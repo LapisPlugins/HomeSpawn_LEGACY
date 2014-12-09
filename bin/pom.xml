@@ -35,14 +35,20 @@
   <repositories>
   <repository>
   <id>bukkit-repo</id>
-  <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
+  <url>http://www.revealedmc.com/maven-repo</url>
   </repository>
   </repositories>
   <dependencies>
   	<dependency>
   		<groupId>org.bukkit</groupId>
   		<artifactId>bukkit</artifactId>
-  		<version>1.8-R0.1-SNAPSHOT</version>
+  		<version>1.7.9-R0.2</version>
+  		<scope>provided</scope>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.bukkit</groupId>
+  		<artifactId>craftbukkit</artifactId>
+  		<version>1.7.9-R0.2</version>
   		<scope>provided</scope>
   	</dependency>
   </dependencies>
