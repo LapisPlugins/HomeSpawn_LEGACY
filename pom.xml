@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>me.dart2112.cyberfreaks</groupId>
   <artifactId>CyberFreaks</artifactId>
-  <version>1.0.5</version>
+  <version>1.0.4</version>
   <name>CyberFreaks</name>
   <build>
   <finalName>${project.artifactId}-${project.version}</finalName>
