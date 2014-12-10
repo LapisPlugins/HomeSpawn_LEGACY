@@ -60,7 +60,7 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 			this.getLogger().info("[HomeSpawn] No Update Avilable");
 		} else {
 			this.getLogger().severe(
-					"[HomeSpawn] Something Went Wrong Updating!");
+					"ChatColor.RED + [HomeSpawn] Something Went Wrong Updating!");
 		}
 	}
 
