@@ -60,8 +60,8 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 		} else if (updater.getResult() == UpdateResult.NO_UPDATE) {
 			this.getLogger().info("[HomeSpawn] No Update Avilable");
 		} else {
-			this.getLogger().severe(
-					"ChatColor.RED + [HomeSpawn] Something Went Wrong Updating!");
+			this.getLogger()
+					.severe("ChatColor.RED + [HomeSpawn] Something Went Wrong Updating!");
 		}
 	}
 
@@ -139,6 +139,7 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 				getMessages.createSection("Home.SentHome");
 				getMessages.createSection("Home.NoHomeSet");
 				getMessages.createSection("Home.HomeRemoved");
+				getMessages.createSection("Home.LimitReached");
 				getMessages.createSection("Spawn");
 				getMessages.createSection("Spawn.NotSet");
 				getMessages.createSection("Spawn.SpawnSet");
@@ -166,6 +167,9 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 			getMessages.set("Home.NoHomeSet",
 					"You First Need To Set a Home With /sethome");
 			getMessages.set("Home.HomeRemoved", "Home Removed");
+			getMessages.set("Home.LimitReached",
+					"Sorry But You have Reached The Max Limit Of Homes, "
+							+ "Please Use /delhome To Remove A Home");
 			getMessages.set("Spawn.NotSet",
 					"You First Need To Set a Spawn With /setspawn");
 			getMessages.set("Spawn.SpawnSet",
@@ -231,8 +235,8 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 
 			if (commandLabel.equalsIgnoreCase("sethome")) {
 				if (player.hasPermission("homespawn.player")) {
-					File file = new File(getDataFolder().getAbsolutePath()
-							+ File.separator + "PlayerData" + File.separator
+					File file = new File(this.getDataFolder() + File.separator
+							+ "PlayerData" + File.separator
 							+ player.getUniqueId() + ".yml");
 					FileConfiguration getHomes = YamlConfiguration
 							.loadConfiguration(file);
@@ -249,12 +253,19 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 					}
 					if (getHomes.getString("name").equalsIgnoreCase(
 							player.getName())) {
+						if (getHomes.getInt(player.getName() + ".Numb") >= getConfig()
+								.getInt("HomesLimit")) {
+							player.sendMessage(ChatColor.RED
+									+ getMessages
+											.getString("Home.LimitReached"));
+							return false;
+						}
 						if (args.length == 0) {
 
 							getHomes.createSection(player.getDisplayName());
-							if (!getHomes.contains(player.getName()
-									+ ".Numb")) {
-								getHomes.createSection(player.getName() + ".Numb");
+							if (!getHomes.contains(player.getName() + ".Numb")) {
+								getHomes.createSection(player.getName()
+										+ ".Numb");
 								getHomes.set(player.getName() + ".Numb", "0");
 							}
 							getHomes.createSection(player.getDisplayName()
@@ -269,14 +280,16 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 									+ ".Yaw");
 							getHomes.createSection(player.getDisplayName()
 									+ ".Pitch");
-							if (!getHomes.contains("HasHome")){
-							getHomes.createSection("HasHome");
+							if (!getHomes.contains("HasHome")) {
+								getHomes.createSection("HasHome");
 							}
 							int HomesNumb = getHomes.getInt(player
 									.getDisplayName() + ".Numb");
-							if (!getHomes.get(player.getName() + ".Hashome").equals("Yes")){
-							getHomes.set(player.getDisplayName() + ".Numb",
-									HomesNumb + 1);
+							if (!getHomes.contains(player.getName()
+									+ ".HasHome") || !getHomes.getString(player.getName() + ".HasHome")
+									.equals("Yes")) {
+								getHomes.set(player.getDisplayName() + ".Numb",
+										HomesNumb + 1);
 							}
 							getHomes.set(player.getDisplayName() + ".x", player
 									.getLocation().getBlockX());
@@ -303,20 +316,23 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 								getHomes.createSection(home + ".world");
 								getHomes.createSection(home + ".Yaw");
 								getHomes.createSection(home + ".Pitch");
-								if (!getHomes.contains(home + "HasHome")){
+								if (!getHomes.contains(home + "HasHome")) {
 									getHomes.createSection(home + "HasHome");
-									}
+								}
 								if (!getHomes.contains(player.getName()
 										+ ".Numb")) {
-									getHomes.createSection(player.getName() + ".Numb");
-									getHomes.set(player.getName() + ".Numb", "0");
+									getHomes.createSection(player.getName()
+											+ ".Numb");
+									getHomes.set(player.getName() + ".Numb",
+											"0");
 								}
 								int HomesNumb = getHomes.getInt(player
 										.getDisplayName() + ".Numb");
-								if (!getHomes.get(home + ".Hashome").equals("Yes")){
-									getHomes.set(player.getDisplayName() + ".Numb",
-											HomesNumb + 1);
-									}
+								if (!getHomes.contains(home + ".HasHome") || !getHomes.get(home + ".HasHome").equals(
+										"Yes")) {
+									getHomes.set(player.getDisplayName()
+											+ ".Numb", HomesNumb + 1);
+								}
 								getHomes.set(home + ".x", player.getLocation()
 										.getBlockX());
 								getHomes.set(home + ".y", player.getLocation()
@@ -456,7 +472,8 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 						return true;
 					}
 					if (args.length == 0) {
-						int HomeNumb = getHomes.getInt(player.getName() + ".Numb");
+						int HomeNumb = getHomes.getInt(player.getName()
+								+ ".Numb");
 						if (getHomes.getString("HasHome")
 								.equalsIgnoreCase("no")
 								|| !getHomes.contains("HasHome")) {
@@ -467,7 +484,8 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 							player.sendMessage(ChatColor.GOLD
 									+ getMessages.getString("Home.HomeRemoved"));
 							getHomes.set("HasHome", "No");
-							getHomes.set(player.getName() + ".Numb", HomeNumb - 1);
+							getHomes.set(player.getName() + ".Numb",
+									HomeNumb - 1);
 							try {
 								getHomes.save(file);
 							} catch (IOException e) {
@@ -479,7 +497,8 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 						}
 					} else if (args.length == 1) {
 						String home = args[0];
-						int HomeNumb = getHomes.getInt(player.getName() + ".Numb");
+						int HomeNumb = getHomes.getInt(player.getName()
+								+ ".Numb");
 						if (getHomes.getString(home + ".HasHome")
 								.equalsIgnoreCase("no")
 								|| !getHomes.contains(home + ".HasHome")) {
@@ -490,7 +509,8 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 							player.sendMessage(ChatColor.GOLD
 									+ getMessages.getString("Home.HomeRemoved"));
 							getHomes.set(home + ".HasHome", "No");
-							getHomes.set(player.getName() + ".Numb", HomeNumb - 1);
+							getHomes.set(player.getName() + ".Numb",
+									HomeNumb - 1);
 							try {
 								getHomes.save(file);
 							} catch (IOException e) {
