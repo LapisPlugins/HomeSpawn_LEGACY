@@ -1,6 +1,6 @@
 name: Homespawn
 main: net.lapismc.HomeSpawn.HomeSpawn
-version: 1.0.5
+version: 1.0.6
 description: >
              The Basic Home And Spawn Plugin
 commands:
@@ -34,3 +34,7 @@ homespawn.admin:
         homespawn.player: true
     description: Allows ALL Commands
     default: op
+homespawn.vip:
+    children:
+        homespawn.player: true
+    default: false
