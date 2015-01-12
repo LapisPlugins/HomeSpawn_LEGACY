@@ -231,25 +231,41 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 	}
 
 	public void reload(Player player) {
-		Configs();
-		this.logger.info("Player " + player.getName()
-				+ " Has Reloaded Homespawn!");
+		if (player != null) {
+			Configs();
+			this.logger.info("Player " + player.getName()
+					+ " Has Reloaded Homespawn!");
+		}
 	}
 
 	public void help(Player player) {
-		player.sendMessage("-----------------------Homespawn-----------------------");
-		player.sendMessage("[name] = VIP Only");
-		player.sendMessage("/home [name]: Sends You To The Home Specified");
-		player.sendMessage("/sethome [name]: Sets Your Home At Your Current Location");
-		player.sendMessage("/delhome [name]: Deleates The Specified Home");
-		player.sendMessage("/spawn: Sends You To Spawn");
-		if (player.hasPermission("homespawn.admin")) {
-			player.sendMessage("/setspawn: Sets The Server Spawn");
-			player.sendMessage("/delspawn: Removes The Server Spawn");
-			player.sendMessage("/homespawn: Displays Plugin Infomation");
-			player.sendMessage("/homespawn reload: Reloads The Plugin Configs");
+		if (player != null) {
+			player.sendMessage(ChatColor.GOLD + "-----------------------"
+					+ ChatColor.RED + "Homespawn" + ChatColor.GOLD
+					+ "-----------------------");
+			player.sendMessage(ChatColor.RED + "[name] = VIP Only");
+			player.sendMessage(ChatColor.RED + "/home [name]:" + ChatColor.GOLD
+					+ " Sends You To The Home Specified");
+			player.sendMessage(ChatColor.RED + "/sethome [name]:"
+					+ ChatColor.GOLD
+					+ " Sets Your Home At Your Current Location");
+			player.sendMessage(ChatColor.RED + "/delhome [name]:"
+					+ ChatColor.GOLD + " Removes The Specified Home");
+			player.sendMessage(ChatColor.RED + "/spawn:" + ChatColor.GOLD
+					+ " Sends You To Spawn");
+			if (player.hasPermission("homespawn.admin")) {
+				player.sendMessage(ChatColor.RED + "/setspawn:"
+						+ ChatColor.GOLD + " Sets The Server Spawn");
+				player.sendMessage(ChatColor.RED + "/delspawn:"
+						+ ChatColor.GOLD + " Removes The Server Spawn");
+				player.sendMessage(ChatColor.RED + "/homespawn:"
+						+ ChatColor.GOLD + " Displays Plugin Infomation");
+				player.sendMessage(ChatColor.RED + "/homespawn reload:"
+						+ ChatColor.GOLD + " Reloads The Plugin Configs");
+			}
+			player.sendMessage(ChatColor.GOLD
+					+ "-------------------------------------------------------");
 		}
-		player.sendMessage("-------------------------------------------------------");
 	}
 
 	@Override
@@ -888,18 +904,25 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 			} else if (commandLabel.equalsIgnoreCase("homespawn")) {
 				if (player.hasPermission("homespawn.admin")) {
 					if (args.length == 0) {
-						player.sendMessage("---------------Homespawn---------------");
-						player.sendMessage("Author: Dart2112");
-						player.sendMessage("Version: "
+						player.sendMessage(ChatColor.GOLD + "---------------"
+								+ ChatColor.RED + "Homespawn" + ChatColor.GOLD
+								+ "---------------");
+						player.sendMessage(ChatColor.RED + "Author:"
+								+ ChatColor.GOLD + " Dart2112");
+						player.sendMessage(ChatColor.RED + "Version: "
+								+ ChatColor.GOLD
 								+ this.getDescription().getVersion());
-						player.sendMessage("Bukkit Dev: http://goo.gl/2Selqa");
-						player.sendMessage("Use /homespawn Help For Commands!");
-						player.sendMessage("---------------------------------------");
+						player.sendMessage(ChatColor.RED + "Bukkit Dev:"
+								+ ChatColor.GOLD + " http://goo.gl/2Selqa");
+						player.sendMessage(ChatColor.RED
+								+ "Use /homespawn Help For Commands!");
+						player.sendMessage(ChatColor.GOLD
+								+ "---------------------------------------");
 					} else if (args.length == 1) {
 						if (args[0].equalsIgnoreCase("reload")) {
 							reload(player);
 						} else if (args[0].equalsIgnoreCase("help")) {
-							// help
+							help(player);
 						}
 					} else {
 						player.sendMessage("That Is Not A Recognised Command, Use /homespawn help For Commands");
