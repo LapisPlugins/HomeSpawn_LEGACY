@@ -4,4 +4,6 @@ AutoUpdate: true
 ## If Set To True The Plugin Will Send Usage Information To mcstats.org So That I Can See Who Is Using It
 Metrics: true
 ## This Limit Only Affects Players With The VIP Perm, Admins Will Be Able To Exceed This Limit (Includes The /Home One)
-HomesLimit: 3
+VIPHomesLimit: 3
+## This Limit Affects Players With The homespawn.admin Perm
+AdminHomesLimit: 5
