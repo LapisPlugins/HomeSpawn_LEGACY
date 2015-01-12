@@ -16,6 +16,10 @@ commands:
     description: Sets the spawn location for the server so you can use /spawn to get back there
   delspawn:
     description: Deleates the spawn location from file
+  homespawn:
+    description: Shows Plugin Infomation
+  homeslist:
+    description: Shows The Current Homes
 permissions:
 homespawn.*:
     description: Gives Access To All Commands
