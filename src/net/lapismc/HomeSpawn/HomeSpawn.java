@@ -2,6 +2,7 @@ package net.lapismc.HomeSpawn;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Logger;
 
 import net.gravitydevelopment.updater.updater;
 import net.gravitydevelopment.updater.updater.UpdateResult;
@@ -32,6 +33,7 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 	public Permission PlayerPerm = new Permission("homespawn.player");
 	public Permission AdminPerm = new Permission("homespawn.admin");
 	public Permission VIPPerm = new Permission("homespawn.vip");
+	public final Logger logger = this.getLogger();
 
 	@Override
 	public void onEnable() {
@@ -225,6 +227,25 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 			}
 		}
 
+	}
+	public void reload(Player player){
+		Configs();
+		this.logger.info("Player " + player.getName() + " Has Reloaded Homespawn!");
+	}
+	public void help(Player player){
+		player.sendMessage("-----------------------Homespawn-----------------------");
+		player.sendMessage("[name] = VIP Only");
+		player.sendMessage("/home [name]: Sends You To The Home Specified");
+		player.sendMessage("/sethome [name]: Sets Your Home At Your Current Location");
+		player.sendMessage("/delhome [name]: Deleates The Specified Home");
+		player.sendMessage("/spawn: Sends You To Spawn");
+		if(player.hasPermission("homespawn.admin")){
+			player.sendMessage("/setspawn: Sets The Server Spawn");
+			player.sendMessage("/delspawn: Removes The Server Spawn");
+			player.sendMessage("/homespawn: Displays Plugin Infomation");
+			player.sendMessage("/homespawn reload: Reloads The Plugin Configs");
+		}
+		player.sendMessage("-------------------------------------------------------");
 	}
 
 	@Override
@@ -661,6 +682,27 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 					player.sendMessage(ChatColor.DARK_RED
 							+ "You don't have permission to do that!");
 				}
+			}else if(commandLabel.equalsIgnoreCase("homespawn")){
+				if(player.hasPermission("homespawn.admin")){
+					if(args.length == 0){
+						player.sendMessage("---------------Homespawn---------------");
+						player.sendMessage("Author: Dart2112");
+						player.sendMessage("Version: " + this.getDescription().getVersion());
+						player.sendMessage("Bukkit Dev: http://goo.gl/2Selqa");
+						player.sendMessage("Use /homespawn Help For Commands!");
+						player.sendMessage("---------------------------------------");
+					}else if(args.length == 1){
+						if(args[0].equalsIgnoreCase("reload")){
+							reload(player);
+						}else if (args[0].equalsIgnoreCase("help")){
+							//help
+						}
+					}else{
+						player.sendMessage("That Is Not A Recognised Command, Use /homespawn help For Commands");
+					}
+				}else{
+					player.sendMessage(ChatColor.DARK_RED + "You Don't Have Permission To Do That!");
+				}
 			}
 
 		} else {
@@ -668,4 +710,5 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 		}
 		return false;
 	}
+	
 }
