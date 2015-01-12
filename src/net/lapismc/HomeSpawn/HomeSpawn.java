@@ -274,7 +274,7 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 					}
 					if (getHomes.getString("name").equalsIgnoreCase(
 							player.getName())) {
-						if (player.hasPermission("homespawn.vip")) {
+						if (player.hasPermission("homespawn.vip") && !player.hasPermission("homespawn.admin")) {
 							if (getHomes.getInt(player.getName() + ".Numb") >= getConfig()
 									.getInt("VIPHomesLimit")) {
 								player.sendMessage(ChatColor.RED
