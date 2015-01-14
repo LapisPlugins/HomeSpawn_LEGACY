@@ -58,13 +58,13 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 		updater updater = new updater(this, 86785, this.getFile(),
 				UpdateType.DEFAULT, true);
 		if (updater.getResult() == UpdateResult.SUCCESS) {
-			this.getLogger()
-					.info("[HomeSpawn] Updated, Reload or restart to install the update!");
+			this.getLogger().info(
+					" Updated, Reload or restart to install the update!");
 		} else if (updater.getResult() == UpdateResult.NO_UPDATE) {
-			this.getLogger().info("[HomeSpawn] No Update Avilable");
+			this.getLogger().info(" No Update Avilable");
 		} else {
-			this.getLogger()
-					.severe("ChatColor.RED + [HomeSpawn] Something Went Wrong Updating!");
+			this.getLogger().severe(
+					"ChatColor.RED +  Something Went Wrong Updating!");
 		}
 	}
 
@@ -233,6 +233,11 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 	public void reload(Player player) {
 		if (player != null) {
 			Configs();
+			player.sendMessage(ChatColor.GOLD
+					+ "You have reloaded the congigs for Homespawn!");
+			Bukkit.broadcast(ChatColor.GOLD + "Player " + ChatColor.RED
+					+ player.getName() + ChatColor.GOLD
+					+ " Has Reloaded Homespawn!", "homespawn.admin");
 			this.logger.info("Player " + player.getName()
 					+ " Has Reloaded Homespawn!");
 		}
