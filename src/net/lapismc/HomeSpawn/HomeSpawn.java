@@ -264,7 +264,7 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 						+ ChatColor.GOLD + " Reloads The Plugin Configs");
 			}
 			player.sendMessage(ChatColor.GOLD
-					+ "-------------------------------------------------------");
+					+ "---------------------------------------------------------");
 		}
 	}
 
@@ -917,7 +917,7 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 						player.sendMessage(ChatColor.RED
 								+ "Use /homespawn Help For Commands!");
 						player.sendMessage(ChatColor.GOLD
-								+ "---------------------------------------");
+								+ "-----------------------------------------");
 					} else if (args.length == 1) {
 						if (args[0].equalsIgnoreCase("reload")) {
 							reload(player);
