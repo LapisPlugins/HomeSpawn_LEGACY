@@ -16,6 +16,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -35,6 +36,7 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 	public Permission AdminPerm = new Permission("homespawn.admin");
 	public Permission VIPPerm = new Permission("homespawn.vip");
 	public final Logger logger = this.getLogger();
+	public final ConsoleCommandSender console = Bukkit.getConsoleSender();
 
 	@Override
 	public void onEnable() {
@@ -49,7 +51,8 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 			Metrics metrics = new Metrics(this);
 			metrics.start();
 		} catch (IOException e) {
-
+			e.printStackTrace();
+			console.sendMessage("[HomeSpawn] Metrics Failed To Start!");
 		}
 
 	}
@@ -167,14 +170,14 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 				getHomes.save(file);
 			} catch (IOException e) {
 				e.printStackTrace();
-				Bukkit.getConsoleSender().sendMessage(
+				console.sendMessage(
 						"[HomeSpawn] Player Data File Creation Failed!");
 				return;
 			}
 
 			getHomes.createSection("name");
 			getHomes.set("name", player.getName());
-			Bukkit.getConsoleSender().sendMessage(
+			console.sendMessage(
 					ChatColor.GOLD
 							+ "[HomeSpawn] Blank Config Has Been Created For "
 							+ player.getName());
@@ -197,14 +200,14 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 	}
 
 	public void Enable() {
-		Bukkit.getConsoleSender().sendMessage(
+		console.sendMessage(
 				"[HomeSpawn] V." + getDescription().getVersion()
 						+ " Has Been Enabled!");
 		getServer().getPluginManager().registerEvents(this, this);
 	}
 
 	public void Disable() {
-		Bukkit.getConsoleSender().sendMessage(
+		console.sendMessage(
 				"[HomeSpawn] Plugin Has Been Disabled!");
 		HandlerList.unregisterAll();
 	}
@@ -285,7 +288,7 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 		File theDir = new File(this.getDataFolder().getAbsolutePath()
 				+ File.separator + "PlayerData");
 		if (!theDir.exists()) {
-			Bukkit.getConsoleSender().sendMessage(
+			console.sendMessage(
 					"[HomeSpawn] Creating PlayerData Directory!");
 			theDir.mkdir();
 		}
@@ -310,7 +313,7 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 					e.printStackTrace();
 				}
 			} catch (IOException e) {
-				Bukkit.getConsoleSender().sendMessage(
+				console.sendMessage(
 						"[HomeSpawn] Couldn't create spawn file!");
 				e.printStackTrace();
 			}
