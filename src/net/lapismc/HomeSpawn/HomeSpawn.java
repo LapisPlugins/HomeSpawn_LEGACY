@@ -78,10 +78,10 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 					" Updated, Reload or restart to install the update!");
 		} else if (updater.getResult() == UpdateResult.NO_UPDATE) {
 			this.getLogger().info(" No Update Available");
-			if (file.exists()){
-				if (getUpdate.contains("Avail")){
-				getUpdate.set("Avail", "false");
-				}else{
+			if (file.exists()) {
+				if (getUpdate.contains("Avail")) {
+					getUpdate.set("Avail", "false");
+				} else {
 					getUpdate.createSection("Avail");
 					try {
 						getUpdate.save(file);
@@ -90,23 +90,23 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 					}
 					getUpdate.set("Avail", "false");
 				}
-			}else{
+			} else {
 				try {
 					file.createNewFile();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-				if (getUpdate.contains("Avail")){
+				if (getUpdate.contains("Avail")) {
 					getUpdate.set("Avail", "false");
-					}else{
-						getUpdate.createSection("Avail");
-						try {
-							getUpdate.save(file);
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-						getUpdate.set("Avail", "false");
+				} else {
+					getUpdate.createSection("Avail");
+					try {
+						getUpdate.save(file);
+					} catch (IOException e) {
+						e.printStackTrace();
 					}
+					getUpdate.set("Avail", "false");
+				}
 			}
 		} else if (updater.getResult() == UpdateResult.UPDATE_AVAILABLE
 				&& updater.getResult() != UpdateResult.SUCCESS) {
@@ -170,17 +170,15 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 				getHomes.save(file);
 			} catch (IOException e) {
 				e.printStackTrace();
-				console.sendMessage(
-						"[HomeSpawn] Player Data File Creation Failed!");
+				console.sendMessage("[HomeSpawn] Player Data File Creation Failed!");
 				return;
 			}
 
 			getHomes.createSection("name");
 			getHomes.set("name", player.getName());
-			console.sendMessage(
-					ChatColor.GOLD
-							+ "[HomeSpawn] Blank Config Has Been Created For "
-							+ player.getName());
+			console.sendMessage(ChatColor.GOLD
+					+ "[HomeSpawn] Blank Config Has Been Created For "
+					+ player.getName());
 			try {
 				getHomes.save(file);
 			} catch (IOException e) {
@@ -200,15 +198,13 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 	}
 
 	public void Enable() {
-		console.sendMessage(
-				"[HomeSpawn] V." + getDescription().getVersion()
-						+ " Has Been Enabled!");
+		console.sendMessage("[HomeSpawn] V." + getDescription().getVersion()
+				+ " Has Been Enabled!");
 		getServer().getPluginManager().registerEvents(this, this);
 	}
 
 	public void Disable() {
-		console.sendMessage(
-				"[HomeSpawn] Plugin Has Been Disabled!");
+		console.sendMessage("[HomeSpawn] Plugin Has Been Disabled!");
 		HandlerList.unregisterAll();
 	}
 
@@ -288,8 +284,7 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 		File theDir = new File(this.getDataFolder().getAbsolutePath()
 				+ File.separator + "PlayerData");
 		if (!theDir.exists()) {
-			console.sendMessage(
-					"[HomeSpawn] Creating PlayerData Directory!");
+			console.sendMessage("[HomeSpawn] Creating PlayerData Directory!");
 			theDir.mkdir();
 		}
 	}
@@ -313,8 +308,7 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 					e.printStackTrace();
 				}
 			} catch (IOException e) {
-				console.sendMessage(
-						"[HomeSpawn] Couldn't create spawn file!");
+				console.sendMessage("[HomeSpawn] Couldn't create spawn file!");
 				e.printStackTrace();
 			}
 		}
