@@ -55,13 +55,91 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 	}
 
 	private void Update() {
-		updater updater = new updater(this, 86785, this.getFile(),
-				UpdateType.DEFAULT, true);
+		if (getConfig().getBoolean("AutoUpdate")) {
+			updater updater = new updater(this, 86785, this.getFile(),
+					UpdateType.DEFAULT, true);
+			updatecheck(updater);
+		} else {
+			updater updater = new updater(this, 86785, this.getFile(),
+					UpdateType.NO_DOWNLOAD, true);
+			updatecheck(updater);
+		}
+	}
+
+	private void updatecheck(updater updater) {
+		File file = new File(this.getDataFolder().getAbsolutePath()
+				+ File.separator + "update.yml");
+		FileConfiguration getUpdate = YamlConfiguration.loadConfiguration(file);
 		if (updater.getResult() == UpdateResult.SUCCESS) {
 			this.getLogger().info(
 					" Updated, Reload or restart to install the update!");
 		} else if (updater.getResult() == UpdateResult.NO_UPDATE) {
-			this.getLogger().info(" No Update Avilable");
+			this.getLogger().info(" No Update Available");
+			if (file.exists()){
+				if (getUpdate.contains("Avail")){
+				getUpdate.set("Avail", "false");
+				}else{
+					getUpdate.createSection("Avail");
+					try {
+						getUpdate.save(file);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					getUpdate.set("Avail", "false");
+				}
+			}else{
+				try {
+					file.createNewFile();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				if (getUpdate.contains("Avail")){
+					getUpdate.set("Avail", "false");
+					}else{
+						getUpdate.createSection("Avail");
+						try {
+							getUpdate.save(file);
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+						getUpdate.set("Avail", "false");
+					}
+			}
+		} else if (updater.getResult() == UpdateResult.UPDATE_AVAILABLE
+				&& updater.getResult() != UpdateResult.SUCCESS) {
+			this.getLogger().info(
+					"An update is Available for HomeSpawn, It can be downloaded from,"
+							+ " dev.bukkit.org/bukkit-plugins/homespawn");
+			if (file.exists()) {
+				if (getUpdate.contains("Avail")) {
+					getUpdate.set("Avail", "true");
+				} else {
+					getUpdate.createSection("Avail");
+					getUpdate.set("Avail", "True");
+					try {
+						getUpdate.save(file);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			} else {
+				try {
+					file.createNewFile();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				if (getUpdate.contains("Avail")) {
+					getUpdate.set("Avail", "true");
+				} else {
+					getUpdate.createSection("Avail");
+					getUpdate.set("Avail", "True");
+					try {
+						getUpdate.save(file);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}
 		} else {
 			this.getLogger().severe(
 					"ChatColor.RED +  Something Went Wrong Updating!");
@@ -104,6 +182,16 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 				getHomes.save(file);
 			} catch (IOException e) {
 				e.printStackTrace();
+			}
+		}
+		if (player.hasPermission("homespawn.admin")) {
+			File file2 = new File(this.getDataFolder().getAbsolutePath()
+					+ File.separator + "update.yml");
+			FileConfiguration getUpdate = YamlConfiguration
+					.loadConfiguration(file2);
+			if (getUpdate.getBoolean("Avail")) {
+				player.sendMessage(ChatColor.GOLD
+						+ "[HomeSpawn] An update is available on bukkit");
 			}
 		}
 	}
