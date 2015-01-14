@@ -75,9 +75,9 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 		FileConfiguration getUpdate = YamlConfiguration.loadConfiguration(file);
 		if (updater.getResult() == UpdateResult.SUCCESS) {
 			this.getLogger().info(
-					" Updated, Reload or restart to install the update!");
+					"Updated, Reload or restart to install the update!");
 		} else if (updater.getResult() == UpdateResult.NO_UPDATE) {
-			this.getLogger().info(" No Update Available");
+			this.getLogger().info("No Update Available");
 			if (file.exists()) {
 				if (getUpdate.contains("Avail")) {
 					getUpdate.set("Avail", "false");
@@ -108,6 +108,7 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 					getUpdate.set("Avail", "false");
 				}
 			}
+
 		} else if (updater.getResult() == UpdateResult.UPDATE_AVAILABLE
 				&& updater.getResult() != UpdateResult.SUCCESS) {
 			this.getLogger().info(
@@ -145,7 +146,12 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 			}
 		} else {
 			this.getLogger().severe(
-					"ChatColor.RED +  Something Went Wrong Updating!");
+					ChatColor.RED + "Something Went Wrong Updating!");
+		}
+		try {
+			getUpdate.save(file);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -168,6 +174,7 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 				getHomes.save(file);
 				getHomes.set("HasHome", "No");
 				getHomes.save(file);
+				spawnnew(player);
 			} catch (IOException e) {
 				e.printStackTrace();
 				console.sendMessage("[HomeSpawn] Player Data File Creation Failed!");
@@ -233,6 +240,7 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 				getMessages.createSection("Spawn");
 				getMessages.createSection("Spawn.NotSet");
 				getMessages.createSection("Spawn.SpawnSet");
+				getMessages.createSection("Spawn.SpawnNewSet");
 				getMessages.createSection("Spawn.SentToSpawn");
 				getMessages.createSection("Spawn.Removed");
 				getMessages.createSection("Error.Args");
@@ -264,6 +272,9 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 					"You First Need To Set a Spawn With /setspawn");
 			getMessages.set("Spawn.SpawnSet",
 					"Spawn Set, You Can Now Use /spawn");
+			getMessages
+					.set("Spawn.SpawnNewSet",
+							"Spawn New Set, All New Players Will Be Sent To This Location");
 			getMessages.set("Spawn.SentToSpawn", "Welcome To Spawn");
 			getMessages.set("Spawn.Removed", "Spawn Removed!");
 			getMessages.set("Error.Args+", "Too Much Infomation!");
@@ -302,6 +313,12 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 				getSpawn.createSection("spawn.World");
 				getSpawn.createSection("spawn.Yaw");
 				getSpawn.createSection("spawn.Pitch");
+				getSpawn.createSection("spawnnew.X");
+				getSpawn.createSection("spawnnew.Y");
+				getSpawn.createSection("spawnnew.Z");
+				getSpawn.createSection("spawnnew.World");
+				getSpawn.createSection("spawnnew.Yaw");
+				getSpawn.createSection("spawnnew.Pitch");
 				try {
 					getSpawn.save(file);
 				} catch (IOException e) {
@@ -315,11 +332,36 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 
 	}
 
+	public void spawnnew(Player player) {
+		File file = new File(this.getDataFolder().getAbsolutePath()
+				+ File.separator + "Spawn.yml");
+		FileConfiguration getSpawn = YamlConfiguration.loadConfiguration(file);
+		try {
+			getSpawn.load(file);
+		} catch (IOException | InvalidConfigurationException e) {
+			e.printStackTrace();
+		}
+		if (getSpawn.getString("spawnnew.SpawnSet").equalsIgnoreCase("yes")) {
+			int x = getSpawn.getInt("spawnnew.X");
+			int y = getSpawn.getInt("spawnnew.Y");
+			int z = getSpawn.getInt("spawnnew.Z");
+			float yaw = getSpawn.getInt("spawnnew.Yaw");
+			float pitch = getSpawn.getInt("spawnnew.Pitch");
+			String cworld = getSpawn.getString("spawnnew.World");
+			World world = getServer().getWorld(cworld);
+			Location spawnnew = new Location(world, x, y, z, yaw, pitch);
+			spawnnew.add(0.5, 0, 0.5);
+			player.teleport(spawnnew);
+		} else {
+			return;
+		}
+	}
+
 	public void reload(Player player) {
 		if (player != null) {
 			Configs();
 			player.sendMessage(ChatColor.GOLD
-					+ "You have reloaded the congigs for Homespawn!");
+					+ "You have reloaded the configs for Homespawn!");
 			Bukkit.broadcast(ChatColor.GOLD + "Player " + ChatColor.RED
 					+ player.getName() + ChatColor.GOLD
 					+ " Has Reloaded Homespawn!", "homespawn.admin");
@@ -346,15 +388,24 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 			if (player.hasPermission("homespawn.admin")) {
 				player.sendMessage(ChatColor.RED + "/setspawn:"
 						+ ChatColor.GOLD + " Sets The Server Spawn");
+				player.sendMessage(ChatColor.RED + "/setspawn new:"
+						+ ChatColor.GOLD + " All New Players Will Be Sent To This Spawn");
 				player.sendMessage(ChatColor.RED + "/delspawn:"
 						+ ChatColor.GOLD + " Removes The Server Spawn");
 				player.sendMessage(ChatColor.RED + "/homespawn:"
 						+ ChatColor.GOLD + " Displays Plugin Infomation");
 				player.sendMessage(ChatColor.RED + "/homespawn reload:"
 						+ ChatColor.GOLD + " Reloads The Plugin Configs");
+				player.sendMessage(ChatColor.GOLD
+						+ "---------------------------------------------------------");
+				return;
+			} else {
+				player.sendMessage(ChatColor.GOLD
+						+ "---------------------------------------------------------");
 			}
-			player.sendMessage(ChatColor.GOLD
-					+ "---------------------------------------------------------");
+
+		} else {
+			return;
 		}
 	}
 
@@ -587,25 +638,6 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 						} else {
 							player.sendMessage(ChatColor.RED
 									+ getMessages.getString("Home.NoHomeSet"));
-							if (getHomes.getInt(player.getName() + ".Numb") > 0) {
-								if (!list.isEmpty()) {
-									String list2 = list.toString();
-									String list3 = list2.replace("[", " ");
-									String StringList = list3.replace("]", " ");
-									player.sendMessage(ChatColor.GOLD
-											+ "Your Current Homes Are:");
-									player.sendMessage(ChatColor.RED
-											+ StringList);
-								} else {
-									player.sendMessage(ChatColor.DARK_RED
-											+ getMessages
-													.getString("Home.NoHomeSet"));
-								}
-							} else {
-								player.sendMessage(ChatColor.DARK_RED
-										+ getMessages
-												.getString("Home.NoHomeSet"));
-							}
 						}
 					} else if (args.length == 1) {
 						String home = args[0];
@@ -853,25 +885,50 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 					} catch (IOException | InvalidConfigurationException e) {
 						e.printStackTrace();
 					}
-					getSpawn.set("spawn.SpawnSet", "Yes");
-					getSpawn.set("spawn.X", player.getLocation().getBlockX());
-					getSpawn.set("spawn.Y", player.getLocation().getBlockY());
-					getSpawn.set("spawn.Z", player.getLocation().getBlockZ());
-					getSpawn.set("spawn.World", player.getWorld().getName());
-					getSpawn.set("spawn.Yaw", player.getLocation().getYaw());
-					getSpawn.set("spawn.Pitch", player.getLocation().getPitch());
-					player.sendMessage(ChatColor.GOLD
-							+ getMessages.getString("Spawn.SpawnSet"));
+					if (args.length == 0) {
+						getSpawn.set("spawn.SpawnSet", "Yes");
+						getSpawn.set("spawn.X", player.getLocation()
+								.getBlockX());
+						getSpawn.set("spawn.Y", player.getLocation()
+								.getBlockY());
+						getSpawn.set("spawn.Z", player.getLocation()
+								.getBlockZ());
+						getSpawn.set("spawn.World", player.getWorld().getName());
+						getSpawn.set("spawn.Yaw", player.getLocation().getYaw());
+						getSpawn.set("spawn.Pitch", player.getLocation()
+								.getPitch());
+						player.sendMessage(ChatColor.GOLD
+								+ getMessages.getString("Spawn.SpawnSet"));
+					} else if (args[0].equalsIgnoreCase("new")) {
+						getSpawn.set("spawnnew.SpawnSet", "Yes");
+						getSpawn.set("spawnnew.X", player.getLocation()
+								.getBlockX());
+						getSpawn.set("spawnnew.Y", player.getLocation()
+								.getBlockY());
+						getSpawn.set("spawnnew.Z", player.getLocation()
+								.getBlockZ());
+						getSpawn.set("spawnnew.World", player.getWorld()
+								.getName());
+						getSpawn.set("spawnnew.Yaw", player.getLocation()
+								.getYaw());
+						getSpawn.set("spawnew.Pitch", player.getLocation()
+								.getPitch());
+						player.sendMessage(ChatColor.GOLD
+								+ getMessages.getString("Spawn.SpawnNewSet"));
+					} else {
+						help(player);
+					}
 					try {
 						getSpawn.save(file);
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
+
 				} else {
 					player.sendMessage(ChatColor.DARK_RED
 							+ "You don't have permission to do that!");
-				}
 
+				}
 			} else if (commandLabel.equals("spawn")) {
 				if (player.hasPermission("homespawn.player")) {
 					File file = new File(this.getDataFolder().getAbsolutePath()
@@ -992,37 +1049,37 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 							+ getMessages.getString("Home.NoHomeSet"));
 				}
 			} else if (commandLabel.equalsIgnoreCase("homespawn")) {
-				if (player.hasPermission("homespawn.admin")) {
-					if (args.length == 0) {
-						player.sendMessage(ChatColor.GOLD + "---------------"
-								+ ChatColor.RED + "Homespawn" + ChatColor.GOLD
-								+ "---------------");
-						player.sendMessage(ChatColor.RED + "Author:"
-								+ ChatColor.GOLD + " Dart2112");
-						player.sendMessage(ChatColor.RED + "Version: "
-								+ ChatColor.GOLD
-								+ this.getDescription().getVersion());
-						player.sendMessage(ChatColor.RED + "Bukkit Dev:"
-								+ ChatColor.GOLD + " http://goo.gl/2Selqa");
-						player.sendMessage(ChatColor.RED
-								+ "Use /homespawn Help For Commands!");
-						player.sendMessage(ChatColor.GOLD
-								+ "-----------------------------------------");
-					} else if (args.length == 1) {
-						if (args[0].equalsIgnoreCase("reload")) {
+				if (args.length == 0) {
+					player.sendMessage(ChatColor.GOLD + "---------------"
+							+ ChatColor.RED + "Homespawn" + ChatColor.GOLD
+							+ "---------------");
+					player.sendMessage(ChatColor.RED + "Author:"
+							+ ChatColor.GOLD + " Dart2112");
+					player.sendMessage(ChatColor.RED + "Version: "
+							+ ChatColor.GOLD
+							+ this.getDescription().getVersion());
+					player.sendMessage(ChatColor.RED + "Bukkit Dev:"
+							+ ChatColor.GOLD + " http://goo.gl/2Selqa");
+					player.sendMessage(ChatColor.RED
+							+ "Use /homespawn Help For Commands!");
+					player.sendMessage(ChatColor.GOLD
+							+ "-----------------------------------------");
+				} else if (args.length == 1) {
+					if (args[0].equalsIgnoreCase("reload")) {
+						if (player.hasPermission("homespawn.admin")) {
 							reload(player);
-						} else if (args[0].equalsIgnoreCase("help")) {
-							help(player);
+						} else {
+							player.sendMessage(ChatColor.RED
+									+ "You Dont Have Permission To Do That");
 						}
-					} else {
-						player.sendMessage("That Is Not A Recognised Command, Use /homespawn help For Commands");
+					} else if (args[0].equalsIgnoreCase("help")) {
+						help(player);
 					}
 				} else {
-					player.sendMessage(ChatColor.DARK_RED
-							+ "You Don't Have Permission To Do That!");
+					player.sendMessage("That Is Not A Recognised Command, Use /homespawn help For Commands");
 				}
-			}
 
+			}
 		} else {
 			sender.sendMessage("You Must Be a Player To Do That");
 		}
