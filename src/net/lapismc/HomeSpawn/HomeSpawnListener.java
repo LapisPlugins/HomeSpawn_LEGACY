@@ -26,7 +26,26 @@ public class HomeSpawnListener implements Listener {
 				+ File.separator + "PlayerData" + File.separator
 				+ player.getUniqueId() + ".yml");
 		FileConfiguration getHomes = YamlConfiguration.loadConfiguration(file);
-		if (!(file.exists())) {
+		File file2 = new File(plugin.getDataFolder().getAbsolutePath()
+				+ File.separator + "PlayerData" + File.separator
+				+ "PlayerNames" + File.separator + player.getName() + ".yml");
+		FileConfiguration getName = YamlConfiguration.loadConfiguration(file2);
+		if (!file2.exists()) {
+			try {
+				file.createNewFile();
+			getName.createSection("Name");
+			getName.createSection("UUID");
+			getName.save(file2);
+			getName.set("Name", player.getName());
+			getName.set("UUID", player.getUniqueId());
+			getName.save(file2);
+			} catch (IOException e) {
+				e.printStackTrace();
+				plugin.console
+				.sendMessage("[HomeSpawn] Player Data File Creation Failed!");
+			}
+		}
+		if (!file.exists()) {
 			try {
 				file.createNewFile();
 				getHomes.createSection("HasHome");
@@ -53,10 +72,10 @@ public class HomeSpawnListener implements Listener {
 			}
 		}
 		if (player.hasPermission("homespawn.admin")) {
-			File file2 = new File(plugin.getDataFolder().getAbsolutePath()
+			File file1 = new File(plugin.getDataFolder().getAbsolutePath()
 					+ File.separator + "update.yml");
 			FileConfiguration getUpdate = YamlConfiguration
-					.loadConfiguration(file2);
+					.loadConfiguration(file1);
 			if (getUpdate.getBoolean("Avail")) {
 				player.sendMessage(ChatColor.GOLD
 						+ "[HomeSpawn] An update is available on bukkit");

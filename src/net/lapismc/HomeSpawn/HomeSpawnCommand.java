@@ -22,6 +22,18 @@ public class HomeSpawnCommand implements CommandExecutor {
 		this.plugin = plugin;
 	}
 
+	private FileConfiguration GetHome(String player) {
+		File file2 = new File(plugin.getDataFolder().getAbsolutePath()
+				+ File.separator + "PlayerData" + File.separator
+				+ "PlayerNames" + File.separator + player + ".yml");
+		FileConfiguration getName = YamlConfiguration.loadConfiguration(file2);
+		File Homes = new File(plugin.getDataFolder().getAbsolutePath()
+				+ File.separator + "PlayerData" + File.separator
+				+ getName.getString("UUID") + ".yml");
+		FileConfiguration Gethome = YamlConfiguration.loadConfiguration(Homes);
+		return Gethome;
+	}
+
 	public boolean onCommand(CommandSender sender, Command cmd,
 			String commandLabel, String[] args) {
 		if (sender instanceof Player) {
@@ -691,7 +703,37 @@ public class HomeSpawnCommand implements CommandExecutor {
 				} else {
 					player.sendMessage("That Is Not A Recognised Command, Use /homespawn help For Commands");
 				}
+			} else if (commandLabel.equalsIgnoreCase("homeinvite")) {
+				if (args.length == 2) {
+					String home = args[0];
+					String PlayerInvited = args[1];
+					String PlayerName = player.getName();
+					FileConfiguration Invited = GetHome(PlayerInvited);
+					FileConfiguration Inviter = GetHome(PlayerName);
+					if (Invited == null || Inviter == null) {
+						player.sendMessage(ChatColor.RED
+								+ "That Player Doesnt Have A Data File, And Therefore Cant Be Invited!");
+						return true;
+					} else {
+						if (Inviter.contains(home)) {
+							if (!Invited.contains("Invites.Recived." + home)) {
+								Invited.createSection("Invites.Recived" + home);
+								Invited.set("Invites.Recived" + home,
+										Inviter.get(home));
+							}
+							if (!Inviter.contains("Invites.Sent." + home)) {
 
+							}
+						} else {
+							player.sendMessage(ChatColor.RED
+									+ "A Home With That Name Doesnt Exist!");
+						}
+					}
+				}
+			} else if (args.length == 1) {
+				player.sendMessage("You Need To Specify Who You Wish To Invite");
+			} else if (args.length == 0) {
+				player.sendMessage("You Need To Specify A Home");
 			}
 		} else {
 			sender.sendMessage("You Must Be a Player To Do That");
