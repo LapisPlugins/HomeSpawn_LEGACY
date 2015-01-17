@@ -182,6 +182,18 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 				+ File.separator + "Messages.yml");
 		FileConfiguration getMessages = YamlConfiguration
 				.loadConfiguration(file2);
+		File file1 = new File(this.getDataFolder().getAbsolutePath()
+				+ File.separator + "Test.yml");
+		FileConfiguration getTest = YamlConfiguration.loadConfiguration(file1);
+		if (!file1.exists()){ 
+			try {
+				file1.createNewFile();
+				getTest.createSection("Home");
+				getTest.save(file1);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 		if (!file2.exists()) {
 			try {
 				file2.createNewFile();
@@ -213,6 +225,9 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 				+ File.separator + "Messages.yml");
 		FileConfiguration getMessages = YamlConfiguration
 				.loadConfiguration(file2);
+		File file1 = new File(this.getDataFolder().getAbsolutePath()
+				+ File.separator + "Test.yml");
+		FileConfiguration getTest = YamlConfiguration.loadConfiguration(file1);
 		if (file2.exists()) {
 			getMessages.set("Home.HomeSet", "Home Set, You Can Now Use /home");
 			getMessages.set("Home.SentHome", "Welcome Home");
@@ -234,8 +249,14 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 			getMessages.set("Error.Args+", "Too Much Infomation!");
 			getMessages.set("Error.Args-", "Not Enough Infomation");
 			getMessages.set("Error.Args", "Too Little or Too Much Infomation");
+			getTest.set("Home", getMessages.get("Home"));
 			try {
 				getMessages.save(file2);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			try {
+				getTest.save(file1);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
