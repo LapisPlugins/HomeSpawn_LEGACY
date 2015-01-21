@@ -68,7 +68,7 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 
 	private void updatecheck(updater updater) {
 		File file = new File(this.getDataFolder().getAbsolutePath()
-				+ File.separator + "update.yml");
+				+ File.separator + "Update.yml");
 		FileConfiguration getUpdate = YamlConfiguration.loadConfiguration(file);
 		if (updater.getResult() == UpdateResult.SUCCESS) {
 			this.getLogger().info(
@@ -93,9 +93,6 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-				if (getUpdate.contains("Avail")) {
-					getUpdate.set("Avail", "false");
-				} else {
 					getUpdate.createSection("Avail");
 					try {
 						getUpdate.save(file);
@@ -104,8 +101,6 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 					}
 					getUpdate.set("Avail", "false");
 				}
-			}
-
 		} else if (updater.getResult() == UpdateResult.UPDATE_AVAILABLE
 				&& updater.getResult() != UpdateResult.SUCCESS) {
 			this.getLogger().info(
@@ -129,9 +124,6 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-				if (getUpdate.contains("Avail")) {
-					getUpdate.set("Avail", "true");
-				} else {
 					getUpdate.createSection("Avail");
 					getUpdate.set("Avail", "True");
 					try {
@@ -139,7 +131,6 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
-				}
 			}
 		} else {
 			this.getLogger().severe(
@@ -182,18 +173,6 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 				+ File.separator + "Messages.yml");
 		FileConfiguration getMessages = YamlConfiguration
 				.loadConfiguration(file2);
-		File file1 = new File(this.getDataFolder().getAbsolutePath()
-				+ File.separator + "Test.yml");
-		FileConfiguration getTest = YamlConfiguration.loadConfiguration(file1);
-		if (!file1.exists()){ 
-			try {
-				file1.createNewFile();
-				getTest.createSection("Home");
-				getTest.save(file1);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
 		if (!file2.exists()) {
 			try {
 				file2.createNewFile();
@@ -225,9 +204,6 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 				+ File.separator + "Messages.yml");
 		FileConfiguration getMessages = YamlConfiguration
 				.loadConfiguration(file2);
-		File file1 = new File(this.getDataFolder().getAbsolutePath()
-				+ File.separator + "Test.yml");
-		FileConfiguration getTest = YamlConfiguration.loadConfiguration(file1);
 		if (file2.exists()) {
 			getMessages.set("Home.HomeSet", "Home Set, You Can Now Use /home");
 			getMessages.set("Home.SentHome", "Welcome Home");
@@ -249,14 +225,8 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 			getMessages.set("Error.Args+", "Too Much Infomation!");
 			getMessages.set("Error.Args-", "Not Enough Infomation");
 			getMessages.set("Error.Args", "Too Little or Too Much Infomation");
-			getTest.set("Home", getMessages.get("Home"));
 			try {
 				getMessages.save(file2);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			try {
-				getTest.save(file1);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -269,9 +239,14 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 	private void createPlayerData() {
 		File theDir = new File(this.getDataFolder().getAbsolutePath()
 				+ File.separator + "PlayerData");
+		File theDir1 = new File(this.getDataFolder().getAbsolutePath()
+				+ File.separator + "PlayerData" + File.separator + "PlayerNames");
 		if (!theDir.exists()) {
 			console.sendMessage("[HomeSpawn] Creating PlayerData Directory!");
 			theDir.mkdir();
+		}
+		if (!theDir1.exists()){
+			theDir1.mkdir();
 		}
 	}
 
@@ -394,5 +369,6 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 		this.getCommand("delspawn").setExecutor(new HomeSpawnCommand(this));
 		this.getCommand("homespawn").setExecutor(new HomeSpawnCommand(this));
 		this.getCommand("homeslist").setExecutor(new HomeSpawnCommand(this));
+		this.getCommand("homeinvite").setExecutor(new HomeSpawnCommand(this));
 	}
 }

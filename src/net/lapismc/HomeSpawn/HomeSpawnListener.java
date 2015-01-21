@@ -42,7 +42,7 @@ public class HomeSpawnListener implements Listener {
 			} catch (IOException e) {
 				e.printStackTrace();
 				plugin.console
-				.sendMessage("[HomeSpawn] Player Data File Creation Failed!");
+				.sendMessage("[HomeSpawn] Player Name Data File Creation Failed!");
 			}
 		}
 		if (!file.exists()) {
@@ -73,10 +73,10 @@ public class HomeSpawnListener implements Listener {
 		}
 		if (player.hasPermission("homespawn.admin")) {
 			File file1 = new File(plugin.getDataFolder().getAbsolutePath()
-					+ File.separator + "update.yml");
+					+ File.separator + "Update.yml");
 			FileConfiguration getUpdate = YamlConfiguration
 					.loadConfiguration(file1);
-			if (getUpdate.getBoolean("Avail")) {
+			if (getUpdate.getString("Avail").equalsIgnoreCase("true")) {
 				player.sendMessage(ChatColor.GOLD
 						+ "[HomeSpawn] An update is available on bukkit");
 			}

@@ -39,7 +39,7 @@ public class HomeSpawnCommand implements CommandExecutor {
 		if (sender instanceof Player) {
 			Player player = (Player) sender;
 
-			if (commandLabel.equalsIgnoreCase("sethome")) {
+			if (cmd.getName().equalsIgnoreCase("sethome")) {
 				if (player.hasPermission("homespawn.player")) {
 					File file = new File(plugin.getDataFolder()
 							+ File.separator + "PlayerData" + File.separator
@@ -208,7 +208,7 @@ public class HomeSpawnCommand implements CommandExecutor {
 							+ "You don't have permission to do that!");
 				}
 
-			} else if (commandLabel.equalsIgnoreCase("home")) {
+			} else if (cmd.getName().equalsIgnoreCase("home")) {
 				if (player.hasPermission("homespawn.player")) {
 					File file = new File(plugin.getDataFolder()
 							+ File.separator + "PlayerData" + File.separator
@@ -342,7 +342,7 @@ public class HomeSpawnCommand implements CommandExecutor {
 							+ "You don't have permission to do that!");
 				}
 
-			} else if (commandLabel.equalsIgnoreCase("delhome")) {
+			} else if (cmd.getName().equalsIgnoreCase("delhome")) {
 				if (player.hasPermission("homespawn.player")) {
 					File file = new File(plugin.getDataFolder()
 							+ File.separator + "PlayerData" + File.separator
@@ -493,7 +493,7 @@ public class HomeSpawnCommand implements CommandExecutor {
 					player.sendMessage(ChatColor.DARK_RED
 							+ "You don't have permission to do that!");
 				}
-			} else if (commandLabel.equalsIgnoreCase("setspawn")) {
+			} else if (cmd.getName().equalsIgnoreCase("setspawn")) {
 				if (player.hasPermission("homespawn.admin")) {
 					File file = new File(plugin.getDataFolder()
 							.getAbsolutePath() + File.separator + "Spawn.yml");
@@ -554,7 +554,7 @@ public class HomeSpawnCommand implements CommandExecutor {
 							+ "You don't have permission to do that!");
 
 				}
-			} else if (commandLabel.equals("spawn")) {
+			} else if (cmd.getName().equals("spawn")) {
 				if (player.hasPermission("homespawn.player")) {
 					File file = new File(plugin.getDataFolder()
 							.getAbsolutePath() + File.separator + "Spawn.yml");
@@ -600,7 +600,7 @@ public class HomeSpawnCommand implements CommandExecutor {
 							+ "You don't have permission to do that!");
 				}
 
-			} else if (commandLabel.equalsIgnoreCase("delspawn")) {
+			} else if (cmd.getName().equalsIgnoreCase("delspawn")) {
 				if (player.hasPermission("homespawn.admin")) {
 					File file = new File(plugin.getDataFolder()
 							.getAbsolutePath() + File.separator + "Spawn.yml");
@@ -637,7 +637,7 @@ public class HomeSpawnCommand implements CommandExecutor {
 					player.sendMessage(ChatColor.DARK_RED
 							+ "You don't have permission to do that!");
 				}
-			} else if (commandLabel.equalsIgnoreCase("homeslist")) {
+			} else if (cmd.getName().equalsIgnoreCase("homeslist")) {
 				File file = new File(plugin.getDataFolder() + File.separator
 						+ "PlayerData" + File.separator + player.getUniqueId()
 						+ ".yml");
@@ -673,7 +673,7 @@ public class HomeSpawnCommand implements CommandExecutor {
 					player.sendMessage(ChatColor.DARK_RED
 							+ getMessages.getString("Home.NoHomeSet"));
 				}
-			} else if (commandLabel.equalsIgnoreCase("homespawn")) {
+			} else if (cmd.getName().equalsIgnoreCase("homespawn")) {
 				if (args.length == 0) {
 					player.sendMessage(ChatColor.GOLD + "---------------"
 							+ ChatColor.RED + "Homespawn" + ChatColor.GOLD
@@ -703,30 +703,53 @@ public class HomeSpawnCommand implements CommandExecutor {
 				} else {
 					player.sendMessage("That Is Not A Recognised Command, Use /homespawn help For Commands");
 				}
-			} else if (commandLabel.equalsIgnoreCase("homeinvite")) {
+			} else if (cmd.getName().equalsIgnoreCase("homeinvite")) {
+				File file = new File(plugin.getDataFolder().getAbsolutePath()
+						+ File.separator + "PlayerData" + File.separator + player.getName() + ".yml");
 				if (args.length == 2) {
-					String home = args[0];
-					String PlayerInvited = args[1];
-					String PlayerName = player.getName();
-					FileConfiguration Invited = GetHome(PlayerInvited);
-					FileConfiguration Inviter = GetHome(PlayerName);
-					if (Invited == null || Inviter == null) {
-						player.sendMessage(ChatColor.RED
-								+ "That Player Doesnt Have A Data File, And Therefore Cant Be Invited!");
-						return true;
-					} else {
-						if (Inviter.contains(home)) {
-							if (!Invited.contains("Invites.Recived." + home)) {
-								Invited.createSection("Invites.Recived" + home);
-								Invited.set("Invites.Recived" + home,
-										Inviter.get(home));
-							}
-							if (!Inviter.contains("Invites.Sent." + home)) {
-
-							}
-						} else {
+					if (player.hasPermission("homespawn.vip")) {
+						String home = args[0];
+						String PlayerInvited = args[1];
+						String PlayerName = player.getName();
+						FileConfiguration Invited = GetHome(PlayerInvited);
+						FileConfiguration Inviter = GetHome(PlayerName);
+						if (Invited == null || Inviter == null) {
 							player.sendMessage(ChatColor.RED
-									+ "A Home With That Name Doesnt Exist!");
+									+ "That Player Doesnt Have A Data File, And Therefore Cant Be Invited!");
+							return true;
+						} else {
+							@SuppressWarnings("unused")
+							List<String> InvitedList = Invited.getStringList("Invites.Recived.List");
+							List<String> InviterList = Inviter.getStringList("Invites.Sent.List");
+							if (Inviter.contains(home)) {
+								if (!Invited
+										.contains("Invites.Recived." + home)) {
+									Invited.createSection("Invites.Recived"
+											+ home);
+									Invited.set("Invites.Recived" + home,
+											Inviter.get(home));
+									if (!Inviter.contains("Invites.Sent." + home)){
+										Inviter.createSection("Invites.Sent." + home);
+										try {
+											Inviter.save(file);
+										} catch (IOException e) {
+											e.printStackTrace();
+										}
+										Inviter.set("Invites.Sent." + home, Inviter.get(home));
+									}
+									if (!InviterList.contains(home)){
+									InviterList.add(home);
+									}
+								} else {
+									
+								}
+								if (!Inviter.contains("Invites.Sent." + home)) {
+
+								}
+							} else {
+								player.sendMessage(ChatColor.RED
+										+ "A Home With That Name Doesnt Exist!");
+							}
 						}
 					}
 				}
