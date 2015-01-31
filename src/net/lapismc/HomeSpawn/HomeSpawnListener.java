@@ -22,35 +22,45 @@ public class HomeSpawnListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGH)
 	void PlayerJoinEvent(final PlayerJoinEvent event) {
 		Player player = event.getPlayer();
-		File file = new File(plugin.getDataFolder().getAbsolutePath()
-				+ File.separator + "PlayerData" + File.separator
-				+ player.getUniqueId() + ".yml");
+		File file = new File(plugin.getDataFolder() + File.separator
+				+ "PlayerData" + File.separator
+				+ player.getUniqueId().toString() + ".yml");
 		FileConfiguration getHomes = YamlConfiguration.loadConfiguration(file);
 		File file2 = new File(plugin.getDataFolder().getAbsolutePath()
 				+ File.separator + "PlayerData" + File.separator
 				+ "PlayerNames" + File.separator + player.getName() + ".yml");
 		FileConfiguration getName = YamlConfiguration.loadConfiguration(file2);
+		if (file == null || file2 == null) {
+			plugin.console.sendMessage("Player " + player.getName()
+					+ "'s Data File Is Null!");
+			return;
+		}
 		if (!file2.exists()) {
 			try {
-				file.createNewFile();
-			getName.createSection("Name");
-			getName.createSection("UUID");
-			getName.save(file2);
-			getName.set("Name", player.getName());
-			getName.set("UUID", player.getUniqueId());
-			getName.save(file2);
+				file2.createNewFile();
+				getName.createSection("Name");
+				getName.createSection("UUID");
+				getName.save(file2);
+				getName.set("Name", player.getName());
+				getName.set("UUID", player.getUniqueId().toString());
+				getName.save(file2);
 			} catch (IOException e) {
 				e.printStackTrace();
 				plugin.console
-				.sendMessage("[HomeSpawn] Player Name Data File Creation Failed!");
+						.sendMessage("[HomeSpawn] Player Name Data File Creation Failed!");
+				return;
 			}
 		}
 		if (!file.exists()) {
 			try {
 				file.createNewFile();
+				getHomes.createSection("name");
 				getHomes.createSection("HasHome");
+				getHomes.createSection(player.getName() + ".Numb");
 				getHomes.save(file);
+				getHomes.set("name", player.getName());
 				getHomes.set("HasHome", "No");
+				getHomes.set(player.getName() + ".Numb", 0);
 				getHomes.save(file);
 				plugin.spawnnew(player);
 			} catch (IOException e) {
@@ -59,26 +69,16 @@ public class HomeSpawnListener implements Listener {
 						.sendMessage("[HomeSpawn] Player Data File Creation Failed!");
 				return;
 			}
-
-			getHomes.createSection("name");
-			getHomes.set("name", player.getName());
-			plugin.console.sendMessage(ChatColor.GOLD
-					+ "[HomeSpawn] Blank Config Has Been Created For "
-					+ player.getName());
-			try {
-				getHomes.save(file);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
 		}
 		if (player.hasPermission("homespawn.admin")) {
 			File file1 = new File(plugin.getDataFolder().getAbsolutePath()
 					+ File.separator + "Update.yml");
 			FileConfiguration getUpdate = YamlConfiguration
 					.loadConfiguration(file1);
-			if (getUpdate.getString("Avail").equalsIgnoreCase("true")) {
+			if (file1 != null || getUpdate.contains("Avail")
+					&& getUpdate.getString("Avail").equalsIgnoreCase("true")) {
 				player.sendMessage(ChatColor.GOLD
-						+ "[HomeSpawn] An update is available on bukkit");
+						+ "[HomeSpawn] An update is available on Bukkit Dev");
 			}
 		}
 	}

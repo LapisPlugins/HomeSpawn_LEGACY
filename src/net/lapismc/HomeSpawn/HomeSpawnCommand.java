@@ -38,12 +38,11 @@ public class HomeSpawnCommand implements CommandExecutor {
 			String commandLabel, String[] args) {
 		if (sender instanceof Player) {
 			Player player = (Player) sender;
-
 			if (cmd.getName().equalsIgnoreCase("sethome")) {
 				if (player.hasPermission("homespawn.player")) {
 					File file = new File(plugin.getDataFolder()
 							+ File.separator + "PlayerData" + File.separator
-							+ player.getUniqueId() + ".yml");
+							+ player.getUniqueId().toString() + ".yml");
 					FileConfiguration getHomes = YamlConfiguration
 							.loadConfiguration(file);
 					File file2 = new File(plugin.getDataFolder()
@@ -212,7 +211,7 @@ public class HomeSpawnCommand implements CommandExecutor {
 				if (player.hasPermission("homespawn.player")) {
 					File file = new File(plugin.getDataFolder()
 							+ File.separator + "PlayerData" + File.separator
-							+ player.getUniqueId() + ".yml");
+							+ player.getUniqueId().toString() + ".yml");
 					FileConfiguration getHomes = YamlConfiguration
 							.loadConfiguration(file);
 					File file2 = new File(plugin.getDataFolder()
@@ -237,8 +236,9 @@ public class HomeSpawnCommand implements CommandExecutor {
 						e.printStackTrace();
 					}
 					if (args.length == 0) {
-						if (getHomes.getString("HasHome").equalsIgnoreCase(
-								"yes")) {
+						if (file != null
+								&& getHomes.getString("HasHome")
+										.equalsIgnoreCase("yes")) {
 							int x = getHomes.getInt(player.getDisplayName()
 									+ ".x");
 							int y = getHomes.getInt(player.getDisplayName()
@@ -346,7 +346,7 @@ public class HomeSpawnCommand implements CommandExecutor {
 				if (player.hasPermission("homespawn.player")) {
 					File file = new File(plugin.getDataFolder()
 							+ File.separator + "PlayerData" + File.separator
-							+ player.getUniqueId() + ".yml");
+							+ player.getUniqueId().toString() + ".yml");
 					FileConfiguration getHomes = YamlConfiguration
 							.loadConfiguration(file);
 					File file2 = new File(plugin.getDataFolder()
@@ -536,7 +536,7 @@ public class HomeSpawnCommand implements CommandExecutor {
 								.getName());
 						getSpawn.set("spawnnew.Yaw", player.getLocation()
 								.getYaw());
-						getSpawn.set("spawnew.Pitch", player.getLocation()
+						getSpawn.set("spawnnew.Pitch", player.getLocation()
 								.getPitch());
 						player.sendMessage(ChatColor.GOLD
 								+ getMessages.getString("Spawn.SpawnNewSet"));
@@ -639,8 +639,8 @@ public class HomeSpawnCommand implements CommandExecutor {
 				}
 			} else if (cmd.getName().equalsIgnoreCase("homeslist")) {
 				File file = new File(plugin.getDataFolder() + File.separator
-						+ "PlayerData" + File.separator + player.getUniqueId()
-						+ ".yml");
+						+ "PlayerData" + File.separator
+						+ player.getUniqueId().toString() + ".yml");
 				FileConfiguration getHomes = YamlConfiguration
 						.loadConfiguration(file);
 				File file2 = new File(plugin.getDataFolder().getAbsolutePath()
@@ -705,7 +705,8 @@ public class HomeSpawnCommand implements CommandExecutor {
 				}
 			} else if (cmd.getName().equalsIgnoreCase("homeinvite")) {
 				File file = new File(plugin.getDataFolder().getAbsolutePath()
-						+ File.separator + "PlayerData" + File.separator + player.getName() + ".yml");
+						+ File.separator + "PlayerData" + File.separator
+						+ player.getName() + ".yml");
 				if (args.length == 2) {
 					if (player.hasPermission("homespawn.vip")) {
 						String home = args[0];
@@ -719,8 +720,10 @@ public class HomeSpawnCommand implements CommandExecutor {
 							return true;
 						} else {
 							@SuppressWarnings("unused")
-							List<String> InvitedList = Invited.getStringList("Invites.Recived.List");
-							List<String> InviterList = Inviter.getStringList("Invites.Sent.List");
+							List<String> InvitedList = Invited
+									.getStringList("Invites.Recived.List");
+							List<String> InviterList = Inviter
+									.getStringList("Invites.Sent.List");
 							if (Inviter.contains(home)) {
 								if (!Invited
 										.contains("Invites.Recived." + home)) {
@@ -728,20 +731,23 @@ public class HomeSpawnCommand implements CommandExecutor {
 											+ home);
 									Invited.set("Invites.Recived" + home,
 											Inviter.get(home));
-									if (!Inviter.contains("Invites.Sent." + home)){
-										Inviter.createSection("Invites.Sent." + home);
+									if (!Inviter.contains("Invites.Sent."
+											+ home)) {
+										Inviter.createSection("Invites.Sent."
+												+ home);
 										try {
 											Inviter.save(file);
 										} catch (IOException e) {
 											e.printStackTrace();
 										}
-										Inviter.set("Invites.Sent." + home, Inviter.get(home));
+										Inviter.set("Invites.Sent." + home,
+												Inviter.get(home));
 									}
-									if (!InviterList.contains(home)){
-									InviterList.add(home);
+									if (!InviterList.contains(home)) {
+										InviterList.add(home);
 									}
 								} else {
-									
+
 								}
 								if (!Inviter.contains("Invites.Sent." + home)) {
 
@@ -752,15 +758,120 @@ public class HomeSpawnCommand implements CommandExecutor {
 							}
 						}
 					}
+				} else if (args.length == 1) {
+					player.sendMessage("You Need To Specify Who You Wish To Invite");
+				} else if (args.length == 0) {
+					player.sendMessage("You Need To Specify A Home");
 				}
-			} else if (args.length == 1) {
-				player.sendMessage("You Need To Specify Who You Wish To Invite");
-			} else if (args.length == 0) {
-				player.sendMessage("You Need To Specify A Home");
+			} else if (cmd.getName().equalsIgnoreCase("homepassword")) {
+				File file = new File(plugin.getDataFolder() + File.separator
+						+ "PlayerData" + File.separator
+						+ player.getUniqueId().toString() + ".yml");
+				FileConfiguration getHomes = YamlConfiguration
+						.loadConfiguration(file);
+				File file2 = new File(plugin.getDataFolder().getAbsolutePath()
+						+ File.separator + "PlayerData" + File.separator
+						+ "PlayerNames" + File.separator + player.getName()
+						+ ".yml");
+				FileConfiguration getName = YamlConfiguration
+						.loadConfiguration(file2);
+				if (!plugin.getServer().getOnlineMode()) {
+					if (args.length == 0) {
+						if (getName.contains("Password")) {
+							player.sendMessage("Your Current Password Is:");
+							player.sendMessage(getName.getString("Password"));
+						} else {
+							player.sendMessage("You Havent Set Your Password");
+						}
+					} else if (args.length == 2) {
+						String string = args[0];
+						if (string.equalsIgnoreCase("help")) {
+
+						} else if (string.equalsIgnoreCase("set")) {
+							String pass = args[1];
+							getName.set("Password", pass);
+							player.sendMessage("Password Set To:");
+							player.sendMessage(pass);
+							try {
+								getName.save(file2);
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+						}
+					} else if (args.length == 1) {
+						PassHelp(player);
+					} else if (args.length == 3) {
+						String string = args[0];
+						if (string.equalsIgnoreCase("transfer")) {
+							String pass = args[2];
+							String name = args[1];
+							File namefile = new File(plugin.getDataFolder()
+									.getAbsolutePath()
+									+ File.separator
+									+ "PlayerData"
+									+ File.separator
+									+ "PlayerNames"
+									+ File.separator
+									+ name
+									+ ".yml");
+							FileConfiguration getOldName = YamlConfiguration
+									.loadConfiguration(namefile);
+							if (namefile.exists()
+									&& getOldName.getString("Password")
+											.equalsIgnoreCase(pass)) {
+								String uuid = getOldName.getString("UUID");
+								File OldUUIDFile = new File(
+										plugin.getDataFolder() + File.separator
+												+ "PlayerData" + File.separator
+												+ uuid + ".yml");
+								file.delete();
+								OldUUIDFile.renameTo(file);
+								getHomes.set("Name", player.getName());
+								try {
+									getHomes.save(file);
+								} catch (IOException e1) {
+									e1.printStackTrace();
+								}
+								OldUUIDFile.delete();
+								namefile.delete();
+								try {
+									getHomes.save(file);
+								} catch (IOException e) {
+									e.printStackTrace();
+								}
+								player.sendMessage("Data Transfered!");
+							} else {
+								player.sendMessage("That Name Or Password Was Incorrect!");
+							}
+						}
+					}
+				} else {
+					player.sendMessage("This Command Isnt Used As This Is An Online Mode Server");
+				}
+
 			}
 		} else {
 			sender.sendMessage("You Must Be a Player To Do That");
 		}
 		return false;
+	}
+
+	private void PassHelp(Player player) {
+		player.sendMessage(ChatColor.GOLD + "---------------------"
+				+ ChatColor.RED + "Homespawn" + ChatColor.GOLD
+				+ "---------------------");
+		player.sendMessage(ChatColor.RED + "/homepassword:" + ChatColor.GOLD
+				+ " Tells You Your Current Password");
+		player.sendMessage(ChatColor.RED + "/homepassword help:"
+				+ ChatColor.GOLD + " Shows This Text");
+		player.sendMessage(ChatColor.RED + "/homepassword set [password]:"
+				+ ChatColor.GOLD + " Sets Your Transfer Password");
+		player.sendMessage(ChatColor.RED
+				+ "/homepassword transfer [old username] [password]:"
+				+ ChatColor.GOLD
+				+ " Transfers Playerdata From Old Username To Current Username");
+		player.sendMessage(ChatColor.GOLD
+				+ "-----------------------------------------------------");
+		return;
 	}
 }

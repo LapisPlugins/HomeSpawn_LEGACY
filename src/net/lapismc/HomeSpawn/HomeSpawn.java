@@ -30,7 +30,7 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 	public Permission PlayerPerm = new Permission("homespawn.player");
 	public Permission AdminPerm = new Permission("homespawn.admin");
 	public Permission VIPPerm = new Permission("homespawn.vip");
-	public final HomeSpawnListener pl = new HomeSpawnListener(plugin);
+	public HomeSpawnListener pl;
 	public final Logger logger = this.getLogger();
 	public final ConsoleCommandSender console = Bukkit.getConsoleSender();
 
@@ -93,14 +93,14 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-					getUpdate.createSection("Avail");
-					try {
-						getUpdate.save(file);
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-					getUpdate.set("Avail", "false");
+				getUpdate.createSection("Avail");
+				try {
+					getUpdate.save(file);
+				} catch (IOException e) {
+					e.printStackTrace();
 				}
+				getUpdate.set("Avail", "false");
+			}
 		} else if (updater.getResult() == UpdateResult.UPDATE_AVAILABLE
 				&& updater.getResult() != UpdateResult.SUCCESS) {
 			this.getLogger().info(
@@ -124,13 +124,13 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-					getUpdate.createSection("Avail");
-					getUpdate.set("Avail", "True");
-					try {
-						getUpdate.save(file);
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
+				getUpdate.createSection("Avail");
+				getUpdate.set("Avail", "True");
+				try {
+					getUpdate.save(file);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		} else {
 			this.getLogger().severe(
@@ -152,6 +152,7 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 		console.sendMessage("[HomeSpawn] V." + getDescription().getVersion()
 				+ " Has Been Enabled!");
 		PluginManager pm = getServer().getPluginManager();
+		pl = new HomeSpawnListener(this);
 		pm.registerEvents(this.pl, this);
 	}
 
@@ -200,7 +201,7 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 	}
 
 	private void setDefaultMessages() {
-		File file2 = new File(this.getDataFolder().getAbsolutePath()
+		File file2 = new File(getDataFolder().getAbsolutePath()
 				+ File.separator + "Messages.yml");
 		FileConfiguration getMessages = YamlConfiguration
 				.loadConfiguration(file2);
@@ -240,12 +241,13 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 		File theDir = new File(this.getDataFolder().getAbsolutePath()
 				+ File.separator + "PlayerData");
 		File theDir1 = new File(this.getDataFolder().getAbsolutePath()
-				+ File.separator + "PlayerData" + File.separator + "PlayerNames");
+				+ File.separator + "PlayerData" + File.separator
+				+ "PlayerNames");
 		if (!theDir.exists()) {
 			console.sendMessage("[HomeSpawn] Creating PlayerData Directory!");
 			theDir.mkdir();
 		}
-		if (!theDir1.exists()){
+		if (!theDir1.exists()) {
 			theDir1.mkdir();
 		}
 	}
@@ -291,7 +293,9 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 		} catch (IOException | InvalidConfigurationException e) {
 			e.printStackTrace();
 		}
-		if (getSpawn.getString("spawnnew.SpawnSet").equalsIgnoreCase("yes")) {
+		if (getSpawn.get("spawnnew.SpawnSet") != null
+				&& getSpawn.getString("spawnnew.SpawnSet").equalsIgnoreCase(
+						"yes")) {
 			int x = getSpawn.getInt("spawnnew.X");
 			int y = getSpawn.getInt("spawnnew.Y");
 			int z = getSpawn.getInt("spawnnew.Z");
@@ -302,8 +306,10 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 			Location spawnnew = new Location(world, x, y, z, yaw, pitch);
 			spawnnew.add(0.5, 0, 0.5);
 			player.teleport(spawnnew);
+			console.sendMessage("[HomeSpawn] Player " + player.getName()
+					+ " Was Sent To New Spawn");
 		} else {
-			return;
+			console.sendMessage("[HomeSpawn] There Is No New Spawn Set And Therefore The Player Wasnt Sent To The New Spawn");
 		}
 	}
 
@@ -362,6 +368,7 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 
 	public void Commands() {
 		this.getCommand("home").setExecutor(new HomeSpawnCommand(this));
+		//this.getCommand("homepassword").setExecutor(new HomeSpawnCommand(this));
 		this.getCommand("sethome").setExecutor(new HomeSpawnCommand(this));
 		this.getCommand("delhome").setExecutor(new HomeSpawnCommand(this));
 		this.getCommand("spawn").setExecutor(new HomeSpawnCommand(this));
@@ -369,6 +376,5 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 		this.getCommand("delspawn").setExecutor(new HomeSpawnCommand(this));
 		this.getCommand("homespawn").setExecutor(new HomeSpawnCommand(this));
 		this.getCommand("homeslist").setExecutor(new HomeSpawnCommand(this));
-		this.getCommand("homeinvite").setExecutor(new HomeSpawnCommand(this));
 	}
 }
