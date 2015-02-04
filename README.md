@@ -1,6 +1,6 @@
 HomeSpawn
 =========
-Bukkit: dev.bukkit.org/bukkit-plugins/homespawn
+Bukkit: http://dev.bukkit.org/bukkit-plugins/homespawn
 
 Travis: 
 
