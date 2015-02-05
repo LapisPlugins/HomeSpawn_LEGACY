@@ -18,13 +18,13 @@ import org.json.simple.JSONValue;
 
 /**
  * Check for updates on BukkitDev for a given plugin, and download the updates if needed.
- * <p/>
+ * <p>
  * <b>VERY, VERY IMPORTANT</b>: Because there are no standards for adding auto-update toggles in your plugin's config, this system provides NO CHECK WITH YOUR CONFIG to make sure the user has allowed auto-updating.
  * <br>
  * It is a <b>BUKKIT POLICY</b> that you include a boolean value in your config that prevents the auto-updater from running <b>AT ALL</b>.
  * <br>
  * If you fail to include this option in your config, your plugin will be <b>REJECTED</b> when you attempt to submit it to dev.bukkit.org.
- * <p/>
+ * </p>
  * An example of a good configuration option would be something similar to 'auto-update: true' - if this value is set to false you may NOT run the auto-updater.
  * <br>
  * If you are unsure about these rules, please read the plugin submission guidelines: http://goo.gl/8iU5l
@@ -33,7 +33,7 @@ import org.json.simple.JSONValue;
  * @version 2.3
  */
 
-public class updater {
+public class Updater {
 
     /* Constants */
 
@@ -99,7 +99,7 @@ public class updater {
     // Updater thread
     private Thread thread;
     // Used for determining the outcome of the update process
-    private updater.UpdateResult result = updater.UpdateResult.SUCCESS;
+    private Updater.UpdateResult result = Updater.UpdateResult.SUCCESS;
 
     /**
      * Gives the developer the result of the update process. Can be obtained by called {@link #getResult()}
@@ -188,7 +188,7 @@ public class updater {
      * @param type     Specify the type of update this will be. See {@link UpdateType}
      * @param announce True if the program should announce the progress of new updates in console.
      */
-    public updater(Plugin plugin, int id, File file, UpdateType type, boolean announce) {
+    public Updater(Plugin plugin, int id, File file, UpdateType type, boolean announce) {
         this(plugin, id, file, type, null, announce);
     }
 
@@ -201,7 +201,7 @@ public class updater {
      * @param type     Specify the type of update this will be. See {@link UpdateType}
      * @param callback The callback instance to notify when the Updater has finished
      */
-    public updater(Plugin plugin, int id, File file, UpdateType type, UpdateCallback callback) {
+    public Updater(Plugin plugin, int id, File file, UpdateType type, UpdateCallback callback) {
         this(plugin, id, file, type, callback, false);
     }
 
@@ -215,7 +215,7 @@ public class updater {
      * @param callback The callback instance to notify when the Updater has finished
      * @param announce True if the program should announce the progress of new updates in console.
      */
-    public updater(Plugin plugin, int id, File file, UpdateType type, UpdateCallback callback, boolean announce) {
+    public Updater(Plugin plugin, int id, File file, UpdateType type, UpdateCallback callback, boolean announce) {
         this.plugin = plugin;
         this.type = type;
         this.announce = announce;
@@ -271,7 +271,7 @@ public class updater {
         this.apiKey = key;
 
         try {
-            this.url = new URL(updater.HOST + updater.QUERY + this.id);
+            this.url = new URL(Updater.HOST + Updater.QUERY + this.id);
         } catch (final MalformedURLException e) {
             this.plugin.getLogger().log(Level.SEVERE, "The project ID provided for updating, " + this.id + " is invalid.", e);
             this.result = UpdateResult.FAIL_BADID;
@@ -291,7 +291,7 @@ public class updater {
      * @return result of the update process.
      * @see UpdateResult
      */
-    public updater.UpdateResult getResult() {
+    public Updater.UpdateResult getResult() {
         this.waitForThread();
         return this.result;
     }
@@ -395,13 +395,13 @@ public class updater {
             in = new BufferedInputStream(fileUrl.openStream());
             fout = new FileOutputStream(new File(this.updateFolder, file.getName()));
 
-            final byte[] data = new byte[updater.BYTE_SIZE];
+            final byte[] data = new byte[Updater.BYTE_SIZE];
             int count;
             if (this.announce) {
                 this.plugin.getLogger().info("About to download a new update: " + this.versionName);
             }
             long downloaded = 0;
-            while ((count = in.read(data, 0, updater.BYTE_SIZE)) != -1) {
+            while ((count = in.read(data, 0, Updater.BYTE_SIZE)) != -1) {
                 downloaded += count;
                 fout.write(data, 0, count);
                 final int percent = (int) ((downloaded * 100) / fileLength);
@@ -411,7 +411,7 @@ public class updater {
             }
         } catch (Exception ex) {
             this.plugin.getLogger().log(Level.WARNING, "The auto-updater tried to download a new update, but was unsuccessful.", ex);
-            this.result = updater.UpdateResult.FAIL_DOWNLOAD;
+            this.result = Updater.UpdateResult.FAIL_DOWNLOAD;
         } finally {
             try {
                 if (in != null) {
@@ -461,10 +461,10 @@ public class updater {
                 if (!entry.isDirectory()) {
                     final BufferedInputStream bis = new BufferedInputStream(zipFile.getInputStream(entry));
                     int b;
-                    final byte[] buffer = new byte[updater.BYTE_SIZE];
+                    final byte[] buffer = new byte[Updater.BYTE_SIZE];
                     final FileOutputStream fos = new FileOutputStream(destinationFilePath);
-                    final BufferedOutputStream bos = new BufferedOutputStream(fos, updater.BYTE_SIZE);
-                    while ((b = bis.read(buffer, 0, updater.BYTE_SIZE)) != -1) {
+                    final BufferedOutputStream bos = new BufferedOutputStream(fos, Updater.BYTE_SIZE);
+                    while ((b = bis.read(buffer, 0, Updater.BYTE_SIZE)) != -1) {
                         bos.write(buffer, 0, b);
                     }
                     bos.flush();
@@ -484,7 +484,7 @@ public class updater {
 
         } catch (final IOException e) {
             this.plugin.getLogger().log(Level.SEVERE, "The auto-updater tried to unzip a new update file, but was unsuccessful.", e);
-            this.result = updater.UpdateResult.FAIL_DOWNLOAD;
+            this.result = Updater.UpdateResult.FAIL_DOWNLOAD;
         } finally {
             this.fileIOOrError(fSourceZip, fSourceZip.delete(), false);
         }
@@ -561,7 +561,7 @@ public class updater {
 
                 if (this.hasTag(localVersion) || !this.shouldUpdate(localVersion, remoteVersion)) {
                     // We already have the latest version, or this build is tagged for no-update
-                    this.result = updater.UpdateResult.NO_UPDATE;
+                    this.result = Updater.UpdateResult.NO_UPDATE;
                     return false;
                 }
             } else {
@@ -570,7 +570,7 @@ public class updater {
                 this.plugin.getLogger().warning("The author of this plugin" + authorInfo + " has misconfigured their Auto Update system");
                 this.plugin.getLogger().warning("File versions should follow the format 'PluginName vVERSION'");
                 this.plugin.getLogger().warning("Please notify the author of this error.");
-                this.result = updater.UpdateResult.FAIL_NOVERSION;
+                this.result = Updater.UpdateResult.FAIL_NOVERSION;
                 return false;
             }
         }
@@ -615,7 +615,7 @@ public class updater {
      * @return true if updating should be disabled.
      */
     private boolean hasTag(String version) {
-        for (final String string : updater.NO_UPDATE_TAG) {
+        for (final String string : Updater.NO_UPDATE_TAG) {
             if (version.contains(string)) {
                 return true;
             }
@@ -636,7 +636,7 @@ public class updater {
             if (this.apiKey != null) {
                 conn.addRequestProperty("X-API-Key", this.apiKey);
             }
-            conn.addRequestProperty("User-Agent", updater.USER_AGENT);
+            conn.addRequestProperty("User-Agent", Updater.USER_AGENT);
 
             conn.setDoOutput(true);
 
@@ -652,10 +652,10 @@ public class updater {
             }
 
             JSONObject latestUpdate = (JSONObject) array.get(array.size() - 1);
-            this.versionName = (String) latestUpdate.get(updater.TITLE_VALUE);
-            this.versionLink = (String) latestUpdate.get(updater.LINK_VALUE);
-            this.versionType = (String) latestUpdate.get(updater.TYPE_VALUE);
-            this.versionGameVersion = (String) latestUpdate.get(updater.VERSION_VALUE);
+            this.versionName = (String) latestUpdate.get(Updater.TITLE_VALUE);
+            this.versionLink = (String) latestUpdate.get(Updater.LINK_VALUE);
+            this.versionType = (String) latestUpdate.get(Updater.TYPE_VALUE);
+            this.versionGameVersion = (String) latestUpdate.get(Updater.VERSION_VALUE);
 
             return true;
         } catch (final IOException e) {
@@ -704,7 +704,7 @@ public class updater {
          * Called when the updater has finished working.
          * @param updater The updater instance
          */
-        void onFinish(updater updater);
+        void onFinish(Updater updater);
     }
 
     private class UpdateRunnable implements Runnable {
