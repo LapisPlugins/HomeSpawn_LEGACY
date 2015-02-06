@@ -4,9 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Logger;
 
-import net.gravitydevelopment.updater.updater;
-import net.gravitydevelopment.updater.updater.UpdateResult;
-import net.gravitydevelopment.updater.updater.UpdateType;
+import net.gravitydevelopment.updater.Updater;
+import net.gravitydevelopment.updater.Updater.UpdateResult;
+import net.gravitydevelopment.updater.Updater.UpdateType;
 
 import org.mcstats.Metrics;
 import org.bukkit.Bukkit;
@@ -56,17 +56,17 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 
 	private void Update() {
 		if (getConfig().getBoolean("AutoUpdate")) {
-			updater updater = new updater(this, 86785, this.getFile(),
+			Updater updater = new Updater(this, 86785, this.getFile(),
 					UpdateType.DEFAULT, true);
 			updatecheck(updater);
 		} else {
-			updater updater = new updater(this, 86785, this.getFile(),
+			Updater updater = new Updater(this, 86785, this.getFile(),
 					UpdateType.NO_DOWNLOAD, true);
 			updatecheck(updater);
 		}
 	}
 
-	private void updatecheck(updater updater) {
+	private void updatecheck(Updater updater) {
 		File file = new File(this.getDataFolder().getAbsolutePath()
 				+ File.separator + "Update.yml");
 		FileConfiguration getUpdate = YamlConfiguration.loadConfiguration(file);
