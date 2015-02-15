@@ -81,8 +81,8 @@ public class HomeSpawnListener implements Listener {
 						+ "[HomeSpawn] An update is available on Bukkit Dev");
 			}
 		}
-		if(getHomes.getString("name").equals(player.getName()){
-			getHomes.set("name",player.getname());
+		if(!getHomes.getString("name").equals(player.getName())){
+			getHomes.set("name",player.getName());
 		}
 	}
 }
