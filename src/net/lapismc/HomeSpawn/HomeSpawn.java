@@ -107,15 +107,17 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 					"An update is Available for HomeSpawn, It can be downloaded from,"
 							+ " dev.bukkit.org/bukkit-plugins/homespawn");
 			if (file.exists()) {
-				if (getUpdate.contains("Avail")) {
-					getUpdate.set("Avail", "true");
-				} else {
-					getUpdate.createSection("Avail");
-					getUpdate.set("Avail", "True");
-					try {
-						getUpdate.save(file);
-					} catch (IOException e) {
-						e.printStackTrace();
+				if (!getConfig().getBoolean("AutoUpdate")) {
+					if (getUpdate.contains("Avail")) {
+						getUpdate.set("Avail", "true");
+					} else {
+						getUpdate.createSection("Avail");
+						getUpdate.set("Avail", "True");
+						try {
+							getUpdate.save(file);
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
 					}
 				}
 			} else {
@@ -368,7 +370,8 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 
 	public void Commands() {
 		this.getCommand("home").setExecutor(new HomeSpawnCommand(this));
-		//this.getCommand("homepassword").setExecutor(new HomeSpawnCommand(this));
+		// this.getCommand("homepassword").setExecutor(new
+		// HomeSpawnCommand(this));
 		this.getCommand("sethome").setExecutor(new HomeSpawnCommand(this));
 		this.getCommand("delhome").setExecutor(new HomeSpawnCommand(this));
 		this.getCommand("spawn").setExecutor(new HomeSpawnCommand(this));

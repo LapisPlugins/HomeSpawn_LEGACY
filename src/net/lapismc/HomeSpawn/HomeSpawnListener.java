@@ -76,13 +76,14 @@ public class HomeSpawnListener implements Listener {
 			FileConfiguration getUpdate = YamlConfiguration
 					.loadConfiguration(file1);
 			if (file1 != null || getUpdate.contains("Avail")
-					&& getUpdate.getString("Avail").equalsIgnoreCase("true")) {
+					&& getUpdate.getString("Avail").equalsIgnoreCase("true")
+					&& !plugin.getConfig().getBoolean("AutoUpdate")) {
 				player.sendMessage(ChatColor.GOLD
 						+ "[HomeSpawn] An update is available on Bukkit Dev");
 			}
 		}
-		if(!getHomes.getString("name").equals(player.getName())){
-			getHomes.set("name",player.getName());
+		if (!getHomes.getString("name").equals(player.getName())) {
+			getHomes.set("name", player.getName());
 		}
 	}
 }
