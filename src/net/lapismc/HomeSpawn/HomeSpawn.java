@@ -151,7 +151,7 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 	}
 
 	public void Enable() {
-		console.sendMessage("[HomeSpawn] V." + getDescription().getVersion()
+		logger.info(" V." + getDescription().getVersion()
 				+ " Has Been Enabled!");
 		PluginManager pm = getServer().getPluginManager();
 		pl = new HomeSpawnListener(this);
