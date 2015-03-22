@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.lapismc.HomeSpawn</groupId>
   <artifactId>Homespawn</artifactId>
-  <version>1.0.9</version>
+  <version>1.1.0</version>
   <name>HomeSpawn</name>
   <build>
   <finalName>${project.artifactId}-${project.version}</finalName>
