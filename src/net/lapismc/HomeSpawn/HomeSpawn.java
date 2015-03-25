@@ -2,6 +2,7 @@ package net.lapismc.HomeSpawn;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.logging.Logger;
 
 import net.gravitydevelopment.updater.Updater;
@@ -23,6 +24,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitScheduler;
 
 public class HomeSpawn extends JavaPlugin implements Listener {
 
@@ -30,6 +32,8 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 	public Permission PlayerPerm = new Permission("homespawn.player");
 	public Permission AdminPerm = new Permission("homespawn.admin");
 	public Permission VIPPerm = new Permission("homespawn.vip");
+	HashMap<Player, Location> Locations = new HashMap<Player, Location>();
+	HashMap<Player, Integer> TimeLeft = new HashMap<Player, Integer>();
 	public HomeSpawnListener pl;
 	public final Logger logger = this.getLogger();
 	public final ConsoleCommandSender console = Bukkit.getConsoleSender();
@@ -41,6 +45,7 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 		Update();
 		Metrics();
 		Commands();
+		CommandDelay();
 	}
 
 	private void Metrics() {
@@ -191,6 +196,7 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 				getMessages.createSection("Spawn.SpawnNewSet");
 				getMessages.createSection("Spawn.SentToSpawn");
 				getMessages.createSection("Spawn.Removed");
+				getMessages.createSection("Wait");
 				getMessages.createSection("Error.Args");
 				getMessages.createSection("Error.Args+");
 				getMessages.createSection("Error.Args-");
@@ -225,6 +231,10 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 							"Spawn New Set, All New Players Will Be Sent To This Location");
 			getMessages.set("Spawn.SentToSpawn", "Welcome To Spawn");
 			getMessages.set("Spawn.Removed", "Spawn Removed!");
+			getMessages
+					.set("Wait",
+							"You Must Wait {time} Before You Can Be Teleported,"
+									+ " If You Move Or Get Hit By Another Player Your Teleport Will Be Canceled");
 			getMessages.set("Error.Args+", "Too Much Infomation!");
 			getMessages.set("Error.Args-", "Not Enough Infomation");
 			getMessages.set("Error.Args", "Too Little or Too Much Infomation");
@@ -363,6 +373,50 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 						+ "---------------------------------------------------------");
 			}
 
+		} else {
+			return;
+		}
+	}
+
+	public void CommandDelay() {
+		if (!getConfig().contains("TeleportTime")) {
+			getConfig().createSection("TeleportTime");
+			saveConfig();
+			getConfig().set("TeleportTime", 0);
+		}
+		if (!(getConfig().getInt("TeleportTime") == 0)) {
+			BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
+			scheduler.scheduleSyncRepeatingTask(this, new Runnable() {
+				@Override
+				public void run() {
+					if (!TimeLeft.isEmpty()) {
+						for (Player p : TimeLeft.keySet()) {
+							if (Locations.get(p) == null) {
+								TimeLeft.remove(p);
+								Locations.remove(p);
+							}
+							for (int Time : TimeLeft.values()) {
+								int NewTime = Time - 1;
+								if (NewTime > 0) {
+									TimeLeft.put(p, NewTime);
+								} else if (NewTime == 0) {
+									Location Tele = Locations.get(p);
+									if (!Tele.equals(null)) {
+										p.teleport(Tele);
+										p.sendMessage(ChatColor.GOLD
+												+ "Teleporting...");
+										TimeLeft.remove(p);
+										Locations.remove(p);
+									} else {
+										TimeLeft.remove(p);
+										Locations.remove(p);
+									}
+								}
+							}
+						}
+					}
+				}
+			}, 0, 20);
 		} else {
 			return;
 		}

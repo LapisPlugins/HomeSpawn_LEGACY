@@ -34,6 +34,31 @@ public class HomeSpawnCommand implements CommandExecutor {
 		return Gethome;
 	}
 
+	public void TeleportPlayer(Player p, Location l, String r) {
+		File file2 = new File(plugin.getDataFolder().getAbsolutePath()
+				+ File.separator + "Messages.yml");
+		FileConfiguration getMessages = YamlConfiguration
+				.loadConfiguration(file2);
+		if (plugin.getConfig().getInt("TeleportTime") == 0) {
+			p.teleport(l);
+			if (r.equalsIgnoreCase("Spawn")) {
+				p.sendMessage(ChatColor.GOLD
+						+ getMessages.getString("Spawn.SentToSpawn"));
+			} else if (r.equalsIgnoreCase("Home")) {
+				p.sendMessage(ChatColor.GOLD
+						+ getMessages.getString("Home.SentHome"));
+			}
+		} else {
+			String waitraw = ChatColor.GOLD + getMessages.getString("Wait");
+			String Wait = waitraw.replace("{time}", ChatColor.RED
+					+ plugin.getConfig().getString("TeleportTime"));
+			p.sendMessage(Wait);
+			plugin.Locations.put(p, l);
+			plugin.TimeLeft.put(p, plugin.getConfig().getInt("TeleportTime"));
+		}
+
+	}
+
 	public boolean onCommand(CommandSender sender, Command cmd,
 			String commandLabel, String[] args) {
 		if (sender instanceof Player) {
@@ -255,10 +280,7 @@ public class HomeSpawnCommand implements CommandExecutor {
 							Location home = new Location(world, x, y, z, yaw,
 									pitch);
 							home.add(0.5, 0, 0.5);
-							player.sendMessage(ChatColor.GOLD
-									+ getMessages.getString("Home.SentHome"));
-							player.teleport(home);
-
+							TeleportPlayer(player, home, "Home");
 						} else {
 							player.sendMessage(ChatColor.RED
 									+ getMessages.getString("Home.NoHomeSet"));
@@ -307,10 +329,7 @@ public class HomeSpawnCommand implements CommandExecutor {
 								Location home2 = new Location(world, x, y, z,
 										yaw, pitch);
 								home2.add(0.5, 0, 0.5);
-								player.sendMessage(ChatColor.GOLD
-										+ getMessages
-												.getString("Home.SentHome"));
-								player.teleport(home2);
+								TeleportPlayer(player, home2, "Home");
 							}
 						} else {
 							player.sendMessage(ChatColor.RED
@@ -588,9 +607,7 @@ public class HomeSpawnCommand implements CommandExecutor {
 						Location Spawn = new Location(world, x, y, z, yaw,
 								pitch);
 						Spawn.add(0.5, 0, 0.5);
-						player.sendMessage(ChatColor.GOLD
-								+ getMessages.getString("Spawn.SentToSpawn"));
-						player.teleport(Spawn);
+						TeleportPlayer(player, Spawn, "Spawn");
 					} else {
 						player.sendMessage(ChatColor.RED
 								+ getMessages.getString("Spawn.NotSet"));
