@@ -105,6 +105,11 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 					e.printStackTrace();
 				}
 				getUpdate.set("Avail", "false");
+				try {
+					getUpdate.save(file);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		} else if (updater.getResult() == UpdateResult.UPDATE_AVAILABLE
 				&& updater.getResult() != UpdateResult.SUCCESS) {
@@ -233,7 +238,7 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 			getMessages.set("Spawn.Removed", "Spawn Removed!");
 			getMessages
 					.set("Wait",
-							"You Must Wait {time} Before You Can Be Teleported,"
+							"You Must Wait {time} Seconds Before You Can Be Teleported,"
 									+ " If You Move Or Get Hit By Another Player Your Teleport Will Be Canceled");
 			getMessages.set("Error.Args+", "Too Much Infomation!");
 			getMessages.set("Error.Args-", "Not Enough Infomation");
