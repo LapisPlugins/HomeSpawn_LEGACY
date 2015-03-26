@@ -102,12 +102,13 @@ public class HomeSpawnListener implements Listener {
 		Player p = e.getPlayer();
 		Location From = e.getFrom();
 		Location To = e.getTo();
-		if (plugin.Locations.containsKey(p)) {
-			if (From.getBlock() == To.getBlock()) {
+		if (plugin.TimeLeft.containsKey(p)) {
+			if (From.getBlock() == To.getBlock()) {// Workout A Working System For If The Player Moved More Than Pitch/Yaw
 				return;
 			} else {
 				if (!Players.contains(p)) {
 					plugin.Locations.put(p, null);
+					plugin.TimeLeft.remove(p);
 					p.sendMessage(ChatColor.GOLD
 							+ "Teleport Canceled Because You Moved!");
 				} else {
@@ -127,6 +128,7 @@ public class HomeSpawnListener implements Listener {
 			if (Hitter instanceof Player || Hitter instanceof Wolf
 					|| Hitter instanceof Arrow) {
 				plugin.Locations.put(p, null);
+				plugin.TimeLeft.remove(p);
 				p.sendMessage(ChatColor.GOLD
 						+ "Teleport Canceled Because You Were Hit!");
 			} else {
