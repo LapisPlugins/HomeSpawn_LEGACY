@@ -51,7 +51,8 @@ public class HomeSpawnCommand implements CommandExecutor {
 		} else {
 			String waitraw = ChatColor.GOLD + getMessages.getString("Wait");
 			String Wait = waitraw.replace("{time}", ChatColor.RED
-					+ plugin.getConfig().getString("TeleportTime"));
+					+ plugin.getConfig().getString("TeleportTime")
+					+ ChatColor.GOLD);
 			p.sendMessage(Wait);
 			plugin.Locations.put(p, l);
 			plugin.TimeLeft.put(p, plugin.getConfig().getInt("TeleportTime"));
