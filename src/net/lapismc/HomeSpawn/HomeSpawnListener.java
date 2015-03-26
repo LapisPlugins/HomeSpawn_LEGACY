@@ -12,6 +12,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Skeleton;
 import org.bukkit.entity.Wolf;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -102,21 +103,31 @@ public class HomeSpawnListener implements Listener {
 		Player p = e.getPlayer();
 		Location From = e.getFrom();
 		Location To = e.getTo();
-		if (plugin.TimeLeft.containsKey(p)) {
-			if (From.getBlock() == To.getBlock()) {// Workout A Working System For If The Player Moved More Than Pitch/Yaw
-				return;
-			} else {
-				if (!Players.contains(p)) {
-					plugin.Locations.put(p, null);
-					plugin.TimeLeft.remove(p);
-					p.sendMessage(ChatColor.GOLD
-							+ "Teleport Canceled Because You Moved!");
-				} else {
-					e.setCancelled(true);
-					plugin.TimeLeft.put(p, 1);
+		List<Integer> To1 = new ArrayList<Integer>();
+		List<Integer> From1 = new ArrayList<Integer>();
+		if (plugin.Locations.containsKey(p)) {
+				if (plugin.TimeLeft.containsKey(p)) {
+					To1.add(To.getBlockX());
+					To1.add(To.getBlockY());
+					To1.add(To.getBlockZ());
+					From1.add(From.getBlockX());
+					From1.add(From.getBlockY());
+					From1.add(From.getBlockZ());
+					if (From1.equals(To1)) {
+						return;
+					} else {
+						if (!Players.contains(p)) {
+							plugin.Locations.put(p, null);
+							plugin.TimeLeft.remove(p);
+							p.sendMessage(ChatColor.GOLD
+									+ "Teleport Canceled Because You Moved!");
+						} else {
+							e.setCancelled(true);
+							plugin.TimeLeft.put(p, 1);
+						}
+					}
 				}
 			}
-		}
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
@@ -125,15 +136,35 @@ public class HomeSpawnListener implements Listener {
 		Entity Hit = e.getEntity();
 		if (Hit instanceof Player) {
 			Player p = ((Player) Hit);
-			if (Hitter instanceof Player || Hitter instanceof Wolf
-					|| Hitter instanceof Arrow) {
-				plugin.Locations.put(p, null);
-				plugin.TimeLeft.remove(p);
-				p.sendMessage(ChatColor.GOLD
-						+ "Teleport Canceled Because You Were Hit!");
-			} else {
-				Players.add(p);
-				e.setCancelled(true);
+			if (plugin.TimeLeft.containsKey(p)) {
+				if (Hitter instanceof Arrow) {
+					final Arrow arrow = (Arrow) Hitter;
+					if (arrow.getShooter() instanceof Player) {
+						plugin.Locations.put(p, null);
+						p.sendMessage(ChatColor.GOLD
+								+ "Teleport Canceled Because You Were Hit!");
+					} else if (arrow.getShooter() instanceof Skeleton) {
+						Players.add(p);
+						e.setCancelled(true);
+					}
+				}
+				if (Hitter instanceof Player || Hitter instanceof Wolf) {
+					plugin.Locations.put(p, null);
+					p.sendMessage(ChatColor.GOLD
+							+ "Teleport Canceled Because You Were Hit!");
+				} else {
+					Players.add(p);
+					e.setCancelled(true);
+				}
+				if (Hitter instanceof Player || Hitter instanceof Wolf
+						|| Hitter instanceof Arrow) {
+					plugin.Locations.put(p, null);
+					plugin.TimeLeft.remove(p);
+					p.sendMessage(ChatColor.GOLD
+							+ "Teleport Canceled Because You Were Hit!");
+				} else {
+					e.setCancelled(false);
+				}
 			}
 		}
 	}
