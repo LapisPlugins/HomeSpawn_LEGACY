@@ -1,0 +1,12 @@
+# Eclipse Stuff
+/.settings
+/.classpath
+/.project
+
+# IntelliJ IDEA Stuff
+/.idea
+/*.iml
+
+# Maven Stuff
+/target
+/dependency-reduced-pom.xml
