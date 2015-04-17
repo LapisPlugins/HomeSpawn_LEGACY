@@ -1,0 +1,11 @@
+ConfigVersion: Not Used Yet
+## If Set To True The Plugin Will Automatically Update The Plugin (And Install On Next Update) When A New Update Is Published On Bukkit
+AutoUpdate: true
+## If Set To True The Plugin Will Send Usage Information To mcstats.org, Such As Minecraft Version And Players Online
+Metrics: true
+## This Limit Only Affects Players With The VIP Perm, Admins Will Be Able To Exceed This Limit (Includes The /Home One)
+VIPHomesLimit: 3
+## This Limit Affects Players With The homespawn.admin Perm
+AdminHomesLimit: 5
+## This Time Is How Long THe Player Must Wait Without Being Hit By Another Player Before They Teleport, Set To 0 To Disable
+TeleportTime: 5
