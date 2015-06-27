@@ -23,6 +23,7 @@ public class HomeSpawnCommand implements CommandExecutor {
 		this.plugin = plugin;
 	}
 
+	@SuppressWarnings("unused")
 	private FileConfiguration GetHome(String player) {
 		File file2 = new File(plugin.getDataFolder().getAbsolutePath()
 				+ File.separator + "PlayerData" + File.separator
@@ -725,66 +726,6 @@ public class HomeSpawnCommand implements CommandExecutor {
 					}
 				} else {
 					player.sendMessage("That Is Not A Recognised Command, Use /homespawn help For Commands");
-				}
-			} else if (cmd.getName().equalsIgnoreCase("homeinvite")) {
-				File file = new File(plugin.getDataFolder().getAbsolutePath()
-						+ File.separator + "PlayerData" + File.separator
-						+ player.getName() + ".yml");
-				if (args.length == 2) {
-					if (player.hasPermission("homespawn.vip")) {
-						String home = args[0];
-						String PlayerInvited = args[1];
-						String PlayerName = player.getName();
-						FileConfiguration Invited = GetHome(PlayerInvited);
-						FileConfiguration Inviter = GetHome(PlayerName);
-						if (Invited == null || Inviter == null) {
-							player.sendMessage(ChatColor.RED
-									+ "That Player Doesnt Have A Data File, And Therefore Cant Be Invited!");
-							return true;
-						} else {
-							@SuppressWarnings("unused")
-							List<String> InvitedList = Invited
-									.getStringList("Invites.Recived.List");
-							List<String> InviterList = Inviter
-									.getStringList("Invites.Sent.List");
-							if (Inviter.contains(home)) {
-								if (!Invited
-										.contains("Invites.Recived." + home)) {
-									Invited.createSection("Invites.Recived"
-											+ home);
-									Invited.set("Invites.Recived" + home,
-											Inviter.get(home));
-									if (!Inviter.contains("Invites.Sent."
-											+ home)) {
-										Inviter.createSection("Invites.Sent."
-												+ home);
-										try {
-											Inviter.save(file);
-										} catch (IOException e) {
-											e.printStackTrace();
-										}
-										Inviter.set("Invites.Sent." + home,
-												Inviter.get(home));
-									}
-									if (!InviterList.contains(home)) {
-										InviterList.add(home);
-									}
-								} else {
-
-								}
-								if (!Inviter.contains("Invites.Sent." + home)) {
-
-								}
-							} else {
-								player.sendMessage(ChatColor.RED
-										+ "A Home With That Name Doesnt Exist!");
-							}
-						}
-					}
-				} else if (args.length == 1) {
-					player.sendMessage("You Need To Specify Who You Wish To Invite");
-				} else if (args.length == 0) {
-					player.sendMessage("You Need To Specify A Home");
 				}
 			} else if (cmd.getName().equalsIgnoreCase("homepassword")) {
 				File file = new File(plugin.getDataFolder() + File.separator

@@ -130,7 +130,7 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 						getUpdate.set("Avail", "true");
 					} else {
 						getUpdate.createSection("Avail");
-						getUpdate.set("Avail", "True");
+						getUpdate.set("Avail", "true");
 						try {
 							getUpdate.save(file);
 						} catch (IOException e) {
@@ -145,7 +145,7 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 					e.printStackTrace();
 				}
 				getUpdate.createSection("Avail");
-				getUpdate.set("Avail", "True");
+				getUpdate.set("Avail", "true");
 				try {
 					getUpdate.save(file);
 				} catch (IOException e) {
@@ -155,6 +155,7 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 		} else {
 			this.getLogger().severe(
 					ChatColor.RED + "Something Went Wrong Updating!");
+			getUpdate.set("Avail", "false");
 		}
 		try {
 			getUpdate.save(file);
@@ -425,7 +426,7 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 								int NewTime = Time - 1;
 								if (NewTime > 0) {
 									TimeLeft.put(p, NewTime);
-								} else if (NewTime == 0) {
+								} else if (NewTime <= 0) {
 									Location Tele = Locations.get(p);
 									if (!Tele.equals(null)) {
 										p.teleport(Tele);
