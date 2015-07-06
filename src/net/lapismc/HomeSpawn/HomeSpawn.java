@@ -453,11 +453,12 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 		this.getCommand("home").setExecutor(new HomeSpawnCommand(this));
 		this.getCommand("sethome").setExecutor(new HomeSpawnCommand(this));
 		this.getCommand("delhome").setExecutor(new HomeSpawnCommand(this));
-		this.getCommand("globalhome").setExecutor(new HomeSpawnCommand(this));
-		this.getCommand("setglobalhome")
-				.setExecutor(new HomeSpawnCommand(this));
-		this.getCommand("delglobalhome")
-				.setExecutor(new HomeSpawnCommand(this));
+		// this.getCommand("globalhome").setExecutor(new
+		// HomeSpawnCommand(this));
+		// this.getCommand("setglobalhome")
+		// .setExecutor(new HomeSpawnCommand(this));
+		// this.getCommand("delglobalhome")
+		// .setExecutor(new HomeSpawnCommand(this));
 		this.getCommand("spawn").setExecutor(new HomeSpawnCommand(this));
 		this.getCommand("setspawn").setExecutor(new HomeSpawnCommand(this));
 		this.getCommand("delspawn").setExecutor(new HomeSpawnCommand(this));
