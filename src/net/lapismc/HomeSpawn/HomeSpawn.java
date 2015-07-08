@@ -36,7 +36,6 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 	HashMap<Player, Integer> TimeLeft = new HashMap<Player, Integer>();
 	public HomeSpawnListener pl;
 	public final Logger logger = this.getLogger();
-	public final ConsoleCommandSender console = Bukkit.getConsoleSender();
 
 	@Override
 	public void onEnable() {
@@ -59,7 +58,7 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 				metrics.start();
 			} catch (IOException e) {
 				e.printStackTrace();
-				console.sendMessage("[HomeSpawn] Metrics Failed To Start!");
+				logger.severe("[HomeSpawn] Metrics Failed To Start!");
 			}
 		} else {
 			getLogger()
@@ -178,7 +177,7 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 	}
 
 	public void Disable() {
-		console.sendMessage("[HomeSpawn] Plugin Has Been Disabled!");
+		logger.info("[HomeSpawn] Plugin Has Been Disabled!");
 		HandlerList.unregisterAll();
 	}
 
@@ -283,7 +282,7 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 				+ File.separator + "PlayerData" + File.separator
 				+ "PlayerNames");
 		if (!theDir.exists()) {
-			console.sendMessage("[HomeSpawn] Creating PlayerData Directory!");
+			logger.info("[HomeSpawn] Creating PlayerData Directory!");
 			theDir.mkdir();
 		}
 		if (!theDir1.exists()) {
@@ -316,7 +315,7 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 					e.printStackTrace();
 				}
 			} catch (IOException e) {
-				console.sendMessage("[HomeSpawn] Couldn't create spawn file!");
+				logger.severe("[HomeSpawn] Couldn't create spawn file!");//todo
 				e.printStackTrace();
 			}
 		}
@@ -345,10 +344,10 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 			Location spawnnew = new Location(world, x, y, z, yaw, pitch);
 			spawnnew.add(0.5, 0, 0.5);
 			player.teleport(spawnnew);
-			console.sendMessage("[HomeSpawn] Player " + player.getName()
-					+ " Was Sent To New Spawn");
+			logger.info("[HomeSpawn] Player " + player.getName()
+					+ " Was Sent To New Spawn");//todo
 		} else {
-			console.sendMessage("[HomeSpawn] There Is No New Spawn Set And Therefore The Player Wasnt Sent To The New Spawn");
+			logger.info("[HomeSpawn] There Is No New Spawn Set And Therefore The Player Wasnt Sent To The New Spawn");//todo
 		}
 	}
 

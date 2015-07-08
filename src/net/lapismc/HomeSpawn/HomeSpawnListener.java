@@ -42,7 +42,7 @@ public class HomeSpawnListener implements Listener {
 				+ "PlayerNames" + File.separator + player.getName() + ".yml");
 		FileConfiguration getName = YamlConfiguration.loadConfiguration(file2);
 		if (file == null || file2 == null) {
-			plugin.console.sendMessage("Player " + player.getName()
+			plugin.logger.severe("Player " + player.getName()
 					+ "'s Data File Is Null!");
 			return;
 		}
@@ -57,8 +57,8 @@ public class HomeSpawnListener implements Listener {
 				getName.save(file2);
 			} catch (IOException e) {
 				e.printStackTrace();
-				plugin.console
-						.sendMessage("[HomeSpawn] Player Name Data File Creation Failed!");
+				plugin.logger
+						.severe("[HomeSpawn] Player Name Data File Creation Failed!");
 				return;
 			}
 		}
@@ -76,8 +76,8 @@ public class HomeSpawnListener implements Listener {
 				plugin.spawnnew(player);
 			} catch (IOException e) {
 				e.printStackTrace();
-				plugin.console
-						.sendMessage("[HomeSpawn] Player Data File Creation Failed!");
+				plugin.logger
+						.severe("[HomeSpawn] Player Data File Creation Failed!");
 				return;
 			}
 		}
