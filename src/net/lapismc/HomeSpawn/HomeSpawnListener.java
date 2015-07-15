@@ -61,6 +61,14 @@ public class HomeSpawnListener implements Listener {
 						.severe("[HomeSpawn] Player Name Data File Creation Failed!");
 				return;
 			}
+		} else {
+			if (!getName.getString("Name").equalsIgnoreCase(player.getName())) {
+				getName.set("Name", player.getName());
+				getHomes.set("name", player.getName());
+				player.kickPlayer(ChatColor.GOLD
+						+ "Your Homespawn Player Data Is Being Transfered To Your New Username, Please Reconnect");
+				return;
+			}
 		}
 		if (!file.exists()) {
 			try {
@@ -88,7 +96,8 @@ public class HomeSpawnListener implements Listener {
 					.loadConfiguration(file1);
 			if (file1 != null || getUpdate.contains("Avail")
 					&& getUpdate.getString("Avail").equalsIgnoreCase("true")) {
-				if (!plugin.getConfig().getBoolean("AutoUpdate") && plugin.getConfig().getBoolean("UpdateNotification")) {
+				if (!plugin.getConfig().getBoolean("AutoUpdate")
+						&& plugin.getConfig().getBoolean("UpdateNotification")) {
 					player.sendMessage(ChatColor.GOLD
 							+ "[HomeSpawn] An update is available on Bukkit Dev");
 				}
