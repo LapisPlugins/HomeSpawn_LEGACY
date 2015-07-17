@@ -7,12 +7,12 @@
     <build>
         <finalName>${project.artifactId}-${project.version}</finalName>
         <defaultGoal>clean install</defaultGoal>
-        <sourceDirectory>${basedir}/src/main/java/</sourceDirectory>
+        <sourceDirectory>${basedir}/src/</sourceDirectory>
         <resources>
             <resource>
                 <targetPath>.</targetPath>
                 <filtering>true</filtering>
-                <directory>${basedir}/src/main/resources/</directory>
+                <directory>${basedir}/src/</directory>
                 <includes>
                     <include>*.yml</include>
                 </includes>
@@ -85,7 +85,7 @@
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
-            <version>1.8.3-R0.1-SNAPSHOT</version>
+            <version>1.8.7-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

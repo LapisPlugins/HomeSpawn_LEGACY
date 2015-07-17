@@ -314,7 +314,7 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 					e.printStackTrace();
 				}
 			} catch (IOException e) {
-				logger.severe("[HomeSpawn] Couldn't create spawn file!");//todo
+				logger.severe("[HomeSpawn] Couldn't create spawn file!");// todo
 				e.printStackTrace();
 			}
 		}
@@ -344,9 +344,9 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 			spawnnew.add(0.5, 0, 0.5);
 			player.teleport(spawnnew);
 			logger.info("[HomeSpawn] Player " + player.getName()
-					+ " Was Sent To New Spawn");//todo
+					+ " Was Sent To New Spawn");// todo
 		} else {
-			logger.info("[HomeSpawn] There Is No New Spawn Set And Therefore The Player Wasnt Sent To The New Spawn");//todo
+			logger.info("[HomeSpawn] There Is No New Spawn Set And Therefore The Player Wasnt Sent To The New Spawn");// todo
 		}
 	}
 
@@ -419,6 +419,9 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 							if (Locations.get(p) == null) {
 								TimeLeft.remove(p);
 								Locations.remove(p);
+							}
+							if (TimeLeft.isEmpty()) {
+								return;
 							}
 							for (int Time : TimeLeft.values()) {
 								int NewTime = Time - 1;
