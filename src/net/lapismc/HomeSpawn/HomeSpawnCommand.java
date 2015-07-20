@@ -41,7 +41,7 @@ public class HomeSpawnCommand implements CommandExecutor {
 				+ File.separator + "Messages.yml");
 		FileConfiguration getMessages = YamlConfiguration
 				.loadConfiguration(file2);
-		if (plugin.getConfig().getInt("TeleportTime") == 0) {
+		if (plugin.getConfig().getInt("TeleportTime") == 0 || p.hasPermission("homespawn.bypassdelay")) {
 			p.teleport(l);
 			if (r.equalsIgnoreCase("Spawn")) {
 				p.sendMessage(ChatColor.GOLD
