@@ -1,6 +1,6 @@
 name: Homespawn
 main: net.lapismc.HomeSpawn.HomeSpawn
-version: 1.1.4
+version: 1.1.5
 description: >
              The Basic Home And Spawn Plugin
 commands:
@@ -20,18 +20,25 @@ commands:
     description: Shows Plugin Infomation
   homeslist:
     description: Shows The Current Homes
+  homepassword:
+    description: Allows the player to set a password and transfer homes to a new username on an offline mode server
 permissions:
 homespawn.*:
     description: Gives Access To All Commands
     children:
         homespawn.player: true
         homespawn.admin: true
+        homespawn.bypassdelay: true
+homespawn.bypassdelay:
+    description: Allows the player to teleport imediatly
+    default: false
 homespawn.player:
-    descrition: Allows Player Commands
+    description: Allows Player Commands
     default: false
 homespawn.admin:
     children:
         homespawn.player: true
+        homespawn.bypassdelay: true
     description: Allows ALL Commands
     default: op
 homespawn.vip:

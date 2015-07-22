@@ -187,6 +187,19 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 		createGlobalHomes();
 		createPlayerData();
 		createMessages();
+		createPasswords();
+	}
+
+	private void createPasswords() {
+		File file = new File(plugin.getDataFolder() + File.separator
+				+ "PlayerData" + File.separator + "Passwords.yml");
+		if (!file.exists()) {
+			try {
+				file.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	private void createMessages() {
@@ -314,7 +327,7 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 					e.printStackTrace();
 				}
 			} catch (IOException e) {
-				logger.severe("[HomeSpawn] Couldn't create spawn file!");// todo
+				logger.severe("[HomeSpawn] Couldn't create spawn file!");
 				e.printStackTrace();
 			}
 		}
@@ -344,9 +357,9 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 			spawnnew.add(0.5, 0, 0.5);
 			player.teleport(spawnnew);
 			logger.info("[HomeSpawn] Player " + player.getName()
-					+ " Was Sent To New Spawn");// todo
+					+ " Was Sent To New Spawn");
 		} else {
-			logger.info("[HomeSpawn] There Is No New Spawn Set And Therefore The Player Wasnt Sent To The New Spawn");// todo
+			logger.info("[HomeSpawn] There Is No New Spawn Set And Therefore The Player Wasnt Sent To The New Spawn");
 		}
 	}
 
