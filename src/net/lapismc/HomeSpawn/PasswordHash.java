@@ -25,7 +25,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package net.lapismc.Homespawn;
+package net.lapismc.HomeSpawn;
 
 import java.security.SecureRandom;
 import javax.crypto.spec.PBEKeySpec;

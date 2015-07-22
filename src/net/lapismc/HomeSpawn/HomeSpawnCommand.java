@@ -2,6 +2,8 @@ package net.lapismc.HomeSpawn;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +17,8 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+
+import net.lapismc.HomeSpawn.PasswordHash;
 
 public class HomeSpawnCommand implements CommandExecutor {
 	private final HomeSpawn plugin;
@@ -41,7 +45,8 @@ public class HomeSpawnCommand implements CommandExecutor {
 				+ File.separator + "Messages.yml");
 		FileConfiguration getMessages = YamlConfiguration
 				.loadConfiguration(file2);
-		if (plugin.getConfig().getInt("TeleportTime") == 0 || p.hasPermission("homespawn.bypassdelay")) {
+		if (plugin.getConfig().getInt("TeleportTime") == 0
+				|| p.hasPermission("homespawn.bypassdelay")) {
 			p.teleport(l);
 			if (r.equalsIgnoreCase("Spawn")) {
 				p.sendMessage(ChatColor.GOLD
@@ -733,39 +738,42 @@ public class HomeSpawnCommand implements CommandExecutor {
 						+ player.getUniqueId().toString() + ".yml");
 				FileConfiguration getHomes = YamlConfiguration
 						.loadConfiguration(file);
-				File file2 = new File(plugin.getDataFolder().getAbsolutePath()
-						+ File.separator + "PlayerData" + File.separator
-						+ "PlayerNames" + File.separator + player.getName()
-						+ ".yml");
-				FileConfiguration getName = YamlConfiguration
-						.loadConfiguration(file2);
+				File file3 = new File(plugin.getDataFolder() + File.separator
+						+ "PlayerData" + File.separator + "Passwords.yml");
+				FileConfiguration getPasswords = YamlConfiguration
+						.loadConfiguration(file3);
 				if (!plugin.getServer().getOnlineMode()) {
-					if (args.length == 0) {
-						if (getName.contains("Password")) {
-							player.sendMessage("Your Current Password Is:");
-							player.sendMessage(getName.getString("Password"));
-						} else {
-							player.sendMessage("You Havent Set Your Password");
-						}
-					} else if (args.length == 2) {
-						String string = args[0];
-						if (string.equalsIgnoreCase("help")) {
-
-						} else if (string.equalsIgnoreCase("set")) {
-							String pass = args[1];
-							getName.set("Password", pass);
-							player.sendMessage("Password Set To:");
-							player.sendMessage(pass);
-							try {
-								getName.save(file2);
-							} catch (IOException e) {
-								e.printStackTrace();
+					String string = args[0];
+					if (args.length == 3) {
+						if (string.equalsIgnoreCase("set")) {
+							if (args[1] == args[2]) {
+								String pass = args[1];
+								String passHash = null;
+								try {
+									passHash = PasswordHash.createHash(pass);
+								} catch (NoSuchAlgorithmException
+										| InvalidKeySpecException e1) {
+									e1.printStackTrace();
+									player.sendMessage(ChatColor.RED
+											+ "Failed To Save Password!");
+									return false;
+								}
+								getPasswords.set(player.getName(), passHash);
+								player.sendMessage("Password Set To:");
+								player.sendMessage(pass);
+								try {
+									getPasswords.save(file3);
+								} catch (IOException e) {
+									e.printStackTrace();
+								}
+							} else {
+								player.sendMessage(ChatColor.RED
+										+ "Your 2 passwords didn't match!");
 							}
 						}
 					} else if (args.length == 1) {
 						PassHelp(player);
 					} else if (args.length == 3) {
-						String string = args[0];
 						if (string.equalsIgnoreCase("transfer")) {
 							String pass = args[2];
 							String name = args[1];
@@ -780,9 +788,15 @@ public class HomeSpawnCommand implements CommandExecutor {
 									+ ".yml");
 							FileConfiguration getOldName = YamlConfiguration
 									.loadConfiguration(namefile);
-							if (namefile.exists()
-									&& getOldName.getString("Password")
-											.equalsIgnoreCase(pass)) {
+							boolean Password = false;
+							try {
+								Password = PasswordHash.validatePassword(pass,
+										getPasswords.getString(name));
+							} catch (NoSuchAlgorithmException
+									| InvalidKeySpecException e2) {
+								e2.printStackTrace();
+							}
+							if (namefile.exists() && Password) {
 								String uuid = getOldName.getString("UUID");
 								File OldUUIDFile = new File(
 										plugin.getDataFolder() + File.separator
@@ -804,6 +818,9 @@ public class HomeSpawnCommand implements CommandExecutor {
 									e.printStackTrace();
 								}
 								player.sendMessage("Data Transfered!");
+								getPasswords.set(player.getName(),
+										getPasswords.getString(name));
+								getPasswords.set(name, null);
 							} else {
 								player.sendMessage("That Name Or Password Was Incorrect!");
 							}
@@ -886,12 +903,11 @@ public class HomeSpawnCommand implements CommandExecutor {
 		player.sendMessage(ChatColor.GOLD + "---------------------"
 				+ ChatColor.RED + "Homespawn" + ChatColor.GOLD
 				+ "---------------------");
-		player.sendMessage(ChatColor.RED + "/homepassword:" + ChatColor.GOLD
-				+ " Tells You Your Current Password");
 		player.sendMessage(ChatColor.RED + "/homepassword help:"
 				+ ChatColor.GOLD + " Shows This Text");
-		player.sendMessage(ChatColor.RED + "/homepassword set [password]:"
-				+ ChatColor.GOLD + " Sets Your Transfer Password");
+		player.sendMessage(ChatColor.RED
+				+ "/homepassword set [password] [password]:" + ChatColor.GOLD
+				+ " Sets Your Transfer Password");
 		player.sendMessage(ChatColor.RED
 				+ "/homepassword transfer [old username] [password]:"
 				+ ChatColor.GOLD
