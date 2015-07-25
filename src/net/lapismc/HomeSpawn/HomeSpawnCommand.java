@@ -61,8 +61,8 @@ public class HomeSpawnCommand implements CommandExecutor {
 					+ plugin.getConfig().getString("TeleportTime")
 					+ ChatColor.GOLD);
 			p.sendMessage(Wait);
-			plugin.Locations.put(p, l);
-			plugin.TimeLeft.put(p, plugin.getConfig().getInt("TeleportTime"));
+			plugin.HomeSpawnLocations.put(p, l);
+			plugin.HomeSpawnTimeLeft.put(p, plugin.getConfig().getInt("TeleportTime"));
 		}
 
 	}

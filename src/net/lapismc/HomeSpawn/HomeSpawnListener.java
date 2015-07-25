@@ -115,8 +115,8 @@ public class HomeSpawnListener implements Listener {
 		Location To = e.getTo();
 		List<Integer> To1 = new ArrayList<Integer>();
 		List<Integer> From1 = new ArrayList<Integer>();
-		if (plugin.Locations.containsKey(p)) {
-			if (plugin.TimeLeft.containsKey(p)) {
+		if (plugin.HomeSpawnLocations.containsKey(p)) {
+			if (plugin.HomeSpawnTimeLeft.containsKey(p)) {
 				To1.add(To.getBlockX());
 				To1.add(To.getBlockY());
 				To1.add(To.getBlockZ());
@@ -127,13 +127,13 @@ public class HomeSpawnListener implements Listener {
 					return;
 				} else {
 					if (!Players.contains(p)) {
-						plugin.Locations.put(p, null);
-						plugin.TimeLeft.remove(p);
+						plugin.HomeSpawnLocations.put(p, null);
+						plugin.HomeSpawnTimeLeft.remove(p);
 						p.sendMessage(ChatColor.GOLD
 								+ "Teleport Canceled Because You Moved!");
 					} else {
 						e.setCancelled(true);
-						plugin.TimeLeft.put(p, 1);
+						plugin.HomeSpawnTimeLeft.put(p, 1);
 					}
 				}
 			}
@@ -146,11 +146,11 @@ public class HomeSpawnListener implements Listener {
 		Entity Hit = e.getEntity();
 		if (Hit instanceof Player) {
 			Player p = ((Player) Hit);
-			if (plugin.TimeLeft.containsKey(p)) {
+			if (plugin.HomeSpawnTimeLeft.containsKey(p)) {
 				if (Hitter instanceof Arrow) {
 					final Arrow arrow = (Arrow) Hitter;
 					if (arrow.getShooter() instanceof Player) {
-						plugin.Locations.put(p, null);
+						plugin.HomeSpawnLocations.put(p, null);
 						p.sendMessage(ChatColor.GOLD
 								+ "Teleport Canceled Because You Were Hit!");
 					} else if (arrow.getShooter() instanceof Skeleton) {
@@ -159,7 +159,7 @@ public class HomeSpawnListener implements Listener {
 					}
 				}
 				if (Hitter instanceof Player || Hitter instanceof Wolf) {
-					plugin.Locations.put(p, null);
+					plugin.HomeSpawnLocations.put(p, null);
 					p.sendMessage(ChatColor.GOLD
 							+ "Teleport Canceled Because You Were Hit!");
 				} else {
@@ -168,8 +168,8 @@ public class HomeSpawnListener implements Listener {
 				}
 				if (Hitter instanceof Player || Hitter instanceof Wolf
 						|| Hitter instanceof Arrow) {
-					plugin.Locations.put(p, null);
-					plugin.TimeLeft.remove(p);
+					plugin.HomeSpawnLocations.put(p, null);
+					plugin.HomeSpawnTimeLeft.remove(p);
 					p.sendMessage(ChatColor.GOLD
 							+ "Teleport Canceled Because You Were Hit!");
 				} else {

@@ -31,20 +31,20 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 	public Permission PlayerPerm = new Permission("homespawn.player");
 	public Permission AdminPerm = new Permission("homespawn.admin");
 	public Permission VIPPerm = new Permission("homespawn.vip");
-	HashMap<Player, Location> Locations = new HashMap<Player, Location>();
-	HashMap<Player, Integer> TimeLeft = new HashMap<Player, Integer>();
+	HashMap<Player, Location> HomeSpawnLocations = new HashMap<Player, Location>();
+	HashMap<Player, Integer> HomeSpawnTimeLeft = new HashMap<Player, Integer>();
 	public HomeSpawnListener pl;
 	public final Logger logger = this.getLogger();
 
 	@Override
 	public void onEnable() {
+		Update();
 		Enable();
 		try {
 			Configs();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		Update();
 		Metrics();
 		Commands();
 		CommandDelay();
@@ -191,7 +191,7 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 	}
 
 	private void createPasswords() {
-		File file = new File(plugin.getDataFolder() + File.separator
+		File file = new File(plugin.getDataFolder().getAbsolutePath() + File.separator
 				+ "PlayerData" + File.separator + "Passwords.yml");
 		if (!file.exists()) {
 			try {
@@ -422,35 +422,35 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 			saveConfig();
 			getConfig().set("TeleportTime", 0);
 		}
-		if (!(getConfig().getInt("TeleportTime") == 0)) {
+		if (!(getConfig().getInt("TeleportTime") <= 0)) {
 			BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
 			scheduler.scheduleSyncRepeatingTask(this, new Runnable() {
 				@Override
 				public void run() {
-					if (!TimeLeft.isEmpty()) {
-						for (Player p : TimeLeft.keySet()) {
-							if (Locations.get(p) == null) {
-								TimeLeft.remove(p);
-								Locations.remove(p);
+					if (!HomeSpawnTimeLeft.isEmpty()) {
+						for (Player p : HomeSpawnTimeLeft.keySet()) {
+							if (HomeSpawnLocations.get(p) == null) {
+								HomeSpawnTimeLeft.remove(p);
+								HomeSpawnLocations.remove(p);
 							}
-							if (TimeLeft.isEmpty()) {
+							if (HomeSpawnTimeLeft.isEmpty()) {
 								return;
 							}
-							for (int Time : TimeLeft.values()) {
+							for (int Time : HomeSpawnTimeLeft.values()) {
 								int NewTime = Time - 1;
 								if (NewTime > 0) {
-									TimeLeft.put(p, NewTime);
+									HomeSpawnTimeLeft.put(p, NewTime);
 								} else if (NewTime <= 0) {
-									Location Tele = Locations.get(p);
+									Location Tele = HomeSpawnLocations.get(p);
 									if (!Tele.equals(null)) {
 										p.teleport(Tele);
 										p.sendMessage(ChatColor.GOLD
 												+ "Teleporting...");
-										TimeLeft.remove(p);
-										Locations.remove(p);
+										HomeSpawnTimeLeft.remove(p);
+										HomeSpawnLocations.remove(p);
 									} else {
-										TimeLeft.remove(p);
-										Locations.remove(p);
+										HomeSpawnTimeLeft.remove(p);
+										HomeSpawnLocations.remove(p);
 									}
 								}
 							}
@@ -477,6 +477,7 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 		this.getCommand("setspawn").setExecutor(new HomeSpawnCommand(this));
 		this.getCommand("delspawn").setExecutor(new HomeSpawnCommand(this));
 		this.getCommand("homespawn").setExecutor(new HomeSpawnCommand(this));
+		this.getCommand("homepassword").setExecutor(new HomeSpawnCommand(this));
 		this.getCommand("homeslist").setExecutor(new HomeSpawnCommand(this));
 	}
 }
