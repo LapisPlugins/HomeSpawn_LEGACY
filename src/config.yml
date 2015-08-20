@@ -1,7 +1,7 @@
 ConfigVersion: Not Used Yet
 ## If Set To True The Plugin Will Automatically Update The Plugin (And Install On Next Update) When A New Update Is Published On Bukkit
 AutoUpdate: true
-## If Set To True Any Player With Homespawn.admin Will Recive A Notification If There Is An Update
+## If Set To True Any Player With Homespawn.admin Will Receive A Notification If There Is An Update
 UpdateNotification: true
 ## If Set To True The Plugin Will Send Usage Information To mcstats.org, Such As Minecraft Version And Players Online
 Metrics: true

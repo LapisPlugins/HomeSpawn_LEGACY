@@ -182,6 +182,7 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 
 	public void Configs() throws IOException {
 		saveDefaultConfig();
+		getConfig().options().copyDefaults(true);
 		saveConfig();
 		createSpawn();
 		createGlobalHomes();
