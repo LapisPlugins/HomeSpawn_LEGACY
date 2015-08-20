@@ -62,7 +62,8 @@ public class HomeSpawnCommand implements CommandExecutor {
 					+ ChatColor.GOLD);
 			p.sendMessage(Wait);
 			plugin.HomeSpawnLocations.put(p, l);
-			plugin.HomeSpawnTimeLeft.put(p, plugin.getConfig().getInt("TeleportTime"));
+			plugin.HomeSpawnTimeLeft.put(p,
+					plugin.getConfig().getInt("TeleportTime"));
 		}
 
 	}
@@ -99,28 +100,24 @@ public class HomeSpawnCommand implements CommandExecutor {
 					}
 					List<String> list = getHomes.getStringList(player.getName()
 							+ ".list");
-					if (getHomes.getString("name").equalsIgnoreCase(
-							player.getName())) {
-						if (player.hasPermission("homespawn.vip")
-								&& !player.hasPermission("homespawn.admin")) {
-							if (getHomes.getInt(player.getName() + ".Numb") >= plugin
-									.getConfig().getInt("VIPHomesLimit")) {
-								player.sendMessage(ChatColor.RED
-										+ getMessages
-												.getString("Home.LimitReached"));
-								return false;
-							}
-						} else if (player.hasPermission("homespawn.admin")) {
-							if (getHomes.getInt(player.getName() + ".Numb") >= plugin
-									.getConfig().getInt("AdminHomesLimit")) {
-								player.sendMessage(ChatColor.RED
-										+ getMessages
-												.getString("Home.LimitReached"));
-								return false;
-							}
+					if (player.hasPermission("homespawn.vip")
+							&& !player.hasPermission("homespawn.admin")) {
+						if (getHomes.getInt(player.getName() + ".Numb") >= plugin
+								.getConfig().getInt("VIPHomesLimit")) {
+							player.sendMessage(ChatColor.RED
+									+ getMessages
+											.getString("Home.LimitReached"));
+							return false;
+						}
+					} else if (player.hasPermission("homespawn.admin")) {
+						if (getHomes.getInt(player.getName() + ".Numb") >= plugin
+								.getConfig().getInt("AdminHomesLimit")) {
+							player.sendMessage(ChatColor.RED
+									+ getMessages
+											.getString("Home.LimitReached"));
+							return false;
 						}
 						if (args.length == 0) {
-
 							getHomes.createSection(player.getDisplayName());
 							if (!getHomes.contains(player.getName() + ".Numb")) {
 								getHomes.createSection(player.getName()
@@ -794,7 +791,8 @@ public class HomeSpawnCommand implements CommandExecutor {
 										getPasswords.getString(name));
 							} catch (NoSuchAlgorithmException
 									| InvalidKeySpecException e2) {
-								e2.printStackTrace();
+								player.sendMessage(ChatColor.RED
+										+ "An Error Stopped Us From Checking Your Password, Please Try Again Later");
 							}
 							if (namefile.exists() && Password) {
 								String uuid = getOldName.getString("UUID");

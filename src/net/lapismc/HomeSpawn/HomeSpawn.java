@@ -191,8 +191,9 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 	}
 
 	private void createPasswords() {
-		File file = new File(plugin.getDataFolder().getAbsolutePath() + File.separator
-				+ "PlayerData" + File.separator + "Passwords.yml");
+		File file = new File(this.getDataFolder().getAbsolutePath()
+				+ File.separator + "PlayerData" + File.separator
+				+ "Passwords.yml");
 		if (!file.exists()) {
 			try {
 				file.createNewFile();
