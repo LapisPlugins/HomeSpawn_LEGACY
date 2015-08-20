@@ -61,15 +61,14 @@ public class HomeSpawnListener implements Listener {
 						.severe("[HomeSpawn] Player Name Data File Creation Failed!");
 				return;
 			}
-		} else {
-			if (!getName.getString("Name").equalsIgnoreCase(player.getName())) {
+		}
+			if (!getHomes.getString("Name").equalsIgnoreCase(player.getName())) {
 				getName.set("Name", player.getName());
 				getHomes.set("name", player.getName());
 				player.kickPlayer(ChatColor.GOLD
 						+ "Your Homespawn Player Data Is Being Transfered To Your New Username, Please Reconnect");
 				return;
 			}
-		}
 		if (!file.exists()) {
 			try {
 				file.createNewFile();
