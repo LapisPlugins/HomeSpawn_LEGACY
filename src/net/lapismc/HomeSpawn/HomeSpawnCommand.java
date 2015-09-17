@@ -28,7 +28,7 @@ public class HomeSpawnCommand implements CommandExecutor {
 	}
 
 	@SuppressWarnings("unused")
-	private FileConfiguration GetHome(String player) {
+	private YamlConfiguration GetHome(String player) {
 		File file2 = new File(plugin.getDataFolder().getAbsolutePath()
 				+ File.separator + "PlayerData" + File.separator
 				+ "PlayerNames" + File.separator + player + ".yml");
@@ -36,7 +36,7 @@ public class HomeSpawnCommand implements CommandExecutor {
 		File Homes = new File(plugin.getDataFolder().getAbsolutePath()
 				+ File.separator + "PlayerData" + File.separator
 				+ getName.getString("UUID") + ".yml");
-		FileConfiguration Gethome = YamlConfiguration.loadConfiguration(Homes);
+		YamlConfiguration Gethome = YamlConfiguration.loadConfiguration(Homes);
 		return Gethome;
 	}
 
@@ -890,6 +890,12 @@ public class HomeSpawnCommand implements CommandExecutor {
 					player.sendMessage(ChatColor.DARK_RED
 							+ "You don't have permission to do that!");
 				}
+			}
+		} else if (cmd.getName().equalsIgnoreCase("reload")) {
+			Player p = null;
+			try {
+				plugin.reload(p);
+			} catch (IOException e) {
 			}
 		} else {
 			sender.sendMessage("You Must Be a Player To Do That");

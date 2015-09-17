@@ -19,13 +19,12 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
-import org.bukkit.event.Listener;
 import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
-public class HomeSpawn extends JavaPlugin implements Listener {
+public class HomeSpawn extends JavaPlugin {
 
 	public HomeSpawn plugin;
 	public Permission PlayerPerm = new Permission("homespawn.player");
@@ -375,6 +374,13 @@ public class HomeSpawn extends JavaPlugin implements Listener {
 					+ " Has Reloaded Homespawn!", "homespawn.admin");
 			this.logger.info("Player " + player.getName()
 					+ " Has Reloaded Homespawn!");
+		} else {
+			Configs();
+			Bukkit.broadcast(ChatColor.GOLD + "Player " + ChatColor.RED
+					+ "Console" + ChatColor.GOLD + " Has Reloaded Homespawn!",
+					"homespawn.admin");
+			this.logger
+					.info("Player " + "Console" + " Has Reloaded Homespawn!");
 		}
 	}
 
