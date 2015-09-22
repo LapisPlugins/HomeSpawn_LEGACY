@@ -472,6 +472,42 @@ public class HomeSpawn extends JavaPlugin {
 	}
 
 	public void Commands() {
+		if (Bukkit.getPluginCommand("home").isRegistered()
+				&& Bukkit.getPluginCommand("home").getPlugin() != this) {
+			Bukkit.getPluginCommand("home").setExecutor(null);
+			Bukkit.getPluginCommand("home").setAliases(null);
+			Bukkit.getPluginCommand("home").setTabCompleter(null);
+		}
+		if (Bukkit.getPluginCommand("sethome").isRegistered()
+				&& Bukkit.getPluginCommand("sethome").getPlugin() != this) {
+			Bukkit.getPluginCommand("sethome").setExecutor(null);
+			Bukkit.getPluginCommand("sethome").setAliases(null);
+			Bukkit.getPluginCommand("sethome").setTabCompleter(null);
+		}
+		if (Bukkit.getPluginCommand("delhome").isRegistered()
+				&& Bukkit.getPluginCommand("delhome").getPlugin() != this) {
+			Bukkit.getPluginCommand("delhome").setExecutor(null);
+			Bukkit.getPluginCommand("delhome").setAliases(null);
+			Bukkit.getPluginCommand("delhome").setTabCompleter(null);
+		}
+		if (Bukkit.getPluginCommand("spawn").isRegistered()
+				&& Bukkit.getPluginCommand("spawn").getPlugin() != this) {
+			Bukkit.getPluginCommand("spawn").setExecutor(null);
+			Bukkit.getPluginCommand("spawn").setAliases(null);
+			Bukkit.getPluginCommand("spawn").setTabCompleter(null);
+		}
+		if (Bukkit.getPluginCommand("setspawn").isRegistered()
+				&& Bukkit.getPluginCommand("setspawn").getPlugin() != this) {
+			Bukkit.getPluginCommand("setspawn").setExecutor(null);
+			Bukkit.getPluginCommand("setspawn").setAliases(null);
+			Bukkit.getPluginCommand("setspawn").setTabCompleter(null);
+		}
+		if (Bukkit.getPluginCommand("delspawn").isRegistered()
+				&& Bukkit.getPluginCommand("delspawn").getPlugin() != this) {
+			Bukkit.getPluginCommand("delspawn").setExecutor(null);
+			Bukkit.getPluginCommand("delspawn").setAliases(null);
+			Bukkit.getPluginCommand("delspawn").setTabCompleter(null);
+		}
 		this.getCommand("home").setExecutor(new HomeSpawnCommand(this));
 		this.getCommand("sethome").setExecutor(new HomeSpawnCommand(this));
 		this.getCommand("delhome").setExecutor(new HomeSpawnCommand(this));

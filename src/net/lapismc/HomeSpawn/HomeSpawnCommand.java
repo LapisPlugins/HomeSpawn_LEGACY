@@ -90,19 +90,19 @@ public class HomeSpawnCommand implements CommandExecutor {
 					} catch (IOException | InvalidConfigurationException e) {
 						e.printStackTrace();
 					}
-					if (!getHomes.contains(player.getName() + ".list")) {
-						getHomes.createSection(player.getName() + ".list");
+					if (!getHomes.contains(player.getUniqueId() + ".list")) {
+						getHomes.createSection(player.getUniqueId() + ".list");
 						try {
 							getHomes.save(file);
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
 					}
-					List<String> list = getHomes.getStringList(player.getName()
-							+ ".list");
+					List<String> list = getHomes.getStringList(player
+							.getUniqueId() + ".list");
 					if (player.hasPermission("homespawn.vip")
 							&& !player.hasPermission("homespawn.admin")) {
-						if (getHomes.getInt(player.getName() + ".Numb") >= plugin
+						if (getHomes.getInt(player.getUniqueId() + ".Numb") >= plugin
 								.getConfig().getInt("VIPHomesLimit")) {
 							player.sendMessage(ChatColor.RED
 									+ getMessages
@@ -110,7 +110,7 @@ public class HomeSpawnCommand implements CommandExecutor {
 							return false;
 						}
 					} else if (player.hasPermission("homespawn.admin")) {
-						if (getHomes.getInt(player.getName() + ".Numb") >= plugin
+						if (getHomes.getInt(player.getUniqueId() + ".Numb") >= plugin
 								.getConfig().getInt("AdminHomesLimit")) {
 							player.sendMessage(ChatColor.RED
 									+ getMessages
@@ -119,10 +119,12 @@ public class HomeSpawnCommand implements CommandExecutor {
 						}
 						if (args.length == 0) {
 							getHomes.createSection(player.getDisplayName());
-							if (!getHomes.contains(player.getName() + ".Numb")) {
-								getHomes.createSection(player.getName()
+							if (!getHomes.contains(player.getUniqueId()
+									+ ".Numb")) {
+								getHomes.createSection(player.getUniqueId()
 										+ ".Numb");
-								getHomes.set(player.getName() + ".Numb", "0");
+								getHomes.set(player.getUniqueId() + ".Numb",
+										"0");
 							}
 							getHomes.createSection(player.getDisplayName()
 									+ ".x");
@@ -141,17 +143,18 @@ public class HomeSpawnCommand implements CommandExecutor {
 							}
 							int HomesNumb = getHomes.getInt(player
 									.getDisplayName() + ".Numb");
-							if (!getHomes.contains(player.getName()
+							if (!getHomes.contains(player.getUniqueId()
 									+ ".HasHome")
 									|| !getHomes.getString(
-											player.getName() + ".HasHome")
+											player.getUniqueId() + ".HasHome")
 											.equals("Yes")) {
 								getHomes.set(player.getDisplayName() + ".Numb",
 										HomesNumb + 1);
 							}
 							if (!list.contains("Home")) {
 								list.add("Home");
-								getHomes.set(player.getName() + ".list", list);
+								getHomes.set(player.getUniqueId() + ".list",
+										list);
 							}
 							getHomes.set(player.getDisplayName() + ".x", player
 									.getLocation().getBlockX());
@@ -161,10 +164,10 @@ public class HomeSpawnCommand implements CommandExecutor {
 									.getLocation().getBlockZ());
 							getHomes.set(player.getDisplayName() + ".world",
 									player.getWorld().getName());
-							getHomes.set(player.getName() + ".Yaw", player
+							getHomes.set(player.getUniqueId() + ".Yaw", player
 									.getLocation().getYaw());
-							getHomes.set(player.getName() + ".Pitch", player
-									.getLocation().getPitch());
+							getHomes.set(player.getUniqueId() + ".Pitch",
+									player.getLocation().getPitch());
 							getHomes.set("HasHome", "Yes");
 							player.sendMessage(ChatColor.GOLD
 									+ getMessages.getString("Home.HomeSet"));
@@ -182,12 +185,12 @@ public class HomeSpawnCommand implements CommandExecutor {
 								if (!getHomes.contains(home + ".HasHome")) {
 									getHomes.createSection(home + ".HasHome");
 								}
-								if (!getHomes.contains(player.getName()
+								if (!getHomes.contains(player.getUniqueId()
 										+ ".Numb")) {
-									getHomes.createSection(player.getName()
+									getHomes.createSection(player.getUniqueId()
 											+ ".Numb");
-									getHomes.set(player.getName() + ".Numb",
-											"0");
+									getHomes.set(
+											player.getUniqueId() + ".Numb", "0");
 								}
 								int HomesNumb = getHomes.getInt(player
 										.getDisplayName() + ".Numb");
@@ -199,7 +202,8 @@ public class HomeSpawnCommand implements CommandExecutor {
 								}
 								if (!list.contains(home)) {
 									list.add(home);
-									getHomes.set(player.getName() + ".list",
+									getHomes.set(
+											player.getUniqueId() + ".list",
 											list);
 								}
 								getHomes.set(home + ".x", player.getLocation()
@@ -250,16 +254,16 @@ public class HomeSpawnCommand implements CommandExecutor {
 							+ "Messages.yml");
 					FileConfiguration getMessages = YamlConfiguration
 							.loadConfiguration(file2);
-					if (!getHomes.contains(player.getName() + ".list")) {
-						getHomes.createSection(player.getName() + ".list");
+					if (!getHomes.contains(player.getUniqueId() + ".list")) {
+						getHomes.createSection(player.getUniqueId() + ".list");
 						try {
 							getHomes.save(file);
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
 					}
-					List<String> list = getHomes.getStringList(player.getName()
-							+ ".list");
+					List<String> list = getHomes.getStringList(player
+							.getUniqueId() + ".list");
 					try {
 						getHomes.load(file);
 					} catch (IOException | InvalidConfigurationException e) {
@@ -275,9 +279,9 @@ public class HomeSpawnCommand implements CommandExecutor {
 									+ ".y");
 							int z = getHomes.getInt(player.getDisplayName()
 									+ ".z");
-							float yaw = getHomes.getInt(player.getName()
+							float yaw = getHomes.getInt(player.getUniqueId()
 									+ ".Yaw");
-							float pitch = getHomes.getInt(player.getName()
+							float pitch = getHomes.getInt(player.getUniqueId()
 									+ ".Pitch");
 							String cworld = getHomes.getString(player
 									.getDisplayName() + ".world");
@@ -297,7 +301,8 @@ public class HomeSpawnCommand implements CommandExecutor {
 									.equalsIgnoreCase("yes")) {
 								player.sendMessage(ChatColor.RED
 										+ "A home with this name does not exist!");
-								if (getHomes.getInt(player.getName() + ".Numb") > 0) {
+								if (getHomes.getInt(player.getUniqueId()
+										+ ".Numb") > 0) {
 									if (!list.isEmpty()) {
 										String list2 = list.toString();
 										String list3 = list2.replace("[", " ");
@@ -339,7 +344,7 @@ public class HomeSpawnCommand implements CommandExecutor {
 						} else {
 							player.sendMessage(ChatColor.RED
 									+ "A home with this name does not exist!");
-							if (getHomes.getInt(player.getName() + ".Numb") > 0) {
+							if (getHomes.getInt(player.getUniqueId() + ".Numb") > 0) {
 								if (!list.isEmpty()) {
 									String list2 = list.toString();
 									String list3 = list2.replace("[", " ");
@@ -379,16 +384,16 @@ public class HomeSpawnCommand implements CommandExecutor {
 							+ "Messages.yml");
 					FileConfiguration getMessages = YamlConfiguration
 							.loadConfiguration(file2);
-					if (!getHomes.contains(player.getName() + ".list")) {
-						getHomes.createSection(player.getName() + ".list");
+					if (!getHomes.contains(player.getUniqueId() + ".list")) {
+						getHomes.createSection(player.getUniqueId() + ".list");
 						try {
 							getHomes.save(file);
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
 					}
-					List<String> list = getHomes.getStringList(player.getName()
-							+ ".list");
+					List<String> list = getHomes.getStringList(player
+							.getUniqueId() + ".list");
 					try {
 						getHomes.load(file);
 					} catch (IOException | InvalidConfigurationException e) {
@@ -396,7 +401,7 @@ public class HomeSpawnCommand implements CommandExecutor {
 						return true;
 					}
 					if (args.length == 0) {
-						int HomeNumb = getHomes.getInt(player.getName()
+						int HomeNumb = getHomes.getInt(player.getUniqueId()
 								+ ".Numb");
 						if (getHomes.getString("HasHome")
 								.equalsIgnoreCase("no")
@@ -408,11 +413,12 @@ public class HomeSpawnCommand implements CommandExecutor {
 							player.sendMessage(ChatColor.GOLD
 									+ getMessages.getString("Home.HomeRemoved"));
 							getHomes.set("HasHome", "No");
-							getHomes.set(player.getName() + ".Numb",
+							getHomes.set(player.getUniqueId() + ".Numb",
 									HomeNumb - 1);
 							if (list.contains("Home")) {
 								list.remove("Home");
-								getHomes.set(player.getName() + ".list", list);
+								getHomes.set(player.getUniqueId() + ".list",
+										list);
 							}
 							try {
 								getHomes.save(file);
@@ -422,7 +428,7 @@ public class HomeSpawnCommand implements CommandExecutor {
 						} else {
 							player.sendMessage(ChatColor.RED
 									+ getMessages.getString("Home.NoHomeSet"));
-							if (getHomes.getInt(player.getName() + ".Numb") > 0) {
+							if (getHomes.getInt(player.getUniqueId() + ".Numb") > 0) {
 								if (!list.isEmpty()) {
 									String list2 = list.toString();
 									String list3 = list2.replace("[", " ");
@@ -444,14 +450,14 @@ public class HomeSpawnCommand implements CommandExecutor {
 						}
 					} else if (args.length == 1) {
 						String home = args[0];
-						int HomeNumb = getHomes.getInt(player.getName()
+						int HomeNumb = getHomes.getInt(player.getUniqueId()
 								+ ".Numb");
 						if (!getHomes.contains(home + ".HasHome")
 								|| getHomes.getString(home + ".HasHome")
 										.equalsIgnoreCase("no")) {
 							player.sendMessage(ChatColor.RED
 									+ getMessages.getString("Home.NoHomeSet"));
-							if (getHomes.getInt(player.getName() + ".Numb") > 0) {
+							if (getHomes.getInt(player.getUniqueId() + ".Numb") > 0) {
 								if (!list.isEmpty()) {
 									String list2 = list.toString();
 									String list3 = list2.replace("[", " ");
@@ -475,11 +481,12 @@ public class HomeSpawnCommand implements CommandExecutor {
 							player.sendMessage(ChatColor.GOLD
 									+ getMessages.getString("Home.HomeRemoved"));
 							getHomes.set(home + ".HasHome", "No");
-							getHomes.set(player.getName() + ".Numb",
+							getHomes.set(player.getUniqueId() + ".Numb",
 									HomeNumb - 1);
 							if (list.contains(home)) {
 								list.remove(home);
-								getHomes.set(player.getName() + ".list", list);
+								getHomes.set(player.getUniqueId() + ".list",
+										list);
 							}
 							try {
 								getHomes.save(file);
@@ -489,7 +496,7 @@ public class HomeSpawnCommand implements CommandExecutor {
 						} else {
 							player.sendMessage(ChatColor.RED
 									+ getMessages.getString("Home.NoHomeSet"));
-							if (getHomes.getInt(player.getName() + ".Numb") > 0) {
+							if (getHomes.getInt(player.getUniqueId() + ".Numb") > 0) {
 								if (!list.isEmpty()) {
 									String list2 = list.toString();
 									String list3 = list2.replace("[", " ");
@@ -674,12 +681,12 @@ public class HomeSpawnCommand implements CommandExecutor {
 				} catch (IOException | InvalidConfigurationException e) {
 					e.printStackTrace();
 				}
-				if (!getHomes.contains(player.getName() + ".list")) {
-					getHomes.createSection(player.getName() + ".list");
+				if (!getHomes.contains(player.getUniqueId() + ".list")) {
+					getHomes.createSection(player.getUniqueId() + ".list");
 				}
-				List<String> list = getHomes.getStringList(player.getName()
+				List<String> list = getHomes.getStringList(player.getUniqueId()
 						+ ".list");
-				if (getHomes.getInt(player.getName() + ".Numb") > 0) {
+				if (getHomes.getInt(player.getUniqueId() + ".Numb") > 0) {
 					if (!list.isEmpty()) {
 						String list2 = list.toString();
 						String list3 = list2.replace("[", " ");
@@ -802,7 +809,7 @@ public class HomeSpawnCommand implements CommandExecutor {
 												+ uuid + ".yml");
 								file.delete();
 								OldUUIDFile.renameTo(file);
-								getHomes.set("Name", player.getName());
+								getHomes.set("Name", player.getUniqueId());
 								try {
 									getHomes.save(file);
 								} catch (IOException e1) {

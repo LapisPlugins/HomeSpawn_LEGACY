@@ -62,13 +62,6 @@ public class HomeSpawnListener implements Listener {
 				return;
 			}
 		}
-			if (!getHomes.getString("Name").equalsIgnoreCase(player.getName())) {
-				getName.set("Name", player.getName());
-				getHomes.set("name", player.getName());
-				player.kickPlayer(ChatColor.GOLD
-						+ "Your Homespawn Player Data Is Being Transfered To Your New Username, Please Reconnect");
-				return;
-			}
 		if (!file.exists()) {
 			try {
 				file.createNewFile();
@@ -76,9 +69,9 @@ public class HomeSpawnListener implements Listener {
 				getHomes.createSection("HasHome");
 				getHomes.createSection(player.getName() + ".Numb");
 				getHomes.save(file);
-				getHomes.set("name", player.getName());
+				getHomes.set("name", player.getUniqueId().toString());
 				getHomes.set("HasHome", "No");
-				getHomes.set(player.getName() + ".Numb", 0);
+				getHomes.set(player.getUniqueId() + ".Numb", 0);
 				getHomes.save(file);
 				plugin.spawnnew(player);
 			} catch (IOException e) {
@@ -101,9 +94,6 @@ public class HomeSpawnListener implements Listener {
 							+ "[HomeSpawn] An update is available on Bukkit Dev");
 				}
 			}
-		}
-		if (!getHomes.getString("name").equals(player.getName())) {
-			getHomes.set("name", player.getName());
 		}
 	}
 
@@ -165,8 +155,7 @@ public class HomeSpawnListener implements Listener {
 					Players.add(p);
 					e.setCancelled(true);
 				}
-				if (Hitter instanceof Player || Hitter instanceof Wolf
-						|| Hitter instanceof Arrow) {
+				if (Hitter instanceof Player || Hitter instanceof Wolf) {
 					plugin.HomeSpawnLocations.put(p, null);
 					plugin.HomeSpawnTimeLeft.remove(p);
 					p.sendMessage(ChatColor.GOLD
