@@ -20,6 +20,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
 public class HomeSpawnListener implements Listener {
 	private final HomeSpawn plugin;
@@ -55,6 +57,11 @@ public class HomeSpawnListener implements Listener {
 				getName.set("Name", player.getName());
 				getName.set("UUID", player.getUniqueId().toString());
 				getName.save(file2);
+				if (plugin.getConfig().getBoolean("CommandBook")) {
+					PlayerInventory pi = player.getInventory();
+					ItemStack commandBook = InstructionBook.getBook();
+					pi.addItem(commandBook);
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 				plugin.logger

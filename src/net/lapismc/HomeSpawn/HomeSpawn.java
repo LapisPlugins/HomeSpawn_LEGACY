@@ -386,9 +386,9 @@ public class HomeSpawn extends JavaPlugin {
 
 	public void help(Player player) {
 		if (player != null) {
-			player.sendMessage(ChatColor.GOLD + "-----------------------"
+			player.sendMessage(ChatColor.GOLD + "---------------"
 					+ ChatColor.RED + "Homespawn" + ChatColor.GOLD
-					+ "-----------------------");
+					+ "---------------");
 			player.sendMessage(ChatColor.RED + "[name] = VIP Only");
 			player.sendMessage(ChatColor.RED + "/home [name]:" + ChatColor.GOLD
 					+ " Sends You To The Home Specified");
@@ -399,6 +399,11 @@ public class HomeSpawn extends JavaPlugin {
 					+ ChatColor.GOLD + " Removes The Specified Home");
 			player.sendMessage(ChatColor.RED + "/spawn:" + ChatColor.GOLD
 					+ " Sends You To Spawn");
+			if (!getServer().getOnlineMode()) {
+				player.sendMessage(ChatColor.RED + "/homepassword help:"
+						+ ChatColor.GOLD
+						+ " Displays The Home Transfer Commands");
+			}
 			if (player.hasPermission("homespawn.admin")) {
 				player.sendMessage(ChatColor.RED + "/setspawn:"
 						+ ChatColor.GOLD + " Sets The Server Spawn");
@@ -412,11 +417,11 @@ public class HomeSpawn extends JavaPlugin {
 				player.sendMessage(ChatColor.RED + "/homespawn reload:"
 						+ ChatColor.GOLD + " Reloads The Plugin Configs");
 				player.sendMessage(ChatColor.GOLD
-						+ "---------------------------------------------------------");
+						+ "-----------------------------------------");
 				return;
 			} else {
 				player.sendMessage(ChatColor.GOLD
-						+ "---------------------------------------------------------");
+						+ "-----------------------------------------");
 			}
 
 		} else {

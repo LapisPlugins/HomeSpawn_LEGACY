@@ -11,3 +11,5 @@ VIPHomesLimit: 3
 AdminHomesLimit: 5
 ## This Time Is How Long THe Player Must Wait Without Being Hit By Another Player Before They Teleport, Set To 0 To Disable
 TeleportTime: 5
+## If enabled the player wil be given a book with all player commands listed (Does not contain admin or VIP commands) on first join
+CommandBook: true
