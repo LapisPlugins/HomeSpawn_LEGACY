@@ -1,13 +1,7 @@
 package net.lapismc.HomeSpawn;
 
-import java.io.File;
-import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.bukkit.ChatColor;
+import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.Command;
@@ -17,15 +11,57 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.material.Wool;
 
-import net.lapismc.HomeSpawn.PasswordHash;
+import java.io.File;
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 
 public class HomeSpawnCommand implements CommandExecutor {
-	private final HomeSpawn plugin;
+    public HomeSpawnCommand Command;
+    private HomeSpawn plugin;
 
 	public HomeSpawnCommand(HomeSpawn plugin) {
 		this.plugin = plugin;
 	}
+
+    public void showMenu(Player p) {
+        File file2 = new File(plugin.getDataFolder().getAbsolutePath()
+                + File.separator + "PlayerData" + File.separator
+                + "PlayerNames" + File.separator + p.getName() + ".yml");
+        FileConfiguration getName = YamlConfiguration.loadConfiguration(file2);
+        File Homes = new File(plugin.getDataFolder().getAbsolutePath()
+                + File.separator + "PlayerData" + File.separator
+                + getName.getString("UUID") + ".yml");
+        YamlConfiguration getHomes = YamlConfiguration.loadConfiguration(Homes);
+        List<String> homes = getHomes.getStringList(p.getUniqueId().toString()
+                + ".list");
+        ArrayList<DyeColor> dc = new ArrayList<DyeColor>();
+        dc.add(DyeColor.BLACK);
+        dc.add(DyeColor.BLUE);
+        dc.add(DyeColor.GRAY);
+        dc.add(DyeColor.GREEN);
+        dc.add(DyeColor.MAGENTA);
+        dc.add(DyeColor.ORANGE);
+        Random r = new Random(3);
+        for (String home : homes) {
+            ItemStack i = new Wool(dc.get(r.nextInt(5))).toItemStack(1);
+            ItemMeta im = i.getItemMeta();
+            im.setDisplayName(ChatColor.GOLD + home);
+            im.setLore(Arrays.asList(ChatColor.GOLD + "Click To Teleport To",
+                    ChatColor.RED + home));
+            i.setItemMeta(im);
+            plugin.inv.addItem(i);
+        }
+        p.openInventory(plugin.inv);
+    }
 
 	@SuppressWarnings("unused")
 	private YamlConfiguration GetHome(String player) {
@@ -68,16 +104,17 @@ public class HomeSpawnCommand implements CommandExecutor {
 
 	}
 
-	public boolean onCommand(CommandSender sender, Command cmd,
-			String commandLabel, String[] args) {
+    @Override
+    public boolean onCommand(CommandSender sender, Command cmd,
+                             String commandLabel, String[] args) {
 		if (sender instanceof Player) {
 			Player player = (Player) sender;
 			if (cmd.getName().equalsIgnoreCase("sethome")) {
 				if (player.hasPermission("homespawn.player")) {
 					File file = new File(plugin.getDataFolder()
 							+ File.separator + "PlayerData" + File.separator
-							+ player.getUniqueId().toString().toString()
-							+ ".yml");
+                            + player.getUniqueId().toString()
+                            + ".yml");
 					FileConfiguration getHomes = YamlConfiguration
 							.loadConfiguration(file);
 					File file2 = new File(plugin.getDataFolder()
@@ -124,8 +161,8 @@ public class HomeSpawnCommand implements CommandExecutor {
 						}
 						if (args.length == 0) {
 							getHomes.createSection(player.getUniqueId()
-									.toString().toString());
-							if (!getHomes.contains(player.getUniqueId()
+                                    .toString());
+                            if (!getHomes.contains(player.getUniqueId()
 									.toString() + ".Numb")) {
 								getHomes.createSection(player.getUniqueId()
 										.toString() + ".Numb");
@@ -184,8 +221,13 @@ public class HomeSpawnCommand implements CommandExecutor {
 							if (player.hasPermission("homespawn.vip")
 									|| player.hasPermission("homespawn.admin")) {
 								String home = args[0];
-								getHomes.createSection(home);
-								getHomes.createSection(home + ".x");
+                                if (home.equals("Home")) {
+                                    player.sendMessage(ChatColor.RED
+                                            + "You Cannot Use The Home Name Home, Please Choose Another!");
+                                    return true;
+                                }
+                                getHomes.createSection(home);
+                                getHomes.createSection(home + ".x");
 								getHomes.createSection(home + ".y");
 								getHomes.createSection(home + ".z");
 								getHomes.createSection(home + ".world");
@@ -240,10 +282,6 @@ public class HomeSpawnCommand implements CommandExecutor {
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
-					} else {
-						player.sendMessage(ChatColor.RED
-								+ "For some reason your name doesnt match"
-								+ " the name in your file, please contact an admin!");
 					}
 				} else {
 					player.sendMessage(ChatColor.DARK_RED
@@ -254,8 +292,8 @@ public class HomeSpawnCommand implements CommandExecutor {
 				if (player.hasPermission("homespawn.player")) {
 					File file = new File(plugin.getDataFolder()
 							+ File.separator + "PlayerData" + File.separator
-							+ player.getUniqueId().toString().toString()
-							+ ".yml");
+                            + player.getUniqueId().toString()
+                            + ".yml");
 					FileConfiguration getHomes = YamlConfiguration
 							.loadConfiguration(file);
 					File file2 = new File(plugin.getDataFolder()
@@ -388,8 +426,8 @@ public class HomeSpawnCommand implements CommandExecutor {
 				if (player.hasPermission("homespawn.player")) {
 					File file = new File(plugin.getDataFolder()
 							+ File.separator + "PlayerData" + File.separator
-							+ player.getUniqueId().toString().toString()
-							+ ".yml");
+                            + player.getUniqueId().toString()
+                            + ".yml");
 					FileConfiguration getHomes = YamlConfiguration
 							.loadConfiguration(file);
 					File file2 = new File(plugin.getDataFolder()
@@ -686,42 +724,51 @@ public class HomeSpawnCommand implements CommandExecutor {
 							+ "You don't have permission to do that!");
 				}
 			} else if (cmd.getName().equalsIgnoreCase("homeslist")) {
-				File file = new File(plugin.getDataFolder() + File.separator
-						+ "PlayerData" + File.separator
-						+ player.getUniqueId().toString().toString() + ".yml");
-				FileConfiguration getHomes = YamlConfiguration
-						.loadConfiguration(file);
-				File file2 = new File(plugin.getDataFolder().getAbsolutePath()
-						+ File.separator + "Messages.yml");
-				FileConfiguration getMessages = YamlConfiguration
-						.loadConfiguration(file2);
-				try {
-					getHomes.load(file);
-				} catch (IOException | InvalidConfigurationException e) {
-					e.printStackTrace();
-				}
-				if (!getHomes.contains(player.getUniqueId().toString()
-						+ ".list")) {
-					getHomes.createSection(player.getUniqueId().toString()
-							+ ".list");
-				}
-				List<String> list = getHomes.getStringList(player.getUniqueId()
-						.toString() + ".list");
-				if (getHomes.getInt(player.getUniqueId().toString() + ".Numb") > 0) {
-					if (!list.isEmpty()) {
-						String list2 = list.toString();
-						String list3 = list2.replace("[", " ");
-						String StringList = list3.replace("]", " ");
-						player.sendMessage(ChatColor.GOLD
-								+ "Your Current Homes Are:");
-						player.sendMessage(ChatColor.RED + StringList);
-					} else {
-						player.sendMessage(ChatColor.DARK_RED
+                if (plugin.getConfig().getBoolean("InventoryMenu")) {
+                    showMenu(player);
+                    return true;
+                } else {
+                    File file = new File(plugin.getDataFolder()
+                            + File.separator + "PlayerData" + File.separator
+                            + player.getUniqueId().toString()
+                            + ".yml");
+                    FileConfiguration getHomes = YamlConfiguration
+                            .loadConfiguration(file);
+                    File file2 = new File(plugin.getDataFolder()
+                            .getAbsolutePath()
+                            + File.separator
+                            + "Messages.yml");
+                    FileConfiguration getMessages = YamlConfiguration
+                            .loadConfiguration(file2);
+                    try {
+                        getHomes.load(file);
+                    } catch (IOException | InvalidConfigurationException e) {
+                        e.printStackTrace();
+                    }
+                    if (!getHomes.contains(player.getUniqueId().toString()
+                            + ".list")) {
+                        getHomes.createSection(player.getUniqueId().toString()
+                                + ".list");
+                    }
+                    List<String> list = getHomes.getStringList(player
+                            .getUniqueId().toString() + ".list");
+                    if (getHomes.getInt(player.getUniqueId().toString()
+                            + ".Numb") > 0) {
+                        if (!list.isEmpty()) {
+                            String list2 = list.toString();
+                            String list3 = list2.replace("[", " ");
+                            String StringList = list3.replace("]", " ");
+                            player.sendMessage(ChatColor.GOLD
+                                    + "Your Current Homes Are:");
+                            player.sendMessage(ChatColor.RED + StringList);
+                        } else {
+                            player.sendMessage(ChatColor.DARK_RED
+                                    + getMessages.getString("Home.NoHomeSet"));
+                        }
+                    } else {
+                        player.sendMessage(ChatColor.DARK_RED
 								+ getMessages.getString("Home.NoHomeSet"));
 					}
-				} else {
-					player.sendMessage(ChatColor.DARK_RED
-							+ getMessages.getString("Home.NoHomeSet"));
 				}
 			} else if (cmd.getName().equalsIgnoreCase("homespawn")) {
 				if (args.length == 0) {
@@ -760,8 +807,8 @@ public class HomeSpawnCommand implements CommandExecutor {
 			} else if (cmd.getName().equalsIgnoreCase("homepassword")) {
 				File file = new File(plugin.getDataFolder() + File.separator
 						+ "PlayerData" + File.separator
-						+ player.getUniqueId().toString().toString() + ".yml");
-				FileConfiguration getHomes = YamlConfiguration
+                        + player.getUniqueId().toString() + ".yml");
+                FileConfiguration getHomes = YamlConfiguration
 						.loadConfiguration(file);
 				File file3 = new File(plugin.getDataFolder() + File.separator
 						+ "PlayerData" + File.separator + "Passwords.yml");
@@ -921,16 +968,17 @@ public class HomeSpawnCommand implements CommandExecutor {
 					player.sendMessage(ChatColor.DARK_RED
 							+ "You don't have permission to do that!");
 				}
-			}
-		} else if (cmd.getName().equalsIgnoreCase("homespawn")) {
-			if (args.length == 1) {
-				if (args[0].equalsIgnoreCase("reload")) {
-					Player p = null;
-					try {
-						plugin.reload(p);
-					} catch (IOException e) {
-					}
-				}
+            } else if (cmd.getName().equalsIgnoreCase("homespawn")) {
+                if (args.length == 1) {
+                    if (args[0].equalsIgnoreCase("reload")) {
+                        Player p = null;
+                        try {
+                            plugin.reload(p);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
 			}
 		} else {
 			sender.sendMessage("You Must Be a Player To Do That");

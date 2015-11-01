@@ -13,3 +13,5 @@ AdminHomesLimit: 5
 TeleportTime: 5
 ## If enabled the player wil be given a book with all player commands listed (Does not contain admin or VIP commands) on first join
 CommandBook: true
+## When enabled players with more than 1 home will be given an inventory menu to select a home to teleport to when they run /homeslist
+InventoryMenu: true

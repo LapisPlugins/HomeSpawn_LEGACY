@@ -35,11 +35,11 @@ public class InstructionBook {
 					+ "/spawn:"
 					+ ChatColor.GOLD
 					+ " Sends You To Spawn \n" // line 4
-					+ ChatColor.RED + "/homepassword help:"
-					+ ChatColor.GOLD
-					+ " Displays The Home Transfer Commands \n" // line 5
-					+ ChatColor.GREEN
-					+ "For More Detailed Help Use /homespawn help");
+                    + ChatColor.RED + "/homepassword help:\n"
+                    + ChatColor.GOLD
+                    + "Displays The Home Transfer Commands \n" // line 5
+                    + ChatColor.GREEN
+                    + "For More Detailed Help Use /homespawn help");
 		} else {
 			meta.addPage(ChatColor.GOLD
 					+ "How To Use HomeSpawn! \n"
