@@ -26,6 +26,7 @@ public class HomeSpawnListener implements Listener {
 
     List<Player> Players = new ArrayList<Player>();
     private HomeSpawn plugin;
+    public YamlConfiguration getMessages = plugin.messages;
 
     public HomeSpawnListener(HomeSpawn plugin) {
         this.plugin = plugin;
@@ -236,10 +237,6 @@ public class HomeSpawnListener implements Listener {
     }
 
     public void TeleportPlayer(Player p, Location l, String r) {
-        File file2 = new File(plugin.getDataFolder().getAbsolutePath()
-                + File.separator + "Messages.yml");
-        FileConfiguration getMessages = YamlConfiguration
-                .loadConfiguration(file2);
         if (plugin.getConfig().getInt("TeleportTime") == 0
                 || p.hasPermission("homespawn.bypassdelay")) {
             p.teleport(l);

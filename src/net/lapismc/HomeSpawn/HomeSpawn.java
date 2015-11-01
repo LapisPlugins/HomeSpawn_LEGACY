@@ -7,7 +7,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -34,6 +33,14 @@ public class HomeSpawn extends JavaPlugin {
     public HomeSpawnListener pl;
     public Inventory inv = Bukkit.createInventory(null, 9 * 5,
             "HomeSpawn Homes");
+    public YamlConfiguration spawn = null;
+    public File spawnFile = null;
+    public YamlConfiguration playerData = null;
+    public File playerDataFile = null;
+    public YamlConfiguration messages = null;
+    public File messagesFile = null;
+    public YamlConfiguration passwords = null;
+    public File passwordsFile = null;
     HashMap<Player, Location> HomeSpawnLocations = new HashMap<Player, Location>();
     HashMap<Player, Integer> HomeSpawnTimeLeft = new HashMap<Player, Integer>();
 
@@ -62,7 +69,7 @@ public class HomeSpawn extends JavaPlugin {
             }
         } else {
             getLogger()
-                    .info("Metrics wasnt started because it is disabled in the config!");
+                    .info("Metrics wasn't started because it is disabled in the config!");
         }
     }
 
@@ -186,7 +193,6 @@ public class HomeSpawn extends JavaPlugin {
         getConfig().options().copyDefaults(true);
         saveConfig();
         createSpawn();
-        createGlobalHomes();
         createPlayerData();
         createMessages();
         createPasswords();
@@ -203,6 +209,8 @@ public class HomeSpawn extends JavaPlugin {
                 e.printStackTrace();
             }
         }
+        this.passwords = YamlConfiguration.loadConfiguration(file);
+        this.passwordsFile = file;
     }
 
     private void createMessages() {
@@ -226,6 +234,7 @@ public class HomeSpawn extends JavaPlugin {
                 getMessages.createSection("Spawn.SentToSpawn");
                 getMessages.createSection("Spawn.Removed");
                 getMessages.createSection("Wait");
+                getMessages.createSection("NoPerms");
                 getMessages.createSection("Error.Args");
                 getMessages.createSection("Error.Args+");
                 getMessages.createSection("Error.Args-");
@@ -235,18 +244,8 @@ public class HomeSpawn extends JavaPlugin {
                 e.printStackTrace();
             }
         }
-    }
-
-    private void createGlobalHomes() throws IOException {
-        File file = new File(getDataFolder().getAbsolutePath() + File.separator
-                + "GlobalHomes.yml");
-        if (!file.exists()) {
-            file.createNewFile();
-            FileConfiguration getGlobalHomes = YamlConfiguration
-                    .loadConfiguration(file);
-            getGlobalHomes.set("list", null);
-            getGlobalHomes.save(file);
-        }
+        this.messages = YamlConfiguration.loadConfiguration(file2);
+        this.messagesFile = file2;
     }
 
     private void setDefaultMessages() {
@@ -276,6 +275,7 @@ public class HomeSpawn extends JavaPlugin {
                     .set("Wait",
                             "You Must Wait {time} Seconds Before You Can Be Teleported,"
                                     + " If You Move Or Get Hit By Another Player Your Teleport Will Be Canceled");
+            getMessages.set("NoPerms", "You Don't Have Permission To Do That!");
             getMessages.set("Error.Args+", "Too Much Infomation!");
             getMessages.set("Error.Args-", "Not Enough Infomation");
             getMessages.set("Error.Args", "Too Little or Too Much Infomation");
@@ -334,27 +334,20 @@ public class HomeSpawn extends JavaPlugin {
                 e.printStackTrace();
             }
         }
-
+        this.spawn = YamlConfiguration.loadConfiguration(file);
+        this.spawnFile = file;
     }
 
     public void spawnnew(Player player) {
-        File file = new File(this.getDataFolder().getAbsolutePath()
-                + File.separator + "Spawn.yml");
-        FileConfiguration getSpawn = YamlConfiguration.loadConfiguration(file);
-        try {
-            getSpawn.load(file);
-        } catch (IOException | InvalidConfigurationException e) {
-            e.printStackTrace();
-        }
-        if (getSpawn.get("spawnnew.SpawnSet") != null
-                && getSpawn.getString("spawnnew.SpawnSet").equalsIgnoreCase(
+        if (this.spawn.get("spawnnew.SpawnSet") != null
+                && this.spawn.getString("spawnnew.SpawnSet").equalsIgnoreCase(
                 "yes")) {
-            int x = getSpawn.getInt("spawnnew.X");
-            int y = getSpawn.getInt("spawnnew.Y");
-            int z = getSpawn.getInt("spawnnew.Z");
-            float yaw = getSpawn.getInt("spawnnew.Yaw");
-            float pitch = getSpawn.getInt("spawnnew.Pitch");
-            String cworld = getSpawn.getString("spawnnew.World");
+            int x = this.spawn.getInt("spawnnew.X");
+            int y = this.spawn.getInt("spawnnew.Y");
+            int z = this.spawn.getInt("spawnnew.Z");
+            float yaw = this.spawn.getInt("spawnnew.Yaw");
+            float pitch = this.spawn.getInt("spawnnew.Pitch");
+            String cworld = this.spawn.getString("spawnnew.World");
             World world = getServer().getWorld(cworld);
             Location spawnnew = new Location(world, x, y, z, yaw, pitch);
             spawnnew.add(0.5, 0, 0.5);
@@ -366,9 +359,31 @@ public class HomeSpawn extends JavaPlugin {
         }
     }
 
-    public void reload(Player player) throws IOException {
+    public void reload(Object obj) throws IOException {
+        Player player = null;
+        if (player instanceof Player) {
+            player = (Player) obj;
+        } else if (obj instanceof String) {
+            String s = (String) obj;
+            if (s.equalsIgnoreCase("Silent")) {
+                this.spawn = YamlConfiguration.loadConfiguration(this.spawnFile);
+                this.messages = YamlConfiguration.loadConfiguration(this.messagesFile);
+                this.passwords = YamlConfiguration.loadConfiguration(this.passwordsFile);
+            }
+        } else if (obj == null) {
+            this.spawn = YamlConfiguration.loadConfiguration(this.spawnFile);
+            this.messages = YamlConfiguration.loadConfiguration(this.messagesFile);
+            this.passwords = YamlConfiguration.loadConfiguration(this.passwordsFile);
+            Bukkit.broadcast(ChatColor.RED
+                            + "Console" + ChatColor.GOLD + " Has Reloaded Homespawn!",
+                    "homespawn.admin");
+            this.logger
+                    .info("You Have Reloaded Homespawn!");
+        }
         if (player != null) {
-            Configs();
+            this.spawn = YamlConfiguration.loadConfiguration(this.spawnFile);
+            this.messages = YamlConfiguration.loadConfiguration(this.messagesFile);
+            this.passwords = YamlConfiguration.loadConfiguration(this.passwordsFile);
             player.sendMessage(ChatColor.GOLD
                     + "You have reloaded the configs for Homespawn!");
             Bukkit.broadcast(ChatColor.GOLD + "Player " + ChatColor.RED
@@ -376,13 +391,6 @@ public class HomeSpawn extends JavaPlugin {
                     + " Has Reloaded Homespawn!", "homespawn.admin");
             this.logger.info("Player " + player.getName()
                     + " Has Reloaded Homespawn!");
-        } else {
-            Configs();
-            Bukkit.broadcast(ChatColor.GOLD + "Player " + ChatColor.RED
-                            + "Console" + ChatColor.GOLD + " Has Reloaded Homespawn!",
-                    "homespawn.admin");
-            this.logger
-                    .info("Player " + "Console" + " Has Reloaded Homespawn!");
         }
     }
 
