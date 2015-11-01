@@ -196,6 +196,7 @@ public class HomeSpawn extends JavaPlugin {
         createPlayerData();
         createMessages();
         createPasswords();
+        pl.setMessages();
     }
 
     private void createPasswords() {

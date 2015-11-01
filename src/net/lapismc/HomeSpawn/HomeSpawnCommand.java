@@ -65,7 +65,6 @@ public class HomeSpawnCommand implements CommandExecutor {
         p.openInventory(plugin.inv);
     }
 
-    @SuppressWarnings("unused")
     private YamlConfiguration GetHome(String player) {
         File file2 = new File(plugin.getDataFolder().getAbsolutePath()
                 + File.separator + "PlayerData" + File.separator
