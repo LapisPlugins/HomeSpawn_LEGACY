@@ -71,15 +71,6 @@ public class HomeSpawnCommand implements CommandExecutor {
         p.openInventory(plugin.HomesListInvs.get(p));
     }
 
-    public void setConfigs() {
-        plugin.getServer().getScheduler().scheduleAsyncDelayedTask(plugin, new Runnable() {
-            public void run() {
-                getMessages = plugin.messages;
-                getSpawn = plugin.spawn;
-            }
-        }, 1 * 20);
-    }
-
     private YamlConfiguration GetHome(String player) {
         File file2 = new File(plugin.getDataFolder().getAbsolutePath()
                 + File.separator + "PlayerData" + File.separator

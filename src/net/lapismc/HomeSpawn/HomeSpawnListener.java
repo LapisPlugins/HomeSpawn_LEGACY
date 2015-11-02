@@ -14,6 +14,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
@@ -43,7 +44,8 @@ public class HomeSpawnListener implements Listener {
         plugin.getServer().getScheduler().scheduleAsyncDelayedTask(plugin, new Runnable() {
             public void run() {
                 getMessages = plugin.messages;
-                cmd.setConfigs();
+                HomeSpawnCommand.getMessages = plugin.messages;
+                HomeSpawnCommand.getSpawn = plugin.spawn;
             }
         }, 1 * 20);
     }
@@ -237,19 +239,21 @@ public class HomeSpawnListener implements Listener {
                     TeleportPlayer(p, home2, "Home");
                 }
             }
+            Inventory inv = plugin.HomesListInvs.get(p);
+            inv.clear();
+            plugin.HomesListInvs.put(p, inv);
         } else {
             return;
         }
+
     }
 
     @EventHandler
     public void onInvExit(InventoryCloseEvent e) {
         Player p = (Player) e.getPlayer();
-        if (e.getInventory().equals(plugin.HomesListInvs.get(p))) {
-            for (ItemStack i : plugin.HomesListInvs.get(p).getContents()) {
-                plugin.HomesListInvs.remove(i);
-            }
-        }
+        Inventory inv = plugin.HomesListInvs.get(p);
+        inv.clear();
+        plugin.HomesListInvs.put(p, inv);
     }
 
     public void TeleportPlayer(Player p, Location l, String r) {
