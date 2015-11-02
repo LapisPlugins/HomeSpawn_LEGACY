@@ -185,6 +185,7 @@ public class HomeSpawn extends JavaPlugin {
 
     public void configVersion() {
         if (getConfig().getInt("ConfigVersion") != 1) {
+            getConfig().set("ConfigVersion", 1);
             if (!getConfig().contains("AutoUpdate")) {
                 getConfig().set("AutoUpdate", true);
             }
@@ -211,7 +212,6 @@ public class HomeSpawn extends JavaPlugin {
             }
         }
     }
-
 
     public void Disable() {
         logger.info("[HomeSpawn] Plugin Has Been Disabled!");
