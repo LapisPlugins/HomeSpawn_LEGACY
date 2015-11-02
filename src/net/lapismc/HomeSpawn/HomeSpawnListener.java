@@ -192,10 +192,10 @@ public class HomeSpawnListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void invInteract(InventoryClickEvent e) {
-        if (e.getInventory().equals(plugin.inv)) {
+        Player p = (Player) e.getWhoClicked();
+        if (e.getInventory().equals(plugin.HomesListInvs.get(p))) {
             String name = e.getCurrentItem().getItemMeta().getDisplayName();
             String name1 = ChatColor.stripColor(name);
-            Player p = (Player) e.getWhoClicked();
             File file2 = new File(plugin.getDataFolder().getAbsolutePath()
                     + File.separator + "PlayerData" + File.separator
                     + "PlayerNames" + File.separator + p.getName() + ".yml");
@@ -240,14 +240,14 @@ public class HomeSpawnListener implements Listener {
         } else {
             return;
         }
-        plugin.inv.clear();
     }
 
     @EventHandler
     public void onInvExit(InventoryCloseEvent e) {
-        if (e.getInventory().getName().equalsIgnoreCase(plugin.inv.getName())) {
-            for (ItemStack i : plugin.inv.getContents()) {
-                plugin.inv.remove(i);
+        Player p = (Player) e.getPlayer();
+        if (e.getInventory().equals(plugin.HomesListInvs.get(p))) {
+            for (ItemStack i : plugin.HomesListInvs.get(p).getContents()) {
+                plugin.HomesListInvs.remove(i);
             }
         }
     }

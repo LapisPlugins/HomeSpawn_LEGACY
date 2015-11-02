@@ -31,8 +31,6 @@ public class HomeSpawn extends JavaPlugin {
     public Permission AdminPerm = new Permission("homespawn.admin");
     public Permission VIPPerm = new Permission("homespawn.vip");
     public HomeSpawnListener pl;
-    public HomeSpawnCommand cmd;
-    public Inventory inv = Bukkit.createInventory(null, 9 * 5, "HomeSpawn Homes");
     public YamlConfiguration spawn = null;
     public File spawnFile = null;
     public YamlConfiguration playerData = null;
@@ -43,6 +41,7 @@ public class HomeSpawn extends JavaPlugin {
     public File passwordsFile = null;
     HashMap<Player, Location> HomeSpawnLocations = new HashMap<Player, Location>();
     HashMap<Player, Integer> HomeSpawnTimeLeft = new HashMap<Player, Integer>();
+    HashMap<Player, Inventory> HomesListInvs = new HashMap<Player, Inventory>();
 
     @Override
     public void onEnable() {

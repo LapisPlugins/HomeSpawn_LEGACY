@@ -61,9 +61,9 @@ public class HomeSpawnCommand implements CommandExecutor {
             im.setLore(Arrays.asList(ChatColor.GOLD + "Click To Teleport To",
                     ChatColor.RED + home));
             i.setItemMeta(im);
-            plugin.inv.addItem(i);
+            plugin.HomesListInvs.get(p).addItem(i);
         }
-        p.openInventory(plugin.inv);
+        p.openInventory(plugin.HomesListInvs.get(p));
     }
 
     public void setConfigs() {
