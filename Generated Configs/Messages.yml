@@ -1,0 +1,18 @@
+Home:
+  HomeSet: Home Set, You Can Now Use /home
+  SentHome: Welcome Home
+  NoHomeSet: You First Need To Set a Home With /sethome
+  HomeRemoved: Home Removed
+  LimitReached: Sorry But You have Reached The Max Limit Of Homes, Please Use /delhome To Remove A Home
+Spawn:
+  NotSet: You First Need To Set a Spawn With /setspawn
+  SpawnSet: Spawn Set, You Can Now Use /spawn
+  SpawnNewSet: Spawn New Set, All New Players Will Be Sent To This Location
+  SentToSpawn: Welcome To Spawn
+  Removed: Spawn Removed!
+Wait: You Must Wait {time} Seconds Before You Can Be Teleported, If You Move Or Get Hit By Another Player Your Teleport Will Be Canceled
+NoPerms: You Don't Have Permission To Do That!
+Error:
+  Args: Too Little or Too Much Infomation
+  Args+: Too Much Infomation!
+  Args-: Not Enough Infomation

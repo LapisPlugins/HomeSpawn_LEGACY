@@ -1,0 +1,38 @@
+name: 81188a41-84b6-3d8d-b393-c672b677fd13
+HasHome: 'Yes'
+dart2112:
+  Numb: {}
+81188a41-84b6-3d8d-b393-c672b677fd13:
+  Numb: 1
+  x: -6761
+  y: 68
+  z: -6937
+  world: Lapis
+  Yaw: 182.5498
+  Pitch: 6.499987
+  list:
+  - Home
+lol:
+  x: 151
+  y: 64
+  z: 302
+  world: Lapis
+  Yaw: 263.4
+  Pitch: 16.199974
+  HasHome: 'Yes'
+ghhjuy:
+  x: 151
+  y: 64
+  z: 302
+  world: Lapis
+  Yaw: 290.0
+  Pitch: 11.050001
+  HasHome: 'Yes'
+here:
+  x: -6760
+  y: 68
+  z: -6931
+  world: Lapis
+  Yaw: 198.2937
+  Pitch: 12.299935
+  HasHome: 'Yes'

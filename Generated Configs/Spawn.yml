@@ -1,0 +1,14 @@
+spawn:
+  X: {}
+  Y: {}
+  Z: {}
+  World: {}
+  Yaw: {}
+  Pitch: {}
+spawnnew:
+  X: {}
+  Y: {}
+  Z: {}
+  World: {}
+  Yaw: {}
+  Pitch: {}
