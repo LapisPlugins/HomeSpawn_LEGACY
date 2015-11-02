@@ -1,4 +1,5 @@
-ConfigVersion: Not Used Yet
+##Dont Change This, It Will Reset The Config If You Do!
+ConfigVersion: 1
 ## If Set To True The Plugin Will Automatically Update The Plugin (And Install On Next Update) When A New Update Is Published On Bukkit
 AutoUpdate: true
 ## If Set To True Any Player With Homespawn.admin Will Receive A Notification If There Is An Update
@@ -10,7 +11,7 @@ VIPHomesLimit: 3
 ## This Limit Affects Players With The homespawn.admin Perm
 AdminHomesLimit: 5
 ## This Time Is How Long THe Player Must Wait Without Being Hit By Another Player Before They Teleport, Set To 0 To Disable
-TeleportTime: 5
+TeleportTime: 10
 ## If enabled the player wil be given a book with all player commands listed (Does not contain admin or VIP commands) on first join
 CommandBook: true
 ## When enabled players with more than 1 home will be given an inventory menu to select a home to teleport to when they run /homeslist

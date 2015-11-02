@@ -31,8 +31,8 @@ public class HomeSpawn extends JavaPlugin {
     public Permission AdminPerm = new Permission("homespawn.admin");
     public Permission VIPPerm = new Permission("homespawn.vip");
     public HomeSpawnListener pl;
-    public Inventory inv = Bukkit.createInventory(null, 9 * 5,
-            "HomeSpawn Homes");
+    public HomeSpawnCommand cmd;
+    public Inventory inv = Bukkit.createInventory(null, 9 * 5, "HomeSpawn Homes");
     public YamlConfiguration spawn = null;
     public File spawnFile = null;
     public YamlConfiguration playerData = null;
@@ -181,7 +181,38 @@ public class HomeSpawn extends JavaPlugin {
         PluginManager pm = getServer().getPluginManager();
         pl = new HomeSpawnListener(this);
         pm.registerEvents(this.pl, this);
+        configVersion();
     }
+
+    public void configVersion() {
+        if (getConfig().getInt("ConfigVersion") != 1) {
+            if (!getConfig().contains("AutoUpdate")) {
+                getConfig().set("AutoUpdate", true);
+            }
+            if (!getConfig().contains("UpdateNotification")) {
+                getConfig().set("UpdateNotification", true);
+            }
+            if (!getConfig().contains("Metrics")) {
+                getConfig().set("Metrics", true);
+            }
+            if (!getConfig().contains("VIPHomesLimit")) {
+                getConfig().set("VIPHomesLimit", 3);
+            }
+            if (!getConfig().contains("AdminHomesLimit")) {
+                getConfig().set("AdminHomesLimit", 5);
+            }
+            if (!getConfig().contains("TeleportTime")) {
+                getConfig().set("TeleportTime", 10);
+            }
+            if (!getConfig().contains("CommandBook")) {
+                getConfig().set("CommandBook", true);
+            }
+            if (!getConfig().contains("InventoryMenu")) {
+                getConfig().set("InventoryMenu", true);
+            }
+        }
+    }
+
 
     public void Disable() {
         logger.info("[HomeSpawn] Plugin Has Been Disabled!");
@@ -298,7 +329,7 @@ public class HomeSpawn extends JavaPlugin {
                 + File.separator + "PlayerData" + File.separator
                 + "PlayerNames");
         if (!theDir.exists()) {
-            logger.info("[HomeSpawn] Creating PlayerData Directory!");
+            logger.info(" Creating PlayerData Directory!");
             theDir.mkdir();
         }
         if (!theDir1.exists()) {

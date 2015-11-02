@@ -25,19 +25,27 @@ import java.util.List;
 public class HomeSpawnListener implements Listener {
 
     public YamlConfiguration getMessages = null;
+
     List<Player> Players = new ArrayList<Player>();
+
     private HomeSpawn plugin;
+    private HomeSpawnCommand cmd;
 
     public HomeSpawnListener(HomeSpawn plugin) {
         this.plugin = plugin;
+    }
+
+    public HomeSpawnListener(HomeSpawnCommand cmd) {
+        this.cmd = cmd;
     }
 
     public void setMessages() {
         plugin.getServer().getScheduler().scheduleAsyncDelayedTask(plugin, new Runnable() {
             public void run() {
                 getMessages = plugin.messages;
+                cmd.setConfigs();
             }
-        }, 2 * 20);
+        }, 1 * 20);
     }
 
     @EventHandler(priority = EventPriority.HIGH)

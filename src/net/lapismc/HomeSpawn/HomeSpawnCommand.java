@@ -25,10 +25,11 @@ import java.util.List;
 import java.util.Random;
 
 public class HomeSpawnCommand implements CommandExecutor {
-    public HomeSpawnCommand Command;
+
+    public static YamlConfiguration getMessages = null;
+    public static YamlConfiguration getSpawn = null;
+    public HomeSpawnCommand cmd;
     private HomeSpawn plugin;
-    public YamlConfiguration getMessages = plugin.messages;
-    public YamlConfiguration getSpawn = plugin.spawn;
 
     public HomeSpawnCommand(HomeSpawn plugin) {
         this.plugin = plugin;
@@ -63,6 +64,15 @@ public class HomeSpawnCommand implements CommandExecutor {
             plugin.inv.addItem(i);
         }
         p.openInventory(plugin.inv);
+    }
+
+    public void setConfigs() {
+        plugin.getServer().getScheduler().scheduleAsyncDelayedTask(plugin, new Runnable() {
+            public void run() {
+                getMessages = plugin.messages;
+                getSpawn = plugin.spawn;
+            }
+        }, 1 * 20);
     }
 
     private YamlConfiguration GetHome(String player) {
