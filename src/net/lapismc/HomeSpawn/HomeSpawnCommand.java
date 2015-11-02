@@ -1,9 +1,6 @@
 package net.lapismc.HomeSpawn;
 
-import org.bukkit.ChatColor;
-import org.bukkit.DyeColor;
-import org.bukkit.Location;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -11,6 +8,7 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.Wool;
@@ -54,6 +52,13 @@ public class HomeSpawnCommand implements CommandExecutor {
         dc.add(DyeColor.MAGENTA);
         dc.add(DyeColor.ORANGE);
         Random r = new Random(3);
+        if (!plugin.HomesListInvs.containsKey(p)) {
+            int notrounded = plugin.getConfig().getInt("AdminHomesLimit") / 9;
+            Double rounded = Math.ceil(notrounded);
+            int slots = rounded.intValue();
+            Inventory inv = Bukkit.createInventory(p, 9 * slots, "HomeSpawn Homes");
+            plugin.HomesListInvs.put(p, inv);
+        }
         for (String home : homes) {
             ItemStack i = new Wool(dc.get(r.nextInt(5))).toItemStack(1);
             ItemMeta im = i.getItemMeta();
