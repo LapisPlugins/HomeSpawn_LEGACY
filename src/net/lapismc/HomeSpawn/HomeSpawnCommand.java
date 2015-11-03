@@ -4,7 +4,6 @@ import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -34,14 +33,8 @@ public class HomeSpawnCommand implements CommandExecutor {
     }
 
     public void showMenu(Player p) {
-        File file2 = new File(plugin.getDataFolder().getAbsolutePath()
-                + File.separator + "PlayerData" + File.separator
-                + "PlayerNames" + File.separator + p.getName() + ".yml");
-        FileConfiguration getName = YamlConfiguration.loadConfiguration(file2);
-        File Homes = new File(plugin.getDataFolder().getAbsolutePath()
-                + File.separator + "PlayerData" + File.separator
-                + getName.getString("UUID") + ".yml");
-        YamlConfiguration getHomes = YamlConfiguration.loadConfiguration(Homes);
+        String getName = plugin.PlayertoUUID.get(p.getName());
+        YamlConfiguration getHomes = plugin.HomeConfigs.get(getName);
         List<String> homes = getHomes.getStringList(p.getUniqueId().toString()
                 + ".list");
         ArrayList<DyeColor> dc = new ArrayList<DyeColor>();
@@ -71,16 +64,10 @@ public class HomeSpawnCommand implements CommandExecutor {
         p.openInventory(plugin.HomesListInvs.get(p));
     }
 
-    private YamlConfiguration GetHome(String player) {
-        File file2 = new File(plugin.getDataFolder().getAbsolutePath()
-                + File.separator + "PlayerData" + File.separator
-                + "PlayerNames" + File.separator + player + ".yml");
-        FileConfiguration getName = YamlConfiguration.loadConfiguration(file2);
-        File Homes = new File(plugin.getDataFolder().getAbsolutePath()
-                + File.separator + "PlayerData" + File.separator
-                + getName.getString("UUID") + ".yml");
-        YamlConfiguration Gethome = YamlConfiguration.loadConfiguration(Homes);
-        return Gethome;
+    private YamlConfiguration GetHome(String p) {
+        String getName = plugin.PlayertoUUID.get(p);
+        YamlConfiguration getHomes = plugin.HomeConfigs.get(getName);
+        return getHomes;
     }
 
     public void TeleportPlayer(Player p, Location l, String r) {
@@ -114,23 +101,14 @@ public class HomeSpawnCommand implements CommandExecutor {
             Player player = (Player) sender;
             if (cmd.getName().equalsIgnoreCase("sethome")) {
                 if (player.hasPermission("homespawn.player")) {
-                    File file = new File(plugin.getDataFolder()
-                            + File.separator + "PlayerData" + File.separator
-                            + player.getUniqueId().toString()
-                            + ".yml");
-                    FileConfiguration getHomes = YamlConfiguration
-                            .loadConfiguration(file);
-                    try {
-                        getHomes.load(file);
-                    } catch (IOException | InvalidConfigurationException e) {
-                        e.printStackTrace();
-                    }
+                    String UUID = plugin.PlayertoUUID.get(player.getName());
+                    YamlConfiguration getHomes = plugin.HomeConfigs.get(UUID);
                     if (!getHomes.contains(player.getUniqueId().toString()
                             + ".list")) {
                         getHomes.createSection(player.getUniqueId().toString()
                                 + ".list");
                         try {
-                            getHomes.save(file);
+                            plugin.savePlayerData(UUID);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -275,7 +253,7 @@ public class HomeSpawnCommand implements CommandExecutor {
                                     + getMessages.getString("Error.Args+"));
                         }
                         try {
-                            getHomes.save(file);
+                            plugin.savePlayerData(UUID);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -289,38 +267,22 @@ public class HomeSpawnCommand implements CommandExecutor {
 
             } else if (cmd.getName().equalsIgnoreCase("home")) {
                 if (player.hasPermission("homespawn.player")) {
-                    File file = new File(plugin.getDataFolder()
-                            + File.separator + "PlayerData" + File.separator
-                            + player.getUniqueId().toString()
-                            + ".yml");
-                    FileConfiguration getHomes = YamlConfiguration
-                            .loadConfiguration(file);
-                    File file2 = new File(plugin.getDataFolder()
-                            .getAbsolutePath()
-                            + File.separator
-                            + "Messages.yml");
-                    FileConfiguration getMessages = YamlConfiguration
-                            .loadConfiguration(file2);
+                    String UUID = plugin.PlayertoUUID.get(player.getName());
+                    YamlConfiguration getHomes = plugin.HomeConfigs.get(UUID);
                     if (!getHomes.contains(player.getUniqueId().toString()
                             + ".list")) {
                         getHomes.createSection(player.getUniqueId().toString()
                                 + ".list");
                         try {
-                            getHomes.save(file);
+                            plugin.savePlayerData(UUID);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
                     }
                     List<String> list = getHomes.getStringList(player
                             .getUniqueId().toString() + ".list");
-                    try {
-                        getHomes.load(file);
-                    } catch (IOException | InvalidConfigurationException e) {
-                        e.printStackTrace();
-                    }
                     if (args.length == 0) {
-                        if (file != null
-                                && getHomes.getString("HasHome")
+                        if (getHomes.getString("HasHome")
                                 .equalsIgnoreCase("yes")) {
                             int x = getHomes.getInt(player.getUniqueId()
                                     .toString() + ".x");
@@ -423,36 +385,20 @@ public class HomeSpawnCommand implements CommandExecutor {
 
             } else if (cmd.getName().equalsIgnoreCase("delhome")) {
                 if (player.hasPermission("homespawn.player")) {
-                    File file = new File(plugin.getDataFolder()
-                            + File.separator + "PlayerData" + File.separator
-                            + player.getUniqueId().toString()
-                            + ".yml");
-                    FileConfiguration getHomes = YamlConfiguration
-                            .loadConfiguration(file);
-                    File file2 = new File(plugin.getDataFolder()
-                            .getAbsolutePath()
-                            + File.separator
-                            + "Messages.yml");
-                    FileConfiguration getMessages = YamlConfiguration
-                            .loadConfiguration(file2);
+                    String UUID = plugin.PlayertoUUID.get(player.getName());
+                    YamlConfiguration getHomes = plugin.HomeConfigs.get(UUID);
                     if (!getHomes.contains(player.getUniqueId().toString()
                             + ".list")) {
                         getHomes.createSection(player.getUniqueId().toString()
                                 + ".list");
                         try {
-                            getHomes.save(file);
+                            plugin.savePlayerData(UUID);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
                     }
                     List<String> list = getHomes.getStringList(player
                             .getUniqueId().toString() + ".list");
-                    try {
-                        getHomes.load(file);
-                    } catch (IOException | InvalidConfigurationException e) {
-                        e.printStackTrace();
-                        return true;
-                    }
                     if (args.length == 0) {
                         int HomeNumb = getHomes.getInt(player.getUniqueId()
                                 .toString() + ".Numb");
@@ -474,7 +420,7 @@ public class HomeSpawnCommand implements CommandExecutor {
                                         + ".list", list);
                             }
                             try {
-                                getHomes.save(file);
+                                plugin.savePlayerData(UUID);
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
@@ -544,7 +490,7 @@ public class HomeSpawnCommand implements CommandExecutor {
                                         + ".list", list);
                             }
                             try {
-                                getHomes.save(file);
+                                plugin.savePlayerData(UUID);
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
@@ -684,23 +630,8 @@ public class HomeSpawnCommand implements CommandExecutor {
                     showMenu(player);
                     return true;
                 } else {
-                    File file = new File(plugin.getDataFolder()
-                            + File.separator + "PlayerData" + File.separator
-                            + player.getUniqueId().toString()
-                            + ".yml");
-                    FileConfiguration getHomes = YamlConfiguration
-                            .loadConfiguration(file);
-                    File file2 = new File(plugin.getDataFolder()
-                            .getAbsolutePath()
-                            + File.separator
-                            + "Messages.yml");
-                    FileConfiguration getMessages = YamlConfiguration
-                            .loadConfiguration(file2);
-                    try {
-                        getHomes.load(file);
-                    } catch (IOException | InvalidConfigurationException e) {
-                        e.printStackTrace();
-                    }
+                    String UUID = plugin.PlayertoUUID.get(player.getName());
+                    YamlConfiguration getHomes = plugin.HomeConfigs.get(UUID);
                     if (!getHomes.contains(player.getUniqueId().toString()
                             + ".list")) {
                         getHomes.createSection(player.getUniqueId().toString()

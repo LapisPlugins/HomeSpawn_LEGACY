@@ -39,6 +39,9 @@ public class HomeSpawn extends JavaPlugin {
     public File messagesFile = null;
     public YamlConfiguration passwords = null;
     public File passwordsFile = null;
+    public HashMap<String, YamlConfiguration> HomeConfigs = new HashMap<String, YamlConfiguration>();
+    public HashMap<String, File> HomeConfigsFiles = new HashMap<String, File>();
+    public HashMap<String, String> PlayertoUUID = new HashMap<String, String>();
     HashMap<Player, Location> HomeSpawnLocations = new HashMap<Player, Location>();
     HashMap<Player, Integer> HomeSpawnTimeLeft = new HashMap<Player, Integer>();
     HashMap<Player, Inventory> HomesListInvs = new HashMap<Player, Inventory>();
@@ -227,7 +230,41 @@ public class HomeSpawn extends JavaPlugin {
         createMessages();
         createPasswords();
         pl.setMessages();
+        loadPlayerData();
+        loadName();
     }
+
+    public void savePlayerData(String uuid) throws IOException {
+        HomeConfigs.get(uuid).save(HomeConfigsFiles.get(uuid));
+    }
+
+    public void loadPlayerData() {
+        HomeConfigs.clear();
+        HomeConfigsFiles.clear();
+        File file = new File(this.getDataFolder().getAbsolutePath() + File.separator + "PlayerData");
+        File[] playerdataArray = file.listFiles();
+        for (File f : playerdataArray) {
+            if (f.isFile()) {
+                if (!f.getName().contains("Passwords")) {
+                    YamlConfiguration Yaml = YamlConfiguration.loadConfiguration(f);
+                    HomeConfigs.put(Yaml.getString("name"), Yaml);
+                    HomeConfigsFiles.put(Yaml.getString("name"), f);
+                }
+            }
+        }
+    }
+
+    public void loadName() {
+        PlayertoUUID.clear();
+        File file = new File(this.getDataFolder().getAbsolutePath() + File.separator
+                + "PlayerData" + File.separator + "PlayerNames");
+        File[] playerNamesArray = file.listFiles();
+        for (File f : playerNamesArray) {
+            YamlConfiguration Yaml = YamlConfiguration.loadConfiguration(f);
+            PlayertoUUID.put(Yaml.getString("Name"), Yaml.getString("UUID"));
+        }
+    }
+
 
     private void createPasswords() {
         File file = new File(this.getDataFolder().getAbsolutePath()
@@ -400,11 +437,15 @@ public class HomeSpawn extends JavaPlugin {
                 this.spawn = YamlConfiguration.loadConfiguration(this.spawnFile);
                 this.messages = YamlConfiguration.loadConfiguration(this.messagesFile);
                 this.passwords = YamlConfiguration.loadConfiguration(this.passwordsFile);
+                loadPlayerData();
+                loadName();
             }
         } else if (obj == null) {
             this.spawn = YamlConfiguration.loadConfiguration(this.spawnFile);
             this.messages = YamlConfiguration.loadConfiguration(this.messagesFile);
             this.passwords = YamlConfiguration.loadConfiguration(this.passwordsFile);
+            loadPlayerData();
+            loadName();
             Bukkit.broadcast(ChatColor.RED
                             + "Console" + ChatColor.GOLD + " Has Reloaded Homespawn!",
                     "homespawn.admin");
@@ -415,6 +456,8 @@ public class HomeSpawn extends JavaPlugin {
             this.spawn = YamlConfiguration.loadConfiguration(this.spawnFile);
             this.messages = YamlConfiguration.loadConfiguration(this.messagesFile);
             this.passwords = YamlConfiguration.loadConfiguration(this.passwordsFile);
+            loadPlayerData();
+            loadName();
             player.sendMessage(ChatColor.GOLD
                     + "You have reloaded the configs for Homespawn!");
             Bukkit.broadcast(ChatColor.GOLD + "Player " + ChatColor.RED
