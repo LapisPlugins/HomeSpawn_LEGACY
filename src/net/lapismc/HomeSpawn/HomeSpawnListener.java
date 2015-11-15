@@ -252,9 +252,11 @@ public class HomeSpawnListener implements Listener {
     public void onInvExit(InventoryCloseEvent e) {
         if (!(e.getPlayer() == null && e.getInventory() == null)) {
             Player p = (Player) e.getPlayer();
-            Inventory inv = plugin.HomesListInvs.get(p);
-            inv.clear();
-            plugin.HomesListInvs.put(p, inv);
+            if (plugin.HomesListInvs.containsKey(p) && e.getInventory().getName() == plugin.HomesListInvs.get(p).getName()) {
+                Inventory inv = plugin.HomesListInvs.get(p);
+                inv.clear();
+                plugin.HomesListInvs.put(p, inv);
+            }
         }
     }
 
