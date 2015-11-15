@@ -188,6 +188,7 @@ public class HomeSpawn extends JavaPlugin {
 
     public void configVersion() {
         if (getConfig().getInt("ConfigVersion") != 1) {
+            getConfig().set("ConfigVersion", 1);
             if (!getConfig().contains("AutoUpdate")) {
                 getConfig().set("AutoUpdate", true);
             }
@@ -214,7 +215,6 @@ public class HomeSpawn extends JavaPlugin {
             }
         }
     }
-
 
     public void Disable() {
         logger.info("[HomeSpawn] Plugin Has Been Disabled!");
@@ -429,7 +429,7 @@ public class HomeSpawn extends JavaPlugin {
 
     public void reload(Object obj) throws IOException {
         Player player = null;
-        if (player instanceof Player) {
+        if (obj instanceof Player) {
             player = (Player) obj;
         } else if (obj instanceof String) {
             String s = (String) obj;
