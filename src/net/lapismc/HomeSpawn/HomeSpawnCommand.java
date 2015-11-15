@@ -924,6 +924,7 @@ public class HomeSpawnCommand implements CommandExecutor {
                     player.sendMessage(ChatColor.DARK_RED
                             + getMessages.getString("NoPerms"));
                 }
+            }
             } else if (cmd.getName().equalsIgnoreCase("homespawn")) {
                 if (args.length == 1) {
                     if (args[0].equalsIgnoreCase("reload")) {
@@ -935,10 +936,10 @@ public class HomeSpawnCommand implements CommandExecutor {
                         }
                     }
                 }
-            }
+
         } else {
             sender.sendMessage("You Must Be a Player To Do That");
-        }
+            }
         return false;
     }
 

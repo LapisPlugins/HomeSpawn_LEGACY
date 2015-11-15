@@ -392,7 +392,7 @@ public class HomeSpawn extends JavaPlugin {
 
     public void reload(Object obj) throws IOException {
         Player player = null;
-        if (player instanceof Player) {
+        if (obj instanceof Player) {
             player = (Player) obj;
         } else if (obj instanceof String) {
             String s = (String) obj;
