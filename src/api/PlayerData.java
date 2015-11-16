@@ -1,4 +1,4 @@
-package API;
+package api;
 
 import net.lapismc.HomeSpawn.HomeSpawn;
 import org.bukkit.configuration.file.YamlConfiguration;

@@ -1,9 +1,12 @@
-package API;
+package api;
 
 import net.lapismc.HomeSpawn.HomeSpawn;
+import net.lapismc.HomeSpawn.PasswordHash;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 
 /**
  * API Class to get Config Files
@@ -80,8 +83,26 @@ public class Configs {
         plugin.reload("Silent");
     }
 
-    //TODO check password
+    /**
+     * Checks if the given string matches the password on file
+     *
+     * @throws NoSuchAlgorithmException and InvalidKeySpecException
+     */
+    public boolean checkPassword(String playerName, String Password) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        String hash = getPasswords().getString("playerName");
+        return PasswordHash.validatePassword(Password, hash);
+    }
 
-    //TODO set password
+    /**
+     * Hashes the password and saves it to the given username then saves the passwords config
+     *
+     * @throws IOException, NoSuchAlgorithmException and InvalidKeySpecException
+     */
+    public void setPassword(String playerName, String rawPassword) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
+        String hash = PasswordHash.createHash(rawPassword);
+        YamlConfiguration passwords = getPasswords();
+        passwords.set(playerName, hash);
+        savePasswords(passwords);
+    }
 
 }
