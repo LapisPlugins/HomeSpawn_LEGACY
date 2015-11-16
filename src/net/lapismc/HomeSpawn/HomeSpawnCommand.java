@@ -856,21 +856,21 @@ public class HomeSpawnCommand implements CommandExecutor {
                             + getMessages.getString("NoPerms"));
                 }
             }
-            } else if (cmd.getName().equalsIgnoreCase("homespawn")) {
-                if (args.length == 1) {
-                    if (args[0].equalsIgnoreCase("reload")) {
-                        Player p = null;
-                        try {
-                            plugin.reload(p);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+        } else if (cmd.getName().equalsIgnoreCase("homespawn")) {
+            if (args.length == 1) {
+                if (args[0].equalsIgnoreCase("reload")) {
+                    Player p = null;
+                    try {
+                        plugin.reload(p);
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
                 }
+            }
 
         } else {
             sender.sendMessage("You Must Be a Player To Do That");
-            }
+        }
         return false;
     }
 
