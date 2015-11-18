@@ -44,16 +44,16 @@ public class HomeSpawnCommand implements CommandExecutor {
         dc.add(DyeColor.GREEN);
         dc.add(DyeColor.MAGENTA);
         dc.add(DyeColor.ORANGE);
-        Random r = new Random(3);
+        Random r = new Random();
         if (!plugin.HomesListInvs.containsKey(p)) {
-            int notrounded = plugin.getConfig().getInt("AdminHomesLimit") / 9;
+            int notrounded = getHomes.getInt(p.getUniqueId() + ".numb") / 9;
             Double rounded = Math.ceil(notrounded);
             int slots = rounded.intValue();
-            Inventory inv = Bukkit.createInventory(p, 9 * slots, "HomeSpawn Homes");
+            Inventory inv = Bukkit.createInventory(p, 9 * slots, ChatColor.GOLD + p.getName() + "'s HomesList");
             plugin.HomesListInvs.put(p, inv);
         }
         for (String home : homes) {
-            ItemStack i = new Wool(dc.get(r.nextInt(5))).toItemStack(1);
+            ItemStack i = new Wool(dc.get(r.nextInt(6))).toItemStack(1);
             ItemMeta im = i.getItemMeta();
             im.setDisplayName(ChatColor.GOLD + home);
             im.setLore(Arrays.asList(ChatColor.GOLD + "Click To Teleport To",
