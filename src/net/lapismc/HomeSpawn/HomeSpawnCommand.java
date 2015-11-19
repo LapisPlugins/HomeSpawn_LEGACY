@@ -793,68 +793,6 @@ public class HomeSpawnCommand implements CommandExecutor {
                     player.sendMessage("This Command Isnt Used As This Is An Online Mode Server");
                 }
 
-            } else if (cmd.getName().equalsIgnoreCase("setglobalhome")) {
-                if (player.hasPermission("homespawn.admin")) {
-                    if (args.length == 0) {
-                        player.sendMessage(ChatColor.RED
-                                + "You need to specify a name");
-                    } else if (args.length == 1) {
-                        File file = new File(plugin.getDataFolder()
-                                .getAbsolutePath()
-                                + File.separator
-                                + "GlobalHomes.yml");
-                        FileConfiguration getGlobalHomes = YamlConfiguration
-                                .loadConfiguration(file);
-                        String home = args[1];
-                        getGlobalHomes.createSection(home);
-                        getGlobalHomes.createSection(home + ".x");
-                        getGlobalHomes.createSection(home + ".y");
-                        getGlobalHomes.createSection(home + ".z");
-                        getGlobalHomes.createSection(home + ".world");
-                        getGlobalHomes.createSection(home + ".Yaw");
-                        getGlobalHomes.createSection(home + ".Pitch");
-                        try {
-                            getGlobalHomes.save(file);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        getGlobalHomes.set(home + ".x", player.getLocation()
-                                .getBlockX());
-                        getGlobalHomes.set(home + ".y", player.getLocation()
-                                .getBlockY());
-                        getGlobalHomes.set(home + ".z", player.getLocation()
-                                .getBlockZ());
-                        getGlobalHomes.set(home + ".world", player.getWorld()
-                                .getName());
-                        getGlobalHomes.set(home + ".Yaw", player.getLocation()
-                                .getYaw());
-                        getGlobalHomes.set(home + ".Pitch", player
-                                .getLocation().getPitch());
-                        if (!getGlobalHomes.contains("list")) {
-                            List<String> list = new ArrayList<String>();
-                            list.add("...");
-                            getGlobalHomes.set("list", list);
-                            list.remove("...");
-                            getGlobalHomes.set("list", list);
-                        }
-                        List<String> list = getGlobalHomes
-                                .getStringList("list");
-                        list.add(home);
-                        getGlobalHomes.set("list", list);
-                        try {
-                            getGlobalHomes.save(file);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    } else {
-                        player.sendMessage(ChatColor.RED + "To much infomation");
-                        player.sendMessage(ChatColor.RED
-                                + "Usage: /setglobalhome (home name)");
-                    }
-                } else {
-                    player.sendMessage(ChatColor.DARK_RED
-                            + getMessages.getString("NoPerms"));
-                }
             }
         } else if (cmd.getName().equalsIgnoreCase("homespawn")) {
             if (args.length == 1) {
