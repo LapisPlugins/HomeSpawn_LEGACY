@@ -1,5 +1,5 @@
 ##Dont Change This, It Will Reset The Config If You Do!
-ConfigVersion: 1
+ConfigVersion: 2
 ## If Set To True The Plugin Will Automatically Update The Plugin (And Install On Next Update) When A New Update Is Published On Bukkit
 AutoUpdate: true
 ## If Set To True Any Player With Homespawn.admin Will Receive A Notification If There Is An Update
@@ -16,3 +16,5 @@ TeleportTime: 10
 CommandBook: true
 ## When enabled players with more than 1 home will be given an inventory menu to select a home to teleport to when they run /homeslist
 InventoryMenu: true
+## The IP address is used for helping with bug fixing
+PublicIP: play.lapismc.net

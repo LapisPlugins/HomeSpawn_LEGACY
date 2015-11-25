@@ -94,7 +94,7 @@ public class Configs {
     }
 
     /**
-     * Hashes the password and saves it to the given username then saves the passwords config
+     * Hashes the password and saves it to as given username then saves the passwords config
      *
      * @throws IOException, NoSuchAlgorithmException and InvalidKeySpecException
      */
