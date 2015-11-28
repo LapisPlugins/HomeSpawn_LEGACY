@@ -77,15 +77,15 @@ public class HomeSpawn extends JavaPlugin {
         if (getConfig().getBoolean("AutoUpdate")) {
             Updater updater = new Updater(this, 86785, this.getFile(),
                     UpdateType.DEFAULT, true);
-            updatecheck(updater);
+            updateCheck(updater);
         } else {
             Updater updater = new Updater(this, 86785, this.getFile(),
                     UpdateType.NO_DOWNLOAD, true);
-            updatecheck(updater);
+            updateCheck(updater);
         }
     }
 
-    private void updatecheck(Updater updater) {
+    private void updateCheck(Updater updater) {
         File file = new File(this.getDataFolder().getAbsolutePath()
                 + File.separator + "Update.yml");
         FileConfiguration getUpdate = YamlConfiguration.loadConfiguration(file);
@@ -185,8 +185,8 @@ public class HomeSpawn extends JavaPlugin {
     }
 
     public void configVersion() {
-        if (getConfig().getInt("ConfigVersion") != 1) {
-            getConfig().set("ConfigVersion", 1);
+        if (getConfig().getInt("ConfigVersion") != 2) {
+            getConfig().set("ConfigVersion", 2);
             if (!getConfig().contains("AutoUpdate")) {
                 getConfig().set("AutoUpdate", true);
             }
@@ -211,6 +211,10 @@ public class HomeSpawn extends JavaPlugin {
             if (!getConfig().contains("InventoryMenu")) {
                 getConfig().set("InventoryMenu", true);
             }
+            if (!getConfig().contains("PublicIP")) {
+                getConfig().set("PublicIP", "play.server.com");
+            }
+            saveConfig();
         }
     }
 
@@ -538,6 +542,9 @@ public class HomeSpawn extends JavaPlugin {
                                 } else if (NewTime <= 0) {
                                     Location Tele = HomeSpawnLocations.get(p);
                                     if (!Tele.equals(null)) {
+                                        if (!Tele.getChunk().isLoaded()) {
+                                            Tele.getChunk().load();
+                                        }
                                         p.teleport(Tele);
                                         p.sendMessage(ChatColor.GOLD
                                                 + "Teleporting...");
