@@ -181,7 +181,6 @@ public class HomeSpawn extends JavaPlugin {
         PluginManager pm = getServer().getPluginManager();
         pl = new HomeSpawnListener(this);
         pm.registerEvents(this.pl, this);
-        configVersion();
     }
 
     public void configVersion() {
@@ -234,6 +233,7 @@ public class HomeSpawn extends JavaPlugin {
         pl.setMessages();
         loadPlayerData();
         loadName();
+        configVersion();
     }
 
     public void savePlayerData(String uuid) throws IOException {

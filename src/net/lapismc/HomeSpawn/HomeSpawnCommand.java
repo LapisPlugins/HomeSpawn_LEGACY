@@ -46,8 +46,8 @@ public class HomeSpawnCommand implements CommandExecutor {
         dc.add(DyeColor.ORANGE);
         Random r = new Random();
         if (!plugin.HomesListInvs.containsKey(p)) {
-            int notrounded = getHomes.getInt(p.getUniqueId() + ".numb") / 9;
-            Double rounded = Math.ceil(notrounded);
+            int notRounded = getHomes.getInt(p.getUniqueId() + ".Numb") / 9;
+            Double rounded = Math.ceil(notRounded);
             int slots = rounded.intValue();
             Inventory inv = Bukkit.createInventory(p, 9 * slots, ChatColor.GOLD + p.getName() + "'s HomesList");
             plugin.HomesListInvs.put(p, inv);

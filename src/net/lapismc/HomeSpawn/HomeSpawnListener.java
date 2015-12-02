@@ -92,7 +92,7 @@ public class HomeSpawnListener implements Listener {
                 file.createNewFile();
                 getHomes.createSection("name");
                 getHomes.createSection("HasHome");
-                getHomes.createSection(player.getName() + ".Numb");
+                getHomes.createSection(player.getUniqueId() + ".Numb");
                 getHomes.save(file);
                 getHomes.set("name", player.getUniqueId().toString());
                 getHomes.set("HasHome", "No");
