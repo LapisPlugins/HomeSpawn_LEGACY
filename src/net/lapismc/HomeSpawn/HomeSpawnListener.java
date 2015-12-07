@@ -41,7 +41,7 @@ public class HomeSpawnListener implements Listener {
     }
 
     public void setMessages() {
-        plugin.getServer().getScheduler().scheduleAsyncDelayedTask(plugin, new Runnable() {
+        plugin.getServer().getScheduler().runTaskLaterAsynchronously(plugin, new Runnable() {
             public void run() {
                 getMessages = plugin.messages;
                 HomeSpawnCommand.getMessages = plugin.messages;
