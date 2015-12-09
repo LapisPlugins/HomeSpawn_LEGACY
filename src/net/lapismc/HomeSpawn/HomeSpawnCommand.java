@@ -35,8 +35,12 @@ public class HomeSpawnCommand implements CommandExecutor {
     public void showMenu(Player p) {
         String getName = plugin.PlayertoUUID.get(p.getName());
         YamlConfiguration getHomes = plugin.HomeConfigs.get(getName);
-        List<String> homes = getHomes.getStringList(p.getUniqueId().toString()
-                + ".list");
+        List<String> homes = getHomes.getStringList(p.getUniqueId().toString() + ".list");
+        if (homes.isEmpty()) {
+            p.sendMessage(ChatColor.DARK_RED
+                    + getMessages.getString("Home.NoHomeSet"));
+            return;
+        }
         ArrayList<DyeColor> dc = new ArrayList<DyeColor>();
         dc.add(DyeColor.BLACK);
         dc.add(DyeColor.BLUE);
@@ -44,11 +48,14 @@ public class HomeSpawnCommand implements CommandExecutor {
         dc.add(DyeColor.GREEN);
         dc.add(DyeColor.MAGENTA);
         dc.add(DyeColor.ORANGE);
-        Random r = new Random();
-        if (!plugin.HomesListInvs.containsKey(p)) {
-            int notRounded = getHomes.getInt(p.getUniqueId() + ".Numb") / 9;
-            Double rounded = Math.ceil(notRounded);
-            int slots = rounded.intValue();
+        Random r = new Random(25);
+        int slots = homes.size() % 9 == 0 ? homes.size() / 9 : homes.size() / 9 + 1;
+        if (plugin.HomesListInvs.containsKey(p)) {
+            if (!(plugin.HomesListInvs.get(p).getSize() == slots * 9)) {
+                Inventory inv = Bukkit.createInventory(p, 9 * slots, ChatColor.GOLD + p.getName() + "'s HomesList");
+                plugin.HomesListInvs.put(p, inv);
+            }
+        } else {
             Inventory inv = Bukkit.createInventory(p, 9 * slots, ChatColor.GOLD + p.getName() + "'s HomesList");
             plugin.HomesListInvs.put(p, inv);
         }

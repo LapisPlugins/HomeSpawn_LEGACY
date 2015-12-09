@@ -16,5 +16,3 @@ TeleportTime: 10
 CommandBook: true
 ## When enabled players with more than 1 home will be given an inventory menu to select a home to teleport to when they run /homeslist
 InventoryMenu: true
-## The IP address is used for helping with bug fixing if you report an error
-PublicIP: play.lapismc.net

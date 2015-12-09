@@ -46,7 +46,6 @@ public class HomeSpawn extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        Update();
         Enable();
         try {
             Configs();
@@ -209,9 +208,6 @@ public class HomeSpawn extends JavaPlugin {
             }
             if (!getConfig().contains("InventoryMenu")) {
                 getConfig().set("InventoryMenu", true);
-            }
-            if (!getConfig().contains("PublicIP")) {
-                getConfig().set("PublicIP", "play.server.com");
             }
             saveConfig();
         }
