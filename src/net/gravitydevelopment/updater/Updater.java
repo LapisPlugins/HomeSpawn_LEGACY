@@ -311,7 +311,7 @@ public class Updater {
      *
      * @param file the name of the file to save it as.
      */
-    private void saveFile(String file) {
+    public void saveFile(String file) {
         final File folder = this.updateFolder;
 
         deleteOldFiles();

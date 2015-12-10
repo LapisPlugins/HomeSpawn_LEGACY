@@ -27,6 +27,7 @@ public class HomeSpawn extends JavaPlugin {
     public final Logger logger = this.getLogger();
     public HomeSpawn plugin;
     public HomeSpawnListener pl;
+    public LapisUpdater updater;
     public YamlConfiguration spawn = null;
     public File spawnFile = null;
     public YamlConfiguration playerData = null;
