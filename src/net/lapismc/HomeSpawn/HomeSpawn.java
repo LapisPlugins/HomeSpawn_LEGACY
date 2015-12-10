@@ -61,6 +61,19 @@ public class HomeSpawn extends JavaPlugin {
         if (getConfig().getBoolean("Metrics")) {
             try {
                 Metrics metrics = new Metrics(this);
+                Metrics.Graph averageHomesGraph = metrics.createGraph("Average Number Of Homes Set");
+                int homes = 0;
+                int files = this.HomeConfigs.size();
+                for (YamlConfiguration yaml : this.HomeConfigs.values()) {
+                    homes = homes + yaml.getInt(yaml.getString("name") + ".Numb");
+                }
+                int average = homes % files == 0 ? homes / files : homes / files + 1;
+                averageHomesGraph.addPlotter(new Metrics.Plotter(average + "") {
+                    @Override
+                    public int getValue() {
+                        return 1;
+                    }
+                });
                 metrics.start();
             } catch (IOException e) {
                 e.printStackTrace();

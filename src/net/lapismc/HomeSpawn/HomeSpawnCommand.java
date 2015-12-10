@@ -101,7 +101,6 @@ public class HomeSpawnCommand implements CommandExecutor {
             plugin.HomeSpawnTimeLeft.put(p,
                     plugin.getConfig().getInt("TeleportTime"));
         }
-
     }
 
     @Override
