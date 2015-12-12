@@ -40,16 +40,16 @@ import java.security.spec.InvalidKeySpecException;
  * www: http://crackstation.net/hashing-security.htm
  */
 public class PasswordHash {
-    public static final String PBKDF2_ALGORITHM = "PBKDF2WithHmacSHA1";
+    private static final String PBKDF2_ALGORITHM = "PBKDF2WithHmacSHA1";
 
     // The following constants may be changed without breaking existing hashes.
-    public static final int SALT_BYTE_SIZE = 24;
-    public static final int HASH_BYTE_SIZE = 24;
-    public static final int PBKDF2_ITERATIONS = 1000;
+    private static final int SALT_BYTE_SIZE = 24;
+    private static final int HASH_BYTE_SIZE = 24;
+    private static final int PBKDF2_ITERATIONS = 1000;
 
-    public static final int ITERATION_INDEX = 0;
-    public static final int SALT_INDEX = 1;
-    public static final int PBKDF2_INDEX = 2;
+    private static final int ITERATION_INDEX = 0;
+    private static final int SALT_INDEX = 1;
+    private static final int PBKDF2_INDEX = 2;
 
     /**
      * Returns a salted PBKDF2 hash of the password.
@@ -68,7 +68,7 @@ public class PasswordHash {
      * @param password the password to hash
      * @return a salted PBKDF2 hash of the password
      */
-    public static String createHash(char[] password)
+    private static String createHash(char[] password)
             throws NoSuchAlgorithmException, InvalidKeySpecException {
         // Generate a random salt
         SecureRandom random = new SecureRandom();
@@ -100,7 +100,7 @@ public class PasswordHash {
      * @param correctHash the hash of the valid password
      * @return true if the password is correct, false if not
      */
-    public static boolean validatePassword(char[] password, String correctHash)
+    private static boolean validatePassword(char[] password, String correctHash)
             throws NoSuchAlgorithmException, InvalidKeySpecException {
         // Decode the hash into its parameters
         String[] params = correctHash.split(":");
@@ -170,7 +170,7 @@ public class PasswordHash {
     private static String toHex(byte[] array) {
         BigInteger bi = new BigInteger(1, array);
         String hex = bi.toString(16);
-        int paddingLength = (array.length * 2) - hex.length();
+        int paddingLength = array.length * 2 - hex.length();
         if (paddingLength > 0)
             return String.format("%0" + paddingLength + "d", 0) + hex;
         else
@@ -213,6 +213,8 @@ public class PasswordHash {
                 System.out.println("TESTS FAILED!");
             else
                 System.out.println("TESTS PASSED!");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
         } catch (Exception ex) {
             System.out.println("ERROR: " + ex);
         }

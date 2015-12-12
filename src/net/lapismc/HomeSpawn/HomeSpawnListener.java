@@ -25,19 +25,16 @@ import java.util.List;
 
 public class HomeSpawnListener implements Listener {
 
-    public YamlConfiguration getMessages = null;
-
-    List<Player> Players = new ArrayList<Player>();
-
+    private final List<Player> Players = new ArrayList<>();
+    private YamlConfiguration getMessages;
     private HomeSpawn plugin;
-    private HomeSpawnCommand cmd;
 
     public HomeSpawnListener(HomeSpawn plugin) {
         this.plugin = plugin;
     }
 
     public HomeSpawnListener(HomeSpawnCommand cmd) {
-        this.cmd = cmd;
+        HomeSpawnCommand cmd1 = cmd;
     }
 
     public void setMessages() {
@@ -47,15 +44,15 @@ public class HomeSpawnListener implements Listener {
                 HomeSpawnCommand.getMessages = plugin.messages;
                 HomeSpawnCommand.getSpawn = plugin.spawn;
             }
-        }, 1 * 20);
+        }, 20);
     }
 
     @EventHandler(priority = EventPriority.HIGH)
-    void PlayerJoinEvent(final PlayerJoinEvent event) {
+    void PlayerJoinEvent(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         File file = new File(plugin.getDataFolder() + File.separator
                 + "PlayerData" + File.separator
-                + player.getUniqueId().toString() + ".yml");
+                + player.getUniqueId() + ".yml");
         FileConfiguration getHomes = YamlConfiguration.loadConfiguration(file);
         File file2 = new File(plugin.getDataFolder().getAbsolutePath()
                 + File.separator + "PlayerData" + File.separator
@@ -129,8 +126,8 @@ public class HomeSpawnListener implements Listener {
         Player p = e.getPlayer();
         Location From = e.getFrom();
         Location To = e.getTo();
-        List<Integer> To1 = new ArrayList<Integer>();
-        List<Integer> From1 = new ArrayList<Integer>();
+        List<Integer> To1 = new ArrayList<>();
+        List<Integer> From1 = new ArrayList<>();
         if (plugin.HomeSpawnLocations.containsKey(p)) {
             if (plugin.HomeSpawnTimeLeft.containsKey(p)) {
                 To1.add(To.getBlockX());
@@ -161,10 +158,10 @@ public class HomeSpawnListener implements Listener {
         Entity Hitter = e.getDamager();
         Entity Hit = e.getEntity();
         if (Hit instanceof Player) {
-            Player p = ((Player) Hit);
+            Player p = (Player) Hit;
             if (plugin.HomeSpawnTimeLeft.containsKey(p)) {
                 if (Hitter instanceof Arrow) {
-                    final Arrow arrow = (Arrow) Hitter;
+                    Arrow arrow = (Arrow) Hitter;
                     if (arrow.getShooter() instanceof Player) {
                         plugin.HomeSpawnLocations.put(p, null);
                         p.sendMessage(ChatColor.GOLD
@@ -212,19 +209,18 @@ public class HomeSpawnListener implements Listener {
                     .loadConfiguration(Homes);
             if (name1.equalsIgnoreCase("Home")) {
                 if (getHomes.getString("HasHome").equalsIgnoreCase("yes")) {
-                    int x = getHomes.getInt(p.getUniqueId().toString() + ".x");
-                    int y = getHomes.getInt(p.getUniqueId().toString() + ".y");
-                    int z = getHomes.getInt(p.getUniqueId().toString() + ".z");
-                    float yaw = getHomes.getInt(p.getUniqueId().toString()
+                    int x = getHomes.getInt(p.getUniqueId() + ".x");
+                    int y = getHomes.getInt(p.getUniqueId() + ".y");
+                    int z = getHomes.getInt(p.getUniqueId() + ".z");
+                    float yaw = getHomes.getInt(p.getUniqueId()
                             + ".Yaw");
-                    float pitch = getHomes.getInt(p.getUniqueId().toString()
+                    float pitch = getHomes.getInt(p.getUniqueId()
                             + ".Pitch");
-                    String cworld = getHomes.getString(p.getUniqueId()
-                            .toString() + ".world");
+                    String cworld = getHomes.getString(p.getUniqueId() + ".world");
                     World world = plugin.getServer().getWorld(cworld);
                     Location home = new Location(world, x, y, z, yaw, pitch);
                     home.add(0.5, 0, 0.5);
-                    TeleportPlayer(p, home, "Home");
+                    TeleportPlayer(p, home);
                 }
             } else {
                 if (getHomes.getString(name1 + ".HasHome").equalsIgnoreCase(
@@ -238,7 +234,7 @@ public class HomeSpawnListener implements Listener {
                     World world = plugin.getServer().getWorld(cworld);
                     Location home2 = new Location(world, x, y, z, yaw, pitch);
                     home2.add(0.5, 0, 0.5);
-                    TeleportPlayer(p, home2, "Home");
+                    TeleportPlayer(p, home2);
                 }
             }
             Inventory inv = plugin.HomesListInvs.get(p);
@@ -262,14 +258,14 @@ public class HomeSpawnListener implements Listener {
         }
     }
 
-    public void TeleportPlayer(Player p, Location l, String r) {
+    private void TeleportPlayer(Player p, Location l) {
         if (plugin.getConfig().getInt("TeleportTime") == 0
                 || p.hasPermission("homespawn.bypassdelay")) {
             p.teleport(l);
-            if (r.equalsIgnoreCase("Spawn")) {
+            if ("Home".equalsIgnoreCase("Spawn")) {
                 p.sendMessage(ChatColor.GOLD
                         + getMessages.getString("Spawn.SentToSpawn"));
-            } else if (r.equalsIgnoreCase("Home")) {
+            } else if ("Home".equalsIgnoreCase("Home")) {
                 p.sendMessage(ChatColor.GOLD
                         + getMessages.getString("Home.SentHome"));
             }

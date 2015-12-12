@@ -48,7 +48,7 @@ public class Metrics {
     /**
      * The current revision number
      */
-    private final static int REVISION = 7;
+    private static final int REVISION = 7;
 
     /**
      * The base url of the metrics domain
@@ -104,9 +104,9 @@ public class Metrics {
     /**
      * The scheduled task
      */
-    private volatile BukkitTask task = null;
+    private volatile BukkitTask task;
 
-    public Metrics(final Plugin plugin) throws IOException {
+    public Metrics(Plugin plugin) throws IOException {
         if (plugin == null) {
             throw new IllegalArgumentException("Plugin cannot be null");
         }
@@ -140,13 +140,15 @@ public class Metrics {
      * @param input
      * @return
      */
-    public static byte[] gzip(String input) {
+    private static byte[] gzip(String input) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         GZIPOutputStream gzos = null;
 
         try {
             gzos = new GZIPOutputStream(baos);
             gzos.write(input.getBytes("UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -229,7 +231,7 @@ public class Metrics {
                 default:
                     if (chr < ' ') {
                         String t = "000" + Integer.toHexString(chr);
-                        builder.append("\\u" + t.substring(t.length() - 4));
+                        builder.append("\\u").append(t.substring(t.length() - 4));
                     } else {
                         builder.append(chr);
                     }
@@ -247,7 +249,7 @@ public class Metrics {
      * @param text the text to encode
      * @return the encoded text, as UTF-8
      */
-    private static String urlEncode(final String text)
+    private static String urlEncode(String text)
             throws UnsupportedEncodingException {
         return URLEncoder.encode(text, "UTF-8");
     }
@@ -257,17 +259,16 @@ public class Metrics {
      * plotters to their own graphs on the metrics website. Plotters can be
      * added to the graph object returned.
      *
-     * @param name The name of the graph
      * @return Graph object created. Will never return NULL under normal
      * circumstances unless bad parameters are given
      */
-    public Graph createGraph(final String name) {
-        if (name == null) {
+    public Graph createGraph() {
+        if ("Average Number Of Homes Set" == null) {
             throw new IllegalArgumentException("Graph name cannot be null");
         }
 
         // Construct the graph object
-        final Graph graph = new Graph(name);
+        Graph graph = new Graph("Average Number Of Homes Set");
 
         // Now we can add our graph
         graphs.add(graph);
@@ -282,7 +283,7 @@ public class Metrics {
      *
      * @param graph The name of the graph
      */
-    public void addGraph(final Graph graph) {
+    public void addGraph(Graph graph) {
         if (graph == null) {
             throw new IllegalArgumentException("Graph cannot be null");
         }
@@ -364,11 +365,13 @@ public class Metrics {
      *
      * @return true if metrics should be opted out of it
      */
-    public boolean isOptOut() {
+    private boolean isOptOut() {
         synchronized (optOutLock) {
             try {
                 // Reload the metrics file
                 configuration.load(getConfigFile());
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
             } catch (IOException ex) {
                 if (debug) {
                     Bukkit.getLogger().log(Level.INFO,
@@ -390,7 +393,7 @@ public class Metrics {
      * Enables metrics for the server by setting "opt-out" to false in the
      * config file and starting the metrics task.
      *
-     * @throws java.io.IOException
+     * @throws IOException
      */
     public void enable() throws IOException {
         // This has to be synchronized or it can collide with the check in the
@@ -414,7 +417,7 @@ public class Metrics {
      * Disables metrics for the server by setting "opt-out" to true in the
      * config file and canceling the metrics task.
      *
-     * @throws java.io.IOException
+     * @throws IOException
      */
     public void disable() throws IOException {
         // This has to be synchronized or it can collide with the check in the
@@ -441,7 +444,7 @@ public class Metrics {
      *
      * @return the File object for the config file
      */
-    public File getConfigFile() {
+    private File getConfigFile() {
         // I believe the easiest way to get the base folder (e.g craftbukkit set
         // via -P) for plugins to use
         // is to abuse the plugin object we already have
@@ -457,7 +460,7 @@ public class Metrics {
     /**
      * Generic method that posts a plugin to the metrics website
      */
-    private void postPlugin(final boolean isPing) throws IOException {
+    private void postPlugin(boolean isPing) throws IOException {
         // Server software specific section
         PluginDescriptionFile description = plugin.getDescription();
         String pluginName = description.getName();
@@ -507,7 +510,7 @@ public class Metrics {
             appendJSONPair(json, "ping", "1");
         }
 
-        if (graphs.size() > 0) {
+        if (!graphs.isEmpty()) {
             synchronized (graphs) {
                 json.append(',');
                 json.append('"');
@@ -518,11 +521,7 @@ public class Metrics {
 
                 boolean firstGraph = true;
 
-                final Iterator<Graph> iter = graphs.iterator();
-
-                while (iter.hasNext()) {
-                    Graph graph = iter.next();
-
+                for (Graph graph : graphs) {
                     StringBuilder graphJson = new StringBuilder();
                     graphJson.append('{');
 
@@ -592,7 +591,7 @@ public class Metrics {
         os.flush();
 
         // Now read the response
-        final BufferedReader reader = new BufferedReader(new InputStreamReader(
+        BufferedReader reader = new BufferedReader(new InputStreamReader(
                 connection.getInputStream()));
         String response = reader.readLine();
 
@@ -615,11 +614,8 @@ public class Metrics {
             if (response.equals("1")
                     || response.contains("This is your first update this hour")) {
                 synchronized (graphs) {
-                    final Iterator<Graph> iter = graphs.iterator();
 
-                    while (iter.hasNext()) {
-                        final Graph graph = iter.next();
-
+                    for (Graph graph : graphs) {
                         for (Plotter plotter : graph.getPlotters()) {
                             plotter.reset();
                         }
@@ -639,7 +635,8 @@ public class Metrics {
         try {
             Class.forName("mineshafter.MineServer");
             return true;
-        } catch (Exception e) {
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
             return false;
         }
     }
@@ -658,9 +655,9 @@ public class Metrics {
         /**
          * The set of plotters that are contained within this graph
          */
-        private final Set<Plotter> plotters = new LinkedHashSet<Plotter>();
+        private final Set<Plotter> plotters = new LinkedHashSet<>();
 
-        private Graph(final String name) {
+        private Graph(String name) {
             this.name = name;
         }
 
@@ -678,7 +675,7 @@ public class Metrics {
          *
          * @param plotter the plotter to add to the graph
          */
-        public void addPlotter(final Plotter plotter) {
+        public void addPlotter(Plotter plotter) {
             plotters.add(plotter);
         }
 
@@ -687,14 +684,14 @@ public class Metrics {
          *
          * @param plotter the plotter to remove from the graph
          */
-        public void removePlotter(final Plotter plotter) {
+        public void removePlotter(Plotter plotter) {
             plotters.remove(plotter);
         }
 
         /**
          * Gets an <b>unmodifiable</b> set of the plotter objects in the graph
          *
-         * @return an unmodifiable {@link java.util.Set} of the plotter objects
+         * @return an unmodifiable {@link Set} of the plotter objects
          */
         public Set<Plotter> getPlotters() {
             return Collections.unmodifiableSet(plotters);
@@ -706,12 +703,12 @@ public class Metrics {
         }
 
         @Override
-        public boolean equals(final Object object) {
+        public boolean equals(Object object) {
             if (!(object instanceof Graph)) {
                 return false;
             }
 
-            final Graph graph = (Graph) object;
+            Graph graph = (Graph) object;
             return graph.name.equals(name);
         }
 
@@ -719,14 +716,14 @@ public class Metrics {
          * Called when the server owner decides to opt-out of BukkitMetrics
          * while the server is running.
          */
-        protected void onOptOut() {
+        void onOptOut() {
         }
     }
 
     /**
      * Interface used to collect custom data for a plugin
      */
-    public static abstract class Plotter {
+    public abstract static class Plotter {
 
         /**
          * The plot's name
@@ -746,7 +743,7 @@ public class Metrics {
          * @param name the name of the plotter to use, which will show up on the
          *             website
          */
-        public Plotter(final String name) {
+        public Plotter(String name) {
             this.name = name;
         }
 
@@ -782,12 +779,12 @@ public class Metrics {
         }
 
         @Override
-        public boolean equals(final Object object) {
+        public boolean equals(Object object) {
             if (!(object instanceof Plotter)) {
                 return false;
             }
 
-            final Plotter plotter = (Plotter) object;
+            Plotter plotter = (Plotter) object;
             return plotter.name.equals(name)
                     && plotter.getValue() == getValue();
         }

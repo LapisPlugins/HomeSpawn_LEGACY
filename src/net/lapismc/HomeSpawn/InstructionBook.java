@@ -6,7 +6,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 
-public class InstructionBook {
+class InstructionBook {
 
     public static ItemStack getBook() {
         ItemStack book = new ItemStack(Material.WRITTEN_BOOK, 1);

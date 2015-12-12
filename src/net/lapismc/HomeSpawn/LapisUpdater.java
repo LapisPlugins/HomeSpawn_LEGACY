@@ -8,27 +8,26 @@ import org.inventivetalent.spiget.api.java.SpigetAPI;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class LapisUpdater {
 
-    private boolean download;
+    private final Updater updater;
     private String ID;
     private String result;
-    private String error = null;
+    private String error;
     private Plugin plugin;
     private URL downloadURL;
 
-    private Updater updater;
-
     public LapisUpdater(Updater plugin) {
-        this.updater = plugin;
+        updater = plugin;
     }
 
     public void update(Plugin plugin, boolean download, String ID) {
-        this.download = download;
+        boolean download1 = download;
         this.ID = ID;
         this.plugin = plugin;
         String updateCheck = updateCheck();
@@ -72,7 +71,7 @@ public class LapisUpdater {
             c.setRequestMethod("POST");
             c.getOutputStream().write(("key=98BE0FE67F88AB82B4C197FAF1DC3B69206EFDCC4D3B80FC83A00037510B99B4" +
                     "&resource=" + ID).getBytes("UTF-8"));
-            final SpigetAPI api = Spiget.getAPI();
+            SpigetAPI api = Spiget.getAPI();
 
             String oldVersion = plugin.getDescription().getVersion();
             String newVersion = new BufferedReader(new InputStreamReader(c.getInputStream()))
@@ -82,7 +81,8 @@ public class LapisUpdater {
             } else {
                 return "No Update";
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
+            e.printStackTrace();
             String message = e.getMessage();
             return "Update Failed: " + message;
         }
