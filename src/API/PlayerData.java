@@ -12,9 +12,9 @@ import java.util.HashMap;
  *
  * @author Dart2112
  */
-public class PlayerData {
+class PlayerData {
 
-    private HomeSpawn plugin;
+    private final HomeSpawn plugin;
 
     public PlayerData(HomeSpawn plugin) {
         this.plugin = plugin;

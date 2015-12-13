@@ -13,8 +13,8 @@ import java.security.spec.InvalidKeySpecException;
  *
  * @author Dart2112
  */
-public class Configs {
-    private HomeSpawn plugin;
+class Configs {
+    private final HomeSpawn plugin;
 
     public Configs(HomeSpawn plugin) {
         this.plugin = plugin;
@@ -68,7 +68,7 @@ public class Configs {
     /**
      * Returns the currently loaded Passwords.yml
      */
-    public YamlConfiguration getPasswords() {
+    private YamlConfiguration getPasswords() {
         return plugin.passwords;
     }
 
@@ -77,7 +77,7 @@ public class Configs {
      *
      * @throws IOException
      */
-    public void savePasswords(YamlConfiguration Passwords) throws IOException {
+    private void savePasswords(YamlConfiguration Passwords) throws IOException {
         plugin.passwords = Passwords;
         plugin.passwords.save(plugin.passwordsFile);
         plugin.reload("Silent");
@@ -89,7 +89,7 @@ public class Configs {
      * @throws NoSuchAlgorithmException and InvalidKeySpecException
      */
     public boolean checkPassword(String playerName, String Password) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        String hash = getPasswords().getString("playerName");
+        String hash = getPasswords().getString(playerName);
         return PasswordHash.validatePassword(Password, hash);
     }
 
