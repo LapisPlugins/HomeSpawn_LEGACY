@@ -33,12 +33,12 @@ public class HomeSpawnCommand implements CommandExecutor {
     }
 
     private void showMenu(Player p) {
-        String getName = plugin.PlayertoUUID.get(p.getName());
-        YamlConfiguration getHomes = plugin.HomeConfigs.get(getName);
+        String getName = this.plugin.PlayertoUUID.get(p.getName());
+        YamlConfiguration getHomes = this.plugin.HomeConfigs.get(getName);
         List<String> homes = getHomes.getStringList(p.getUniqueId() + ".list");
         if (homes.isEmpty()) {
             p.sendMessage(ChatColor.DARK_RED
-                    + getMessages.getString("Home.NoHomeSet"));
+                    + HomeSpawnCommand.getMessages.getString("Home.NoHomeSet"));
             return;
         }
         ArrayList<DyeColor> dc = new ArrayList<>();
@@ -50,14 +50,14 @@ public class HomeSpawnCommand implements CommandExecutor {
         dc.add(DyeColor.ORANGE);
         Random r = new Random(25);
         int slots = homes.size() % 9 == 0 ? homes.size() / 9 : homes.size() / 9 + 1;
-        if (plugin.HomesListInvs.containsKey(p)) {
-            if (!(plugin.HomesListInvs.get(p).getSize() == slots * 9)) {
+        if (this.plugin.HomesListInvs.containsKey(p)) {
+            if (!(this.plugin.HomesListInvs.get(p).getSize() == slots * 9)) {
                 Inventory inv = Bukkit.createInventory(p, 9 * slots, ChatColor.GOLD + p.getName() + "'s HomesList");
-                plugin.HomesListInvs.put(p, inv);
+                this.plugin.HomesListInvs.put(p, inv);
             }
         } else {
             Inventory inv = Bukkit.createInventory(p, 9 * slots, ChatColor.GOLD + p.getName() + "'s HomesList");
-            plugin.HomesListInvs.put(p, inv);
+            this.plugin.HomesListInvs.put(p, inv);
         }
         for (String home : homes) {
             ItemStack i = new Wool(dc.get(r.nextInt(6))).toItemStack(1);
@@ -66,19 +66,19 @@ public class HomeSpawnCommand implements CommandExecutor {
             im.setLore(Arrays.asList(ChatColor.GOLD + "Click To Teleport To",
                     ChatColor.RED + home));
             i.setItemMeta(im);
-            plugin.HomesListInvs.get(p).addItem(i);
+            this.plugin.HomesListInvs.get(p).addItem(i);
         }
-        p.openInventory(plugin.HomesListInvs.get(p));
+        p.openInventory(this.plugin.HomesListInvs.get(p));
     }
 
     private YamlConfiguration GetHome(String p) {
-        String getName = plugin.PlayertoUUID.get(p);
-        YamlConfiguration getHomes = plugin.HomeConfigs.get(getName);
+        String getName = this.plugin.PlayertoUUID.get(p);
+        YamlConfiguration getHomes = this.plugin.HomeConfigs.get(getName);
         return getHomes;
     }
 
     private void TeleportPlayer(Player p, Location l, String r) {
-        if (plugin.getConfig().getInt("TeleportTime") == 0
+        if (this.plugin.getConfig().getInt("TeleportTime") == 0
                 || p.hasPermission("homespawn.bypassdelay")) {
             if (!l.getChunk().isLoaded()) {
                 l.getChunk().load();
@@ -86,20 +86,20 @@ public class HomeSpawnCommand implements CommandExecutor {
             p.teleport(l);
             if (r.equalsIgnoreCase("Spawn")) {
                 p.sendMessage(ChatColor.GOLD
-                        + getMessages.getString("Spawn.SentToSpawn"));
+                        + HomeSpawnCommand.getMessages.getString("Spawn.SentToSpawn"));
             } else if (r.equalsIgnoreCase("Home")) {
                 p.sendMessage(ChatColor.GOLD
-                        + getMessages.getString("Home.SentHome"));
+                        + HomeSpawnCommand.getMessages.getString("Home.SentHome"));
             }
         } else {
-            String waitraw = ChatColor.GOLD + getMessages.getString("Wait");
+            String waitraw = ChatColor.GOLD + HomeSpawnCommand.getMessages.getString("Wait");
             String Wait = waitraw.replace("{time}", ChatColor.RED
-                    + plugin.getConfig().getString("TeleportTime")
+                    + this.plugin.getConfig().getString("TeleportTime")
                     + ChatColor.GOLD);
             p.sendMessage(Wait);
-            plugin.HomeSpawnLocations.put(p, l);
-            plugin.HomeSpawnTimeLeft.put(p,
-                    plugin.getConfig().getInt("TeleportTime"));
+            this.plugin.HomeSpawnLocations.put(p, l);
+            this.plugin.HomeSpawnTimeLeft.put(p,
+                    this.plugin.getConfig().getInt("TeleportTime"));
         }
     }
 
@@ -110,36 +110,32 @@ public class HomeSpawnCommand implements CommandExecutor {
             Player player = (Player) sender;
             if (cmd.getName().equalsIgnoreCase("sethome")) {
                 if (player.hasPermission("homespawn.player")) {
-                    String UUID = plugin.PlayertoUUID.get(player.getName());
-                    YamlConfiguration getHomes = plugin.HomeConfigs.get(UUID);
+                    String UUID = this.plugin.PlayertoUUID.get(player.getName());
+                    YamlConfiguration getHomes = this.plugin.HomeConfigs.get(UUID);
                     if (!getHomes.contains(player.getUniqueId()
                             + ".list")) {
                         getHomes.createSection(player.getUniqueId()
                                 + ".list");
-                        try {
-                            plugin.savePlayerData(UUID);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                        this.plugin.savePlayerData(UUID);
                     }
                     List<String> list = getHomes.getStringList(player
                             .getUniqueId() + ".list");
                     if (player.hasPermission("homespawn.vip")
                             && !player.hasPermission("homespawn.admin")) {
                         if (getHomes.getInt(player.getUniqueId()
-                                + ".Numb") >= plugin.getConfig().getInt(
+                                + ".Numb") >= this.plugin.getConfig().getInt(
                                 "VIPHomesLimit")) {
                             player.sendMessage(ChatColor.RED
-                                    + getMessages
+                                    + HomeSpawnCommand.getMessages
                                     .getString("Home.LimitReached"));
                             return false;
                         }
                     } else if (player.hasPermission("homespawn.admin")) {
                         if (getHomes.getInt(player.getUniqueId()
-                                + ".Numb") >= plugin.getConfig().getInt(
+                                + ".Numb") >= this.plugin.getConfig().getInt(
                                 "AdminHomesLimit")) {
                             player.sendMessage(ChatColor.RED
-                                    + getMessages
+                                    + HomeSpawnCommand.getMessages
                                     .getString("Home.LimitReached"));
                             return false;
                         }
@@ -192,7 +188,7 @@ public class HomeSpawnCommand implements CommandExecutor {
                                 + ".Pitch", player.getLocation().getPitch());
                         getHomes.set("HasHome", "Yes");
                         player.sendMessage(ChatColor.GOLD
-                                + getMessages.getString("Home.HomeSet"));
+                                + HomeSpawnCommand.getMessages.getString("Home.HomeSet"));
                     } else if (args.length == 1) {
                         if (player.hasPermission("homespawn.vip")
                                 || player.hasPermission("homespawn.admin")) {
@@ -242,38 +238,29 @@ public class HomeSpawnCommand implements CommandExecutor {
                                     .getLocation().getPitch());
                             getHomes.set(home + ".HasHome", "Yes");
                             player.sendMessage(ChatColor.GOLD
-                                    + getMessages.getString("Home.HomeSet"));
+                                    + HomeSpawnCommand.getMessages.getString("Home.HomeSet"));
                         } else {
-                            player.sendMessage(ChatColor.DARK_RED + getMessages.getString("NoPerms"));
+                            player.sendMessage(ChatColor.DARK_RED + HomeSpawnCommand.getMessages.getString("NoPerms"));
                         }
                     } else {
                         player.sendMessage(ChatColor.RED
-                                + getMessages.getString("Error.Args+"));
+                                + HomeSpawnCommand.getMessages.getString("Error.Args+"));
                     }
-                    try {
-                        plugin.savePlayerData(UUID);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
+                    this.plugin.savePlayerData(UUID);
                 } else {
                     player.sendMessage(ChatColor.DARK_RED
-                            + getMessages.getString("NoPerms"));
+                            + HomeSpawnCommand.getMessages.getString("NoPerms"));
                 }
 
             } else if (cmd.getName().equalsIgnoreCase("home")) {
                 if (player.hasPermission("homespawn.player")) {
-                    String UUID = plugin.PlayertoUUID.get(player.getName());
-                    YamlConfiguration getHomes = plugin.HomeConfigs.get(UUID);
+                    String UUID = this.plugin.PlayertoUUID.get(player.getName());
+                    YamlConfiguration getHomes = this.plugin.HomeConfigs.get(UUID);
                     if (!getHomes.contains(player.getUniqueId()
                             + ".list")) {
                         getHomes.createSection(player.getUniqueId()
                                 + ".list");
-                        try {
-                            plugin.savePlayerData(UUID);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                        this.plugin.savePlayerData(UUID);
                     }
                     List<String> list = getHomes.getStringList(player
                             .getUniqueId() + ".list");
@@ -287,14 +274,14 @@ public class HomeSpawnCommand implements CommandExecutor {
                             float pitch = getHomes.getInt(player.getUniqueId() + ".Pitch");
                             String cworld = getHomes.getString(player
                                     .getUniqueId() + ".world");
-                            World world = plugin.getServer().getWorld(cworld);
+                            World world = this.plugin.getServer().getWorld(cworld);
                             Location home = new Location(world, x, y, z, yaw,
                                     pitch);
                             home.add(0.5, 0, 0.5);
-                            TeleportPlayer(player, home, "Home");
+                            this.TeleportPlayer(player, home, "Home");
                         } else {
                             player.sendMessage(ChatColor.RED
-                                    + getMessages.getString("Home.NoHomeSet"));
+                                    + HomeSpawnCommand.getMessages.getString("Home.NoHomeSet"));
                         }
                     } else if (args.length == 1) {
                         String home = args[0];
@@ -315,12 +302,12 @@ public class HomeSpawnCommand implements CommandExecutor {
                                                 + StringList);
                                     } else {
                                         player.sendMessage(ChatColor.DARK_RED
-                                                + getMessages
+                                                + HomeSpawnCommand.getMessages
                                                 .getString("Home.NoHomeSet"));
                                     }
                                 } else {
                                     player.sendMessage(ChatColor.DARK_RED
-                                            + getMessages
+                                            + HomeSpawnCommand.getMessages
                                             .getString("Home.NoHomeSet"));
                                 }
                                 return false;
@@ -335,12 +322,12 @@ public class HomeSpawnCommand implements CommandExecutor {
                                 float pitch = getHomes.getInt(home + ".Pitch");
                                 String cworld = getHomes.getString(home
                                         + ".world");
-                                World world = plugin.getServer().getWorld(
+                                World world = this.plugin.getServer().getWorld(
                                         cworld);
                                 Location home2 = new Location(world, x, y, z,
                                         yaw, pitch);
                                 home2.add(0.5, 0, 0.5);
-                                TeleportPlayer(player, home2, "Home");
+                                this.TeleportPlayer(player, home2, "Home");
                             }
                         } else {
                             player.sendMessage(ChatColor.RED
@@ -357,12 +344,12 @@ public class HomeSpawnCommand implements CommandExecutor {
                                             + StringList);
                                 } else {
                                     player.sendMessage(ChatColor.DARK_RED
-                                            + getMessages
+                                            + HomeSpawnCommand.getMessages
                                             .getString("Home.NoHomeSet"));
                                 }
                             } else {
                                 player.sendMessage(ChatColor.DARK_RED
-                                        + getMessages
+                                        + HomeSpawnCommand.getMessages
                                         .getString("Home.NoHomeSet"));
                             }
                             return false;
@@ -370,22 +357,18 @@ public class HomeSpawnCommand implements CommandExecutor {
                     }
                 } else {
                     player.sendMessage(ChatColor.DARK_RED
-                            + getMessages.getString("NoPerms"));
+                            + HomeSpawnCommand.getMessages.getString("NoPerms"));
                 }
 
             } else if (cmd.getName().equalsIgnoreCase("delhome")) {
                 if (player.hasPermission("homespawn.player")) {
-                    String UUID = plugin.PlayertoUUID.get(player.getName());
-                    YamlConfiguration getHomes = plugin.HomeConfigs.get(UUID);
+                    String UUID = this.plugin.PlayertoUUID.get(player.getName());
+                    YamlConfiguration getHomes = this.plugin.HomeConfigs.get(UUID);
                     if (!getHomes.contains(player.getUniqueId()
                             + ".list")) {
                         getHomes.createSection(player.getUniqueId()
                                 + ".list");
-                        try {
-                            plugin.savePlayerData(UUID);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                        this.plugin.savePlayerData(UUID);
                     }
                     List<String> list = getHomes.getStringList(player
                             .getUniqueId() + ".list");
@@ -395,11 +378,11 @@ public class HomeSpawnCommand implements CommandExecutor {
                                 .equalsIgnoreCase("no")
                                 || !getHomes.contains("HasHome")) {
                             player.sendMessage(ChatColor.RED
-                                    + getMessages.getString("Home.NoHomeSet"));
+                                    + HomeSpawnCommand.getMessages.getString("Home.NoHomeSet"));
                         } else if (getHomes.getString("HasHome")
                                 .equalsIgnoreCase("yes")) {
                             player.sendMessage(ChatColor.GOLD
-                                    + getMessages.getString("Home.HomeRemoved"));
+                                    + HomeSpawnCommand.getMessages.getString("Home.HomeRemoved"));
                             getHomes.set("HasHome", "No");
                             getHomes.set(player.getUniqueId()
                                     + ".Numb", HomeNumb - 1);
@@ -408,14 +391,10 @@ public class HomeSpawnCommand implements CommandExecutor {
                                 getHomes.set(player.getUniqueId()
                                         + ".list", list);
                             }
-                            try {
-                                plugin.savePlayerData(UUID);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
+                            this.plugin.savePlayerData(UUID);
                         } else {
                             player.sendMessage(ChatColor.RED
-                                    + getMessages.getString("Home.NoHomeSet"));
+                                    + HomeSpawnCommand.getMessages.getString("Home.NoHomeSet"));
                             if (getHomes.getInt(player.getUniqueId()
                                     + ".Numb") > 0) {
                                 if (!list.isEmpty()) {
@@ -428,12 +407,12 @@ public class HomeSpawnCommand implements CommandExecutor {
                                             + StringList);
                                 } else {
                                     player.sendMessage(ChatColor.DARK_RED
-                                            + getMessages
+                                            + HomeSpawnCommand.getMessages
                                             .getString("Home.NoHomeSet"));
                                 }
                             } else {
                                 player.sendMessage(ChatColor.DARK_RED
-                                        + getMessages
+                                        + HomeSpawnCommand.getMessages
                                         .getString("Home.NoHomeSet"));
                             }
                         }
@@ -444,7 +423,7 @@ public class HomeSpawnCommand implements CommandExecutor {
                                 || getHomes.getString(home + ".HasHome")
                                 .equalsIgnoreCase("no")) {
                             player.sendMessage(ChatColor.RED
-                                    + getMessages.getString("Home.NoHomeSet"));
+                                    + HomeSpawnCommand.getMessages.getString("Home.NoHomeSet"));
                             if (getHomes.getInt(player.getUniqueId()
                                     + ".Numb") > 0) {
                                 if (!list.isEmpty()) {
@@ -457,18 +436,18 @@ public class HomeSpawnCommand implements CommandExecutor {
                                             + StringList);
                                 } else {
                                     player.sendMessage(ChatColor.DARK_RED
-                                            + getMessages
+                                            + HomeSpawnCommand.getMessages
                                             .getString("Home.NoHomeSet"));
                                 }
                             } else {
                                 player.sendMessage(ChatColor.DARK_RED
-                                        + getMessages
+                                        + HomeSpawnCommand.getMessages
                                         .getString("Home.NoHomeSet"));
                             }
                         } else if (getHomes.getString(home + ".HasHome")
                                 .equalsIgnoreCase("yes")) {
                             player.sendMessage(ChatColor.GOLD
-                                    + getMessages.getString("Home.HomeRemoved"));
+                                    + HomeSpawnCommand.getMessages.getString("Home.HomeRemoved"));
                             getHomes.set(home + ".HasHome", "No");
                             getHomes.set(player.getUniqueId()
                                     + ".Numb", HomeNumb - 1);
@@ -477,14 +456,10 @@ public class HomeSpawnCommand implements CommandExecutor {
                                 getHomes.set(player.getUniqueId()
                                         + ".list", list);
                             }
-                            try {
-                                plugin.savePlayerData(UUID);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
+                            this.plugin.savePlayerData(UUID);
                         } else {
                             player.sendMessage(ChatColor.RED
-                                    + getMessages.getString("Home.NoHomeSet"));
+                                    + HomeSpawnCommand.getMessages.getString("Home.NoHomeSet"));
                             if (getHomes.getInt(player.getUniqueId()
                                     + ".Numb") > 0) {
                                 if (!list.isEmpty()) {
@@ -497,113 +472,113 @@ public class HomeSpawnCommand implements CommandExecutor {
                                             + StringList);
                                 } else {
                                     player.sendMessage(ChatColor.DARK_RED
-                                            + getMessages
+                                            + HomeSpawnCommand.getMessages
                                             .getString("Home.NoHomeSet"));
                                 }
                             } else {
                                 player.sendMessage(ChatColor.DARK_RED
-                                        + getMessages
+                                        + HomeSpawnCommand.getMessages
                                         .getString("Home.NoHomeSet"));
                             }
                         }
                     } else {
                         player.sendMessage(ChatColor.RED
-                                + getMessages.getString("Error.Args+"));
+                                + HomeSpawnCommand.getMessages.getString("Error.Args+"));
                     }
                 } else {
                     player.sendMessage(ChatColor.DARK_RED
-                            + getMessages.getString("NoPerms"));
+                            + HomeSpawnCommand.getMessages.getString("NoPerms"));
                 }
             } else if (cmd.getName().equalsIgnoreCase("setspawn")) {
                 if (player.hasPermission("homespawn.admin")) {
                     if (args.length == 0) {
-                        getSpawn.set("spawn.SpawnSet", "Yes");
-                        getSpawn.set("spawn.X", player.getLocation()
+                        HomeSpawnCommand.getSpawn.set("spawn.SpawnSet", "Yes");
+                        HomeSpawnCommand.getSpawn.set("spawn.X", player.getLocation()
                                 .getBlockX());
-                        getSpawn.set("spawn.Y", player.getLocation()
+                        HomeSpawnCommand.getSpawn.set("spawn.Y", player.getLocation()
                                 .getBlockY());
-                        getSpawn.set("spawn.Z", player.getLocation()
+                        HomeSpawnCommand.getSpawn.set("spawn.Z", player.getLocation()
                                 .getBlockZ());
-                        getSpawn.set("spawn.World", player.getWorld().getName());
-                        getSpawn.set("spawn.Yaw", player.getLocation().getYaw());
-                        getSpawn.set("spawn.Pitch", player.getLocation()
+                        HomeSpawnCommand.getSpawn.set("spawn.World", player.getWorld().getName());
+                        HomeSpawnCommand.getSpawn.set("spawn.Yaw", player.getLocation().getYaw());
+                        HomeSpawnCommand.getSpawn.set("spawn.Pitch", player.getLocation()
                                 .getPitch());
                         player.sendMessage(ChatColor.GOLD
-                                + getMessages.getString("Spawn.SpawnSet"));
+                                + HomeSpawnCommand.getMessages.getString("Spawn.SpawnSet"));
                     } else if (args[0].equalsIgnoreCase("new")) {
-                        getSpawn.set("spawnnew.SpawnSet", "Yes");
-                        getSpawn.set("spawnnew.X", player.getLocation()
+                        HomeSpawnCommand.getSpawn.set("spawnnew.SpawnSet", "Yes");
+                        HomeSpawnCommand.getSpawn.set("spawnnew.X", player.getLocation()
                                 .getBlockX());
-                        getSpawn.set("spawnnew.Y", player.getLocation()
+                        HomeSpawnCommand.getSpawn.set("spawnnew.Y", player.getLocation()
                                 .getBlockY());
-                        getSpawn.set("spawnnew.Z", player.getLocation()
+                        HomeSpawnCommand.getSpawn.set("spawnnew.Z", player.getLocation()
                                 .getBlockZ());
-                        getSpawn.set("spawnnew.World", player.getWorld()
+                        HomeSpawnCommand.getSpawn.set("spawnnew.World", player.getWorld()
                                 .getName());
-                        getSpawn.set("spawnnew.Yaw", player.getLocation()
+                        HomeSpawnCommand.getSpawn.set("spawnnew.Yaw", player.getLocation()
                                 .getYaw());
-                        getSpawn.set("spawnnew.Pitch", player.getLocation()
+                        HomeSpawnCommand.getSpawn.set("spawnnew.Pitch", player.getLocation()
                                 .getPitch());
                         player.sendMessage(ChatColor.GOLD
-                                + getMessages.getString("Spawn.SpawnNewSet"));
+                                + HomeSpawnCommand.getMessages.getString("Spawn.SpawnNewSet"));
                     } else {
-                        plugin.help(player);
+                        this.plugin.help(player);
                     }
                     try {
-                        getSpawn.save(plugin.spawnFile);
-                        plugin.reload("Silent");
+                        HomeSpawnCommand.getSpawn.save(this.plugin.spawnFile);
+                        this.plugin.reload("Silent");
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
 
                 } else {
                     player.sendMessage(ChatColor.DARK_RED
-                            + getMessages.getString("NoPerms"));
+                            + HomeSpawnCommand.getMessages.getString("NoPerms"));
 
                 }
             } else if (cmd.getName().equals("spawn")) {
                 if (player.hasPermission("homespawn.player")) {
-                    if (!getSpawn.contains("spawn.SpawnSet")) {
+                    if (!HomeSpawnCommand.getSpawn.contains("spawn.SpawnSet")) {
                         player.sendMessage(ChatColor.RED
-                                + getMessages.getString("Spawn.NotSet"));
+                                + HomeSpawnCommand.getMessages.getString("Spawn.NotSet"));
                         return false;
                     }
-                    if (getSpawn.getString("spawn.SpawnSet").equalsIgnoreCase(
+                    if (HomeSpawnCommand.getSpawn.getString("spawn.SpawnSet").equalsIgnoreCase(
                             "yes")) {
-                        int x = getSpawn.getInt("spawn.X");
-                        int y = getSpawn.getInt("spawn.Y");
-                        int z = getSpawn.getInt("spawn.Z");
-                        float yaw = getSpawn.getInt("spawn.Yaw");
-                        float pitch = getSpawn.getInt("spawn.Pitch");
-                        String cworld = getSpawn.getString("spawn.World");
-                        World world = plugin.getServer().getWorld(cworld);
+                        int x = HomeSpawnCommand.getSpawn.getInt("spawn.X");
+                        int y = HomeSpawnCommand.getSpawn.getInt("spawn.Y");
+                        int z = HomeSpawnCommand.getSpawn.getInt("spawn.Z");
+                        float yaw = HomeSpawnCommand.getSpawn.getInt("spawn.Yaw");
+                        float pitch = HomeSpawnCommand.getSpawn.getInt("spawn.Pitch");
+                        String cworld = HomeSpawnCommand.getSpawn.getString("spawn.World");
+                        World world = this.plugin.getServer().getWorld(cworld);
                         Location Spawn = new Location(world, x, y, z, yaw,
                                 pitch);
                         Spawn.add(0.5, 0, 0.5);
-                        TeleportPlayer(player, Spawn, "Spawn");
+                        this.TeleportPlayer(player, Spawn, "Spawn");
                     } else {
                         player.sendMessage(ChatColor.RED
-                                + getMessages.getString("Spawn.NotSet"));
+                                + HomeSpawnCommand.getMessages.getString("Spawn.NotSet"));
                     }
                 } else {
                     player.sendMessage(ChatColor.DARK_RED
-                            + getMessages.getString("NoPerms"));
+                            + HomeSpawnCommand.getMessages.getString("NoPerms"));
                 }
 
             } else if (cmd.getName().equalsIgnoreCase("delspawn")) {
                 if (player.hasPermission("homespawn.admin")) {
-                    if (getSpawn.getString("spawn.SpawnSet") == "No"
-                            || !getSpawn.contains("spawn.SpawnSet")) {
+                    if (HomeSpawnCommand.getSpawn.getString("spawn.SpawnSet") == "No"
+                            || !HomeSpawnCommand.getSpawn.contains("spawn.SpawnSet")) {
                         player.sendMessage(ChatColor.RED
-                                + getMessages.getString("Spawn.NotSet"));
-                    } else if (getSpawn.getString("spawn.SpawnSet")
+                                + HomeSpawnCommand.getMessages.getString("Spawn.NotSet"));
+                    } else if (HomeSpawnCommand.getSpawn.getString("spawn.SpawnSet")
                             .equalsIgnoreCase("Yes")) {
-                        getSpawn.set("spawn.SpawnSet", "No");
+                        HomeSpawnCommand.getSpawn.set("spawn.SpawnSet", "No");
                         player.sendMessage(ChatColor.GOLD
-                                + getMessages.getString("Spawn.Removed"));
+                                + HomeSpawnCommand.getMessages.getString("Spawn.Removed"));
                         try {
-                            getSpawn.save(plugin.spawnFile);
-                            plugin.reload("silent");
+                            HomeSpawnCommand.getSpawn.save(this.plugin.spawnFile);
+                            this.plugin.reload("silent");
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -611,15 +586,15 @@ public class HomeSpawnCommand implements CommandExecutor {
 
                 } else {
                     player.sendMessage(ChatColor.DARK_RED
-                            + getMessages.getString("NoPerms"));
+                            + HomeSpawnCommand.getMessages.getString("NoPerms"));
                 }
             } else if (cmd.getName().equalsIgnoreCase("homeslist")) {
-                if (plugin.getConfig().getBoolean("InventoryMenu")) {
-                    showMenu(player);
+                if (this.plugin.getConfig().getBoolean("InventoryMenu")) {
+                    this.showMenu(player);
                     return true;
                 } else {
-                    String UUID = plugin.PlayertoUUID.get(player.getName());
-                    YamlConfiguration getHomes = plugin.HomeConfigs.get(UUID);
+                    String UUID = this.plugin.PlayertoUUID.get(player.getName());
+                    YamlConfiguration getHomes = this.plugin.HomeConfigs.get(UUID);
                     if (!getHomes.contains(player.getUniqueId()
                             + ".list")) {
                         getHomes.createSection(player.getUniqueId()
@@ -638,11 +613,11 @@ public class HomeSpawnCommand implements CommandExecutor {
                             player.sendMessage(ChatColor.RED + StringList);
                         } else {
                             player.sendMessage(ChatColor.DARK_RED
-                                    + getMessages.getString("Home.NoHomeSet"));
+                                    + HomeSpawnCommand.getMessages.getString("Home.NoHomeSet"));
                         }
                     } else {
                         player.sendMessage(ChatColor.DARK_RED
-                                + getMessages.getString("Home.NoHomeSet"));
+                                + HomeSpawnCommand.getMessages.getString("Home.NoHomeSet"));
                     }
                 }
             } else if (cmd.getName().equalsIgnoreCase("homespawn")) {
@@ -654,7 +629,7 @@ public class HomeSpawnCommand implements CommandExecutor {
                             + ChatColor.GOLD + " Dart2112");
                     player.sendMessage(ChatColor.RED + "Version: "
                             + ChatColor.GOLD
-                            + plugin.getDescription().getVersion());
+                            + this.plugin.getDescription().getVersion());
                     player.sendMessage(ChatColor.RED + "Bukkit Dev:"
                             + ChatColor.GOLD + " http://goo.gl/2Selqa");
                     player.sendMessage(ChatColor.RED
@@ -664,28 +639,28 @@ public class HomeSpawnCommand implements CommandExecutor {
                 } else if (args.length == 1) {
                     if (args[0].equalsIgnoreCase("reload")) {
                         if (player.hasPermission("homespawn.admin")) {
-                            plugin.reload(player);
+                            this.plugin.reload(player);
                         } else {
                             player.sendMessage(ChatColor.RED
                                     + "You Dont Have Permission To Do That");
                         }
                     } else if (args[0].equalsIgnoreCase("help")) {
-                        plugin.help(player);
+                        this.plugin.help(player);
                     }
                 } else {
                     player.sendMessage("That Is Not A Recognised Command, Use /homespawn help For Commands");
                 }
             } else if (cmd.getName().equalsIgnoreCase("homepassword")) {
-                File file = new File(plugin.getDataFolder() + File.separator
+                File file = new File(this.plugin.getDataFolder() + File.separator
                         + "PlayerData" + File.separator
                         + player.getUniqueId() + ".yml");
                 FileConfiguration getHomes = YamlConfiguration
                         .loadConfiguration(file);
-                File file3 = new File(plugin.getDataFolder() + File.separator
+                File file3 = new File(this.plugin.getDataFolder() + File.separator
                         + "PlayerData" + File.separator + "Passwords.yml");
                 FileConfiguration getPasswords = YamlConfiguration
                         .loadConfiguration(file3);
-                if (!plugin.getServer().getOnlineMode()) {
+                if (!this.plugin.getServer().getOnlineMode()) {
                     if (args.length == 3) {
                         String string = args[0];
                         if (string.equalsIgnoreCase("set")) {
@@ -716,13 +691,13 @@ public class HomeSpawnCommand implements CommandExecutor {
                             }
                         }
                     } else if (args.length <= 1) {
-                        PassHelp(player);
+                        this.PassHelp(player);
                     } else if (args.length == 3) {
                         String string = args[0];
                         if (string.equalsIgnoreCase("transfer")) {
                             String pass = args[2];
                             String name = args[1];
-                            File namefile = new File(plugin.getDataFolder()
+                            File namefile = new File(this.plugin.getDataFolder()
                                     .getAbsolutePath()
                                     + File.separator
                                     + "PlayerData"
@@ -746,7 +721,7 @@ public class HomeSpawnCommand implements CommandExecutor {
                             if (namefile.exists() && Password) {
                                 String uuid = getOldName.getString("UUID");
                                 File OldUUIDFile = new File(
-                                        plugin.getDataFolder() + File.separator
+                                        this.plugin.getDataFolder() + File.separator
                                                 + "PlayerData" + File.separator
                                                 + uuid + ".yml");
                                 file.delete();
@@ -789,7 +764,7 @@ public class HomeSpawnCommand implements CommandExecutor {
             if (args.length == 1) {
                 if (args[0].equalsIgnoreCase("reload")) {
                     Player p = null;
-                    plugin.reload(p);
+                    this.plugin.reload(p);
                 }
             }
 

@@ -1,6 +1,8 @@
 package net.lapismc.HomeSpawn;
 
 import net.gravitydevelopment.updater.Updater;
+import net.gravitydevelopment.updater.Updater.UpdateResult;
+import net.gravitydevelopment.updater.Updater.UpdateType;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -16,19 +18,18 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.mcstats.Metrics;
-import org.mcstats.Metrics.Graph;
-import org.mcstats.Metrics.Plotter;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class HomeSpawn extends JavaPlugin {
 
-    public final Logger logger = this.getLogger();
+    public final Logger logger = getLogger();
     public final HashMap<String, YamlConfiguration> HomeConfigs = new HashMap<>();
     public final HashMap<String, String> PlayertoUUID = new HashMap<>();
     final HashMap<Player, Location> HomeSpawnLocations = new HashMap<>();
@@ -51,25 +52,25 @@ public class HomeSpawn extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        this.Enable();
-        this.Configs();
-        this.Metrics();
-        this.Commands();
-        this.CommandDelay();
+        Enable();
+        Configs();
+        Metrics();
+        Commands();
+        CommandDelay();
     }
 
     private void Metrics() {
-        if (this.getConfig().getBoolean("Metrics")) {
+        if (getConfig().getBoolean("Metrics")) {
             try {
                 Metrics metrics = new Metrics(this);
-                Graph averageHomesGraph = metrics.createGraph();
+                Metrics.Graph averageHomesGraph = metrics.createGraph();
                 int homes = 0;
-                int files = this.HomeConfigs.size();
-                for (YamlConfiguration yaml : this.HomeConfigs.values()) {
+                int files = HomeConfigs.size();
+                for (YamlConfiguration yaml : HomeConfigs.values()) {
                     homes = homes + yaml.getInt(yaml.getString("name") + ".Numb");
                 }
                 int average = homes % files == 0 ? homes / files : homes / files + 1;
-                averageHomesGraph.addPlotter(new Plotter(average + "") {
+                averageHomesGraph.addPlotter(new Metrics.Plotter(average + "") {
                     @Override
                     public int getValue() {
                         return 1;
@@ -77,36 +78,37 @@ public class HomeSpawn extends JavaPlugin {
                 });
                 metrics.start();
             } catch (IOException e) {
+                this.logger.log(Level.SEVERE, "An error has occurred while trying to start HomeSpawn metrics");
+                this.logger.log(Level.SEVERE, "The error follows, Please report it to dart2112");
                 e.printStackTrace();
-                this.logger.severe("[HomeSpawn] Metrics Failed To Start!");
             }
         } else {
-            this.getLogger()
+            getLogger()
                     .info("Metrics wasn't started because it is disabled in the config!");
         }
     }
 
     private void Update() {
-        if (this.getConfig().getBoolean("AutoUpdate")) {
-            Updater updater = new Updater(this, this.getFile(),
-                    Updater.UpdateType.DEFAULT, true);
-            this.updateCheck(updater);
+        if (getConfig().getBoolean("AutoUpdate")) {
+            Updater updater = new Updater(this, getFile(),
+                    UpdateType.DEFAULT, true);
+            updateCheck(updater);
         } else {
-            Updater updater = new Updater(this, this.getFile(),
-                    Updater.UpdateType.NO_DOWNLOAD, true);
-            this.updateCheck(updater);
+            Updater updater = new Updater(this, getFile(),
+                    UpdateType.NO_DOWNLOAD, true);
+            updateCheck(updater);
         }
     }
 
     private void updateCheck(Updater updater) {
-        File file = new File(this.getDataFolder().getAbsolutePath()
+        File file = new File(getDataFolder().getAbsolutePath()
                 + File.separator + "Update.yml");
         FileConfiguration getUpdate = YamlConfiguration.loadConfiguration(file);
-        if (updater.getResult() == Updater.UpdateResult.SUCCESS) {
-            this.getLogger().info(
+        if (updater.getResult() == UpdateResult.SUCCESS) {
+            getLogger().info(
                     "Updated, Reload or restart to install the update!");
-        } else if (updater.getResult() == Updater.UpdateResult.NO_UPDATE) {
-            this.getLogger().info("No Update Available");
+        } else if (updater.getResult() == UpdateResult.NO_UPDATE) {
+            getLogger().info("No Update Available");
             if (file.exists()) {
                 if (getUpdate.contains("Avail")) {
                     getUpdate.set("Avail", "false");
@@ -138,13 +140,13 @@ public class HomeSpawn extends JavaPlugin {
                     e.printStackTrace();
                 }
             }
-        } else if (updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE
-                && updater.getResult() != Updater.UpdateResult.SUCCESS) {
-            this.getLogger().info(
+        } else if (updater.getResult() == UpdateResult.UPDATE_AVAILABLE
+                && updater.getResult() != UpdateResult.SUCCESS) {
+            getLogger().info(
                     "An update is Available for HomeSpawn, It can be downloaded from,"
                             + " dev.bukkit.org/bukkit-plugins/homespawn");
             if (file.exists()) {
-                if (!this.getConfig().getBoolean("AutoUpdate")) {
+                if (!getConfig().getBoolean("AutoUpdate")) {
                     if (getUpdate.contains("Avail")) {
                         getUpdate.set("Avail", "true");
                     } else {
@@ -172,7 +174,7 @@ public class HomeSpawn extends JavaPlugin {
                 }
             }
         } else {
-            this.getLogger().severe(
+            getLogger().severe(
                     ChatColor.RED + "Something Went Wrong Updating!");
             getUpdate.set("Avail", "false");
         }
@@ -185,116 +187,124 @@ public class HomeSpawn extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        this.Disable();
+        Disable();
     }
 
     private void Enable() {
-        this.logger.info(" V." + this.getDescription().getVersion()
+        logger.info(" V." + getDescription().getVersion()
                 + " Has Been Enabled!");
-        PluginManager pm = this.getServer().getPluginManager();
-        this.pl = new HomeSpawnListener(this);
-        pm.registerEvents(this.pl, this);
+        PluginManager pm = getServer().getPluginManager();
+        pl = new HomeSpawnListener(this);
+        pm.registerEvents(pl, this);
     }
 
     private void configVersion() {
-        if (this.getConfig().getInt("ConfigVersion") != 2) {
-            this.getConfig().set("ConfigVersion", 2);
-            if (!this.getConfig().contains("AutoUpdate")) {
-                this.getConfig().set("AutoUpdate", true);
+        if (getConfig().getInt("ConfigVersion") != 2) {
+            getConfig().set("ConfigVersion", 2);
+            if (!getConfig().contains("AutoUpdate")) {
+                getConfig().set("AutoUpdate", true);
             }
-            if (!this.getConfig().contains("UpdateNotification")) {
-                this.getConfig().set("UpdateNotification", true);
+            if (!getConfig().contains("UpdateNotification")) {
+                getConfig().set("UpdateNotification", true);
             }
-            if (!this.getConfig().contains("Metrics")) {
-                this.getConfig().set("Metrics", true);
+            if (!getConfig().contains("Metrics")) {
+                getConfig().set("Metrics", true);
             }
-            if (!this.getConfig().contains("VIPHomesLimit")) {
-                this.getConfig().set("VIPHomesLimit", 3);
+            if (!getConfig().contains("VIPHomesLimit")) {
+                getConfig().set("VIPHomesLimit", 3);
             }
-            if (!this.getConfig().contains("AdminHomesLimit")) {
-                this.getConfig().set("AdminHomesLimit", 5);
+            if (!getConfig().contains("AdminHomesLimit")) {
+                getConfig().set("AdminHomesLimit", 5);
             }
-            if (!this.getConfig().contains("TeleportTime")) {
-                this.getConfig().set("TeleportTime", 10);
+            if (!getConfig().contains("TeleportTime")) {
+                getConfig().set("TeleportTime", 10);
             }
-            if (!this.getConfig().contains("CommandBook")) {
-                this.getConfig().set("CommandBook", true);
+            if (!getConfig().contains("CommandBook")) {
+                getConfig().set("CommandBook", true);
             }
-            if (!this.getConfig().contains("InventoryMenu")) {
-                this.getConfig().set("InventoryMenu", true);
+            if (!getConfig().contains("InventoryMenu")) {
+                getConfig().set("InventoryMenu", true);
             }
-            this.saveConfig();
+            saveConfig();
         }
     }
 
     private void Disable() {
-        this.logger.info("[HomeSpawn] Plugin Has Been Disabled!");
+        logger.info("[HomeSpawn] Plugin Has Been Disabled!");
         HandlerList.unregisterAll();
     }
 
     private void Configs() {
-        this.saveDefaultConfig();
-        this.getConfig().options().copyDefaults(true);
-        this.saveConfig();
-        this.createSpawn();
-        this.createPlayerData();
-        this.createMessages();
-        this.createPasswords();
-        this.pl.setMessages();
-        this.loadPlayerData();
-        this.loadName();
-        this.configVersion();
+        saveDefaultConfig();
+        getConfig().options().copyDefaults(true);
+        saveConfig();
+        createSpawn();
+        createPlayerData();
+        createMessages();
+        createPasswords();
+        pl.setMessages();
+        loadPlayerData();
+        loadName();
+        configVersion();
     }
 
-    public void savePlayerData(String uuid) throws IOException {
-        this.HomeConfigs.get(uuid).save(this.HomeConfigsFiles.get(uuid));
+    public void savePlayerData(String uuid) {
+        try {
+            HomeConfigs.get(uuid).save(HomeConfigsFiles.get(uuid));
+        } catch (IOException e) {
+            this.logger.log(Level.SEVERE, "An error has occurred while trying to save HomeSpawn player data");
+            this.logger.log(Level.SEVERE, "The error follows, Please report it to dart2112");
+            e.printStackTrace();
+        }
     }
 
     public void loadPlayerData() {
-        this.HomeConfigs.clear();
-        this.HomeConfigsFiles.clear();
-        File file = new File(this.getDataFolder().getAbsolutePath() + File.separator + "PlayerData");
+        HomeConfigs.clear();
+        HomeConfigsFiles.clear();
+        File file = new File(getDataFolder().getAbsolutePath() + File.separator + "PlayerData");
         File[] playerdataArray = file.listFiles();
         for (File f : playerdataArray) {
             if (f.isFile()) {
                 if (!f.getName().contains("Passwords")) {
                     YamlConfiguration Yaml = YamlConfiguration.loadConfiguration(f);
-                    this.HomeConfigs.put(Yaml.getString("name"), Yaml);
-                    this.HomeConfigsFiles.put(Yaml.getString("name"), f);
+                    HomeConfigs.put(Yaml.getString("name"), Yaml);
+                    HomeConfigsFiles.put(Yaml.getString("name"), f);
                 }
             }
         }
     }
 
     public void loadName() {
-        this.PlayertoUUID.clear();
-        File file = new File(this.getDataFolder().getAbsolutePath() + File.separator
+        PlayertoUUID.clear();
+        File file = new File(getDataFolder().getAbsolutePath() + File.separator
                 + "PlayerData" + File.separator + "PlayerNames");
         File[] playerNamesArray = file.listFiles();
         for (File f : playerNamesArray) {
             YamlConfiguration Yaml = YamlConfiguration.loadConfiguration(f);
-            this.PlayertoUUID.put(Yaml.getString("Name"), Yaml.getString("UUID"));
+            PlayertoUUID.put(Yaml.getString("Name"), Yaml.getString("UUID"));
         }
     }
 
 
     private void createPasswords() {
-        File file = new File(this.getDataFolder().getAbsolutePath()
+        File file = new File(getDataFolder().getAbsolutePath()
                 + File.separator + "PlayerData" + File.separator
                 + "Passwords.yml");
         if (!file.exists()) {
             try {
                 file.createNewFile();
             } catch (IOException e) {
+                this.logger.log(Level.SEVERE, "An error has occurred while trying to save HomeSpawn player password data");
+                this.logger.log(Level.SEVERE, "The error follows, Please report it to dart2112");
                 e.printStackTrace();
             }
         }
-        this.passwords = YamlConfiguration.loadConfiguration(file);
-        this.passwordsFile = file;
+        passwords = YamlConfiguration.loadConfiguration(file);
+        passwordsFile = file;
     }
 
     private void createMessages() {
-        File file2 = new File(this.getDataFolder().getAbsolutePath()
+        File file2 = new File(getDataFolder().getAbsolutePath()
                 + File.separator + "Messages.yml");
         FileConfiguration getMessages = YamlConfiguration
                 .loadConfiguration(file2);
@@ -319,17 +329,19 @@ public class HomeSpawn extends JavaPlugin {
                 getMessages.createSection("Error.Args+");
                 getMessages.createSection("Error.Args-");
                 getMessages.save(file2);
-                this.setDefaultMessages();
+                setDefaultMessages();
             } catch (IOException e) {
+                this.logger.log(Level.SEVERE, "An error has occurred while trying to save HomeSpawn messages data");
+                this.logger.log(Level.SEVERE, "The error follows, Please report it to dart2112");
                 e.printStackTrace();
             }
         }
-        this.messages = YamlConfiguration.loadConfiguration(file2);
-        this.messagesFile = file2;
+        messages = YamlConfiguration.loadConfiguration(file2);
+        messagesFile = file2;
     }
 
     private void setDefaultMessages() {
-        File file2 = new File(this.getDataFolder().getAbsolutePath()
+        File file2 = new File(getDataFolder().getAbsolutePath()
                 + File.separator + "Messages.yml");
         FileConfiguration getMessages = YamlConfiguration
                 .loadConfiguration(file2);
@@ -362,22 +374,24 @@ public class HomeSpawn extends JavaPlugin {
             try {
                 getMessages.save(file2);
             } catch (IOException e) {
+                this.logger.log(Level.SEVERE, "An error has occurred while trying to save HomeSpawn messages data");
+                this.logger.log(Level.SEVERE, "The error follows, Please report it to dart2112");
                 e.printStackTrace();
             }
         } else {
-            this.createMessages();
+            createMessages();
         }
 
     }
 
     private void createPlayerData() {
-        File theDir = new File(this.getDataFolder().getAbsolutePath()
+        File theDir = new File(getDataFolder().getAbsolutePath()
                 + File.separator + "PlayerData");
-        File theDir1 = new File(this.getDataFolder().getAbsolutePath()
+        File theDir1 = new File(getDataFolder().getAbsolutePath()
                 + File.separator + "PlayerData" + File.separator
                 + "PlayerNames");
         if (!theDir.exists()) {
-            this.logger.info(" Creating PlayerData Directory!");
+            logger.info(" Creating PlayerData Directory!");
             theDir.mkdir();
         }
         if (!theDir1.exists()) {
@@ -386,7 +400,7 @@ public class HomeSpawn extends JavaPlugin {
     }
 
     private void createSpawn() {
-        File file = new File(this.getDataFolder().getAbsolutePath()
+        File file = new File(getDataFolder().getAbsolutePath()
                 + File.separator + "Spawn.yml");
         FileConfiguration getSpawn = YamlConfiguration.loadConfiguration(file);
         if (!file.exists()) {
@@ -406,32 +420,33 @@ public class HomeSpawn extends JavaPlugin {
                 getSpawn.createSection("spawnnew.Pitch");
                 getSpawn.save(file);
             } catch (IOException e) {
-                this.logger.severe("[HomeSpawn] Couldn't create spawn file!");
+                this.logger.log(Level.SEVERE, "An error has occurred while trying to save HomeSpawn spawn data");
+                this.logger.log(Level.SEVERE, "The error follows, Please report it to dart2112");
                 e.printStackTrace();
             }
         }
-        this.spawn = YamlConfiguration.loadConfiguration(file);
-        this.spawnFile = file;
+        spawn = YamlConfiguration.loadConfiguration(file);
+        spawnFile = file;
     }
 
     public void spawnnew(Player player) {
-        if (this.spawn.get("spawnnew.SpawnSet") != null
-                && this.spawn.getString("spawnnew.SpawnSet").equalsIgnoreCase(
+        if (spawn.get("spawnnew.SpawnSet") != null
+                && spawn.getString("spawnnew.SpawnSet").equalsIgnoreCase(
                 "yes")) {
-            int x = this.spawn.getInt("spawnnew.X");
-            int y = this.spawn.getInt("spawnnew.Y");
-            int z = this.spawn.getInt("spawnnew.Z");
-            float yaw = this.spawn.getInt("spawnnew.Yaw");
-            float pitch = this.spawn.getInt("spawnnew.Pitch");
-            String cworld = this.spawn.getString("spawnnew.World");
-            World world = this.getServer().getWorld(cworld);
+            int x = spawn.getInt("spawnnew.X");
+            int y = spawn.getInt("spawnnew.Y");
+            int z = spawn.getInt("spawnnew.Z");
+            float yaw = spawn.getInt("spawnnew.Yaw");
+            float pitch = spawn.getInt("spawnnew.Pitch");
+            String cworld = spawn.getString("spawnnew.World");
+            World world = getServer().getWorld(cworld);
             Location spawnnew = new Location(world, x, y, z, yaw, pitch);
             spawnnew.add(0.5, 0, 0.5);
             player.teleport(spawnnew);
-            this.logger.info("[HomeSpawn] Player " + player.getName()
+            logger.info("[HomeSpawn] Player " + player.getName()
                     + " Was Sent To New Spawn");
         } else {
-            this.logger.info("[HomeSpawn] There Is No New Spawn Set And Therefore The Player Wasn't Sent To The New Spawn");
+            logger.info("[HomeSpawn] There Is No New Spawn Set And Therefore The Player Wasn't Sent To The New Spawn");
         }
     }
 
@@ -442,36 +457,36 @@ public class HomeSpawn extends JavaPlugin {
         } else if (obj instanceof String) {
             String s = (String) obj;
             if (s.equalsIgnoreCase("Silent")) {
-                this.spawn = YamlConfiguration.loadConfiguration(this.spawnFile);
-                this.messages = YamlConfiguration.loadConfiguration(this.messagesFile);
-                this.passwords = YamlConfiguration.loadConfiguration(this.passwordsFile);
-                this.loadPlayerData();
-                this.loadName();
+                spawn = YamlConfiguration.loadConfiguration(spawnFile);
+                messages = YamlConfiguration.loadConfiguration(messagesFile);
+                passwords = YamlConfiguration.loadConfiguration(passwordsFile);
+                loadPlayerData();
+                loadName();
             }
         } else if (obj == null) {
-            this.spawn = YamlConfiguration.loadConfiguration(this.spawnFile);
-            this.messages = YamlConfiguration.loadConfiguration(this.messagesFile);
-            this.passwords = YamlConfiguration.loadConfiguration(this.passwordsFile);
-            this.loadPlayerData();
-            this.loadName();
+            spawn = YamlConfiguration.loadConfiguration(spawnFile);
+            messages = YamlConfiguration.loadConfiguration(messagesFile);
+            passwords = YamlConfiguration.loadConfiguration(passwordsFile);
+            loadPlayerData();
+            loadName();
             Bukkit.broadcast(ChatColor.RED
                             + "Console" + ChatColor.GOLD + " Has Reloaded Homespawn!",
                     "homespawn.admin");
-            this.logger
+            logger
                     .info("You Have Reloaded Homespawn!");
         }
         if (player != null) {
-            this.spawn = YamlConfiguration.loadConfiguration(this.spawnFile);
-            this.messages = YamlConfiguration.loadConfiguration(this.messagesFile);
-            this.passwords = YamlConfiguration.loadConfiguration(this.passwordsFile);
-            this.loadPlayerData();
-            this.loadName();
+            spawn = YamlConfiguration.loadConfiguration(spawnFile);
+            messages = YamlConfiguration.loadConfiguration(messagesFile);
+            passwords = YamlConfiguration.loadConfiguration(passwordsFile);
+            loadPlayerData();
+            loadName();
             player.sendMessage(ChatColor.GOLD
                     + "You have reloaded the configs for Homespawn!");
             Bukkit.broadcast(ChatColor.GOLD + "Player " + ChatColor.RED
                     + player.getName() + ChatColor.GOLD
                     + " Has Reloaded Homespawn!", "homespawn.admin");
-            this.logger.info("Player " + player.getName()
+            logger.info("Player " + player.getName()
                     + " Has Reloaded Homespawn!");
         }
     }
@@ -491,7 +506,7 @@ public class HomeSpawn extends JavaPlugin {
                     + ChatColor.GOLD + " Removes The Specified Home");
             player.sendMessage(ChatColor.RED + "/spawn:" + ChatColor.GOLD
                     + " Sends You To Spawn");
-            if (!this.getServer().getOnlineMode()) {
+            if (!getServer().getOnlineMode()) {
                 player.sendMessage(ChatColor.RED + "/homepassword help:"
                         + ChatColor.GOLD
                         + " Displays The Home Transfer Commands");
@@ -526,7 +541,7 @@ public class HomeSpawn extends JavaPlugin {
             List<String> l = new ArrayList<String>();
             if (args.length == 1) {
                 Player p = (Player) sender;
-                YamlConfiguration pd = this.HomeConfigs.get(p.getUniqueId().toString());
+                YamlConfiguration pd = HomeConfigs.get(p.getUniqueId().toString());
                 l.addAll(pd.getStringList(p.getUniqueId() + ".list"));
             }
             return l;
@@ -535,31 +550,31 @@ public class HomeSpawn extends JavaPlugin {
     }
 
     private void CommandDelay() {
-        if (!this.getConfig().contains("TeleportTime")) {
-            this.getConfig().createSection("TeleportTime");
-            this.saveConfig();
-            this.getConfig().set("TeleportTime", 0);
+        if (!getConfig().contains("TeleportTime")) {
+            getConfig().createSection("TeleportTime");
+            saveConfig();
+            getConfig().set("TeleportTime", 0);
         }
-        if (!(this.getConfig().getInt("TeleportTime") <= 0)) {
+        if (!(getConfig().getInt("TeleportTime") <= 0)) {
             BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
             scheduler.scheduleSyncRepeatingTask(this, new Runnable() {
                 @Override
                 public void run() {
-                    if (!HomeSpawn.this.HomeSpawnTimeLeft.isEmpty()) {
-                        for (Player p : HomeSpawn.this.HomeSpawnTimeLeft.keySet()) {
-                            if (HomeSpawn.this.HomeSpawnLocations.get(p) == null) {
-                                HomeSpawn.this.HomeSpawnTimeLeft.remove(p);
-                                HomeSpawn.this.HomeSpawnLocations.remove(p);
+                    if (!HomeSpawnTimeLeft.isEmpty()) {
+                        for (Player p : HomeSpawnTimeLeft.keySet()) {
+                            if (HomeSpawnLocations.get(p) == null) {
+                                HomeSpawnTimeLeft.remove(p);
+                                HomeSpawnLocations.remove(p);
                             }
-                            if (HomeSpawn.this.HomeSpawnTimeLeft.isEmpty()) {
+                            if (HomeSpawnTimeLeft.isEmpty()) {
                                 return;
                             }
-                            for (int Time : HomeSpawn.this.HomeSpawnTimeLeft.values()) {
+                            for (int Time : HomeSpawnTimeLeft.values()) {
                                 int NewTime = Time - 1;
                                 if (NewTime > 0) {
-                                    HomeSpawn.this.HomeSpawnTimeLeft.put(p, NewTime);
+                                    HomeSpawnTimeLeft.put(p, NewTime);
                                 } else if (NewTime <= 0) {
-                                    Location Tele = HomeSpawn.this.HomeSpawnLocations.get(p);
+                                    Location Tele = HomeSpawnLocations.get(p);
                                     if (!(Tele == null)) {
                                         if (!Tele.getChunk().isLoaded()) {
                                             Tele.getChunk().load();
@@ -567,11 +582,11 @@ public class HomeSpawn extends JavaPlugin {
                                         p.teleport(Tele);
                                         p.sendMessage(ChatColor.GOLD
                                                 + "Teleporting...");
-                                        HomeSpawn.this.HomeSpawnTimeLeft.remove(p);
-                                        HomeSpawn.this.HomeSpawnLocations.remove(p);
+                                        HomeSpawnTimeLeft.remove(p);
+                                        HomeSpawnLocations.remove(p);
                                     } else {
-                                        HomeSpawn.this.HomeSpawnTimeLeft.remove(p);
-                                        HomeSpawn.this.HomeSpawnLocations.remove(p);
+                                        HomeSpawnTimeLeft.remove(p);
+                                        HomeSpawnLocations.remove(p);
                                     }
                                 }
                             }
@@ -585,15 +600,15 @@ public class HomeSpawn extends JavaPlugin {
     }
 
     private void Commands() {
-        this.getCommand("home").setExecutor(new HomeSpawnCommand(this));
-        this.getCommand("sethome").setExecutor(new HomeSpawnCommand(this));
-        this.getCommand("delhome").setExecutor(new HomeSpawnCommand(this));
-        this.getCommand("spawn").setExecutor(new HomeSpawnCommand(this));
-        this.getCommand("setspawn").setExecutor(new HomeSpawnCommand(this));
-        this.getCommand("delspawn").setExecutor(new HomeSpawnCommand(this));
-        this.getCommand("homespawn").setExecutor(new HomeSpawnCommand(this));
-        this.getCommand("homepassword").setExecutor(new HomeSpawnCommand(this));
-        this.getCommand("homeslist").setExecutor(new HomeSpawnCommand(this));
-        this.logger.info("Commands Registered!");
+        getCommand("home").setExecutor(new HomeSpawnCommand(this));
+        getCommand("sethome").setExecutor(new HomeSpawnCommand(this));
+        getCommand("delhome").setExecutor(new HomeSpawnCommand(this));
+        getCommand("spawn").setExecutor(new HomeSpawnCommand(this));
+        getCommand("setspawn").setExecutor(new HomeSpawnCommand(this));
+        getCommand("delspawn").setExecutor(new HomeSpawnCommand(this));
+        getCommand("homespawn").setExecutor(new HomeSpawnCommand(this));
+        getCommand("homepassword").setExecutor(new HomeSpawnCommand(this));
+        getCommand("homeslist").setExecutor(new HomeSpawnCommand(this));
+        logger.info("Commands Registered!");
     }
 }
