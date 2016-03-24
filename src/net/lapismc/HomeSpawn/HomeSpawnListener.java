@@ -95,7 +95,7 @@ public class HomeSpawnListener implements Listener {
                 getHomes.set("HasHome", "No");
                 getHomes.set(player.getUniqueId() + ".Numb", 0);
                 getHomes.save(file);
-                plugin.spawnnew(player);
+                plugin.spawnNew(player);
                 plugin.loadPlayerData();
                 plugin.loadName();
             } catch (IOException e) {

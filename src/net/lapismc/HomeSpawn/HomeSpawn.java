@@ -42,8 +42,6 @@ public class HomeSpawn extends JavaPlugin {
     public File spawnFile;
     public YamlConfiguration playerData;
     public File playerDataFile;
-    public YamlConfiguration stackTraces;
-    public File stackTracesFile;
     public YamlConfiguration messages;
     public File messagesFile;
     public YamlConfiguration passwords;
@@ -429,7 +427,7 @@ public class HomeSpawn extends JavaPlugin {
         spawnFile = file;
     }
 
-    public void spawnnew(Player player) {
+    public void spawnNew(Player player) {
         if (spawn.get("spawnnew.SpawnSet") != null
                 && spawn.getString("spawnnew.SpawnSet").equalsIgnoreCase(
                 "yes")) {
