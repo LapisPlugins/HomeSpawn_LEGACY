@@ -13,7 +13,7 @@ import java.security.spec.InvalidKeySpecException;
  *
  * @author Dart2112
  */
-public class Configs {
+class Configs {
     private final HomeSpawn plugin;
 
     public Configs(HomeSpawn plugin) {
@@ -26,14 +26,14 @@ public class Configs {
      * @throws IOException
      */
     public void reloadConfigs() throws IOException {
-        plugin.reload("Silent");
+        this.plugin.reload("Silent");
     }
 
     /**
      * Returns the currently loaded Spawn.yml
      */
     public YamlConfiguration getSpawnConfig() {
-        return plugin.spawn;
+        return this.plugin.spawn;
     }
 
     /**
@@ -42,16 +42,16 @@ public class Configs {
      * @throws IOException
      */
     public void saveSpawnConfig(YamlConfiguration SpawnConfig) throws IOException {
-        plugin.spawn = SpawnConfig;
-        plugin.spawn.save(plugin.spawnFile);
-        plugin.reload("Silent");
+        this.plugin.spawn = SpawnConfig;
+        this.plugin.spawn.save(this.plugin.spawnFile);
+        this.plugin.reload("Silent");
     }
 
     /**
      * Returns the currently loaded Messages.yml
      */
     public YamlConfiguration getMessagesConfig() {
-        return plugin.messages;
+        return this.plugin.messages;
     }
 
     /**
@@ -60,16 +60,16 @@ public class Configs {
      * @throws IOException
      */
     public void saveMessagesConfig(YamlConfiguration MessagesConfig) throws IOException {
-        plugin.messages = MessagesConfig;
-        plugin.messages.save(plugin.messagesFile);
-        plugin.reload("Silent");
+        this.plugin.messages = MessagesConfig;
+        this.plugin.messages.save(this.plugin.messagesFile);
+        this.plugin.reload("Silent");
     }
 
     /**
      * Returns the currently loaded Passwords.yml
      */
     private YamlConfiguration getPasswords() {
-        return plugin.passwords;
+        return this.plugin.passwords;
     }
 
     /**
@@ -78,9 +78,9 @@ public class Configs {
      * @throws IOException
      */
     private void savePasswords(YamlConfiguration Passwords) throws IOException {
-        plugin.passwords = Passwords;
-        plugin.passwords.save(plugin.passwordsFile);
-        plugin.reload("Silent");
+        this.plugin.passwords = Passwords;
+        this.plugin.passwords.save(this.plugin.passwordsFile);
+        this.plugin.reload("Silent");
     }
 
     /**
@@ -89,7 +89,7 @@ public class Configs {
      * @throws NoSuchAlgorithmException and InvalidKeySpecException
      */
     public boolean checkPassword(String playerName, String Password) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        String hash = getPasswords().getString(playerName);
+        String hash = this.getPasswords().getString(playerName);
         return PasswordHash.validatePassword(Password, hash);
     }
 
