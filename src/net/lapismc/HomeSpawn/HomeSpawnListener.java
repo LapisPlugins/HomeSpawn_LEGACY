@@ -107,15 +107,16 @@ public class HomeSpawnListener implements Listener {
         }
         if (player.hasPermission("homespawn.admin")) {
             File file1 = new File(plugin.getDataFolder().getAbsolutePath()
-                    + File.separator + "Update.yml");
+                    + File.separator + "update.yml");
             FileConfiguration getUpdate = YamlConfiguration
                     .loadConfiguration(file1);
-            if (file1 != null || getUpdate.contains("Avail")
-                    && getUpdate.getString("Avail").equalsIgnoreCase("true")) {
-                if (!plugin.getConfig().getBoolean("AutoUpdate")
-                        && plugin.getConfig().getBoolean("UpdateNotification")) {
-                    player.sendMessage(ChatColor.GOLD
-                            + "[HomeSpawn] An update is available on Bukkit Dev");
+            if (file1 != null || getUpdate.contains("HomeSpawn")
+                    && !getUpdate.getString("Homespawn").equalsIgnoreCase(plugin.getDescription().getVersion())) {
+                if (plugin.getConfig().getBoolean("UpdateNotification")) {
+                    player.sendMessage(ChatColor.DARK_GRAY
+                            + "[" + ChatColor.AQUA + "HomeSpawn" + ChatColor.DARK_GRAY
+                            + "]" + ChatColor.GOLD + " An update is available on SpigotMC" +
+                            " at https://www.spigotmc.org/resources/homespawn.14108");
                 }
             }
         }

@@ -1,8 +1,5 @@
 package net.lapismc.HomeSpawn;
 
-import net.gravitydevelopment.updater.Updater;
-import net.gravitydevelopment.updater.Updater.UpdateResult;
-import net.gravitydevelopment.updater.Updater.UpdateType;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -87,99 +84,12 @@ public class HomeSpawn extends JavaPlugin {
     }
 
     private void Update() {
-        if (getConfig().getBoolean("AutoUpdate")) {
-            Updater updater = new Updater(this, getFile(),
-                    UpdateType.DEFAULT, true);
-            updateCheck(updater);
-        } else {
-            Updater updater = new Updater(this, getFile(),
-                    UpdateType.NO_DOWNLOAD, true);
-            updateCheck(updater);
-        }
-    }
+        if (updater.checkUpdate(this, "HomeSpawn")) {
+            if (getConfig().getBoolean("UpdateNotification")) {
+                logger.info("An update for HomeSpawn is available and can be" +
+                        " downloaded from https://www.spigotmc.org/resources/homespawn.14108");
 
-    private void updateCheck(Updater updater) {
-        File file = new File(getDataFolder().getAbsolutePath()
-                + File.separator + "Update.yml");
-        FileConfiguration getUpdate = YamlConfiguration.loadConfiguration(file);
-        if (updater.getResult() == UpdateResult.SUCCESS) {
-            getLogger().info(
-                    "Updated, Reload or restart to install the update!");
-        } else if (updater.getResult() == UpdateResult.NO_UPDATE) {
-            getLogger().info("No Update Available");
-            if (file.exists()) {
-                if (getUpdate.contains("Avail")) {
-                    getUpdate.set("Avail", "false");
-                } else {
-                    getUpdate.createSection("Avail");
-                    try {
-                        getUpdate.save(file);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    getUpdate.set("Avail", "false");
-                }
-            } else {
-                try {
-                    file.createNewFile();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                getUpdate.createSection("Avail");
-                try {
-                    getUpdate.save(file);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                getUpdate.set("Avail", "false");
-                try {
-                    getUpdate.save(file);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
             }
-        } else if (updater.getResult() == UpdateResult.UPDATE_AVAILABLE
-                && updater.getResult() != UpdateResult.SUCCESS) {
-            getLogger().info(
-                    "An update is Available for HomeSpawn, It can be downloaded from,"
-                            + " dev.bukkit.org/bukkit-plugins/homespawn");
-            if (file.exists()) {
-                if (!getConfig().getBoolean("AutoUpdate")) {
-                    if (getUpdate.contains("Avail")) {
-                        getUpdate.set("Avail", "true");
-                    } else {
-                        getUpdate.createSection("Avail");
-                        getUpdate.set("Avail", "true");
-                        try {
-                            getUpdate.save(file);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            } else {
-                try {
-                    file.createNewFile();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                getUpdate.createSection("Avail");
-                getUpdate.set("Avail", "true");
-                try {
-                    getUpdate.save(file);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        } else {
-            getLogger().severe(
-                    ChatColor.RED + "Something Went Wrong Updating!");
-            getUpdate.set("Avail", "false");
-        }
-        try {
-            getUpdate.save(file);
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
