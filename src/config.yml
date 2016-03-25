@@ -14,24 +14,41 @@ InventoryMenu: true
 ##Players may only have 1 of the following permissions or they will not be allowed to use the plugin
 ##See permissions section of homespawn on SpigotMC.org for more infomation.
 Permissions:
+    ##This permission is given to players with more than 1 permission, it will stop them from using any commands.
+    ##this cannot be removed from this file(If you do remove it you will be errors everytime a player tries to run a command).
+    homespawn,nulled:
+        default: 0
+        homes: 0
+        spawn: 0
+        set custom homes: 0
+        TP delay: 0
+        setspawn: 0
+        updateNotify: 0
+        reload: 0
     homespawn,player:
         default: 1
         homes: 1
+        spawn: 1
         set custom homes: 0
         TP delay: 10
         setspawn: 0
         updateNotify: 0
+        reload: 0
     homespawn,vip:
         default: 0
         homes: 3
+        spawn: 1
         set custom homes: 1
         TP delay: 5
         setspawn: 0
         updateNotify: 0
+        reload: 0
     homespawn,admin:
         default: 2
         homes: 5
+        spawn: 1
         set custom homes: 1
         TP delay: 0
         setspawn: 1
         updateNotify: 1
+        reload: 1
