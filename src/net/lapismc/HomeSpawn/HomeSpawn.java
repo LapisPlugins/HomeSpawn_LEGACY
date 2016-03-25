@@ -52,10 +52,10 @@ public class HomeSpawn extends JavaPlugin {
     public void onEnable() {
         Enable();
         Configs();
-        Metrics();
         Permissions();
         Commands();
         CommandDelay();
+        Metrics();
     }
 
     private void Permissions() {
@@ -95,6 +95,7 @@ public class HomeSpawn extends JavaPlugin {
             Bukkit.getPluginManager().addPermission(p);
             Permissions.put(p, permMap);
         }
+        logger.info("Permissions Loaded!");
     }
 
     private void Metrics() {
@@ -107,7 +108,12 @@ public class HomeSpawn extends JavaPlugin {
                 for (YamlConfiguration yaml : HomeConfigs.values()) {
                     homes = homes + yaml.getInt(yaml.getString("name") + ".Numb");
                 }
-                int average = homes % files == 0 ? homes / files : homes / files + 1;
+                int average;
+                if (files != 0) {
+                    average = homes % files == 0 ? homes / files : homes / files + 1;
+                } else {
+                    average = 0;
+                }
                 averageHomesGraph.addPlotter(new Metrics.Plotter(average + "") {
                     @Override
                     public int getValue() {
@@ -131,6 +137,9 @@ public class HomeSpawn extends JavaPlugin {
             if (getConfig().getBoolean("UpdateNotification")) {
                 logger.info("An update for HomeSpawn is available and can be" +
                         " downloaded from https://www.spigotmc.org/resources/homespawn.14108");
+            }
+        } else {
+            if (getConfig().getBoolean("UpdateNotification")) {
 
             }
         }
@@ -142,7 +151,7 @@ public class HomeSpawn extends JavaPlugin {
     }
 
     private void Enable() {
-        logger.info(" V." + getDescription().getVersion()
+        logger.info("V." + getDescription().getVersion()
                 + " Has Been Enabled!");
         PluginManager pm = getServer().getPluginManager();
         pl = new HomeSpawnListener(this);
@@ -195,7 +204,7 @@ public class HomeSpawn extends JavaPlugin {
     }
 
     private void Disable() {
-        logger.info("[HomeSpawn] Plugin Has Been Disabled!");
+        logger.info("Plugin Has Been Disabled!");
         HandlerList.unregisterAll();
     }
 
@@ -433,6 +442,7 @@ public class HomeSpawn extends JavaPlugin {
             passwords = YamlConfiguration.loadConfiguration(passwordsFile);
             loadPlayerData();
             loadName();
+            Permissions();
             Bukkit.broadcast(ChatColor.RED
                             + "Console" + ChatColor.GOLD + " Has Reloaded Homespawn!",
                     "homespawn.admin");
@@ -445,6 +455,7 @@ public class HomeSpawn extends JavaPlugin {
             passwords = YamlConfiguration.loadConfiguration(passwordsFile);
             loadPlayerData();
             loadName();
+            Permissions();
             player.sendMessage(ChatColor.GOLD
                     + "You have reloaded the configs for Homespawn!");
             Bukkit.broadcast(ChatColor.GOLD + "Player " + ChatColor.RED

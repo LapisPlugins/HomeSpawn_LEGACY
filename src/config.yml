@@ -1,6 +1,6 @@
 ##Dont Change This, It Will Reset The Config If You Do!
 ConfigVersion: 3
-## If Set To True Any Player With Homespawn.admin Will Receive A Notification If There Is An Update
+## If Set To True Console Will Be Notified If The
 UpdateNotification: true
 ## If Set To True The Plugin Will Send Usage Information To mcstats.org, Such As Minecraft Version And Players Online
 Metrics: true

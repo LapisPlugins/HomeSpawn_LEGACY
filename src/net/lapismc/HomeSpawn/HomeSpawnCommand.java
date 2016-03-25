@@ -106,6 +106,21 @@ public class HomeSpawnCommand implements CommandExecutor {
             Player player = (Player) sender;
             if (cmd.getName().equalsIgnoreCase("sethome")) {
                 HashMap<String, Integer> perms = plugin.Permissions.get(plugin.PlayerPermission.get(player.getUniqueId()));
+                if (perms == null) {
+                    player.sendMessage("Perms is null");
+                }
+                if (plugin == null) {
+                    player.sendMessage("Plugin is null");
+                }
+                if (plugin.PlayerPermission.get(player.getUniqueId()) == null) {
+                    player.sendMessage("PlayerPermission is null");
+                }
+                if (plugin.Permissions.get(plugin.PlayerPermission.get(player.getUniqueId())) == null) {
+                    player.sendMessage("Permissions in general is null");
+                }
+                if (plugin.Permissions.get(plugin.PlayerPermission.get(player.getUniqueId())).get("Homes") == null) {
+                    player.sendMessage("Homes is null");
+                }
                 UUID uuid = this.plugin.PlayertoUUID.get(player.getName());
                 YamlConfiguration getHomes = this.plugin.HomeConfigs.get(uuid);
                 if (!getHomes.contains(player.getUniqueId()
