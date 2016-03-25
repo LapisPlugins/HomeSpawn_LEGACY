@@ -16,10 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class HomeSpawnCommand implements CommandExecutor {
 
@@ -33,8 +30,8 @@ public class HomeSpawnCommand implements CommandExecutor {
     }
 
     private void showMenu(Player p) {
-        String getName = this.plugin.PlayertoUUID.get(p.getName());
-        YamlConfiguration getHomes = this.plugin.HomeConfigs.get(getName);
+        UUID uuid = this.plugin.PlayertoUUID.get(p.getName());
+        YamlConfiguration getHomes = this.plugin.HomeConfigs.get(uuid);
         List<String> homes = getHomes.getStringList(p.getUniqueId() + ".list");
         if (homes.isEmpty()) {
             p.sendMessage(ChatColor.DARK_RED
@@ -60,7 +57,7 @@ public class HomeSpawnCommand implements CommandExecutor {
             this.plugin.HomesListInvs.put(p, inv);
         }
         for (String home : homes) {
-            ItemStack i = new Wool(dc.get(r.nextInt(6))).toItemStack(1);
+            ItemStack i = new Wool(dc.get(r.nextInt(5))).toItemStack(1);
             ItemMeta im = i.getItemMeta();
             im.setDisplayName(ChatColor.GOLD + home);
             im.setLore(Arrays.asList(ChatColor.GOLD + "Click To Teleport To",
@@ -72,8 +69,8 @@ public class HomeSpawnCommand implements CommandExecutor {
     }
 
     private YamlConfiguration GetHome(String p) {
-        String getName = this.plugin.PlayertoUUID.get(p);
-        YamlConfiguration getHomes = this.plugin.HomeConfigs.get(getName);
+        UUID uuid = this.plugin.PlayertoUUID.get(p);
+        YamlConfiguration getHomes = this.plugin.HomeConfigs.get(uuid);
         return getHomes;
     }
 
@@ -110,13 +107,13 @@ public class HomeSpawnCommand implements CommandExecutor {
             Player player = (Player) sender;
             if (cmd.getName().equalsIgnoreCase("sethome")) {
                 if (player.hasPermission("homespawn.player")) {
-                    String UUID = this.plugin.PlayertoUUID.get(player.getName());
-                    YamlConfiguration getHomes = this.plugin.HomeConfigs.get(UUID);
+                    UUID uuid = this.plugin.PlayertoUUID.get(player.getName());
+                    YamlConfiguration getHomes = this.plugin.HomeConfigs.get(uuid);
                     if (!getHomes.contains(player.getUniqueId()
                             + ".list")) {
                         getHomes.createSection(player.getUniqueId()
                                 + ".list");
-                        this.plugin.savePlayerData(UUID);
+                        this.plugin.savePlayerData(uuid);
                     }
                     List<String> list = getHomes.getStringList(player
                             .getUniqueId() + ".list");
@@ -246,7 +243,7 @@ public class HomeSpawnCommand implements CommandExecutor {
                         player.sendMessage(ChatColor.RED
                                 + HomeSpawnCommand.getMessages.getString("Error.Args+"));
                     }
-                    this.plugin.savePlayerData(UUID);
+                    this.plugin.savePlayerData(uuid);
                 } else {
                     player.sendMessage(ChatColor.DARK_RED
                             + HomeSpawnCommand.getMessages.getString("NoPerms"));
@@ -254,13 +251,13 @@ public class HomeSpawnCommand implements CommandExecutor {
 
             } else if (cmd.getName().equalsIgnoreCase("home")) {
                 if (player.hasPermission("homespawn.player")) {
-                    String UUID = this.plugin.PlayertoUUID.get(player.getName());
-                    YamlConfiguration getHomes = this.plugin.HomeConfigs.get(UUID);
+                    UUID uuid = this.plugin.PlayertoUUID.get(player.getName());
+                    YamlConfiguration getHomes = this.plugin.HomeConfigs.get(uuid);
                     if (!getHomes.contains(player.getUniqueId()
                             + ".list")) {
                         getHomes.createSection(player.getUniqueId()
                                 + ".list");
-                        this.plugin.savePlayerData(UUID);
+                        this.plugin.savePlayerData(uuid);
                     }
                     List<String> list = getHomes.getStringList(player
                             .getUniqueId() + ".list");
@@ -362,13 +359,13 @@ public class HomeSpawnCommand implements CommandExecutor {
 
             } else if (cmd.getName().equalsIgnoreCase("delhome")) {
                 if (player.hasPermission("homespawn.player")) {
-                    String UUID = this.plugin.PlayertoUUID.get(player.getName());
-                    YamlConfiguration getHomes = this.plugin.HomeConfigs.get(UUID);
+                    UUID uuid = this.plugin.PlayertoUUID.get(player.getName());
+                    YamlConfiguration getHomes = this.plugin.HomeConfigs.get(uuid);
                     if (!getHomes.contains(player.getUniqueId()
                             + ".list")) {
                         getHomes.createSection(player.getUniqueId()
                                 + ".list");
-                        this.plugin.savePlayerData(UUID);
+                        this.plugin.savePlayerData(uuid);
                     }
                     List<String> list = getHomes.getStringList(player
                             .getUniqueId() + ".list");
@@ -391,7 +388,7 @@ public class HomeSpawnCommand implements CommandExecutor {
                                 getHomes.set(player.getUniqueId()
                                         + ".list", list);
                             }
-                            this.plugin.savePlayerData(UUID);
+                            this.plugin.savePlayerData(uuid);
                         } else {
                             player.sendMessage(ChatColor.RED
                                     + HomeSpawnCommand.getMessages.getString("Home.NoHomeSet"));
@@ -456,7 +453,7 @@ public class HomeSpawnCommand implements CommandExecutor {
                                 getHomes.set(player.getUniqueId()
                                         + ".list", list);
                             }
-                            this.plugin.savePlayerData(UUID);
+                            this.plugin.savePlayerData(uuid);
                         } else {
                             player.sendMessage(ChatColor.RED
                                     + HomeSpawnCommand.getMessages.getString("Home.NoHomeSet"));
@@ -593,8 +590,8 @@ public class HomeSpawnCommand implements CommandExecutor {
                     this.showMenu(player);
                     return true;
                 } else {
-                    String UUID = this.plugin.PlayertoUUID.get(player.getName());
-                    YamlConfiguration getHomes = this.plugin.HomeConfigs.get(UUID);
+                    UUID uuid = this.plugin.PlayertoUUID.get(player.getName());
+                    YamlConfiguration getHomes = this.plugin.HomeConfigs.get(uuid);
                     if (!getHomes.contains(player.getUniqueId()
                             + ".list")) {
                         getHomes.createSection(player.getUniqueId()

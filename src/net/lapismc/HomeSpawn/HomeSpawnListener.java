@@ -125,12 +125,12 @@ public class HomeSpawnListener implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void OnPlayerMove(PlayerMoveEvent e) {
         Player p = e.getPlayer();
-        Location From = e.getFrom();
-        Location To = e.getTo();
-        List<Integer> To1 = new ArrayList<>();
-        List<Integer> From1 = new ArrayList<>();
         if (plugin.HomeSpawnLocations.containsKey(p)) {
             if (plugin.HomeSpawnTimeLeft.containsKey(p)) {
+                Location From = e.getFrom();
+                Location To = e.getTo();
+                List<Integer> To1 = new ArrayList<>();
+                List<Integer> From1 = new ArrayList<>();
                 To1.add(To.getBlockX());
                 To1.add(To.getBlockY());
                 To1.add(To.getBlockZ());
@@ -172,20 +172,24 @@ public class HomeSpawnListener implements Listener {
                         e.setCancelled(true);
                     }
                 }
-                if (Hitter instanceof Player || Hitter instanceof Wolf) {
-                    plugin.HomeSpawnLocations.put(p, null);
-                    p.sendMessage(ChatColor.GOLD
-                            + "Teleport Canceled Because You Were Hit!");
-                } else {
-                    Players.add(p);
-                    e.setCancelled(true);
+                if (Hitter instanceof Wolf) {
+                    Wolf wolf = (Wolf) Hitter;
+                    if (wolf.isTamed()) {
+                        plugin.HomeSpawnLocations.put(p, null);
+                        p.sendMessage(ChatColor.GOLD
+                                + "Teleport Canceled Because You Were Hit!");
+                    } else {
+                        Players.add(p);
+                        e.setCancelled(true);
+                    }
                 }
-                if (Hitter instanceof Player || Hitter instanceof Wolf) {
+                if (Hitter instanceof Player) {
                     plugin.HomeSpawnLocations.put(p, null);
                     plugin.HomeSpawnTimeLeft.remove(p);
                     p.sendMessage(ChatColor.GOLD
                             + "Teleport Canceled Because You Were Hit!");
                 } else {
+                    Players.add(p);
                     e.setCancelled(false);
                 }
             }

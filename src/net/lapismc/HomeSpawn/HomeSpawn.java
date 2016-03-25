@@ -21,18 +21,19 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class HomeSpawn extends JavaPlugin {
 
     public final Logger logger = getLogger();
-    public final HashMap<String, YamlConfiguration> HomeConfigs = new HashMap<>();
-    public final HashMap<String, String> PlayertoUUID = new HashMap<>();
+    public final HashMap<UUID, YamlConfiguration> HomeConfigs = new HashMap<>();
+    public final HashMap<String, UUID> PlayertoUUID = new HashMap<>();
     final HashMap<Player, Location> HomeSpawnLocations = new HashMap<>();
     final HashMap<Player, Integer> HomeSpawnTimeLeft = new HashMap<>();
     final HashMap<Player, Inventory> HomesListInvs = new HashMap<>();
-    private final HashMap<String, File> HomeConfigsFiles = new HashMap<>();
+    private final HashMap<UUID, File> HomeConfigsFiles = new HashMap<>();
     public HomeSpawn plugin;
     public LapisUpdater updater;
     public YamlConfiguration spawn;
@@ -156,7 +157,7 @@ public class HomeSpawn extends JavaPlugin {
         configVersion();
     }
 
-    public void savePlayerData(String uuid) {
+    public void savePlayerData(UUID uuid) {
         try {
             HomeConfigs.get(uuid).save(HomeConfigsFiles.get(uuid));
         } catch (IOException e) {
@@ -175,8 +176,8 @@ public class HomeSpawn extends JavaPlugin {
             if (f.isFile()) {
                 if (!f.getName().contains("Passwords")) {
                     YamlConfiguration Yaml = YamlConfiguration.loadConfiguration(f);
-                    HomeConfigs.put(Yaml.getString("name"), Yaml);
-                    HomeConfigsFiles.put(Yaml.getString("name"), f);
+                    HomeConfigs.put(UUID.fromString(Yaml.getString("name")), Yaml);
+                    HomeConfigsFiles.put(UUID.fromString(Yaml.getString("name")), f);
                 }
             }
         }
@@ -189,10 +190,9 @@ public class HomeSpawn extends JavaPlugin {
         File[] playerNamesArray = file.listFiles();
         for (File f : playerNamesArray) {
             YamlConfiguration Yaml = YamlConfiguration.loadConfiguration(f);
-            PlayertoUUID.put(Yaml.getString("Name"), Yaml.getString("UUID"));
+            PlayertoUUID.put(Yaml.getString("Name"), UUID.fromString(Yaml.getString("UUID")));
         }
     }
-
 
     private void createPasswords() {
         File file = new File(getDataFolder().getAbsolutePath()

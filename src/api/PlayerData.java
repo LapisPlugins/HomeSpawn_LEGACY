@@ -6,6 +6,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.UUID;
 
 /**
  * API Class to get Player Data Files
@@ -24,8 +25,8 @@ class PlayerData {
      * Returns the currently loaded Player Data file will the given Player name
      */
     public YamlConfiguration getHomeConfig(String PlayerName) {
-        String UUID = plugin.PlayertoUUID.get(PlayerName);
-        YamlConfiguration getHome = plugin.HomeConfigs.get(UUID);
+        UUID uuid = plugin.PlayertoUUID.get(PlayerName);
+        YamlConfiguration getHome = plugin.HomeConfigs.get(uuid);
         return getHome;
     }
 
@@ -44,7 +45,7 @@ class PlayerData {
     /**
      * Returns the loaded list of Player names and UUIDs for getting a UUID from a Player name
      */
-    public HashMap<String, String> PlayerNames() {
+    public HashMap<String, UUID> PlayerNames() {
         return plugin.PlayertoUUID;
     }
 
