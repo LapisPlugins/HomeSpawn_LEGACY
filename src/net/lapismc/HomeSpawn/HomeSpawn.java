@@ -6,11 +6,14 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
@@ -18,10 +21,7 @@ import org.mcstats.Metrics;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -34,6 +34,8 @@ public class HomeSpawn extends JavaPlugin {
     final HashMap<Player, Integer> HomeSpawnTimeLeft = new HashMap<>();
     final HashMap<Player, Inventory> HomesListInvs = new HashMap<>();
     private final HashMap<UUID, File> HomeConfigsFiles = new HashMap<>();
+    public HashMap<Permission, HashMap<String, Integer>> Permissions = new HashMap<>();
+    public HashMap<UUID, Permission> PlayerPermission = new HashMap<>();
     public HomeSpawn plugin;
     public LapisUpdater updater;
     public YamlConfiguration spawn;
@@ -51,8 +53,48 @@ public class HomeSpawn extends JavaPlugin {
         Enable();
         Configs();
         Metrics();
+        Permissions();
         Commands();
         CommandDelay();
+    }
+
+    private void Permissions() {
+        ConfigurationSection permsSection = getConfig().getConfigurationSection("Permissions");
+        Set<String> perms = permsSection.getKeys(false);
+        for (String perm : perms) {
+            String permName = perm.replace("Permissions.", "");
+            int Default = getConfig().getInt(perm + "default");
+            int homes = getConfig().getInt(perm + "homes");
+            int spawn = getConfig().getInt(perm + "spawn");
+            int cHomes = getConfig().getInt(perm + "set custom homes");
+            int TPD = getConfig().getInt(perm + "TP delay");
+            int sSpawn = getConfig().getInt(perm + "setspawn");
+            int updateNotify = getConfig().getInt(perm + "updateNotify");
+            int reload = getConfig().getInt(perm + "reload");
+            HashMap<String, Integer> permMap = new HashMap<>();
+            permMap.put("homes", homes);
+            permMap.put("spawn", spawn);
+            permMap.put("cHomes", cHomes);
+            permMap.put("TPD", TPD);
+            permMap.put("sSpawn", sSpawn);
+            permMap.put("updateNotify", updateNotify);
+            permMap.put("reload", reload);
+            PermissionDefault PD = null;
+            if (Default == 0) {
+                PD = PermissionDefault.FALSE;
+            } else if (Default == 1) {
+                PD = PermissionDefault.TRUE;
+            } else if (Default == 2) {
+                PD = PermissionDefault.OP;
+            } else {
+                logger.severe("HomeSpawn disabled because of invalid default value for " + permName + " in config.yml");
+                Bukkit.getPluginManager().disablePlugin(this);
+                break;
+            }
+            Permission p = new Permission(permName, PD);
+            Bukkit.getPluginManager().addPermission(p);
+            Permissions.put(p, permMap);
+        }
     }
 
     private void Metrics() {
@@ -108,31 +150,45 @@ public class HomeSpawn extends JavaPlugin {
     }
 
     private void configVersion() {
-        if (getConfig().getInt("ConfigVersion") != 2) {
-            getConfig().set("ConfigVersion", 2);
-            if (!getConfig().contains("AutoUpdate")) {
-                getConfig().set("AutoUpdate", true);
-            }
+        if (getConfig().getInt("ConfigVersion") != 3) {
+            getConfig().set("ConfigVersion", 3);
             if (!getConfig().contains("UpdateNotification")) {
                 getConfig().set("UpdateNotification", true);
             }
             if (!getConfig().contains("Metrics")) {
                 getConfig().set("Metrics", true);
             }
-            if (!getConfig().contains("VIPHomesLimit")) {
-                getConfig().set("VIPHomesLimit", 3);
-            }
-            if (!getConfig().contains("AdminHomesLimit")) {
-                getConfig().set("AdminHomesLimit", 5);
-            }
-            if (!getConfig().contains("TeleportTime")) {
-                getConfig().set("TeleportTime", 10);
-            }
             if (!getConfig().contains("CommandBook")) {
                 getConfig().set("CommandBook", true);
             }
             if (!getConfig().contains("InventoryMenu")) {
                 getConfig().set("InventoryMenu", true);
+            }
+            if (!getConfig().contains("Permissions")) {
+                getConfig().set("Permissions.homespawn,player.default", 1);
+                getConfig().set("Permissions.homespawn,player.homes", 1);
+                getConfig().set("Permissions.homespawn,player.spawn", 1);
+                getConfig().set("Permissions.homespawn,player.set custom homes", 0);
+                getConfig().set("Permissions.homespawn,player.TP delay", 10);
+                getConfig().set("Permissions.homespawn,player.setspawn", 0);
+                getConfig().set("Permissions.homespawn,player.updateNotify", 0);
+                getConfig().set("Permissions.homespawn,player.reload", 0);
+                getConfig().set("Permissions.homespawn,vip.default", 0);
+                getConfig().set("Permissions.homespawn,vip.homes", 3);
+                getConfig().set("Permissions.homespawn,vip.spawn", 1);
+                getConfig().set("Permissions.homespawn,vip.set custom homes", 1);
+                getConfig().set("Permissions.homespawn,vip.TP delay", 5);
+                getConfig().set("Permissions.homespawn,vip.setspawn", 0);
+                getConfig().set("Permissions.homespawn,vip.updateNotify", 0);
+                getConfig().set("Permissions.homespawn,vip.reload", 0);
+                getConfig().set("Permissions.homespawn,admin.default", 2);
+                getConfig().set("Permissions.homespawn,admin.homes", 5);
+                getConfig().set("Permissions.homespawn,admin.spawn", 1);
+                getConfig().set("Permissions.homespawn,admin.set custom homes", 1);
+                getConfig().set("Permissions.homespawn,admin.TP delay", 0);
+                getConfig().set("Permissions.homespawn,admin.setspawn", 1);
+                getConfig().set("Permissions.homespawn,admin.updateNotify", 0);
+                getConfig().set("Permissions.homespawn,admin.reload", 1);
             }
             saveConfig();
         }

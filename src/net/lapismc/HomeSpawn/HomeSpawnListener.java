@@ -17,10 +17,12 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.permissions.Permission;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class HomeSpawnListener implements Listener {
@@ -87,6 +89,7 @@ public class HomeSpawnListener implements Listener {
         if (!file.exists()) {
             try {
                 file.createNewFile();
+                getHomes.createSection("Permission");
                 getHomes.createSection("name");
                 getHomes.createSection("HasHome");
                 getHomes.createSection(player.getUniqueId() + ".Numb");
@@ -105,7 +108,21 @@ public class HomeSpawnListener implements Listener {
                 return;
             }
         }
-        if (player.hasPermission("homespawn.admin")) {
+        int numb = 0;
+        for (Permission p : plugin.Permissions.keySet()) {
+            if (player.hasPermission(p)) {
+                plugin.PlayerPermission.put(player.getUniqueId(), p);
+                numb++;
+            }
+        }
+        if (numb == 0 || numb > 1) {
+            player.sendMessage(ChatColor.RED + "Your permission for HomeSpawn are setup incorectly," +
+                    " Therefore you will not be able to use any of its commands!");
+            Permission nulled = new Permission("homespawn.null");
+            plugin.PlayerPermission.put(player.getUniqueId(), nulled);
+        }
+        HashMap<String, Integer> perms = plugin.Permissions.get(plugin.PlayerPermission.get(player.getUniqueId()));
+        if (perms.get("updateNotify") == 1) {
             File file1 = new File(plugin.getDataFolder().getAbsolutePath()
                     + File.separator + "update.yml");
             FileConfiguration getUpdate = YamlConfiguration
@@ -264,25 +281,18 @@ public class HomeSpawnListener implements Listener {
     }
 
     private void TeleportPlayer(Player p, Location l) {
-        if (plugin.getConfig().getInt("TeleportTime") == 0
-                || p.hasPermission("homespawn.bypassdelay")) {
+        HashMap<String, Integer> perms = plugin.Permissions.get(plugin.PlayerPermission.get(p.getUniqueId()));
+        if (perms.get("TPD") == 0) {
             p.teleport(l);
-            if ("Home".equalsIgnoreCase("Spawn")) {
-                p.sendMessage(ChatColor.GOLD
-                        + getMessages.getString("Spawn.SentToSpawn"));
-            } else if ("Home".equalsIgnoreCase("Home")) {
-                p.sendMessage(ChatColor.GOLD
-                        + getMessages.getString("Home.SentHome"));
-            }
+            p.sendMessage(ChatColor.GOLD + getMessages.getString("Home.SentHome"));
         } else {
             String waitraw = ChatColor.GOLD + getMessages.getString("Wait");
             String Wait = waitraw.replace("{time}", ChatColor.RED
-                    + plugin.getConfig().getString("TeleportTime")
+                    + perms.get("TPD").toString()
                     + ChatColor.GOLD);
             p.sendMessage(Wait);
             plugin.HomeSpawnLocations.put(p, l);
-            plugin.HomeSpawnTimeLeft.put(p,
-                    plugin.getConfig().getInt("TeleportTime"));
+            plugin.HomeSpawnTimeLeft.put(p, perms.get("TPD"));
         }
 
     }

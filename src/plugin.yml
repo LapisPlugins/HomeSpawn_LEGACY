@@ -22,26 +22,3 @@ commands:
     description: Shows The Current Homes
   homepassword:
     description: Allows the player to set a password and transfer homes to a new username on an offline mode server
-permissions:
-homespawn.*:
-    description: Gives Access To All Commands
-    children:
-        homespawn.player: true
-        homespawn.admin: true
-        homespawn.bypassdelay: true
-homespawn.bypassdelay:
-    description: Allows the player to teleport imediatly
-    default: false
-homespawn.player:
-    description: Allows Player Commands
-    default: false
-homespawn.admin:
-    children:
-        homespawn.player: true
-        homespawn.bypassdelay: true
-    description: Allows ALL Commands
-    default: op
-homespawn.vip:
-    children:
-        homespawn.player: true
-    default: false

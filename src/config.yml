@@ -1,16 +1,37 @@
 ##Dont Change This, It Will Reset The Config If You Do!
-ConfigVersion: 2
+ConfigVersion: 3
 ## If Set To True Any Player With Homespawn.admin Will Receive A Notification If There Is An Update
 UpdateNotification: true
 ## If Set To True The Plugin Will Send Usage Information To mcstats.org, Such As Minecraft Version And Players Online
 Metrics: true
-## This Limit Only Affects Players With The VIP Perm, Admins Will Be Able To Exceed This Limit (Includes The /Home One)
-VIPHomesLimit: 3
-## This Limit Affects Players With The homespawn.admin Perm
-AdminHomesLimit: 5
-## This Time Is How Long THe Player Must Wait Without Being Hit By Another Player Before They Teleport, Set To 0 To Disable
-TeleportTime: 10
-## If enabled the player wil be given a book with all player commands listed (Does not contain admin or VIP commands) on first join
+## If enabled the player wil be given a book with all player commands listed (Does not contain admin or VIP commands)
+## on first join
 CommandBook: true
-## When enabled players with more than 1 home will be given an inventory menu to select a home to teleport to when they run /homeslist
+## When enabled players with more than 1 home will be given an inventory menu to select a home to teleport to when
+## they run /homeslist
 InventoryMenu: true
+## 0 = false, 1 = true. (NOTE: , in a permission name will be replaced with . EG. homespawn,player = homespawn.player)
+##Players may only have 1 of the following permissions or they will not be allowed to use the plugin
+##See permissions section of homespawn on SpigotMC.org for more infomation.
+Permissions:
+    homespawn,player:
+        default: 1
+        homes: 1
+        set custom homes: 0
+        TP delay: 10
+        setspawn: 0
+        updateNotify: 0
+    homespawn,vip:
+        default: 0
+        homes: 3
+        set custom homes: 1
+        TP delay: 5
+        setspawn: 0
+        updateNotify: 0
+    homespawn,admin:
+        default: 2
+        homes: 5
+        set custom homes: 1
+        TP delay: 0
+        setspawn: 1
+        updateNotify: 1
