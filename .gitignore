@@ -4,7 +4,7 @@
 /.project
 
 # IntelliJ IDEA Stuff
-/.idea
+.idea
 /*.iml
 
 # Maven Stuff
