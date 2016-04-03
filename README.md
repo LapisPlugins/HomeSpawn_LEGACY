@@ -4,7 +4,7 @@ Spigot: https://www.spigotmc.org/resources/homespawn.14108/
 
 Travis: https://travis-ci.org/Dart2112/HomeSpawn
 
-This plugin allows player to teleport to the home(s) and spawn locations set using the commands below. Here is a list of current features:
+This plugin allows player to teleport to the home(s) and spawn locations set using the commands listed on the spigot page. Here is a list of current features:
 
 •	Multiple homes
 
