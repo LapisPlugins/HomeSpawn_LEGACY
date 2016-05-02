@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
+import java.util.Objects;
 
 public class LapisUpdater {
 
@@ -36,7 +37,7 @@ public class LapisUpdater {
             YamlConfiguration yaml = YamlConfiguration.loadConfiguration(f);
             String oldVersion = plugin.getDescription().getVersion();
             String newVersion = yaml.getString(ID);
-            return oldVersion != newVersion;
+            return !Objects.equals(oldVersion, newVersion);
         } catch (IOException e) {
             e.printStackTrace();
             return false;

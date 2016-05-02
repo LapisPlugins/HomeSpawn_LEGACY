@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 public class HomeSpawnListener implements Listener {
 
@@ -272,7 +273,7 @@ public class HomeSpawnListener implements Listener {
     public void onInvExit(InventoryCloseEvent e) {
         if (!(e.getPlayer() == null && e.getInventory() == null)) {
             Player p = (Player) e.getPlayer();
-            if (plugin.HomesListInvs.containsKey(p) && e.getInventory().getName() == plugin.HomesListInvs.get(p).getName()) {
+            if (plugin.HomesListInvs.containsKey(p) && Objects.equals(e.getInventory().getName(), plugin.HomesListInvs.get(p).getName())) {
                 Inventory inv = plugin.HomesListInvs.get(p);
                 inv.clear();
                 plugin.HomesListInvs.put(p, inv);

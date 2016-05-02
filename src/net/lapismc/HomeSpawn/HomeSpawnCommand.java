@@ -555,7 +555,7 @@ public class HomeSpawnCommand implements CommandExecutor {
             } else if (cmd.getName().equalsIgnoreCase("delspawn")) {
                 HashMap<String, Integer> perms = plugin.Permissions.get(plugin.PlayerPermission.get(player.getUniqueId()));
                 if (perms.get("sSpawn") == 1) {
-                    if (HomeSpawnCommand.getSpawn.getString("spawn.SpawnSet") == "No"
+                    if (Objects.equals(HomeSpawnCommand.getSpawn.getString("spawn.SpawnSet"), "No")
                             || !HomeSpawnCommand.getSpawn.contains("spawn.SpawnSet")) {
                         player.sendMessage(ChatColor.RED
                                 + HomeSpawnCommand.getMessages.getString("Spawn.NotSet"));

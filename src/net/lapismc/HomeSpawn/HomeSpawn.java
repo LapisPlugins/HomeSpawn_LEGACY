@@ -34,8 +34,8 @@ public class HomeSpawn extends JavaPlugin {
     final HashMap<Player, Integer> HomeSpawnTimeLeft = new HashMap<>();
     final HashMap<Player, Inventory> HomesListInvs = new HashMap<>();
     private final HashMap<UUID, File> HomeConfigsFiles = new HashMap<>();
-    public HashMap<Permission, HashMap<String, Integer>> Permissions = new HashMap<>();
-    public HashMap<UUID, Permission> PlayerPermission = new HashMap<>();
+    public final HashMap<Permission, HashMap<String, Integer>> Permissions = new HashMap<>();
+    public final HashMap<UUID, Permission> PlayerPermission = new HashMap<>();
     public HomeSpawn plugin;
     public LapisUpdater updater;
     public YamlConfiguration spawn;
@@ -476,10 +476,10 @@ public class HomeSpawn extends JavaPlugin {
 
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (command.getName().equalsIgnoreCase("home") || command.getName().equalsIgnoreCase("delhome")) {
-            List<String> l = new ArrayList<String>();
+            List<String> l = new ArrayList<>();
             if (args.length == 1) {
                 Player p = (Player) sender;
-                YamlConfiguration pd = HomeConfigs.get(p.getUniqueId().toString());
+                YamlConfiguration pd = HomeConfigs.get(p.getUniqueId());
                 l.addAll(pd.getStringList(p.getUniqueId() + ".list"));
             }
             return l;
