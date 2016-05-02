@@ -475,7 +475,7 @@ public class HomeSpawn extends JavaPlugin {
                         + ChatColor.GOLD + " Removes The Server Spawn");
             }
             player.sendMessage(ChatColor.RED + "/homespawn:"
-                    + ChatColor.GOLD + " Displays Plugin Infomation");
+                    + ChatColor.GOLD + " Displays Plugin Information");
             if (Permissions.get(PlayerPermission.get(player.getUniqueId())).get("reload").equals(1)) {
                 player.sendMessage(ChatColor.RED + "/homespawn reload:"
                         + ChatColor.GOLD + " Reloads The Plugin Configs");
