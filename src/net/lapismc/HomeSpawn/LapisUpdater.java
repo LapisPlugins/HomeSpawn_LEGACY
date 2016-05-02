@@ -36,11 +36,7 @@ public class LapisUpdater {
             YamlConfiguration yaml = YamlConfiguration.loadConfiguration(f);
             String oldVersion = plugin.getDescription().getVersion();
             String newVersion = yaml.getString(ID);
-            if (oldVersion != newVersion) {
-                return true;
-            } else {
-                return false;
-            }
+            return oldVersion != newVersion;
         } catch (IOException e) {
             e.printStackTrace();
             return false;

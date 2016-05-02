@@ -62,7 +62,7 @@ public class HomeSpawn extends JavaPlugin {
         ConfigurationSection permsSection = getConfig().getConfigurationSection("Permissions");
         Set<String> perms = permsSection.getKeys(false);
         for (String perm : perms) {
-            String permName = perm.replace("Permissions.", "");
+            String permName = perm.replace("Permissions.", "").replace(",", ".");
             int Default = getConfig().getInt(perm + "default");
             int homes = getConfig().getInt(perm + "homes");
             int spawn = getConfig().getInt(perm + "spawn");
@@ -80,16 +80,13 @@ public class HomeSpawn extends JavaPlugin {
             permMap.put("updateNotify", updateNotify);
             permMap.put("reload", reload);
             PermissionDefault PD = null;
-            if (Default == 0) {
-                PD = PermissionDefault.FALSE;
-            } else if (Default == 1) {
-                PD = PermissionDefault.TRUE;
-            } else if (Default == 2) {
-                PD = PermissionDefault.OP;
-            } else {
-                logger.severe("HomeSpawn disabled because of invalid default value for " + permName + " in config.yml");
-                Bukkit.getPluginManager().disablePlugin(this);
-                break;
+            switch (Default) {
+                case 0:
+                    PD = PermissionDefault.FALSE;
+                case 1:
+                    PD = PermissionDefault.TRUE;
+                case 2:
+                    PD = PermissionDefault.OP;
             }
             Permission p = new Permission(permName, PD);
             Bukkit.getPluginManager().addPermission(p);
@@ -133,6 +130,7 @@ public class HomeSpawn extends JavaPlugin {
     }
 
     private void Update() {
+        /*
         if (updater.checkUpdate(this, "HomeSpawn")) {
             if (getConfig().getBoolean("UpdateNotification")) {
                 logger.info("An update for HomeSpawn is available and can be" +
@@ -142,7 +140,7 @@ public class HomeSpawn extends JavaPlugin {
             if (getConfig().getBoolean("UpdateNotification")) {
 
             }
-        }
+        }*/
     }
 
     @Override
@@ -160,46 +158,12 @@ public class HomeSpawn extends JavaPlugin {
 
     private void configVersion() {
         if (getConfig().getInt("ConfigVersion") != 3) {
-            getConfig().set("ConfigVersion", 3);
-            if (!getConfig().contains("UpdateNotification")) {
-                getConfig().set("UpdateNotification", true);
-            }
-            if (!getConfig().contains("Metrics")) {
-                getConfig().set("Metrics", true);
-            }
-            if (!getConfig().contains("CommandBook")) {
-                getConfig().set("CommandBook", true);
-            }
-            if (!getConfig().contains("InventoryMenu")) {
-                getConfig().set("InventoryMenu", true);
-            }
-            if (!getConfig().contains("Permissions")) {
-                getConfig().set("Permissions.homespawn,player.default", 1);
-                getConfig().set("Permissions.homespawn,player.homes", 1);
-                getConfig().set("Permissions.homespawn,player.spawn", 1);
-                getConfig().set("Permissions.homespawn,player.set custom homes", 0);
-                getConfig().set("Permissions.homespawn,player.TP delay", 10);
-                getConfig().set("Permissions.homespawn,player.setspawn", 0);
-                getConfig().set("Permissions.homespawn,player.updateNotify", 0);
-                getConfig().set("Permissions.homespawn,player.reload", 0);
-                getConfig().set("Permissions.homespawn,vip.default", 0);
-                getConfig().set("Permissions.homespawn,vip.homes", 3);
-                getConfig().set("Permissions.homespawn,vip.spawn", 1);
-                getConfig().set("Permissions.homespawn,vip.set custom homes", 1);
-                getConfig().set("Permissions.homespawn,vip.TP delay", 5);
-                getConfig().set("Permissions.homespawn,vip.setspawn", 0);
-                getConfig().set("Permissions.homespawn,vip.updateNotify", 0);
-                getConfig().set("Permissions.homespawn,vip.reload", 0);
-                getConfig().set("Permissions.homespawn,admin.default", 2);
-                getConfig().set("Permissions.homespawn,admin.homes", 5);
-                getConfig().set("Permissions.homespawn,admin.spawn", 1);
-                getConfig().set("Permissions.homespawn,admin.set custom homes", 1);
-                getConfig().set("Permissions.homespawn,admin.TP delay", 0);
-                getConfig().set("Permissions.homespawn,admin.setspawn", 1);
-                getConfig().set("Permissions.homespawn,admin.updateNotify", 0);
-                getConfig().set("Permissions.homespawn,admin.reload", 1);
-            }
-            saveConfig();
+            File oldConfig = new File(this.getDataFolder() + File.separator + "config.yml");
+            File backupConfig = new File(this.getDataFolder() + File.separator + "Backup_config.yml");
+            oldConfig.renameTo(backupConfig);
+            saveDefaultConfig();
+            logger.info("New config generated!");
+            logger.info("Please transfer vaules!");
         }
     }
 
@@ -210,7 +174,6 @@ public class HomeSpawn extends JavaPlugin {
 
     private void Configs() {
         saveDefaultConfig();
-        getConfig().options().copyDefaults(true);
         saveConfig();
         createSpawn();
         createPlayerData();
