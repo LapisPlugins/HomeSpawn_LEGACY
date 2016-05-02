@@ -417,9 +417,11 @@ public class HomeSpawn extends JavaPlugin {
             loadPlayerData();
             loadName();
             Permissions();
-            Bukkit.broadcast(ChatColor.RED
-                            + "Console" + ChatColor.GOLD + " Has Reloaded Homespawn!",
-                    "homespawn.admin");
+            for (Permission p : Permissions.keySet()) {
+                if (Permissions.get(p).get("reload").equals(1)) {
+                    Bukkit.broadcast(ChatColor.RED + "Console" + ChatColor.GOLD + " Has Reloaded Homespawn!", p.getName());
+                }
+            }
             logger
                     .info("You Have Reloaded Homespawn!");
         }
@@ -432,9 +434,12 @@ public class HomeSpawn extends JavaPlugin {
             Permissions();
             player.sendMessage(ChatColor.GOLD
                     + "You have reloaded the configs for Homespawn!");
-            Bukkit.broadcast(ChatColor.GOLD + "Player " + ChatColor.RED
-                    + player.getName() + ChatColor.GOLD
-                    + " Has Reloaded Homespawn!", "homespawn.admin");
+            for (Permission p : Permissions.keySet()) {
+                if (Permissions.get(p).get("reload").equals(1)) {
+                    Bukkit.broadcast(ChatColor.GOLD + "Player " + ChatColor.RED + player.getName() + ChatColor.GOLD
+                            + " Has Reloaded Homespawn!", p.getName());
+                }
+            }
             logger.info("Player " + player.getName()
                     + " Has Reloaded Homespawn!");
         }
@@ -460,7 +465,7 @@ public class HomeSpawn extends JavaPlugin {
                         + ChatColor.GOLD
                         + " Displays The Home Transfer Commands");
             }
-            if (player.hasPermission("homespawn.admin")) {
+            if (Permissions.get(PlayerPermission.get(player.getUniqueId())).get("sSpawn").equals(1)) {
                 player.sendMessage(ChatColor.RED + "/setspawn:"
                         + ChatColor.GOLD + " Sets The Server Spawn");
                 player.sendMessage(ChatColor.RED + "/setspawn new:"
@@ -468,18 +473,15 @@ public class HomeSpawn extends JavaPlugin {
                         + " All New Players Will Be Sent To This Spawn");
                 player.sendMessage(ChatColor.RED + "/delspawn:"
                         + ChatColor.GOLD + " Removes The Server Spawn");
-                player.sendMessage(ChatColor.RED + "/homespawn:"
-                        + ChatColor.GOLD + " Displays Plugin Infomation");
+            }
+            player.sendMessage(ChatColor.RED + "/homespawn:"
+                    + ChatColor.GOLD + " Displays Plugin Infomation");
+            if (Permissions.get(PlayerPermission.get(player.getUniqueId())).get("reload").equals(1)) {
                 player.sendMessage(ChatColor.RED + "/homespawn reload:"
                         + ChatColor.GOLD + " Reloads The Plugin Configs");
-                player.sendMessage(ChatColor.GOLD
-                        + "-----------------------------------------");
-                return;
-            } else {
-                player.sendMessage(ChatColor.GOLD
-                        + "-----------------------------------------");
             }
-
+            player.sendMessage(ChatColor.GOLD
+                    + "-----------------------------------------");
         } else {
             return;
         }
