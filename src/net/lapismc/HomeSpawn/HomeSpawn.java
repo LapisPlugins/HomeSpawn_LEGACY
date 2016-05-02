@@ -30,12 +30,12 @@ public class HomeSpawn extends JavaPlugin {
     public final Logger logger = getLogger();
     public final HashMap<UUID, YamlConfiguration> HomeConfigs = new HashMap<>();
     public final HashMap<String, UUID> PlayertoUUID = new HashMap<>();
+    public final HashMap<Permission, HashMap<String, Integer>> Permissions = new HashMap<>();
+    public final HashMap<UUID, Permission> PlayerPermission = new HashMap<>();
     final HashMap<Player, Location> HomeSpawnLocations = new HashMap<>();
     final HashMap<Player, Integer> HomeSpawnTimeLeft = new HashMap<>();
     final HashMap<Player, Inventory> HomesListInvs = new HashMap<>();
     private final HashMap<UUID, File> HomeConfigsFiles = new HashMap<>();
-    public final HashMap<Permission, HashMap<String, Integer>> Permissions = new HashMap<>();
-    public final HashMap<UUID, Permission> PlayerPermission = new HashMap<>();
     public HomeSpawn plugin;
     public LapisUpdater updater;
     public YamlConfiguration spawn;
@@ -61,6 +61,17 @@ public class HomeSpawn extends JavaPlugin {
     private void Permissions() {
         ConfigurationSection permsSection = getConfig().getConfigurationSection("Permissions");
         Set<String> perms = permsSection.getKeys(false);
+        HashMap<String, Integer> nullPermMap = new HashMap<>();
+        nullPermMap.put("homes", 0);
+        nullPermMap.put("spawn", 1);
+        nullPermMap.put("cHomes", 0);
+        nullPermMap.put("TPD", 0);
+        nullPermMap.put("sSpawn", 0);
+        nullPermMap.put("updateNotify", 0);
+        nullPermMap.put("reload", 0);
+        Permission np = new Permission("homespawn.nulled", PermissionDefault.FALSE);
+        Bukkit.getPluginManager().addPermission(np);
+        Permissions.put(np, nullPermMap);
         for (String perm : perms) {
             String permName = perm.replace("Permissions.", "").replace(",", ".");
             int Default = getConfig().getInt(perm + "default");
@@ -157,13 +168,13 @@ public class HomeSpawn extends JavaPlugin {
     }
 
     private void configVersion() {
-        if (getConfig().getInt("ConfigVersion") != 3) {
+        if (getConfig().getInt("ConfigVersion") != 4) {
             File oldConfig = new File(this.getDataFolder() + File.separator + "config.yml");
             File backupConfig = new File(this.getDataFolder() + File.separator + "Backup_config.yml");
             oldConfig.renameTo(backupConfig);
             saveDefaultConfig();
             logger.info("New config generated!");
-            logger.info("Please transfer vaules!");
+            logger.info("Please transfer values!");
         }
     }
 
