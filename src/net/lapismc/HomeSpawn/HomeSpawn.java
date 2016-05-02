@@ -60,6 +60,7 @@ public class HomeSpawn extends JavaPlugin {
 
     private void Permissions() {
         HashMap<String, Integer> nullPermMap = new HashMap<>();
+        nullPermMap.put("priority", 0);
         nullPermMap.put("homes", 0);
         nullPermMap.put("spawn", 1);
         nullPermMap.put("cHomes", 0);
@@ -76,6 +77,7 @@ public class HomeSpawn extends JavaPlugin {
             logger.info(perm);
             String permName = perm.replace(",", ".");
             int Default = getConfig().getInt("Permissions." + perm + ".default");
+            int priority = getConfig().getInt("Permissions." + perm + ".priority");
             int homes = getConfig().getInt("Permissions." + perm + ".homes");
             int spawn = getConfig().getInt("Permissions." + perm + ".spawn");
             int cHomes = getConfig().getInt("Permissions." + perm + ".set custom homes");
@@ -84,6 +86,7 @@ public class HomeSpawn extends JavaPlugin {
             int updateNotify = getConfig().getInt("Permissions." + perm + ".updateNotify");
             int reload = getConfig().getInt("Permissions." + perm + ".reload");
             HashMap<String, Integer> permMap = new HashMap<>();
+            permMap.put("priority", priority);
             permMap.put("homes", homes);
             permMap.put("spawn", spawn);
             permMap.put("cHomes", cHomes);

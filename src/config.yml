@@ -17,6 +17,8 @@ Permissions:
     homespawn,player:
     ## Who will have this by default? 0=no one 1=everyone 2=OPs
         default: 1
+    ## Players will be given the permission with the highest value, if players have multiple permissions.
+        priority: 0
     ## How many homes can they have set? 0=none
         homes: 1
     ## Can they use /spawn? 0=no 1=yes
@@ -33,6 +35,7 @@ Permissions:
         reload: 0
     homespawn,vip:
         default: 0
+        priority: 1
         homes: 3
         spawn: 1
         set custom homes: 1
@@ -42,6 +45,7 @@ Permissions:
         reload: 0
     homespawn,admin:
         default: 2
+        priority: 2
         homes: 5
         spawn: 1
         set custom homes: 1

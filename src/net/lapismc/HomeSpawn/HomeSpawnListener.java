@@ -108,9 +108,13 @@ public class HomeSpawnListener implements Listener {
                 return;
             }
         }
+        int priority = -1;
         for (Permission p : plugin.Permissions.keySet()) {
             if (player.hasPermission(p)) {
-                plugin.PlayerPermission.put(player.getUniqueId(), p);
+                if (priority == -1 || plugin.Permissions.get(p).get("priority") > priority) {
+                    plugin.PlayerPermission.put(player.getUniqueId(), p);
+                    priority = plugin.Permissions.get(p).get("priority");
+                }
             }
         }
         if (!plugin.PlayerPermission.containsKey(player.getUniqueId())) {
