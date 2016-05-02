@@ -59,8 +59,6 @@ public class HomeSpawn extends JavaPlugin {
     }
 
     private void Permissions() {
-        ConfigurationSection permsSection = getConfig().getConfigurationSection("Permissions");
-        Set<String> perms = permsSection.getKeys(false);
         HashMap<String, Integer> nullPermMap = new HashMap<>();
         nullPermMap.put("homes", 0);
         nullPermMap.put("spawn", 1);
@@ -72,16 +70,19 @@ public class HomeSpawn extends JavaPlugin {
         Permission np = new Permission("homespawn.nulled", PermissionDefault.FALSE);
         Bukkit.getPluginManager().addPermission(np);
         Permissions.put(np, nullPermMap);
+        ConfigurationSection permsSection = getConfig().getConfigurationSection("Permissions");
+        Set<String> perms = permsSection.getKeys(false);
         for (String perm : perms) {
-            String permName = perm.replace("Permissions.", "").replace(",", ".");
-            int Default = getConfig().getInt(perm + "default");
-            int homes = getConfig().getInt(perm + "homes");
-            int spawn = getConfig().getInt(perm + "spawn");
-            int cHomes = getConfig().getInt(perm + "set custom homes");
-            int TPD = getConfig().getInt(perm + "TP delay");
-            int sSpawn = getConfig().getInt(perm + "setspawn");
-            int updateNotify = getConfig().getInt(perm + "updateNotify");
-            int reload = getConfig().getInt(perm + "reload");
+            logger.info(perm);
+            String permName = perm.replace(",", ".");
+            int Default = getConfig().getInt("Permissions." + perm + ".default");
+            int homes = getConfig().getInt("Permissions." + perm + ".homes");
+            int spawn = getConfig().getInt("Permissions." + perm + ".spawn");
+            int cHomes = getConfig().getInt("Permissions." + perm + ".set custom homes");
+            int TPD = getConfig().getInt("Permissions." + perm + ".TP delay");
+            int sSpawn = getConfig().getInt("Permissions." + perm + ".setspawn");
+            int updateNotify = getConfig().getInt("Permissions." + perm + ".updateNotify");
+            int reload = getConfig().getInt("Permissions." + perm + ".reload");
             HashMap<String, Integer> permMap = new HashMap<>();
             permMap.put("homes", homes);
             permMap.put("spawn", spawn);
@@ -102,6 +103,10 @@ public class HomeSpawn extends JavaPlugin {
             Permission p = new Permission(permName, PD);
             Bukkit.getPluginManager().addPermission(p);
             Permissions.put(p, permMap);
+        }
+        for (Permission p : Permissions.keySet()) {
+            logger.info(p.getName());
+            logger.info(Permissions.get(p).entrySet().toString());
         }
         logger.info("Permissions Loaded!");
     }
@@ -185,7 +190,6 @@ public class HomeSpawn extends JavaPlugin {
 
     private void Configs() {
         saveDefaultConfig();
-        saveConfig();
         createSpawn();
         createPlayerData();
         createMessages();
@@ -499,54 +503,46 @@ public class HomeSpawn extends JavaPlugin {
     }
 
     private void CommandDelay() {
-        if (!getConfig().contains("TeleportTime")) {
-            getConfig().createSection("TeleportTime");
-            saveConfig();
-            getConfig().set("TeleportTime", 0);
-        }
-        if (!(getConfig().getInt("TeleportTime") <= 0)) {
-            BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
-            scheduler.scheduleSyncRepeatingTask(this, new Runnable() {
-                @Override
-                public void run() {
-                    if (!HomeSpawnTimeLeft.isEmpty()) {
-                        for (Player p : HomeSpawnTimeLeft.keySet()) {
-                            if (HomeSpawnLocations.get(p) == null) {
-                                HomeSpawnTimeLeft.remove(p);
-                                HomeSpawnLocations.remove(p);
-                            }
-                            if (HomeSpawnTimeLeft.isEmpty()) {
-                                return;
-                            }
-                            for (int Time : HomeSpawnTimeLeft.values()) {
-                                int NewTime = Time - 1;
-                                if (NewTime > 0) {
-                                    HomeSpawnTimeLeft.put(p, NewTime);
-                                } else if (NewTime <= 0) {
-                                    Location Tele = HomeSpawnLocations.get(p);
-                                    if (!(Tele == null)) {
-                                        if (!Tele.getChunk().isLoaded()) {
-                                            Tele.getChunk().load();
-                                        }
-                                        p.teleport(Tele);
-                                        p.sendMessage(ChatColor.GOLD
-                                                + "Teleporting...");
-                                        HomeSpawnTimeLeft.remove(p);
-                                        HomeSpawnLocations.remove(p);
-                                    } else {
-                                        HomeSpawnTimeLeft.remove(p);
-                                        HomeSpawnLocations.remove(p);
+        BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
+        scheduler.scheduleSyncRepeatingTask(this, new Runnable() {
+            @Override
+            public void run() {
+                if (!HomeSpawnTimeLeft.isEmpty()) {
+                    for (Player p : HomeSpawnTimeLeft.keySet()) {
+                        if (HomeSpawnLocations.get(p) == null) {
+                            HomeSpawnTimeLeft.remove(p);
+                            HomeSpawnLocations.remove(p);
+                        }
+                        if (HomeSpawnTimeLeft.isEmpty()) {
+                            return;
+                        }
+                        for (int Time : HomeSpawnTimeLeft.values()) {
+                            int NewTime = Time - 1;
+                            if (NewTime > 0) {
+                                HomeSpawnTimeLeft.put(p, NewTime);
+                            } else if (NewTime <= 0) {
+                                Location Tele = HomeSpawnLocations.get(p);
+                                if (!(Tele == null)) {
+                                    if (!Tele.getChunk().isLoaded()) {
+                                        Tele.getChunk().load();
                                     }
+                                    p.teleport(Tele);
+                                    p.sendMessage(ChatColor.GOLD
+                                            + "Teleporting...");
+                                    HomeSpawnTimeLeft.remove(p);
+                                    HomeSpawnLocations.remove(p);
+                                } else {
+                                    HomeSpawnTimeLeft.remove(p);
+                                    HomeSpawnLocations.remove(p);
                                 }
                             }
                         }
                     }
                 }
-            }, 0, 20);
-        } else {
-            return;
-        }
+            }
+        }, 0, 20);
     }
+
 
     private void Commands() {
         getCommand("home").setExecutor(new HomeSpawnCommand(this));

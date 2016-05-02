@@ -1,6 +1,6 @@
 ##Dont Change This, It Will Reset The Config If You Do!
 ConfigVersion: 4
-## If Set To True Console Will Be Notified If The
+## If Set To True Console Will Be Notified If The Plugin Has Updates Available
 UpdateNotification: true
 ## If Set To True The Plugin Will Send Usage Information To mcstats.org, Such As Minecraft Version And Players Online
 Metrics: true
@@ -17,11 +17,11 @@ Permissions:
     homespawn,player:
     ## Who will have this by default? 0=no one 1=everyone 2=OPs
         default: 1
-    ## Can they use /sethome, /delhome and /home? 0=no 1=yes
+    ## How many homes can they have set? 0=none
         homes: 1
     ## Can they use /spawn? 0=no 1=yes
         spawn: 1
-    ## How many named homes can they have? 0=none
+    ## Can they make custom named homes? 0=no 1=yes
         set custom homes: 0
     ## How many seconds must they wait before they are teleported? 0=instant
         TP delay: 10
