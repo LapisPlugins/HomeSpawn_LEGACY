@@ -104,10 +104,6 @@ public class HomeSpawn extends JavaPlugin {
             Bukkit.getPluginManager().addPermission(p);
             Permissions.put(p, permMap);
         }
-        for (Permission p : Permissions.keySet()) {
-            logger.info(p.getName());
-            logger.info(Permissions.get(p).entrySet().toString());
-        }
         logger.info("Permissions Loaded!");
     }
 
@@ -394,10 +390,10 @@ public class HomeSpawn extends JavaPlugin {
             Location spawnnew = new Location(world, x, y, z, yaw, pitch);
             spawnnew.add(0.5, 0, 0.5);
             player.teleport(spawnnew);
-            logger.info("[HomeSpawn] Player " + player.getName()
+            logger.info("Player " + player.getName()
                     + " Was Sent To New Spawn");
         } else {
-            logger.info("[HomeSpawn] There Is No New Spawn Set And Therefore The Player Wasn't Sent To The New Spawn");
+            logger.info("There Is No New Spawn Set And Therefore The Player Wasn't Sent To The New Spawn");
         }
     }
 
