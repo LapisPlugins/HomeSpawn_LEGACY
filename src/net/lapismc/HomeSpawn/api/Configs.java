@@ -1,4 +1,4 @@
-package api;
+package net.lapismc.HomeSpawn.api;
 
 import net.lapismc.HomeSpawn.HomeSpawn;
 import net.lapismc.HomeSpawn.PasswordHash;
