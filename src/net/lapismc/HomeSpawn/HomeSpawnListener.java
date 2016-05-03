@@ -30,6 +30,7 @@ public class HomeSpawnListener implements Listener {
 
     private final List<Player> Players = new ArrayList<>();
     private YamlConfiguration getMessages;
+    private LapisUpdater updater;
     private HomeSpawn plugin;
 
     public HomeSpawnListener(HomeSpawn plugin) {
@@ -38,6 +39,10 @@ public class HomeSpawnListener implements Listener {
 
     public HomeSpawnListener(HomeSpawnCommand cmd) {
         HomeSpawnCommand cmd1 = cmd;
+    }
+
+    public HomeSpawnListener(LapisUpdater updater) {
+        this.updater = updater;
     }
 
     public void setMessages() {
@@ -127,8 +132,7 @@ public class HomeSpawnListener implements Listener {
                     + File.separator + "update.yml");
             FileConfiguration getUpdate = YamlConfiguration
                     .loadConfiguration(file1);
-            if (file1 != null || getUpdate.contains("HomeSpawn")
-                    && !getUpdate.getString("Homespawn").equalsIgnoreCase(plugin.getDescription().getVersion())) {
+            if (updater.checkUpdate(plugin, "main")) {
                 if (plugin.getConfig().getBoolean("UpdateNotification")) {
                     player.sendMessage(ChatColor.DARK_GRAY
                             + "[" + ChatColor.AQUA + "HomeSpawn" + ChatColor.DARK_GRAY

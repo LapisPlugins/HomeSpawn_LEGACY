@@ -38,15 +38,13 @@ public class LapisUpdater {
                 rbc.close();
                 fos.flush();
                 fos.close();
-                YamlConfiguration yaml = YamlConfiguration.loadConfiguration(f);
-                String oldVersionString = plugin.getDescription().getVersion().replace(".", "");
-                String newVersionString = yaml.getString(ID).replace(".", "");
-                Integer oldVersion = Integer.parseInt(oldVersionString);
-                Integer newVersion = Integer.parseInt(newVersionString);
-                return oldVersion < newVersion;
-            } else {
-                return false;
             }
+            YamlConfiguration yaml = YamlConfiguration.loadConfiguration(f);
+            String oldVersionString = plugin.getDescription().getVersion().replace(".", "");
+            String newVersionString = yaml.getString(ID).replace(".", "");
+            Integer oldVersion = Integer.parseInt(oldVersionString);
+            Integer newVersion = Integer.parseInt(newVersionString);
+            return (oldVersion < newVersion);
         } catch (IOException e) {
             e.printStackTrace();
             return false;

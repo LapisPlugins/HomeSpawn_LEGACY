@@ -66,7 +66,7 @@ public class HomeSpawn extends JavaPlugin {
         nullPermMap.put("sSpawn", 0);
         nullPermMap.put("updateNotify", 0);
         nullPermMap.put("reload", 0);
-        Permission np = new Permission("homespawn.nulled", PermissionDefault.FALSE);
+        Permission np = new Permission("homespawn.null", PermissionDefault.FALSE);
         Bukkit.getPluginManager().addPermission(np);
         Permissions.put(np, nullPermMap);
         ConfigurationSection permsSection = getConfig().getConfigurationSection("Permissions");
