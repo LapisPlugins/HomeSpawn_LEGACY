@@ -18,9 +18,12 @@ public class LapisUpdater {
     private String result;
     private Plugin plugin;
 
-    public boolean checkUpdate(Plugin plugin, String ID) {
-        this.ID = ID;
+    public LapisUpdater(Plugin plugin) {
         this.plugin = plugin;
+    }
+
+    public boolean checkUpdate(String ID) {
+        this.ID = ID;
         return updateCheck();
     }
 
@@ -28,7 +31,7 @@ public class LapisUpdater {
         try {
             URL website = new URL("https://raw.githubusercontent.com/Dart2112/HomeSpawn/master/src/update.yml");
             ReadableByteChannel rbc = Channels.newChannel(website.openStream());
-            File f = new File(plugin.getDataFolder().getAbsolutePath() + "update.yml");
+            File f = new File(plugin.getDataFolder().getAbsolutePath() + File.separator + "update.yml");
             Date d = new Date(f.lastModified());
             Date d0 = new Date();
             d0.setTime(d0.getTime() - 3600);
@@ -40,8 +43,8 @@ public class LapisUpdater {
                 fos.close();
             }
             YamlConfiguration yaml = YamlConfiguration.loadConfiguration(f);
-            String oldVersionString = plugin.getDescription().getVersion().replace(".", "");
-            String newVersionString = yaml.getString(ID).replace(".", "");
+            String oldVersionString = plugin.getDescription().getVersion().replace(".", "").replace("Beta ", "");
+            String newVersionString = yaml.getString(ID).replace(".", "").replace("Beta ", "");
             Integer oldVersion = Integer.parseInt(oldVersionString);
             Integer newVersion = Integer.parseInt(newVersionString);
             return (oldVersion < newVersion);

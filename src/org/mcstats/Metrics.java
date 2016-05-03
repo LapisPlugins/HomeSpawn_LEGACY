@@ -634,7 +634,6 @@ public class Metrics {
             Class.forName("mineshafter.MineServer");
             return true;
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
             return false;
         }
     }

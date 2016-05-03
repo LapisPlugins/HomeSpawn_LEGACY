@@ -37,17 +37,10 @@ public class HomeSpawnListener implements Listener {
         this.plugin = plugin;
     }
 
-    public HomeSpawnListener(HomeSpawnCommand cmd) {
-        HomeSpawnCommand cmd1 = cmd;
-    }
-
-    public HomeSpawnListener(LapisUpdater updater) {
-        this.updater = updater;
-    }
-
     public void setMessages() {
         plugin.getServer().getScheduler().runTaskLaterAsynchronously(plugin, new Runnable() {
             public void run() {
+                updater = new LapisUpdater(plugin);
                 getMessages = plugin.messages;
                 HomeSpawnCommand.getMessages = plugin.messages;
                 HomeSpawnCommand.getSpawn = plugin.spawn;
@@ -132,7 +125,7 @@ public class HomeSpawnListener implements Listener {
                     + File.separator + "update.yml");
             FileConfiguration getUpdate = YamlConfiguration
                     .loadConfiguration(file1);
-            if (updater.checkUpdate(plugin, "main")) {
+            if (updater.checkUpdate("main")) {
                 if (plugin.getConfig().getBoolean("UpdateNotification")) {
                     player.sendMessage(ChatColor.DARK_GRAY
                             + "[" + ChatColor.AQUA + "HomeSpawn" + ChatColor.DARK_GRAY

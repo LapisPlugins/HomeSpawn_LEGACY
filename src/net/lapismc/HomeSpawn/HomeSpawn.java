@@ -72,7 +72,6 @@ public class HomeSpawn extends JavaPlugin {
         ConfigurationSection permsSection = getConfig().getConfigurationSection("Permissions");
         Set<String> perms = permsSection.getKeys(false);
         for (String perm : perms) {
-            logger.info(perm);
             String permName = perm.replace(",", ".");
             int Default = getConfig().getInt("Permissions." + perm + ".default");
             int priority = getConfig().getInt("Permissions." + perm + ".priority");
@@ -143,7 +142,7 @@ public class HomeSpawn extends JavaPlugin {
     }
 
     private void Update() {
-        if (updater.checkUpdate(this, getConfig().getBoolean("BetaVersions") ? "beta" : "main")) {
+        if (updater.checkUpdate(getConfig().getBoolean("BetaVersions") ? "beta" : "main")) {
             if (getConfig().getBoolean("UpdateNotification")) {
                 logger.info("An update for HomeSpawn is available and can be" +
                         " downloaded from https://www.spigotmc.org/resources/homespawn.14108");
@@ -540,7 +539,6 @@ public class HomeSpawn extends JavaPlugin {
             }
         }, 0, 20);
     }
-
 
     private void Commands() {
         getCommand("home").setExecutor(new HomeSpawnCommand(this));
