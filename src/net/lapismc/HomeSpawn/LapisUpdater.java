@@ -26,7 +26,7 @@ public class LapisUpdater {
 
     private boolean updateCheck() {
         try {
-            URL website = new URL("http://www.dart2112.comli.com/plugins/update.yml");
+            URL website = new URL("https://raw.githubusercontent.com/Dart2112/HomeSpawn/master/src/update.yml");
             ReadableByteChannel rbc = Channels.newChannel(website.openStream());
             File f = new File(plugin.getDataFolder().getAbsolutePath() + "update.yml");
             Date d = new Date(f.lastModified());

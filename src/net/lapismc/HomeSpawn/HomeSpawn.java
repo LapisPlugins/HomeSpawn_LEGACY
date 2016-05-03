@@ -143,8 +143,7 @@ public class HomeSpawn extends JavaPlugin {
     }
 
     private void Update() {
-        /*
-        if (updater.checkUpdate(this, "HomeSpawn")) {
+        if (updater.checkUpdate(this, getConfig().getBoolean("BetaVersions") ? "beta" : "main")) {
             if (getConfig().getBoolean("UpdateNotification")) {
                 logger.info("An update for HomeSpawn is available and can be" +
                         " downloaded from https://www.spigotmc.org/resources/homespawn.14108");
@@ -153,7 +152,7 @@ public class HomeSpawn extends JavaPlugin {
             if (getConfig().getBoolean("UpdateNotification")) {
 
             }
-        }*/
+        }
     }
 
     @Override

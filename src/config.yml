@@ -2,6 +2,7 @@
 ConfigVersion: 4
 ## If Set To True Console Will Be Notified If The Plugin Has Updates Available
 UpdateNotification: true
+BetaVersions: false
 ## If Set To True The Plugin Will Send Usage Information To mcstats.org, Such As Minecraft Version And Players Online
 Metrics: true
 ## If enabled the player wil be given a book with all player commands listed (Does not contain admin or VIP commands)
