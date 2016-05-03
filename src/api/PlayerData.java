@@ -1,4 +1,4 @@
-package API;
+package api;
 
 import net.lapismc.HomeSpawn.HomeSpawn;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.UUID;
 
 /**
- * API Class to get Player Data Files
+ * api Class to get Player Data Files
  *
  * @author Dart2112
  */

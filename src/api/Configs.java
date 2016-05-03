@@ -1,4 +1,4 @@
-package API;
+package api;
 
 import net.lapismc.HomeSpawn.HomeSpawn;
 import net.lapismc.HomeSpawn.PasswordHash;
@@ -9,7 +9,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 
 /**
- * API Class to get Config Files
+ * api Class to get Config Files
  *
  * @author Dart2112
  */
