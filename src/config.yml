@@ -1,6 +1,6 @@
 ##Dont Change This, It Will Reset The Config If You Do!
-ConfigVersion: 3
-## If Set To True Console Will Be Notified If The
+ConfigVersion: 4
+## If Set To True Console Will Be Notified If The Plugin Has Updates Available
 UpdateNotification: true
 ## If Set To True The Plugin Will Send Usage Information To mcstats.org, Such As Minecraft Version And Players Online
 Metrics: true
@@ -10,32 +10,32 @@ CommandBook: true
 ## When enabled players with more than 1 home will be given an inventory menu to select a home to teleport to when
 ## they run /homeslist
 InventoryMenu: true
-## 0 = false, 1 = true. (NOTE: , in a permission name will be replaced with . EG. homespawn,player = homespawn.player)
-##Players may only have 1 of the following permissions or they will not be allowed to use the plugin
-##See permissions section of homespawn on SpigotMC.org for more infomation.
+## Permissions are handled below, there is no limit to how many permissions
+## you can have as long as they contain all of the settings
+## (NOTE: , in a permission name will be replaced with . EG. homespawn,player = homespawn.player)
 Permissions:
-    ##This permission is given to players with more than 1 permission, it will stop them from using any commands.
-    ##this cannot be removed from this file(If you do remove it you will be errors everytime a player tries to run a command).
-    homespawn,nulled:
-        default: 0
-        homes: 0
-        spawn: 0
-        set custom homes: 0
-        TP delay: 0
-        setspawn: 0
-        updateNotify: 0
-        reload: 0
     homespawn,player:
+    ## Who will have this by default? 0=no one 1=everyone 2=OPs
         default: 1
+    ## Players will be given the permission with the highest value, if players have multiple permissions.
+        priority: 0
+    ## How many homes can they have set? 0=none
         homes: 1
+    ## Can they use /spawn? 0=no 1=yes
         spawn: 1
+    ## Can they make custom named homes? 0=no 1=yes
         set custom homes: 0
+    ## How many seconds must they wait before they are teleported? 0=instant
         TP delay: 10
+    ## Can they set spawn? this includes /setspawn new. 0=no 1=yes
         setspawn: 0
+    ## Will they be notified of an available update? 0=no 1=yes
         updateNotify: 0
+    ## Can they reload the plugin? 0=no 1=yes
         reload: 0
     homespawn,vip:
         default: 0
+        priority: 1
         homes: 3
         spawn: 1
         set custom homes: 1
@@ -45,6 +45,7 @@ Permissions:
         reload: 0
     homespawn,admin:
         default: 2
+        priority: 2
         homes: 5
         spawn: 1
         set custom homes: 1

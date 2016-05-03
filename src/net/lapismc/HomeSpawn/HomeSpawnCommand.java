@@ -631,7 +631,7 @@ public class HomeSpawnCommand implements CommandExecutor {
                             this.plugin.reload(player);
                         } else {
                             player.sendMessage(ChatColor.RED
-                                    + "You Dont Have Permission To Do That");
+                                    + "You Don't Have Permission To Do That");
                         }
                     } else if (args[0].equalsIgnoreCase("help")) {
                         this.plugin.help(player);

@@ -90,7 +90,6 @@ public class HomeSpawnListener implements Listener {
         if (!file.exists()) {
             try {
                 file.createNewFile();
-                getHomes.createSection("Permission");
                 getHomes.createSection("name");
                 getHomes.createSection("HasHome");
                 getHomes.createSection(player.getUniqueId() + ".Numb");
@@ -109,16 +108,16 @@ public class HomeSpawnListener implements Listener {
                 return;
             }
         }
-        int numb = 0;
+        int priority = -1;
         for (Permission p : plugin.Permissions.keySet()) {
             if (player.hasPermission(p)) {
-                plugin.PlayerPermission.put(player.getUniqueId(), p);
-                numb++;
+                if (priority == -1 || plugin.Permissions.get(p).get("priority") > priority) {
+                    plugin.PlayerPermission.put(player.getUniqueId(), p);
+                    priority = plugin.Permissions.get(p).get("priority");
+                }
             }
         }
-        if (numb == 0 || numb > 1) {
-            player.sendMessage(ChatColor.RED + "Your permission for HomeSpawn are setup incorectly," +
-                    " Therefore you will not be able to use any of its commands!");
+        if (!plugin.PlayerPermission.containsKey(player.getUniqueId())) {
             Permission nulled = new Permission("homespawn.null");
             plugin.PlayerPermission.put(player.getUniqueId(), nulled);
         }

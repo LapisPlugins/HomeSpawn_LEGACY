@@ -1,6 +1,5 @@
 # Eclipse Stuff
 /.settings
-/.classpath
 /.project
 
 # IntelliJ IDEA Stuff
@@ -9,4 +8,3 @@
 
 # Maven Stuff
 /target
-/dependency-reduced-pom.xml

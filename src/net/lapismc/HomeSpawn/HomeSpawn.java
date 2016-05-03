@@ -30,12 +30,12 @@ public class HomeSpawn extends JavaPlugin {
     public final Logger logger = getLogger();
     public final HashMap<UUID, YamlConfiguration> HomeConfigs = new HashMap<>();
     public final HashMap<String, UUID> PlayertoUUID = new HashMap<>();
+    public final HashMap<Permission, HashMap<String, Integer>> Permissions = new HashMap<>();
+    public final HashMap<UUID, Permission> PlayerPermission = new HashMap<>();
     final HashMap<Player, Location> HomeSpawnLocations = new HashMap<>();
     final HashMap<Player, Integer> HomeSpawnTimeLeft = new HashMap<>();
     final HashMap<Player, Inventory> HomesListInvs = new HashMap<>();
     private final HashMap<UUID, File> HomeConfigsFiles = new HashMap<>();
-    public final HashMap<Permission, HashMap<String, Integer>> Permissions = new HashMap<>();
-    public final HashMap<UUID, Permission> PlayerPermission = new HashMap<>();
     public HomeSpawn plugin;
     public LapisUpdater updater;
     public YamlConfiguration spawn;
@@ -57,19 +57,34 @@ public class HomeSpawn extends JavaPlugin {
     }
 
     private void Permissions() {
+        HashMap<String, Integer> nullPermMap = new HashMap<>();
+        nullPermMap.put("priority", 0);
+        nullPermMap.put("homes", 0);
+        nullPermMap.put("spawn", 1);
+        nullPermMap.put("cHomes", 0);
+        nullPermMap.put("TPD", 0);
+        nullPermMap.put("sSpawn", 0);
+        nullPermMap.put("updateNotify", 0);
+        nullPermMap.put("reload", 0);
+        Permission np = new Permission("homespawn.nulled", PermissionDefault.FALSE);
+        Bukkit.getPluginManager().addPermission(np);
+        Permissions.put(np, nullPermMap);
         ConfigurationSection permsSection = getConfig().getConfigurationSection("Permissions");
         Set<String> perms = permsSection.getKeys(false);
         for (String perm : perms) {
-            String permName = perm.replace("Permissions.", "").replace(",", ".");
-            int Default = getConfig().getInt(perm + "default");
-            int homes = getConfig().getInt(perm + "homes");
-            int spawn = getConfig().getInt(perm + "spawn");
-            int cHomes = getConfig().getInt(perm + "set custom homes");
-            int TPD = getConfig().getInt(perm + "TP delay");
-            int sSpawn = getConfig().getInt(perm + "setspawn");
-            int updateNotify = getConfig().getInt(perm + "updateNotify");
-            int reload = getConfig().getInt(perm + "reload");
+            logger.info(perm);
+            String permName = perm.replace(",", ".");
+            int Default = getConfig().getInt("Permissions." + perm + ".default");
+            int priority = getConfig().getInt("Permissions." + perm + ".priority");
+            int homes = getConfig().getInt("Permissions." + perm + ".homes");
+            int spawn = getConfig().getInt("Permissions." + perm + ".spawn");
+            int cHomes = getConfig().getInt("Permissions." + perm + ".set custom homes");
+            int TPD = getConfig().getInt("Permissions." + perm + ".TP delay");
+            int sSpawn = getConfig().getInt("Permissions." + perm + ".setspawn");
+            int updateNotify = getConfig().getInt("Permissions." + perm + ".updateNotify");
+            int reload = getConfig().getInt("Permissions." + perm + ".reload");
             HashMap<String, Integer> permMap = new HashMap<>();
+            permMap.put("priority", priority);
             permMap.put("homes", homes);
             permMap.put("spawn", spawn);
             permMap.put("cHomes", cHomes);
@@ -155,13 +170,13 @@ public class HomeSpawn extends JavaPlugin {
     }
 
     private void configVersion() {
-        if (getConfig().getInt("ConfigVersion") != 3) {
+        if (getConfig().getInt("ConfigVersion") != 4) {
             File oldConfig = new File(this.getDataFolder() + File.separator + "config.yml");
             File backupConfig = new File(this.getDataFolder() + File.separator + "Backup_config.yml");
             oldConfig.renameTo(backupConfig);
             saveDefaultConfig();
             logger.info("New config generated!");
-            logger.info("Please transfer vaules!");
+            logger.info("Please transfer values!");
         }
     }
 
@@ -172,7 +187,6 @@ public class HomeSpawn extends JavaPlugin {
 
     private void Configs() {
         saveDefaultConfig();
-        saveConfig();
         createSpawn();
         createPlayerData();
         createMessages();
@@ -377,10 +391,10 @@ public class HomeSpawn extends JavaPlugin {
             Location spawnnew = new Location(world, x, y, z, yaw, pitch);
             spawnnew.add(0.5, 0, 0.5);
             player.teleport(spawnnew);
-            logger.info("[HomeSpawn] Player " + player.getName()
+            logger.info("Player " + player.getName()
                     + " Was Sent To New Spawn");
         } else {
-            logger.info("[HomeSpawn] There Is No New Spawn Set And Therefore The Player Wasn't Sent To The New Spawn");
+            logger.info("There Is No New Spawn Set And Therefore The Player Wasn't Sent To The New Spawn");
         }
     }
 
@@ -404,9 +418,11 @@ public class HomeSpawn extends JavaPlugin {
             loadPlayerData();
             loadName();
             Permissions();
-            Bukkit.broadcast(ChatColor.RED
-                            + "Console" + ChatColor.GOLD + " Has Reloaded Homespawn!",
-                    "homespawn.admin");
+            for (Permission p : Permissions.keySet()) {
+                if (Permissions.get(p).get("reload").equals(1)) {
+                    Bukkit.broadcast(ChatColor.RED + "Console" + ChatColor.GOLD + " Has Reloaded Homespawn!", p.getName());
+                }
+            }
             logger
                     .info("You Have Reloaded Homespawn!");
         }
@@ -419,9 +435,12 @@ public class HomeSpawn extends JavaPlugin {
             Permissions();
             player.sendMessage(ChatColor.GOLD
                     + "You have reloaded the configs for Homespawn!");
-            Bukkit.broadcast(ChatColor.GOLD + "Player " + ChatColor.RED
-                    + player.getName() + ChatColor.GOLD
-                    + " Has Reloaded Homespawn!", "homespawn.admin");
+            for (Permission p : Permissions.keySet()) {
+                if (Permissions.get(p).get("reload").equals(1)) {
+                    Bukkit.broadcast(ChatColor.GOLD + "Player " + ChatColor.RED + player.getName() + ChatColor.GOLD
+                            + " Has Reloaded Homespawn!", p.getName());
+                }
+            }
             logger.info("Player " + player.getName()
                     + " Has Reloaded Homespawn!");
         }
@@ -447,7 +466,7 @@ public class HomeSpawn extends JavaPlugin {
                         + ChatColor.GOLD
                         + " Displays The Home Transfer Commands");
             }
-            if (player.hasPermission("homespawn.admin")) {
+            if (Permissions.get(PlayerPermission.get(player.getUniqueId())).get("sSpawn").equals(1)) {
                 player.sendMessage(ChatColor.RED + "/setspawn:"
                         + ChatColor.GOLD + " Sets The Server Spawn");
                 player.sendMessage(ChatColor.RED + "/setspawn new:"
@@ -455,18 +474,15 @@ public class HomeSpawn extends JavaPlugin {
                         + " All New Players Will Be Sent To This Spawn");
                 player.sendMessage(ChatColor.RED + "/delspawn:"
                         + ChatColor.GOLD + " Removes The Server Spawn");
-                player.sendMessage(ChatColor.RED + "/homespawn:"
-                        + ChatColor.GOLD + " Displays Plugin Infomation");
+            }
+            player.sendMessage(ChatColor.RED + "/homespawn:"
+                    + ChatColor.GOLD + " Displays Plugin Information");
+            if (Permissions.get(PlayerPermission.get(player.getUniqueId())).get("reload").equals(1)) {
                 player.sendMessage(ChatColor.RED + "/homespawn reload:"
                         + ChatColor.GOLD + " Reloads The Plugin Configs");
-                player.sendMessage(ChatColor.GOLD
-                        + "-----------------------------------------");
-                return;
-            } else {
-                player.sendMessage(ChatColor.GOLD
-                        + "-----------------------------------------");
             }
-
+            player.sendMessage(ChatColor.GOLD
+                    + "-----------------------------------------");
         } else {
             return;
         }
@@ -486,54 +502,46 @@ public class HomeSpawn extends JavaPlugin {
     }
 
     private void CommandDelay() {
-        if (!getConfig().contains("TeleportTime")) {
-            getConfig().createSection("TeleportTime");
-            saveConfig();
-            getConfig().set("TeleportTime", 0);
-        }
-        if (!(getConfig().getInt("TeleportTime") <= 0)) {
-            BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
-            scheduler.scheduleSyncRepeatingTask(this, new Runnable() {
-                @Override
-                public void run() {
-                    if (!HomeSpawnTimeLeft.isEmpty()) {
-                        for (Player p : HomeSpawnTimeLeft.keySet()) {
-                            if (HomeSpawnLocations.get(p) == null) {
-                                HomeSpawnTimeLeft.remove(p);
-                                HomeSpawnLocations.remove(p);
-                            }
-                            if (HomeSpawnTimeLeft.isEmpty()) {
-                                return;
-                            }
-                            for (int Time : HomeSpawnTimeLeft.values()) {
-                                int NewTime = Time - 1;
-                                if (NewTime > 0) {
-                                    HomeSpawnTimeLeft.put(p, NewTime);
-                                } else if (NewTime <= 0) {
-                                    Location Tele = HomeSpawnLocations.get(p);
-                                    if (!(Tele == null)) {
-                                        if (!Tele.getChunk().isLoaded()) {
-                                            Tele.getChunk().load();
-                                        }
-                                        p.teleport(Tele);
-                                        p.sendMessage(ChatColor.GOLD
-                                                + "Teleporting...");
-                                        HomeSpawnTimeLeft.remove(p);
-                                        HomeSpawnLocations.remove(p);
-                                    } else {
-                                        HomeSpawnTimeLeft.remove(p);
-                                        HomeSpawnLocations.remove(p);
+        BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
+        scheduler.scheduleSyncRepeatingTask(this, new Runnable() {
+            @Override
+            public void run() {
+                if (!HomeSpawnTimeLeft.isEmpty()) {
+                    for (Player p : HomeSpawnTimeLeft.keySet()) {
+                        if (HomeSpawnLocations.get(p) == null) {
+                            HomeSpawnTimeLeft.remove(p);
+                            HomeSpawnLocations.remove(p);
+                        }
+                        if (HomeSpawnTimeLeft.isEmpty()) {
+                            return;
+                        }
+                        for (int Time : HomeSpawnTimeLeft.values()) {
+                            int NewTime = Time - 1;
+                            if (NewTime > 0) {
+                                HomeSpawnTimeLeft.put(p, NewTime);
+                            } else if (NewTime <= 0) {
+                                Location Tele = HomeSpawnLocations.get(p);
+                                if (!(Tele == null)) {
+                                    if (!Tele.getChunk().isLoaded()) {
+                                        Tele.getChunk().load();
                                     }
+                                    p.teleport(Tele);
+                                    p.sendMessage(ChatColor.GOLD
+                                            + "Teleporting...");
+                                    HomeSpawnTimeLeft.remove(p);
+                                    HomeSpawnLocations.remove(p);
+                                } else {
+                                    HomeSpawnTimeLeft.remove(p);
+                                    HomeSpawnLocations.remove(p);
                                 }
                             }
                         }
                     }
                 }
-            }, 0, 20);
-        } else {
-            return;
-        }
+            }
+        }, 0, 20);
     }
+
 
     private void Commands() {
         getCommand("home").setExecutor(new HomeSpawnCommand(this));
