@@ -40,8 +40,6 @@ public class HomeSpawn extends JavaPlugin {
     public LapisUpdater updater;
     public YamlConfiguration spawn;
     public File spawnFile;
-    public YamlConfiguration playerData;
-    public File playerDataFile;
     public YamlConfiguration messages;
     public File messagesFile;
     public YamlConfiguration passwords;
