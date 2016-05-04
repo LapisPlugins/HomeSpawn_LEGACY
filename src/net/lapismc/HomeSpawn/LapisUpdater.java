@@ -36,7 +36,7 @@ public class LapisUpdater {
     private boolean downloadUpdateJar() {
         if (updateCheck()) {
             try {
-                URL website = new URL("https://raw.githubusercontent.com/Dart2112/HomeSpawn/master/updater/" + ID + "/Homespawn.jar");
+                URL website = new URL("https://raw.githubusercontent.com/Dart2112/HomeSpawn/master/updater/" + ID.replace("s", "S").replace("b", "B") + "/Homespawn.jar");
                 ReadableByteChannel rbc = Channels.newChannel(website.openStream());
                 File f = new File(Bukkit.getUpdateFolder() + File.separator + "Homespawn.jar");
                 FileOutputStream fos = new FileOutputStream(f);
