@@ -68,6 +68,7 @@ public class LapisUpdater {
                 rbc.close();
                 fos.flush();
                 fos.close();
+                f.setLastModified(d0.getTime());
             }
             YamlConfiguration yaml = YamlConfiguration.loadConfiguration(f);
             if (!yaml.contains(ID)) {
