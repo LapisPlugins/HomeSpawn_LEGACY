@@ -121,17 +121,11 @@ public class HomeSpawnListener implements Listener {
         }
         HashMap<String, Integer> perms = plugin.Permissions.get(plugin.PlayerPermission.get(player.getUniqueId()));
         if (perms.get("updateNotify") == 1) {
-            File file1 = new File(plugin.getDataFolder().getAbsolutePath()
-                    + File.separator + "update.yml");
-            FileConfiguration getUpdate = YamlConfiguration
-                    .loadConfiguration(file1);
-            if (updater.checkUpdate("main")) {
-                if (plugin.getConfig().getBoolean("UpdateNotification")) {
-                    player.sendMessage(ChatColor.DARK_GRAY
-                            + "[" + ChatColor.AQUA + "HomeSpawn" + ChatColor.DARK_GRAY
-                            + "]" + ChatColor.GOLD + " An update is available on SpigotMC" +
-                            " at https://www.spigotmc.org/resources/homespawn.14108");
-                }
+            if (!plugin.getConfig().getBoolean("DownloadUpdates") && updater.checkUpdate("main")) {
+                player.sendMessage(ChatColor.DARK_GRAY
+                        + "[" + ChatColor.AQUA + "HomeSpawn" + ChatColor.DARK_GRAY
+                        + "]" + ChatColor.GOLD + " An update is available on SpigotMC" +
+                        " at https://www.spigotmc.org/resources/homespawn.14108");
             }
         }
     }

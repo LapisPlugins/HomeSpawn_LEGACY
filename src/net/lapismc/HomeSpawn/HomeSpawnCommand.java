@@ -636,6 +636,35 @@ public class HomeSpawnCommand implements CommandExecutor {
                     } else if (args[0].equalsIgnoreCase("help")) {
                         this.plugin.help(player);
                     }
+                } else if (args.length > 0) {
+                    if (args[0].equalsIgnoreCase("update")) {
+                        if (perms.get("updateNotify") == 1) {
+                            LapisUpdater updater = new LapisUpdater(plugin);
+                            if (args.length == 1) {
+                                String ID = plugin.getConfig().getBoolean("BetaVersions") ? "beta" : "stable";
+                                if (updater.downloadUpdate(ID)) {
+                                    player.sendMessage(ChatColor.GOLD + "Downloading Update...");
+                                    player.sendMessage(ChatColor.GOLD + "The update will be installed" +
+                                            " when the server next starts!");
+                                } else {
+                                    player.sendMessage(ChatColor.GOLD + "Updating failed or there is no update!");
+                                }
+                            } else if (args.length == 2) {
+                                String ID = args[1];
+                                if (updater.downloadUpdate(ID)) {
+                                    player.sendMessage(ChatColor.GOLD + "Downloading Update...");
+                                    player.sendMessage(ChatColor.GOLD + "The update will be installed" +
+                                            " when the server next starts!");
+                                } else {
+                                    player.sendMessage(ChatColor.GOLD + "Updating failed or there is no update!");
+                                }
+                            } else {
+                                player.sendMessage(ChatColor.RED + HomeSpawnCommand.getMessages.getString("Error.Args"));
+                            }
+                        } else {
+                            player.sendMessage(ChatColor.RED + HomeSpawnCommand.getMessages.getString("NoPerms"));
+                        }
+                    }
                 } else {
                     player.sendMessage("That Is Not A Recognised Command, Use /homespawn help For Commands");
                 }
