@@ -167,6 +167,7 @@ public class HomeSpawn extends JavaPlugin {
         PluginManager pm = getServer().getPluginManager();
         pl = new HomeSpawnListener(this);
         pm.registerEvents(pl, this);
+        Update();
     }
 
     private void configVersion() {
