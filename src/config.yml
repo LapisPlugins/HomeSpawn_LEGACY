@@ -16,7 +16,7 @@ CommandBook: true
 InventoryMenu: true
 ## Permissions are handled below, there is no limit to how many permissions
 ## you can have as long as they contain all of the settings
-## (NOTE: , in a permission name will be replaced with . EG. homespawn,player = homespawn.player)
+## (NOTE: in a permission name "," will be replaced with "." EG. homespawn,player = homespawn.player)
 Permissions:
     homespawn,player:
         ## Who will have this by default? 0=no one 1=everyone 2=OPs
