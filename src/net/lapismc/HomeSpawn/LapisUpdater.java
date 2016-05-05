@@ -78,7 +78,20 @@ public class LapisUpdater {
             String newVersionString = yaml.getString(ID).replace(".", "").replace("Beta ", "");
             Integer oldVersion = Integer.parseInt(oldVersionString);
             Integer newVersion = Integer.parseInt(newVersionString);
-            return (oldVersion < newVersion);
+            Boolean update = false;
+            if (yaml.getString(ID).contains("Beta") && !plugin.getDescription().getVersion().contains("Beta")) {
+                update = true;
+            }
+            if (!yaml.getString(ID).contains("Beta") && plugin.getDescription().getVersion().contains("Beta")) {
+                update = true;
+            }
+            if (yaml.getString(ID).contains("Beta") && plugin.getDescription().getVersion().contains("Beta")) {
+                update = oldVersion < newVersion;
+            }
+            if (!yaml.getString(ID).contains("Beta") && !plugin.getDescription().getVersion().contains("Beta")) {
+                update = oldVersion < newVersion;
+            }
+            return update;
         } catch (IOException e) {
             e.printStackTrace();
             return false;

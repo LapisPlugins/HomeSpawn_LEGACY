@@ -452,16 +452,28 @@ public class HomeSpawn extends JavaPlugin {
             player.sendMessage(ChatColor.GOLD + "---------------"
                     + ChatColor.RED + "Homespawn" + ChatColor.GOLD
                     + "---------------");
-            player.sendMessage(ChatColor.RED + "[name] = VIP Only");
-            player.sendMessage(ChatColor.RED + "/home [name]:" + ChatColor.GOLD
-                    + " Sends You To The Home Specified");
-            player.sendMessage(ChatColor.RED + "/sethome [name]:"
-                    + ChatColor.GOLD
-                    + " Sets Your Home At Your Current Location");
-            player.sendMessage(ChatColor.RED + "/delhome [name]:"
-                    + ChatColor.GOLD + " Removes The Specified Home");
-            player.sendMessage(ChatColor.RED + "/spawn:" + ChatColor.GOLD
-                    + " Sends You To Spawn");
+            if (Permissions.get(PlayerPermission.get(player)).get("cHomes") == 1 &&
+                    Permissions.get(PlayerPermission.get(player)).get("homes") > 0) {
+                player.sendMessage(ChatColor.RED + "/home [name]:" + ChatColor.GOLD
+                        + " Sends You To The Home Specified");
+                player.sendMessage(ChatColor.RED + "/sethome [name]:"
+                        + ChatColor.GOLD
+                        + " Sets Your Home At Your Current Location");
+                player.sendMessage(ChatColor.RED + "/delhome [name]:"
+                        + ChatColor.GOLD + " Removes The Specified Home");
+            } else if (Permissions.get(PlayerPermission.get(player)).get("homes") > 0) {
+                player.sendMessage(ChatColor.RED + "/home:" + ChatColor.GOLD
+                        + " Sends You To Your Home");
+                player.sendMessage(ChatColor.RED + "/sethome:"
+                        + ChatColor.GOLD
+                        + " Sets Your Home At Your Current Location");
+                player.sendMessage(ChatColor.RED + "/delhome:"
+                        + ChatColor.GOLD + " Removes Your Home");
+            }
+            if (Permissions.get(PlayerPermission.get(player)).get("spawn") == 1) {
+                player.sendMessage(ChatColor.RED + "/spawn:" + ChatColor.GOLD
+                        + " Sends You To Spawn");
+            }
             if (!getServer().getOnlineMode()) {
                 player.sendMessage(ChatColor.RED + "/homepassword help:"
                         + ChatColor.GOLD
@@ -481,6 +493,10 @@ public class HomeSpawn extends JavaPlugin {
             if (Permissions.get(PlayerPermission.get(player.getUniqueId())).get("reload").equals(1)) {
                 player.sendMessage(ChatColor.RED + "/homespawn reload:"
                         + ChatColor.GOLD + " Reloads The Plugin Configs");
+            }
+            if (Permissions.get(PlayerPermission.get(player.getUniqueId())).get("updateNotify").equals(1)) {
+                player.sendMessage(ChatColor.RED + "/homespawn update (beta/stable):"
+                        + ChatColor.GOLD + " Installs updates if available, you can also choose beta or stable.");
             }
             player.sendMessage(ChatColor.GOLD
                     + "-----------------------------------------");
