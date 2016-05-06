@@ -8,13 +8,13 @@ This plugin allows player to teleport to the home(s) and spawn locations set usi
 
 •	Multiple homes
 
-•	Admin and VIP home limits
+•	Custom permissions system
 
 •	List of homes with /homeslist (set InventoryMenu to true in the config to use a GUI)
 
-•	Book of commands that is given to new players(Doesn’t contain VIP or Admin commands, set CommandBook to true in the config to enable)
+•	Book of commands that is given to new players (Doesn’t contain VIP or Admin commands, set CommandBook to true in the config to enable)
 
-•	Configurable teleport timer, players have to wait a set amount of time (without being hit by a player or a player arrow or dog) before they will be teleported. Includes a permission to bypass the delay(Automatically given to admins)
+•	Configurable teleport timer, players have to wait a set amount of time (without being hit by a player or a player arrow or dog) before they will be teleported. permissions can be set to have different delays or remove it entirely for different people.
 
 •	New player spawn, you can set where new players will spawn by using “/setspawn new”
 
@@ -22,7 +22,7 @@ This plugin allows player to teleport to the home(s) and spawn locations set usi
 
 •	All configuration files are loaded at plugin start and therefore will not use your precious disk time to load and save files every time they are used. This also makes loading and using data from configuration files faster, meaning that players will still be able to teleport easily and quickly even if your server is lagging.
 
-•	Permission based help, the “/homespawn help” command will only show you what you need to see. It won’t show normal players VIP commands and it won’t show admin commands to anyone but admins.
+•	Permission based help, the “/homespawn help” command will only show you what you need to see. It won’t show admin commands to normal players
 
 •	Full UUID Support! This means that players can change their Mojang usernames without losing all of their home data
 
