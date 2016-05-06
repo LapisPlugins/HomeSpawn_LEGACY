@@ -18,7 +18,7 @@ public class Configs {
 
     public Configs(Plugin plugin) {
         //check if API is enabled
-        //report to console that Plugin plugin is using the API
+        //report to console that Plugin plugin is using the API (Excluding homespawn)
     }
     
     protected void init(Plugin p){
