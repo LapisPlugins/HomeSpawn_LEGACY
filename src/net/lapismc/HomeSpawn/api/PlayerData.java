@@ -13,12 +13,17 @@ import java.util.UUID;
  *
  * @author Dart2112
  */
-class PlayerData {
+public class PlayerData {
 
-    private final HomeSpawn plugin;
+    private final Plugin plugin;
 
-    public PlayerData(HomeSpawn plugin) {
-        this.plugin = plugin;
+    public PlayerData(Plugin plugin) {
+        //check if API is enabled
+        //notify that a plugin is accessing the API (Excludes homespawn)
+    }
+    
+    protected void init(Plugin p){
+        this.plugin = p;
     }
 
     /**
