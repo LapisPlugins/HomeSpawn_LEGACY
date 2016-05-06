@@ -13,11 +13,16 @@ import java.security.spec.InvalidKeySpecException;
  *
  * @author Dart2112
  */
-class Configs {
+public class Configs {
     private final HomeSpawn plugin;
 
-    public Configs(HomeSpawn plugin) {
-        this.plugin = plugin;
+    public Configs(Plugin plugin) {
+        //check if API is enabled
+        //report to console that Plugin plugin is using the API
+    }
+    
+    protected void init(Plugin p){
+        this.plugin = p
     }
 
     /**
@@ -68,7 +73,7 @@ class Configs {
     /**
      * Returns the currently loaded Passwords.yml
      */
-    private YamlConfiguration getPasswords() {
+    public YamlConfiguration getPasswords() {
         return plugin.passwords;
     }
 
@@ -77,7 +82,7 @@ class Configs {
      *
      * @throws IOException
      */
-    private void savePasswords(YamlConfiguration Passwords) throws IOException {
+    public void savePasswords(YamlConfiguration Passwords) throws IOException {
         plugin.passwords = Passwords;
         plugin.passwords.save(plugin.passwordsFile);
         plugin.reload("Silent");
