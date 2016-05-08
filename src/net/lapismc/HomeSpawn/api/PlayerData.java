@@ -15,14 +15,14 @@ import java.util.UUID;
  */
 public class PlayerData {
 
-    private final Plugin plugin;
+    private HomeSpawn plugin;
 
-    public PlayerData(Plugin plugin) {
+    public PlayerData(HomeSpawn plugin) {
         //check if API is enabled
         //notify that a plugin is accessing the API (Excludes homespawn)
     }
-    
-    protected void init(Plugin p){
+
+    protected void init(HomeSpawn p) {
         this.plugin = p;
     }
 

@@ -3,6 +3,7 @@ package net.lapismc.HomeSpawn.api;
 import net.lapismc.HomeSpawn.HomeSpawn;
 import net.lapismc.HomeSpawn.PasswordHash;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.Plugin;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
@@ -14,15 +15,15 @@ import java.security.spec.InvalidKeySpecException;
  * @author Dart2112
  */
 public class Configs {
-    private final HomeSpawn plugin;
+    private HomeSpawn plugin;
 
     public Configs(Plugin plugin) {
         //check if API is enabled
         //report to console that Plugin plugin is using the API (Excluding homespawn)
     }
-    
-    protected void init(Plugin p){
-        this.plugin = p
+
+    protected void init(HomeSpawn p) {
+        this.plugin = p;
     }
 
     /**
