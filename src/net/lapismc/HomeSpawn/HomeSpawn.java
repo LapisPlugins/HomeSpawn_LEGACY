@@ -58,6 +58,7 @@ public class HomeSpawn extends JavaPlugin {
     }
 
     private void Permissions() {
+        Permissions.clear();
         HashMap<String, Integer> nullPermMap = new HashMap<>();
         nullPermMap.put("priority", 0);
         nullPermMap.put("homes", 0);
@@ -67,8 +68,13 @@ public class HomeSpawn extends JavaPlugin {
         nullPermMap.put("sSpawn", 0);
         nullPermMap.put("updateNotify", 0);
         nullPermMap.put("reload", 0);
-        Permission np = new Permission("homespawn.null", PermissionDefault.FALSE);
-        Bukkit.getPluginManager().addPermission(np);
+        Permission np;
+        if (Bukkit.getServer().getPluginManager().getPermission("homespawn.null") == null) {
+            np = new Permission("homespawn.null", PermissionDefault.FALSE);
+            Bukkit.getPluginManager().addPermission(np);
+        } else {
+            np = Bukkit.getServer().getPluginManager().getPermission("homespawn.null");
+        }
         Permissions.put(np, nullPermMap);
         ConfigurationSection permsSection = getConfig().getConfigurationSection("Permissions");
         Set<String> perms = permsSection.getKeys(false);
@@ -101,8 +107,13 @@ public class HomeSpawn extends JavaPlugin {
                 case 2:
                     PD = PermissionDefault.OP;
             }
-            Permission p = new Permission(permName, PD);
-            Bukkit.getPluginManager().addPermission(p);
+            Permission p;
+            if (Bukkit.getServer().getPluginManager().getPermission(permName) == null) {
+                p = new Permission(permName, PD);
+                Bukkit.getPluginManager().addPermission(p);
+            } else {
+                p = Bukkit.getServer().getPluginManager().getPermission(permName);
+            }
             Permissions.put(p, permMap);
         }
         logger.info("Permissions Loaded!");
@@ -342,7 +353,7 @@ public class HomeSpawn extends JavaPlugin {
                 + File.separator + "PlayerData" + File.separator
                 + "PlayerNames");
         if (!theDir.exists()) {
-            logger.info(" Creating PlayerData Directory!");
+            logger.info("Creating PlayerData Directory!");
             theDir.mkdir();
         }
         if (!theDir1.exists()) {
