@@ -50,6 +50,7 @@ public class HomeSpawn extends JavaPlugin {
     public void onEnable() {
         Enable();
         Configs();
+        Update();
         Permissions();
         Commands();
         CommandDelay();
@@ -142,7 +143,9 @@ public class HomeSpawn extends JavaPlugin {
     }
 
     private void Update() {
-        if (updater.checkUpdate(getConfig().getBoolean("BetaVersions") ? "beta" : "stable")) {
+        updater = new LapisUpdater(this);
+        String type = getConfig().getBoolean("BetaVersions") == true ? "beta" : "stable";
+        if (updater.checkUpdate(type)) {
             if (getConfig().getBoolean("UpdateNotification") && !getConfig().getBoolean("DownloadUpdates")) {
                 logger.info("An update for HomeSpawn is available and can be" +
                         " downloaded and installed by running /homespawn update");
@@ -167,7 +170,6 @@ public class HomeSpawn extends JavaPlugin {
         PluginManager pm = getServer().getPluginManager();
         pl = new HomeSpawnListener(this);
         pm.registerEvents(pl, this);
-        Update();
     }
 
     private void configVersion() {
@@ -560,15 +562,16 @@ public class HomeSpawn extends JavaPlugin {
     }
 
     private void Commands() {
-        getCommand("home").setExecutor(new HomeSpawnCommand(this));
-        getCommand("sethome").setExecutor(new HomeSpawnCommand(this));
-        getCommand("delhome").setExecutor(new HomeSpawnCommand(this));
-        getCommand("spawn").setExecutor(new HomeSpawnCommand(this));
-        getCommand("setspawn").setExecutor(new HomeSpawnCommand(this));
-        getCommand("delspawn").setExecutor(new HomeSpawnCommand(this));
-        getCommand("homespawn").setExecutor(new HomeSpawnCommand(this));
-        getCommand("homepassword").setExecutor(new HomeSpawnCommand(this));
-        getCommand("homeslist").setExecutor(new HomeSpawnCommand(this));
+        HomeSpawnCommand hsc = new HomeSpawnCommand(this);
+        getCommand("home").setExecutor(hsc);
+        getCommand("sethome").setExecutor(hsc);
+        getCommand("delhome").setExecutor(hsc);
+        getCommand("spawn").setExecutor(hsc);
+        getCommand("setspawn").setExecutor(hsc);
+        getCommand("delspawn").setExecutor(hsc);
+        getCommand("homespawn").setExecutor(hsc);
+        getCommand("homepassword").setExecutor(hsc);
+        getCommand("homeslist").setExecutor(hsc);
         logger.info("Commands Registered!");
     }
 }

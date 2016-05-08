@@ -1,13 +1,13 @@
 package net.lapismc.HomeSpawn;
 
-import net.lapismc.HomeSpawn.commands.DelHome;
-import net.lapismc.HomeSpawn.commands.Home;
-import net.lapismc.HomeSpawn.commands.SetHome;
-import org.bukkit.*;
+import net.lapismc.HomeSpawn.commands.*;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.DyeColor;
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -15,10 +15,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.Wool;
 
-import java.io.File;
-import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import java.util.*;
 
 public class HomeSpawnCommand implements CommandExecutor {
@@ -28,17 +24,29 @@ public class HomeSpawnCommand implements CommandExecutor {
     private final HomeSpawn plugin;
     public HomeSpawnCommand cmd;
     private DelHome delHome;
+    private DelSpawn delSpawn;
     private Home home;
+    private HomePassword homePassword;
+    private HomesList homesList;
+    private net.lapismc.HomeSpawn.commands.HomeSpawn homeSpawn;
     private SetHome setHome;
+    private SetSpawn setSpawn;
+    private Spawn spawn;
 
     public HomeSpawnCommand(HomeSpawn plugin) {
         this.plugin = plugin;
         this.delHome = new DelHome(plugin);
-        this.home = new Home(plugin);
+        this.delSpawn = new DelSpawn(plugin);
+        this.home = new Home(plugin, this);
+        this.homePassword = new HomePassword(plugin, this);
+        this.homesList = new HomesList(plugin, this);
+        this.homeSpawn = new net.lapismc.HomeSpawn.commands.HomeSpawn(plugin);
         this.setHome = new SetHome(plugin);
+        this.setSpawn = new SetSpawn(plugin);
+        this.spawn = new Spawn(plugin, this);
     }
 
-    private void showMenu(Player p) {
+    public void showMenu(Player p) {
         UUID uuid = this.plugin.PlayertoUUID.get(p.getName());
         YamlConfiguration getHomes = this.plugin.HomeConfigs.get(uuid);
         List<String> homes = getHomes.getStringList(p.getUniqueId() + ".list");
@@ -108,339 +116,7 @@ public class HomeSpawnCommand implements CommandExecutor {
         }
     }
 
-    @Override
-    public boolean onCommand(CommandSender sender, Command cmd,
-                             String commandLabel, String[] args) {
-        if (sender instanceof Player) {
-            Player player = (Player) sender;
-            if (cmd.getName().equalsIgnoreCase("sethome")) {
-                setHome.setHome(args, player);
-            } else if (cmd.getName().equalsIgnoreCase("home")) {
-                home.home(args, player, this);
-            } else if (cmd.getName().equalsIgnoreCase("delhome")) {
-                delHome.delHome(args, player);
-            } else if (cmd.getName().equalsIgnoreCase("setspawn")) {
-                HashMap<String, Integer> perms = plugin.Permissions.get(plugin.PlayerPermission.get(player.getUniqueId()));
-                if (perms.get("sSpawn") == 1) {
-                    if (args.length == 0) {
-                        HomeSpawnCommand.getSpawn.set("spawn.SpawnSet", "Yes");
-                        HomeSpawnCommand.getSpawn.set("spawn.X", player.getLocation()
-                                .getBlockX());
-                        HomeSpawnCommand.getSpawn.set("spawn.Y", player.getLocation()
-                                .getBlockY());
-                        HomeSpawnCommand.getSpawn.set("spawn.Z", player.getLocation()
-                                .getBlockZ());
-                        HomeSpawnCommand.getSpawn.set("spawn.World", player.getWorld().getName());
-                        HomeSpawnCommand.getSpawn.set("spawn.Yaw", player.getLocation().getYaw());
-                        HomeSpawnCommand.getSpawn.set("spawn.Pitch", player.getLocation()
-                                .getPitch());
-                        player.sendMessage(ChatColor.GOLD
-                                + HomeSpawnCommand.getMessages.getString("Spawn.SpawnSet"));
-                    } else if (args[0].equalsIgnoreCase("new")) {
-                        HomeSpawnCommand.getSpawn.set("spawnnew.SpawnSet", "Yes");
-                        HomeSpawnCommand.getSpawn.set("spawnnew.X", player.getLocation()
-                                .getBlockX());
-                        HomeSpawnCommand.getSpawn.set("spawnnew.Y", player.getLocation()
-                                .getBlockY());
-                        HomeSpawnCommand.getSpawn.set("spawnnew.Z", player.getLocation()
-                                .getBlockZ());
-                        HomeSpawnCommand.getSpawn.set("spawnnew.World", player.getWorld()
-                                .getName());
-                        HomeSpawnCommand.getSpawn.set("spawnnew.Yaw", player.getLocation()
-                                .getYaw());
-                        HomeSpawnCommand.getSpawn.set("spawnnew.Pitch", player.getLocation()
-                                .getPitch());
-                        player.sendMessage(ChatColor.GOLD
-                                + HomeSpawnCommand.getMessages.getString("Spawn.SpawnNewSet"));
-                    } else {
-                        this.plugin.help(player);
-                    }
-                    try {
-                        HomeSpawnCommand.getSpawn.save(this.plugin.spawnFile);
-                        this.plugin.reload("Silent");
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                } else {
-                    player.sendMessage(ChatColor.DARK_RED
-                            + HomeSpawnCommand.getMessages.getString("NoPerms"));
-
-                }
-            } else if (cmd.getName().equals("spawn")) {
-                HashMap<String, Integer> perms = plugin.Permissions.get(plugin.PlayerPermission.get(player.getUniqueId()));
-                if (perms.get("spawn") == 1) {
-                    if (!HomeSpawnCommand.getSpawn.contains("spawn.SpawnSet")) {
-                        player.sendMessage(ChatColor.RED
-                                + HomeSpawnCommand.getMessages.getString("Spawn.NotSet"));
-                        return false;
-                    }
-                    if (HomeSpawnCommand.getSpawn.getString("spawn.SpawnSet").equalsIgnoreCase(
-                            "yes")) {
-                        int x = HomeSpawnCommand.getSpawn.getInt("spawn.X");
-                        int y = HomeSpawnCommand.getSpawn.getInt("spawn.Y");
-                        int z = HomeSpawnCommand.getSpawn.getInt("spawn.Z");
-                        float yaw = HomeSpawnCommand.getSpawn.getInt("spawn.Yaw");
-                        float pitch = HomeSpawnCommand.getSpawn.getInt("spawn.Pitch");
-                        String cworld = HomeSpawnCommand.getSpawn.getString("spawn.World");
-                        World world = this.plugin.getServer().getWorld(cworld);
-                        Location Spawn = new Location(world, x, y, z, yaw,
-                                pitch);
-                        Spawn.add(0.5, 0, 0.5);
-                        this.TeleportPlayer(player, Spawn, "Spawn");
-                    } else {
-                        player.sendMessage(ChatColor.RED
-                                + HomeSpawnCommand.getMessages.getString("Spawn.NotSet"));
-                    }
-                } else {
-                    player.sendMessage(ChatColor.DARK_RED
-                            + HomeSpawnCommand.getMessages.getString("NoPerms"));
-                }
-
-            } else if (cmd.getName().equalsIgnoreCase("delspawn")) {
-                HashMap<String, Integer> perms = plugin.Permissions.get(plugin.PlayerPermission.get(player.getUniqueId()));
-                if (perms.get("sSpawn") == 1) {
-                    if (Objects.equals(HomeSpawnCommand.getSpawn.getString("spawn.SpawnSet"), "No")
-                            || !HomeSpawnCommand.getSpawn.contains("spawn.SpawnSet")) {
-                        player.sendMessage(ChatColor.RED
-                                + HomeSpawnCommand.getMessages.getString("Spawn.NotSet"));
-                    } else if (HomeSpawnCommand.getSpawn.getString("spawn.SpawnSet")
-                            .equalsIgnoreCase("Yes")) {
-                        HomeSpawnCommand.getSpawn.set("spawn.SpawnSet", "No");
-                        player.sendMessage(ChatColor.GOLD
-                                + HomeSpawnCommand.getMessages.getString("Spawn.Removed"));
-                        try {
-                            HomeSpawnCommand.getSpawn.save(this.plugin.spawnFile);
-                            this.plugin.reload("silent");
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                } else {
-                    player.sendMessage(ChatColor.DARK_RED
-                            + HomeSpawnCommand.getMessages.getString("NoPerms"));
-                }
-            } else if (cmd.getName().equalsIgnoreCase("homeslist")) {
-                if (this.plugin.getConfig().getBoolean("InventoryMenu")) {
-                    this.showMenu(player);
-                    return true;
-                } else {
-                    UUID uuid = this.plugin.PlayertoUUID.get(player.getName());
-                    YamlConfiguration getHomes = this.plugin.HomeConfigs.get(uuid);
-                    if (!getHomes.contains(player.getUniqueId()
-                            + ".list")) {
-                        getHomes.createSection(player.getUniqueId()
-                                + ".list");
-                    }
-                    List<String> list = getHomes.getStringList(player
-                            .getUniqueId() + ".list");
-                    if (getHomes.getInt(player.getUniqueId()
-                            + ".Numb") > 0) {
-                        if (!list.isEmpty()) {
-                            String list2 = list.toString();
-                            String list3 = list2.replace("[", " ");
-                            String StringList = list3.replace("]", " ");
-                            player.sendMessage(ChatColor.GOLD
-                                    + "Your Current Homes Are:");
-                            player.sendMessage(ChatColor.RED + StringList);
-                        } else {
-                            player.sendMessage(ChatColor.DARK_RED
-                                    + HomeSpawnCommand.getMessages.getString("Home.NoHomeSet"));
-                        }
-                    } else {
-                        player.sendMessage(ChatColor.DARK_RED
-                                + HomeSpawnCommand.getMessages.getString("Home.NoHomeSet"));
-                    }
-                }
-            } else if (cmd.getName().equalsIgnoreCase("homespawn")) {
-                HashMap<String, Integer> perms = plugin.Permissions.get(plugin.PlayerPermission.get(player.getUniqueId()));
-                if (args.length == 0) {
-                    player.sendMessage(ChatColor.GOLD + "---------------"
-                            + ChatColor.RED + "Homespawn" + ChatColor.GOLD
-                            + "---------------");
-                    player.sendMessage(ChatColor.RED + "Author:"
-                            + ChatColor.GOLD + " Dart2112");
-                    player.sendMessage(ChatColor.RED + "Version: "
-                            + ChatColor.GOLD
-                            + this.plugin.getDescription().getVersion());
-                    player.sendMessage(ChatColor.RED + "Bukkit Dev:"
-                            + ChatColor.GOLD + " http://goo.gl/2Selqa");
-                    player.sendMessage(ChatColor.RED
-                            + "Use /homespawn Help For Commands!");
-                    player.sendMessage(ChatColor.GOLD
-                            + "-----------------------------------------");
-                } else if (args.length == 1) {
-                    if (args[0].equalsIgnoreCase("reload")) {
-                        if (perms.get("reload") == 1) {
-                            this.plugin.reload(player);
-                        } else {
-                            player.sendMessage(ChatColor.RED
-                                    + "You Don't Have Permission To Do That");
-                        }
-                    } else if (args[0].equalsIgnoreCase("help")) {
-                        this.plugin.help(player);
-                    }
-                } else if (args.length > 0) {
-                    if (args[0].equalsIgnoreCase("update")) {
-                        if (perms.get("updateNotify") == 1) {
-                            LapisUpdater updater = new LapisUpdater(plugin);
-                            if (args.length == 1) {
-                                String ID = plugin.getConfig().getBoolean("BetaVersions") ? "beta" : "stable";
-                                if (updater.downloadUpdate(ID)) {
-                                    player.sendMessage(ChatColor.GOLD + "Downloading Update...");
-                                    player.sendMessage(ChatColor.GOLD + "The update will be installed" +
-                                            " when the server next starts!");
-                                } else {
-                                    player.sendMessage(ChatColor.GOLD + "Updating failed or there is no update!");
-                                }
-                            } else if (args.length == 2) {
-                                String ID = args[1];
-                                if (updater.downloadUpdate(ID)) {
-                                    player.sendMessage(ChatColor.GOLD + "Downloading Update...");
-                                    player.sendMessage(ChatColor.GOLD + "The update will be installed" +
-                                            " when the server next starts!");
-                                } else {
-                                    player.sendMessage(ChatColor.GOLD + "Updating failed or there is no update!");
-                                }
-                            } else {
-                                player.sendMessage(ChatColor.RED + HomeSpawnCommand.getMessages.getString("Error.Args"));
-                            }
-                        } else {
-                            player.sendMessage(ChatColor.RED + HomeSpawnCommand.getMessages.getString("NoPerms"));
-                        }
-                    }
-                } else {
-                    player.sendMessage("That Is Not A Recognised Command, Use /homespawn help For Commands");
-                }
-            } else if (cmd.getName().equalsIgnoreCase("homepassword")) {
-                File file = new File(this.plugin.getDataFolder() + File.separator
-                        + "PlayerData" + File.separator
-                        + player.getUniqueId() + ".yml");
-                FileConfiguration getHomes = YamlConfiguration
-                        .loadConfiguration(file);
-                File file3 = new File(this.plugin.getDataFolder() + File.separator
-                        + "PlayerData" + File.separator + "Passwords.yml");
-                FileConfiguration getPasswords = YamlConfiguration
-                        .loadConfiguration(file3);
-                if (!this.plugin.getServer().getOnlineMode()) {
-                    if (args.length == 3) {
-                        String string = args[0];
-                        if (string.equalsIgnoreCase("set")) {
-                            if (args[1].equals(args[2])) {
-                                String pass = args[1];
-                                String passHash = null;
-                                try {
-                                    passHash = PasswordHash.createHash(pass);
-                                } catch (NoSuchAlgorithmException
-                                        | InvalidKeySpecException e1) {
-                                    e1.printStackTrace();
-                                    player.sendMessage(ChatColor.RED
-                                            + "Failed To Save Password!");
-                                    return false;
-                                }
-                                getPasswords.set(player.getName(), passHash);
-                                player.sendMessage(ChatColor.GOLD
-                                        + "Password Set To:");
-                                player.sendMessage(ChatColor.RED + pass);
-                                try {
-                                    getPasswords.save(file3);
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                            } else {
-                                player.sendMessage(ChatColor.RED
-                                        + "Your 2 passwords didn't match!");
-                            }
-                        }
-                    } else if (args.length <= 1) {
-                        this.PassHelp(player);
-                    } else if (args.length == 3) {
-                        String string = args[0];
-                        if (string.equalsIgnoreCase("transfer")) {
-                            String pass = args[2];
-                            String name = args[1];
-                            File namefile = new File(this.plugin.getDataFolder()
-                                    .getAbsolutePath()
-                                    + File.separator
-                                    + "PlayerData"
-                                    + File.separator
-                                    + "PlayerNames"
-                                    + File.separator
-                                    + name
-                                    + ".yml");
-                            FileConfiguration getOldName = YamlConfiguration
-                                    .loadConfiguration(namefile);
-                            boolean Password = false;
-                            try {
-                                Password = PasswordHash.validatePassword(pass,
-                                        getPasswords.getString(name));
-                            } catch (NoSuchAlgorithmException
-                                    | InvalidKeySpecException e2) {
-                                e2.printStackTrace();
-                                player.sendMessage(ChatColor.RED
-                                        + "An Error Stopped Us From Checking Your Password, Please Try Again Later");
-                            }
-                            if (namefile.exists() && Password) {
-                                String uuid = getOldName.getString("UUID");
-                                File OldUUIDFile = new File(
-                                        this.plugin.getDataFolder() + File.separator
-                                                + "PlayerData" + File.separator
-                                                + uuid + ".yml");
-                                file.delete();
-                                OldUUIDFile.renameTo(file);
-                                getHomes.set("Name", player.getUniqueId()
-                                        .toString());
-                                try {
-                                    getHomes.save(file);
-                                } catch (IOException e1) {
-                                    e1.printStackTrace();
-                                }
-                                OldUUIDFile.delete();
-                                namefile.delete();
-                                try {
-                                    getHomes.save(file);
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                                player.sendMessage("Data Transfered!");
-                                getPasswords.set(player.getName(),
-                                        getPasswords.getString(name));
-                                getPasswords.set(name, null);
-                            } else {
-                                player.sendMessage("That Name Or Password Was Incorrect!");
-                            }
-                        }
-                    }
-                } else {
-                    player.sendMessage("This Command Isnt Used As This Is An Online Mode Server");
-                }
-
-            }
-        } else if (cmd.getName().
-
-                equalsIgnoreCase("homespawn")
-
-                )
-
-        {
-            if (args.length == 1) {
-                if (args[0].equalsIgnoreCase("reload")) {
-                    Player p = null;
-                    this.plugin.reload(p);
-                }
-            }
-
-        } else
-
-        {
-            sender.sendMessage("You Must Be a Player To Do That");
-        }
-
-        return false;
-    }
-
-    private void PassHelp(Player player) {
+    public void PassHelp(Player player) {
         player.sendMessage(ChatColor.GOLD + "---------------------"
                 + ChatColor.RED + "Homespawn" + ChatColor.GOLD
                 + "---------------------");
@@ -457,4 +133,42 @@ public class HomeSpawnCommand implements CommandExecutor {
                 + "-----------------------------------------------------");
         return;
     }
+
+    @Override
+    public boolean onCommand(CommandSender sender, Command cmd,
+                             String commandLabel, String[] args) {
+        if (sender instanceof Player) {
+            Player player = (Player) sender;
+            if (cmd.getName().equalsIgnoreCase("sethome")) {
+                setHome.setHome(args, player);
+            } else if (cmd.getName().equalsIgnoreCase("home")) {
+                home.home(args, player);
+            } else if (cmd.getName().equalsIgnoreCase("delhome")) {
+                delHome.delHome(args, player);
+            } else if (cmd.getName().equalsIgnoreCase("setspawn")) {
+                setSpawn.setSpawn(args, player);
+            } else if (cmd.getName().equals("spawn")) {
+                spawn.spawn(args, player);
+            } else if (cmd.getName().equalsIgnoreCase("delspawn")) {
+                delSpawn.delSpawn(args, player);
+            } else if (cmd.getName().equalsIgnoreCase("homeslist")) {
+                homesList.homesList(args, player);
+            } else if (cmd.getName().equalsIgnoreCase("homespawn")) {
+                homeSpawn.homeSpawn(args, player);
+            } else if (cmd.getName().equalsIgnoreCase("homepassword")) {
+                homePassword.homePassword(args, player);
+            }
+        } else if (cmd.getName().equalsIgnoreCase("homespawn")) {
+            if (args.length == 1) {
+                if (args[0].equalsIgnoreCase("reload")) {
+                    Player p = null;
+                    this.plugin.reload(p);
+                }
+            }
+        } else {
+            sender.sendMessage("You Must Be a Player To Do That");
+        }
+        return false;
+    }
+
 }

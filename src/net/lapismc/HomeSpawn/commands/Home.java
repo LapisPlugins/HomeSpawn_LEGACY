@@ -15,12 +15,14 @@ import java.util.UUID;
 public class Home {
 
     private HomeSpawn plugin;
+    private HomeSpawnCommand hsc;
 
-    public Home(HomeSpawn p) {
+    public Home(HomeSpawn p, HomeSpawnCommand hsc) {
         this.plugin = p;
+        this.hsc = hsc;
     }
 
-    public void home(String[] args, Player player, HomeSpawnCommand hsc) {
+    public void home(String[] args, Player player) {
         HashMap<String, Integer> perms = plugin.Permissions.get(plugin.PlayerPermission.get(player.getUniqueId()));
         UUID uuid = this.plugin.PlayertoUUID.get(player.getName());
         YamlConfiguration getHomes = this.plugin.HomeConfigs.get(uuid);
@@ -124,4 +126,5 @@ public class Home {
             }
         }
     }
+
 }

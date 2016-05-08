@@ -20,21 +20,6 @@ public class SetHome {
 
     public void setHome(String[] args, Player player) {
         HashMap<String, Integer> perms = plugin.Permissions.get(plugin.PlayerPermission.get(player.getUniqueId()));
-        if (perms == null) {
-            player.sendMessage("Perms is null");
-        }
-        if (plugin == null) {
-            player.sendMessage("Plugin is null");
-        }
-        if (plugin.PlayerPermission.get(player.getUniqueId()) == null) {
-            player.sendMessage("PlayerPermission is null");
-        }
-        if (plugin.Permissions.get(plugin.PlayerPermission.get(player.getUniqueId())) == null) {
-            player.sendMessage("Permissions in general is null");
-        }
-        if (plugin.Permissions.get(plugin.PlayerPermission.get(player.getUniqueId())).get("Homes") == null) {
-            player.sendMessage("Homes is null");
-        }
         UUID uuid = this.plugin.PlayertoUUID.get(player.getName());
         YamlConfiguration getHomes = this.plugin.HomeConfigs.get(uuid);
         if (!getHomes.contains(player.getUniqueId()
@@ -103,7 +88,7 @@ public class SetHome {
             player.sendMessage(ChatColor.GOLD
                     + HomeSpawnCommand.getMessages.getString("Home.HomeSet"));
         } else if (args.length == 1) {
-            if (perms.get("set custom homes") == 1) {
+            if (perms.get("cHomes") == 1) {
                 String home = args[0];
                 if (home.equals("Home")) {
                     player.sendMessage(ChatColor.RED
@@ -160,4 +145,5 @@ public class SetHome {
         }
         this.plugin.savePlayerData(uuid);
     }
+
 }
