@@ -176,7 +176,17 @@ public class HomeSpawnCommand implements CommandExecutor {
                     } else {
                         sender.sendMessage(ChatColor.GOLD + "Updating failed or there is no update!");
                     }
+                } else {
+                    sender.sendMessage("HomeSpawn Console Commands!");
+                    sender.sendMessage("/homespawn reload: Reloads all configs");
+                    sender.sendMessage("/homespawn update: Will download and " +
+                            "install update if available");
                 }
+            } else {
+                sender.sendMessage("HomeSpawn Console Commands!");
+                sender.sendMessage("/homespawn reload: Reloads all configs");
+                sender.sendMessage("/homespawn update: Will download and " +
+                        "install update if available");
             }
         } else {
             sender.sendMessage("You Must Be a Player To Do That");

@@ -2,6 +2,10 @@ package net.lapismc.HomeSpawn.commands;
 
 import net.lapismc.HomeSpawn.HomeSpawn;
 import net.lapismc.HomeSpawn.HomeSpawnCommand;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -41,7 +45,27 @@ public class HomesList {
                     String StringList = list3.replace("]", " ");
                     player.sendMessage(ChatColor.GOLD
                             + "Your Current Homes Are:");
-                    player.sendMessage(ChatColor.RED + StringList);
+                    if (isSpigot()) {
+                        for (String s : list) {
+                            TextComponent h = new TextComponent(s);
+                            h.setColor(net.md_5.bungee.api.ChatColor.RED);
+                            h.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+                                    new ComponentBuilder("Click To TP").create()));
+                            if (s.equalsIgnoreCase("home")) {
+                                h.setClickEvent(new ClickEvent(
+                                        ClickEvent.Action.RUN_COMMAND,
+                                        "/home"));
+                            } else {
+                                h.setClickEvent(new ClickEvent(
+                                        ClickEvent.Action.RUN_COMMAND,
+                                        "/home " + s));
+                            }
+                            player.spigot().sendMessage(h);
+                        }
+                    } else {
+                        player.sendMessage(ChatColor.RED
+                                + StringList);
+                    }
                 } else {
                     player.sendMessage(ChatColor.DARK_RED
                             + HomeSpawnCommand.getMessages.getString("Home.NoHomeSet"));
@@ -53,4 +77,12 @@ public class HomesList {
         }
     }
 
+    private boolean isSpigot() {
+        try {
+            Class.forName("net.md_5.bungee.api.chat.TextCompnent");
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }

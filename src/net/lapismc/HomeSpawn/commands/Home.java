@@ -2,6 +2,10 @@ package net.lapismc.HomeSpawn.commands;
 
 import net.lapismc.HomeSpawn.HomeSpawn;
 import net.lapismc.HomeSpawn.HomeSpawnCommand;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -23,7 +27,8 @@ public class Home {
     }
 
     public void home(String[] args, Player player) {
-        HashMap<String, Integer> perms = plugin.Permissions.get(plugin.PlayerPermission.get(player.getUniqueId()));
+        HashMap<String, Integer> perms = plugin.Permissions.get
+                (plugin.PlayerPermission.get(player.getUniqueId()));
         UUID uuid = this.plugin.PlayertoUUID.get(player.getName());
         YamlConfiguration getHomes = this.plugin.HomeConfigs.get(uuid);
         if (!getHomes.contains(player.getUniqueId()
@@ -66,10 +71,27 @@ public class Home {
                             String list3 = list2.replace("[", " ");
                             String StringList = list3.replace("]",
                                     " ");
-                            player.sendMessage(ChatColor.GOLD
-                                    + "Your Current Homes Are:");
-                            player.sendMessage(ChatColor.RED
-                                    + StringList);
+                            if (isSpigot()) {
+                                for (String s : list) {
+                                    TextComponent h = new TextComponent(s);
+                                    h.setColor(net.md_5.bungee.api.ChatColor.RED);
+                                    h.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+                                            new ComponentBuilder("Click To TP").create()));
+                                    if (s.equalsIgnoreCase("home")) {
+                                        h.setClickEvent(new ClickEvent(
+                                                ClickEvent.Action.RUN_COMMAND,
+                                                "/home"));
+                                    } else {
+                                        h.setClickEvent(new ClickEvent(
+                                                ClickEvent.Action.RUN_COMMAND,
+                                                "/home " + s));
+                                    }
+                                    player.spigot().sendMessage(h);
+                                }
+                            } else {
+                                player.sendMessage(ChatColor.RED
+                                        + StringList);
+                            }
                         } else {
                             player.sendMessage(ChatColor.DARK_RED
                                     + HomeSpawnCommand.getMessages
@@ -110,8 +132,28 @@ public class Home {
                         String StringList = list3.replace("]", " ");
                         player.sendMessage(ChatColor.GOLD
                                 + "Your Current Homes Are:");
-                        player.sendMessage(ChatColor.RED
-                                + StringList);
+                        if (isSpigot()) {
+                            for (String s : list) {
+                                TextComponent h = new TextComponent(s);
+                                h.setColor(net.md_5.bungee.api.ChatColor.RED);
+                                h.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+                                        new ComponentBuilder("Click To TP").create()));
+                                if (s.equalsIgnoreCase("home")) {
+                                    h.setClickEvent(new ClickEvent(
+                                            ClickEvent.Action.RUN_COMMAND,
+                                            "/home"));
+                                } else {
+                                    h.setClickEvent(new ClickEvent(
+                                            ClickEvent.Action.RUN_COMMAND,
+                                            "/home " + s));
+                                }
+                                player.spigot().sendMessage(h);
+                            }
+                        } else {
+                            player.sendMessage(ChatColor.RED
+                                    + StringList);
+                        }
+
                     } else {
                         player.sendMessage(ChatColor.DARK_RED
                                 + HomeSpawnCommand.getMessages
@@ -127,4 +169,15 @@ public class Home {
         }
     }
 
+    private boolean isSpigot() {
+        try {
+            Class.forName("net.md_5.bungee.api.chat.TextCompnent");
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }
+
+
+
