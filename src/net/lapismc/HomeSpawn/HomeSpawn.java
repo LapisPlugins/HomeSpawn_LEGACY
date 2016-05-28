@@ -57,7 +57,7 @@ public class HomeSpawn extends JavaPlugin {
         Metrics();
     }
 
-    private void Permissions() {
+    protected void Permissions() {
         Permissions.clear();
         HashMap<String, Integer> nullPermMap = new HashMap<>();
         nullPermMap.put("priority", 0);

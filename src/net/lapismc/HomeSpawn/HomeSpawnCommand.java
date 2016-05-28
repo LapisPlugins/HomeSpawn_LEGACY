@@ -139,6 +139,9 @@ public class HomeSpawnCommand implements CommandExecutor {
                              String commandLabel, String[] args) {
         if (sender instanceof Player) {
             Player player = (Player) sender;
+            if (plugin.Permissions.get(plugin.PlayerPermission.get(player.getUniqueId())) == null) {
+                plugin.Permissions();
+            }
             if (cmd.getName().equalsIgnoreCase("sethome")) {
                 setHome.setHome(args, player);
             } else if (cmd.getName().equalsIgnoreCase("home")) {

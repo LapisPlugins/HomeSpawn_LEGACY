@@ -119,6 +119,8 @@ public class HomeSpawnListener implements Listener {
             Permission nulled = new Permission("homespawn.null");
             plugin.PlayerPermission.put(player.getUniqueId(), nulled);
         }
+        plugin.logger.info("Player " + player.getName() + " has been given the permission " +
+                plugin.PlayerPermission.get(player.getUniqueId()).getName());
         HashMap<String, Integer> perms = plugin.Permissions.get(plugin.PlayerPermission.get(player.getUniqueId()));
         if (perms.get("updateNotify") == 1) {
             if (!plugin.getConfig().getBoolean("DownloadUpdates") && updater.checkUpdate("main")) {
