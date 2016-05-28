@@ -18,6 +18,7 @@ public class LapisUpdater {
     private String ID;
     private String result;
     private Plugin plugin;
+    private Boolean force;
 
     public LapisUpdater(Plugin plugin) {
         this.plugin = plugin;
@@ -25,11 +26,13 @@ public class LapisUpdater {
 
     public boolean checkUpdate(String ID) {
         this.ID = ID;
+        this.force = false;
         return updateCheck();
     }
 
     public boolean downloadUpdate(String ID) {
         this.ID = ID;
+        this.force = true;
         return downloadUpdateJar();
     }
 
@@ -62,7 +65,7 @@ public class LapisUpdater {
             Date d = new Date(f.lastModified());
             Date d0 = new Date();
             d0.setTime(d0.getTime() - 3600);
-            if (!f.exists() || d.before(d0)) {
+            if (!f.exists() || force || d.before(d0)) {
                 FileOutputStream fos = new FileOutputStream(f);
                 fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
                 rbc.close();

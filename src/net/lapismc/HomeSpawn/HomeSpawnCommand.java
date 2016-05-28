@@ -166,6 +166,16 @@ public class HomeSpawnCommand implements CommandExecutor {
                 if (args[0].equalsIgnoreCase("reload")) {
                     Player p = null;
                     this.plugin.reload(p);
+                } else if (args[0].equalsIgnoreCase("update")) {
+                    String ID = plugin.getConfig().getBoolean("BetaVersions") ? "beta" : "stable";
+                    LapisUpdater updater = new LapisUpdater(plugin);
+                    if (updater.downloadUpdate(ID)) {
+                        sender.sendMessage(ChatColor.GOLD + "Downloading Update...");
+                        sender.sendMessage(ChatColor.GOLD + "The update will be installed" +
+                                " when the server next starts!");
+                    } else {
+                        sender.sendMessage(ChatColor.GOLD + "Updating failed or there is no update!");
+                    }
                 }
             }
         } else {
