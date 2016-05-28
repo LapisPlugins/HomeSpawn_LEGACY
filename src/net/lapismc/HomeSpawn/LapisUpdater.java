@@ -45,6 +45,10 @@ public class LapisUpdater {
                     Bukkit.getUpdateFolderFile().mkdirs();
                 }
                 File f = new File(Bukkit.getUpdateFolder() + File.separator + "Homespawn.jar");
+                if (!f.exists()) {
+                    f.mkdirs();
+                    f.createNewFile();
+                }
                 FileOutputStream fos = new FileOutputStream(f);
                 fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
                 rbc.close();
