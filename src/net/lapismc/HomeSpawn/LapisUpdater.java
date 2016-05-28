@@ -1,7 +1,6 @@
 package net.lapismc.HomeSpawn;
 
 
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 
@@ -41,12 +40,12 @@ public class LapisUpdater {
             try {
                 URL website = new URL("https://raw.githubusercontent.com/Dart2112/HomeSpawn/master/updater/" + ID.replace("s", "S").replace("b", "B") + "/Homespawn.jar");
                 ReadableByteChannel rbc = Channels.newChannel(website.openStream());
-                if (!Bukkit.getUpdateFolderFile().exists()) {
-                    Bukkit.getUpdateFolderFile().mkdirs();
+                File update = new File(plugin.getDataFolder().getParent() + File.separator + "update");
+                if (!update.exists()) {
+                    update.mkdir();
                 }
-                File f = new File(Bukkit.getUpdateFolder() + File.separator + "Homespawn.jar");
+                File f = new File(update.getAbsolutePath() + File.separator + "Homespawn.jar");
                 if (!f.exists()) {
-                    f.mkdirs();
                     f.createNewFile();
                 }
                 FileOutputStream fos = new FileOutputStream(f);
