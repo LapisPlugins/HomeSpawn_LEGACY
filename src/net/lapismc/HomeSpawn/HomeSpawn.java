@@ -155,13 +155,14 @@ public class HomeSpawn extends JavaPlugin {
 
     private void Update() {
         updater = new LapisUpdater(this);
-        String type = getConfig().getBoolean("BetaVersions") == true ? "beta" : "stable";
-        if (updater.checkUpdate(type)) {
+        String ID = getConfig().getBoolean("BetaVersions") == true ? "beta" : "stable";
+        if (updater.checkUpdate(ID)) {
             if (getConfig().getBoolean("UpdateNotification") && !getConfig().getBoolean("DownloadUpdates")) {
                 logger.info("An update for HomeSpawn is available and can be" +
                         " downloaded and installed by running /homespawn update");
             } else if (getConfig().getBoolean("DownloadUpdates")) {
-                updater.downloadUpdate(getConfig().getBoolean("BetaVersions") ? "beta" : "stable");
+                updater.downloadUpdate(ID);
+                logger.info("Downloading homespawn update, it will be installed on next restart!");
             }
         } else {
             if (getConfig().getBoolean("UpdateNotification")) {
