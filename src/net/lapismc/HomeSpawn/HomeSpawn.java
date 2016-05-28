@@ -166,7 +166,7 @@ public class HomeSpawn extends JavaPlugin {
             }
         } else {
             if (getConfig().getBoolean("UpdateNotification")) {
-
+                logger.info("No Update Available");
             }
         }
     }
