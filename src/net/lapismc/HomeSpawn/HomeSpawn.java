@@ -466,8 +466,8 @@ public class HomeSpawn extends JavaPlugin {
             player.sendMessage(ChatColor.GOLD + "---------------"
                     + ChatColor.RED + "Homespawn" + ChatColor.GOLD
                     + "---------------");
-            if (Permissions.get(PlayerPermission.get(player)).get("cHomes") == 1 &&
-                    Permissions.get(PlayerPermission.get(player)).get("homes") > 0) {
+            if (Permissions.get(PlayerPermission.get(player.getUniqueId())).get("cHomes") == 1 &&
+                    Permissions.get(PlayerPermission.get(player.getUniqueId())).get("homes") > 0) {
                 player.sendMessage(ChatColor.RED + "/home [name]:" + ChatColor.GOLD
                         + " Sends You To The Home Specified");
                 player.sendMessage(ChatColor.RED + "/sethome [name]:"
@@ -475,7 +475,7 @@ public class HomeSpawn extends JavaPlugin {
                         + " Sets Your Home At Your Current Location");
                 player.sendMessage(ChatColor.RED + "/delhome [name]:"
                         + ChatColor.GOLD + " Removes The Specified Home");
-            } else if (Permissions.get(PlayerPermission.get(player)).get("homes") > 0) {
+            } else if (Permissions.get(PlayerPermission.get(player.getUniqueId())).get("homes") > 0) {
                 player.sendMessage(ChatColor.RED + "/home:" + ChatColor.GOLD
                         + " Sends You To Your Home");
                 player.sendMessage(ChatColor.RED + "/sethome:"
@@ -484,7 +484,7 @@ public class HomeSpawn extends JavaPlugin {
                 player.sendMessage(ChatColor.RED + "/delhome:"
                         + ChatColor.GOLD + " Removes Your Home");
             }
-            if (Permissions.get(PlayerPermission.get(player)).get("spawn") == 1) {
+            if (Permissions.get(PlayerPermission.get(player.getUniqueId())).get("spawn") == 1) {
                 player.sendMessage(ChatColor.RED + "/spawn:" + ChatColor.GOLD
                         + " Sends You To Spawn");
             }
@@ -557,6 +557,7 @@ public class HomeSpawn extends JavaPlugin {
                                         Tele.getChunk().load();
                                     }
                                     p.teleport(Tele);
+                                    debug("Teleported " + p.getName());
                                     p.sendMessage(ChatColor.GOLD
                                             + "Teleporting...");
                                     HomeSpawnTimeLeft.remove(p);
@@ -571,6 +572,12 @@ public class HomeSpawn extends JavaPlugin {
                 }
             }
         }, 0, 20);
+    }
+
+    public void debug(String s) {
+        if (getConfig().getBoolean("Debug")) {
+            logger.info("Homespawn Debug: " + s);
+        }
     }
 
     private void Commands() {
