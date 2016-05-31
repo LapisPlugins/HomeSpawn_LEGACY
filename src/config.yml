@@ -1,18 +1,21 @@
 ##Dont Change This, It Will Reset The Config If You Do!
-ConfigVersion: 4
+ConfigVersion: 5
 ## If Set To True Console Will Be Notified If The Plugin Has Updates Available
 UpdateNotification: true
-## If set to true the plugin will check if there is a beta version (Can only be downloaded by enabling DownloadUpdates)
+## If set to true the plugin will check if there is a beta version (Can be downloaded by enabling DownloadUpdates or
+## using /homespawn update)
 BetaVersions: false
-## If set to true the plugin will automaticly download and install updates (updates can still be installed with /homespawn update)
+## If set to true the plugin will automaticly download and install updates (updates can be force installed with /homespawn update)
 DownloadUpdates: false
 ## If Set To True The Plugin Will Send Usage Information To mcstats.org, Such As Minecraft Version And Players Online
 Metrics: true
+## If set to true the plugin will print messages telling you what it is currently doing, helpfull while trying to find errors
+Debug: false
 ## If enabled the player wil be given a book with all player commands listed (Does not contain admin or VIP commands)
 ## on first join
 CommandBook: true
-## When enabled players with more than 1 home will be given an inventory menu to select a home to teleport to when
-## they run /homeslist
+## When enabled players will be given an inventory menu to select a home to teleport to when
+## they run /homeslist, otherwise they wll get a clickable chat list
 InventoryMenu: true
 ## Permissions are handled below, there is no limit to how many permissions
 ## you can have as long as they contain all of the settings
@@ -23,7 +26,7 @@ Permissions:
         default: 1
         ## Players will be given the permission with the highest value, if players have multiple permissions.
         priority: 0
-        ## How many homes can they have set? 0=none
+        ## How many homes can they have set? 0=none, will be limited to 1 if custom homes is disabled
         homes: 1
         ## Can they use /spawn? 0=no 1=yes
         spawn: 1

@@ -115,6 +115,7 @@ public class HomeSpawn extends JavaPlugin {
                 p = Bukkit.getServer().getPluginManager().getPermission(permName);
             }
             Permissions.put(p, permMap);
+            debug("Loaded permission " + p.getName());
         }
         logger.info("Permissions Loaded!");
     }
@@ -142,6 +143,7 @@ public class HomeSpawn extends JavaPlugin {
                     }
                 });
                 metrics.start();
+                debug("Send stats to metrics");
             } catch (IOException e) {
                 this.logger.log(Level.SEVERE, "An error has occurred while trying to start HomeSpawn metrics");
                 this.logger.log(Level.SEVERE, "The error follows, Please report it to dart2112");
@@ -185,7 +187,7 @@ public class HomeSpawn extends JavaPlugin {
     }
 
     private void configVersion() {
-        if (getConfig().getInt("ConfigVersion") != 4) {
+        if (getConfig().getInt("ConfigVersion") != 5) {
             File oldConfig = new File(this.getDataFolder() + File.separator + "config.yml");
             File backupConfig = new File(this.getDataFolder() + File.separator + "Backup_config.yml");
             oldConfig.renameTo(backupConfig);
@@ -527,6 +529,7 @@ public class HomeSpawn extends JavaPlugin {
                 YamlConfiguration pd = HomeConfigs.get(p.getUniqueId());
                 l.addAll(pd.getStringList(p.getUniqueId() + ".list"));
             }
+            debug("Tab Completed for " + sender.getName());
             return l;
         }
         return null;
