@@ -54,8 +54,9 @@ public class LapisUpdater {
                 fos.close();
                 return true;
             } catch (IOException e) {
-                plugin.logger.severe(e.getMessage());
                 plugin.logger.severe("HomeSpawn updater failed to download updates!");
+                plugin.logger.severe("Please check your internet connection and" +
+                        " firewall settings and try again later");
                 return false;
             }
         } else {
@@ -64,10 +65,14 @@ public class LapisUpdater {
     }
 
     private boolean updateCheck() {
+        Integer oldVersion = null;
+        Integer newVersion = null;
+        File f = null;
+        YamlConfiguration yaml = null;
         try {
             URL website = new URL("https://raw.githubusercontent.com/Dart2112/HomeSpawn/master/updater/update.yml");
             ReadableByteChannel rbc = Channels.newChannel(website.openStream());
-            File f = new File(plugin.getDataFolder().getAbsolutePath() + File.separator + "update.yml");
+            f = new File(plugin.getDataFolder().getAbsolutePath() + File.separator + "update.yml");
             Date d = new Date(f.lastModified());
             Date d0 = new Date();
             d0.setTime(d0.getTime() - 3600);
@@ -79,32 +84,41 @@ public class LapisUpdater {
                 fos.close();
                 f.setLastModified(d0.getTime());
             }
-            YamlConfiguration yaml = YamlConfiguration.loadConfiguration(f);
+        } catch (IOException e) {
+            plugin.logger.severe("Failed to check for updates!");
+            plugin.logger.severe("Please check your internet and firewall settings" +
+                    " and try again later!");
+            return false;
+        }
+        try {
+            yaml = YamlConfiguration.loadConfiguration(f);
             if (!yaml.contains(ID)) {
                 return false;
             }
             String oldVersionString = plugin.getDescription().getVersion().replace(".", "").replace("Beta ", "");
             String newVersionString = yaml.getString(ID).replace(".", "").replace("Beta ", "");
-            Integer oldVersion = Integer.parseInt(oldVersionString);
-            Integer newVersion = Integer.parseInt(newVersionString);
-            Boolean update = false;
-            if (yaml.getString(ID).contains("Beta") && !plugin.getDescription().getVersion().contains("Beta")) {
-                update = true;
-            }
-            if (!yaml.getString(ID).contains("Beta") && plugin.getDescription().getVersion().contains("Beta")) {
-                update = true;
-            }
-            if (yaml.getString(ID).contains("Beta") && plugin.getDescription().getVersion().contains("Beta")) {
-                update = oldVersion < newVersion;
-            }
-            if (!yaml.getString(ID).contains("Beta") && !plugin.getDescription().getVersion().contains("Beta")) {
-                update = oldVersion < newVersion;
-            }
-            return update;
-        } catch (IOException e) {
-            plugin.logger.severe(e.getLocalizedMessage());
-            plugin.logger.severe("HomeSpawn updater failed to check for updates!");
+            oldVersion = Integer.parseInt(oldVersionString);
+            newVersion = Integer.parseInt(newVersionString);
+        } catch (Exception e) {
+            plugin.logger.severe("Failed to load update.yml or parse the values!" +
+                    " It may be corrupt!");
+            plugin.logger.severe("Please try again later");
+            f.delete();
             return false;
         }
+        Boolean update = false;
+        if (yaml.getString(ID).contains("Beta") && !plugin.getDescription().getVersion().contains("Beta")) {
+            update = true;
+        }
+        if (!yaml.getString(ID).contains("Beta") && plugin.getDescription().getVersion().contains("Beta")) {
+            update = true;
+        }
+        if (yaml.getString(ID).contains("Beta") && plugin.getDescription().getVersion().contains("Beta")) {
+            update = oldVersion < newVersion;
+        }
+        if (!yaml.getString(ID).contains("Beta") && !plugin.getDescription().getVersion().contains("Beta")) {
+            update = oldVersion < newVersion;
+        }
+        return update;
     }
 }
