@@ -2,7 +2,6 @@ package net.lapismc.HomeSpawn;
 
 
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.Plugin;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -16,10 +15,10 @@ public class LapisUpdater {
 
     private String ID;
     private String result;
-    private Plugin plugin;
+    private HomeSpawn plugin;
     private Boolean force;
 
-    public LapisUpdater(Plugin plugin) {
+    public LapisUpdater(HomeSpawn plugin) {
         this.plugin = plugin;
     }
 
@@ -55,7 +54,8 @@ public class LapisUpdater {
                 fos.close();
                 return true;
             } catch (IOException e) {
-                e.printStackTrace();
+                plugin.logger.severe(e.getMessage());
+                plugin.logger.severe("HomeSpawn updater failed to download updates!");
                 return false;
             }
         } else {
@@ -102,7 +102,8 @@ public class LapisUpdater {
             }
             return update;
         } catch (IOException e) {
-            e.printStackTrace();
+            plugin.logger.severe(e.getLocalizedMessage());
+            plugin.logger.severe("HomeSpawn updater failed to check for updates!");
             return false;
         }
     }

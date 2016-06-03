@@ -50,7 +50,7 @@ public class HomeSpawn extends JavaPlugin {
     public void onEnable() {
         Enable();
         Configs();
-        Update();
+        Update(this);
         Permissions();
         Commands();
         CommandDelay();
@@ -155,22 +155,27 @@ public class HomeSpawn extends JavaPlugin {
         }
     }
 
-    private void Update() {
-        updater = new LapisUpdater(this);
-        String ID = getConfig().getBoolean("BetaVersions") == true ? "beta" : "stable";
-        if (updater.checkUpdate(ID)) {
-            if (getConfig().getBoolean("UpdateNotification") && !getConfig().getBoolean("DownloadUpdates")) {
-                logger.info("An update for HomeSpawn is available and can be" +
-                        " downloaded and installed by running /homespawn update");
-            } else if (getConfig().getBoolean("DownloadUpdates")) {
-                updater.downloadUpdate(ID);
-                logger.info("Downloading homespawn update, it will be installed on next restart!");
+    private void Update(final HomeSpawn p) {
+        Bukkit.getScheduler().runTaskAsynchronously(this, new Runnable() {
+            @Override
+            public void run() {
+                updater = new LapisUpdater(p);
+                String ID = getConfig().getBoolean("BetaVersions") == true ? "beta" : "stable";
+                if (updater.checkUpdate(ID)) {
+                    if (getConfig().getBoolean("UpdateNotification") && !getConfig().getBoolean("DownloadUpdates")) {
+                        logger.info("An update for HomeSpawn is available and can be" +
+                                " downloaded and installed by running /homespawn update");
+                    } else if (getConfig().getBoolean("DownloadUpdates")) {
+                        updater.downloadUpdate(ID);
+                        logger.info("Downloading homespawn update, it will be installed on next restart!");
+                    }
+                } else {
+                    if (getConfig().getBoolean("UpdateNotification")) {
+                        logger.info("No Update Available");
+                    }
+                }
             }
-        } else {
-            if (getConfig().getBoolean("UpdateNotification")) {
-                logger.info("No Update Available");
-            }
-        }
+        });
     }
 
     @Override
@@ -187,7 +192,17 @@ public class HomeSpawn extends JavaPlugin {
     }
 
     private void configVersion() {
-        if (getConfig().getInt("ConfigVersion") != 5) {
+        boolean Config = false;
+        try {
+            if (getConfig().getInt("ConfigVersion") != 5) {
+                Config = true;
+            }
+        } catch (Exception e) {
+            if (getConfig().getString("ConfigVersion").startsWith("Not Used Yet")) {
+                Config = true;
+            }
+        }
+        if (Config) {
             File oldConfig = new File(this.getDataFolder() + File.separator + "config.yml");
             File backupConfig = new File(this.getDataFolder() + File.separator + "Backup_config.yml");
             oldConfig.renameTo(backupConfig);
