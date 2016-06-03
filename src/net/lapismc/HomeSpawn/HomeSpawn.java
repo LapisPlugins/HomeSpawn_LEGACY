@@ -145,7 +145,8 @@ public class HomeSpawn extends JavaPlugin {
                 metrics.start();
                 debug("Send stats to metrics");
             } catch (IOException e) {
-                this.logger.log(Level.SEVERE, "An error has occurred while trying to start HomeSpawn metrics");
+                this.logger.log(Level.SEVERE, "An error has occurred while trying to" +
+                        " start HomeSpawn metrics");
                 this.logger.log(Level.SEVERE, "The error follows, Please report it to dart2112");
                 e.printStackTrace();
             }
@@ -162,12 +163,14 @@ public class HomeSpawn extends JavaPlugin {
                 updater = new LapisUpdater(p);
                 String ID = getConfig().getBoolean("BetaVersions") == true ? "beta" : "stable";
                 if (updater.checkUpdate(ID)) {
-                    if (getConfig().getBoolean("UpdateNotification") && !getConfig().getBoolean("DownloadUpdates")) {
+                    if (getConfig().getBoolean("UpdateNotification") && !getConfig()
+                            .getBoolean("DownloadUpdates")) {
                         logger.info("An update for HomeSpawn is available and can be" +
                                 " downloaded and installed by running /homespawn update");
                     } else if (getConfig().getBoolean("DownloadUpdates")) {
                         updater.downloadUpdate(ID);
-                        logger.info("Downloading homespawn update, it will be installed on next restart!");
+                        logger.info("Downloading Homespawn update, it will be installed " +
+                                "on next restart!");
                     }
                 } else {
                     if (getConfig().getBoolean("UpdateNotification")) {
@@ -204,7 +207,8 @@ public class HomeSpawn extends JavaPlugin {
         }
         if (Config) {
             File oldConfig = new File(this.getDataFolder() + File.separator + "config.yml");
-            File backupConfig = new File(this.getDataFolder() + File.separator + "Backup_config.yml");
+            File backupConfig = new File(this.getDataFolder() + File.separator +
+                    "Backup_config.yml");
             oldConfig.renameTo(backupConfig);
             saveDefaultConfig();
             logger.info("New config generated!");
@@ -233,7 +237,8 @@ public class HomeSpawn extends JavaPlugin {
         try {
             HomeConfigs.get(uuid).save(HomeConfigsFiles.get(uuid));
         } catch (IOException e) {
-            this.logger.log(Level.SEVERE, "An error has occurred while trying to save HomeSpawn player data");
+            this.logger.log(Level.SEVERE, "An error has occurred while trying to save" +
+                    " HomeSpawn player data");
             this.logger.log(Level.SEVERE, "The error follows, Please report it to dart2112");
             e.printStackTrace();
         }
@@ -274,7 +279,8 @@ public class HomeSpawn extends JavaPlugin {
             try {
                 file.createNewFile();
             } catch (IOException e) {
-                this.logger.log(Level.SEVERE, "An error has occurred while trying to save HomeSpawn player password data");
+                this.logger.log(Level.SEVERE, "An error has occurred while trying to" +
+                        " save HomeSpawn player password data");
                 this.logger.log(Level.SEVERE, "The error follows, Please report it to dart2112");
                 e.printStackTrace();
             }
@@ -311,7 +317,8 @@ public class HomeSpawn extends JavaPlugin {
                 getMessages.save(file2);
                 setDefaultMessages();
             } catch (IOException e) {
-                this.logger.log(Level.SEVERE, "An error has occurred while trying to save HomeSpawn messages data");
+                this.logger.log(Level.SEVERE, "An error has occurred while trying to save" +
+                        " HomeSpawn messages data");
                 this.logger.log(Level.SEVERE, "The error follows, Please report it to dart2112");
                 e.printStackTrace();
             }
@@ -354,7 +361,8 @@ public class HomeSpawn extends JavaPlugin {
             try {
                 getMessages.save(file2);
             } catch (IOException e) {
-                this.logger.log(Level.SEVERE, "An error has occurred while trying to save HomeSpawn messages data");
+                this.logger.log(Level.SEVERE, "An error has occurred while trying to save" +
+                        " HomeSpawn messages data");
                 this.logger.log(Level.SEVERE, "The error follows, Please report it to dart2112");
                 e.printStackTrace();
             }
@@ -455,8 +463,7 @@ public class HomeSpawn extends JavaPlugin {
                     Bukkit.broadcast(ChatColor.RED + "Console" + ChatColor.GOLD + " Has Reloaded Homespawn!", p.getName());
                 }
             }
-            logger
-                    .info("You Have Reloaded Homespawn!");
+            logger.info("You Have Reloaded Homespawn!");
         }
         if (player != null) {
             spawn = YamlConfiguration.loadConfiguration(spawnFile);
