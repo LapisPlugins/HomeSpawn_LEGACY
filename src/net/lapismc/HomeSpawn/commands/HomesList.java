@@ -67,12 +67,12 @@ public class HomesList {
                                 + StringList);
                     }
                 } else {
-                    player.sendMessage(ChatColor.DARK_RED
-                            + HomeSpawnCommand.getMessages.getString("Home.NoHomeSet"));
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                            HomeSpawnCommand.getMessages.getString("Home.NoHomeSet")));
                 }
             } else {
-                player.sendMessage(ChatColor.DARK_RED
-                        + HomeSpawnCommand.getMessages.getString("Home.NoHomeSet"));
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                        HomeSpawnCommand.getMessages.getString("Home.NoHomeSet")));
             }
         }
     }

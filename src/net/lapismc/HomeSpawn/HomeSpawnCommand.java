@@ -177,6 +177,18 @@ public class HomeSpawnCommand implements CommandExecutor {
                         sender.sendMessage(ChatColor.GOLD + "Updating failed or there is no update!");
                     }
                 } else {
+                    sender.sendMessage(ChatColor.GOLD + "---------------"
+                            + ChatColor.RED + "Homespawn" + ChatColor.GOLD
+                            + "---------------");
+                    sender.sendMessage(ChatColor.RED + "Author:"
+                            + ChatColor.GOLD + " Dart2112");
+                    sender.sendMessage(ChatColor.RED + "Version: "
+                            + ChatColor.GOLD
+                            + this.plugin.getDescription().getVersion());
+                    sender.sendMessage(ChatColor.RED + "Spigot:"
+                            + ChatColor.GOLD + " https://goo.gl/aWby6W");
+                    sender.sendMessage(ChatColor.GOLD
+                            + "-----------------------------------------");
                     sender.sendMessage("HomeSpawn Console Commands!");
                     sender.sendMessage("/homespawn reload: Reloads all configs");
                     sender.sendMessage("/homespawn update: Will download and " +

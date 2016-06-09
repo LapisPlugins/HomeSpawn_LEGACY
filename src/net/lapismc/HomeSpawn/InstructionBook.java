@@ -1,67 +1,35 @@
 package net.lapismc.HomeSpawn;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 
+import java.io.File;
+
 public class InstructionBook {
 
-    public static ItemStack getBook() {
+    private HomeSpawn plugin;
+    private File f;
+    private YamlConfiguration yaml;
+
+    public InstructionBook(HomeSpawn plugin) {
+        this.plugin = plugin;
+        f = new File(plugin.getDataFolder() + File.separator + "HomeSpawnBook.yml");
+        yaml = YamlConfiguration.loadConfiguration(f);
+    }
+
+    public ItemStack getBook() {
         ItemStack book = new ItemStack(Material.WRITTEN_BOOK, 1);
         BookMeta meta = (BookMeta) book.getItemMeta();
-        meta.setTitle(ChatColor.GOLD + "How To HomeSpawn");
+        meta.setTitle(yaml.getString("Title"));
         meta.setAuthor(ChatColor.AQUA + "Dart2112");
-        if (!Bukkit.getServer().getOnlineMode()) {
-            meta.addPage(ChatColor.GOLD
-                    + "How To Use HomeSpawn! \n"
-                    + ChatColor.RED
-                    + "/home:"
-                    + ChatColor.GOLD
-                    + " Sends You To Your Home \n"
-                    + // line 1
-                    ChatColor.RED
-                    + "/sethome:"
-                    + ChatColor.GOLD
-                    + " Sets Your Home At Your Current Location \n"
-                    + // line 2
-                    ChatColor.RED
-                    + "/delhome:"
-                    + ChatColor.GOLD
-                    + " Removes Your Home \n"
-                    + // line 3
-                    ChatColor.RED
-                    + "/spawn:"
-                    + ChatColor.GOLD
-                    + " Sends You To Spawn \n" // line 4
-                    + ChatColor.RED + "/homepassword help:\n"
-                    + ChatColor.GOLD
-                    + "Displays The Home Transfer Commands \n" // line 5
-                    + ChatColor.GREEN
-                    + "For More Detailed Help Use /homespawn help");
-        } else {
-            meta.addPage(ChatColor.GOLD
-                    + "How To Use HomeSpawn! \n"
-                    + ChatColor.RED
-                    + "/home:"
-                    + ChatColor.GOLD
-                    + " Sends You To Your Home \n"
-                    + // line 1
-                    ChatColor.RED
-                    + "/sethome:"
-                    + ChatColor.GOLD
-                    + " Sets Your Home At Your Current Location \n"
-                    + // line 2
-                    ChatColor.RED + "/delhome:"
-                    + ChatColor.GOLD
-                    + " Removes Your Home \n"
-                    + // line 3
-                    ChatColor.RED + "/spawn:"
-                    + ChatColor.GOLD
-                    + " Sends You To Spawn \n" // line 4
-                    + ChatColor.GREEN
-                    + "For More Detailed Help Use /homespawn help");
+        int zero = 0;
+        int pages = yaml.getInt("Book.NumbOfPages");
+        while (pages > zero) {
+            zero++;
+            meta.addPage(yaml.getString("Book." + zero));
         }
         book.setItemMeta(meta);
         return book;

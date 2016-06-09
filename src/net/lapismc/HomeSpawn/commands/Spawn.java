@@ -20,11 +20,12 @@ public class Spawn {
     }
 
     public void spawn(String[] args, Player player) {
-        HashMap<String, Integer> perms = plugin.Permissions.get(plugin.PlayerPermission.get(player.getUniqueId()));
+        HashMap<String, Integer> perms = plugin.Permissions.get(plugin.PlayerPermission.
+                get(player.getUniqueId()));
         if (perms.get("spawn") == 1) {
             if (!HomeSpawnCommand.getSpawn.contains("spawn.SpawnSet")) {
-                player.sendMessage(ChatColor.RED
-                        + HomeSpawnCommand.getMessages.getString("Spawn.NotSet"));
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                        HomeSpawnCommand.getMessages.getString("Spawn.NotSet")));
                 return;
             }
             if (HomeSpawnCommand.getSpawn.getString("spawn.SpawnSet").equalsIgnoreCase(
@@ -41,12 +42,12 @@ public class Spawn {
                 Spawn.add(0.5, 0, 0.5);
                 hsc.TeleportPlayer(player, Spawn, "Spawn");
             } else {
-                player.sendMessage(ChatColor.RED
-                        + HomeSpawnCommand.getMessages.getString("Spawn.NotSet"));
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                        HomeSpawnCommand.getMessages.getString("Spawn.NotSet")));
             }
         } else {
-            player.sendMessage(ChatColor.DARK_RED
-                    + HomeSpawnCommand.getMessages.getString("NoPerms"));
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    HomeSpawnCommand.getMessages.getString("NoPerms")));
         }
     }
 

@@ -18,17 +18,18 @@ public class DelSpawn {
     }
 
     public void delSpawn(String[] args, Player player) {
-        HashMap<String, Integer> perms = plugin.Permissions.get(plugin.PlayerPermission.get(player.getUniqueId()));
+        HashMap<String, Integer> perms = plugin.Permissions.get(plugin.PlayerPermission
+                .get(player.getUniqueId()));
         if (perms.get("sSpawn") == 1) {
             if (Objects.equals(HomeSpawnCommand.getSpawn.getString("spawn.SpawnSet"), "No")
                     || !HomeSpawnCommand.getSpawn.contains("spawn.SpawnSet")) {
-                player.sendMessage(ChatColor.RED
-                        + HomeSpawnCommand.getMessages.getString("Spawn.NotSet"));
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                        HomeSpawnCommand.getMessages.getString("Spawn.NotSet")));
             } else if (HomeSpawnCommand.getSpawn.getString("spawn.SpawnSet")
                     .equalsIgnoreCase("Yes")) {
                 HomeSpawnCommand.getSpawn.set("spawn.SpawnSet", "No");
-                player.sendMessage(ChatColor.GOLD
-                        + HomeSpawnCommand.getMessages.getString("Spawn.Removed"));
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                        HomeSpawnCommand.getMessages.getString("Spawn.Removed")));
                 try {
                     HomeSpawnCommand.getSpawn.save(this.plugin.spawnFile);
                     this.plugin.reload("silent");
@@ -38,8 +39,8 @@ public class DelSpawn {
             }
 
         } else {
-            player.sendMessage(ChatColor.DARK_RED
-                    + HomeSpawnCommand.getMessages.getString("NoPerms"));
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    HomeSpawnCommand.getMessages.getString("NoPerms")));
         }
     }
 

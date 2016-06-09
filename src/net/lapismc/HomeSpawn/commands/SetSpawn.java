@@ -17,7 +17,8 @@ public class SetSpawn {
     }
 
     public void setSpawn(String[] args, Player player) {
-        HashMap<String, Integer> perms = plugin.Permissions.get(plugin.PlayerPermission.get(player.getUniqueId()));
+        HashMap<String, Integer> perms = plugin.Permissions.get(plugin.PlayerPermission
+                .get(player.getUniqueId()));
         if (perms.get("sSpawn") == 1) {
             if (args.length == 0) {
                 HomeSpawnCommand.getSpawn.set("spawn.SpawnSet", "Yes");
@@ -31,8 +32,8 @@ public class SetSpawn {
                 HomeSpawnCommand.getSpawn.set("spawn.Yaw", player.getLocation().getYaw());
                 HomeSpawnCommand.getSpawn.set("spawn.Pitch", player.getLocation()
                         .getPitch());
-                player.sendMessage(ChatColor.GOLD
-                        + HomeSpawnCommand.getMessages.getString("Spawn.SpawnSet"));
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                        HomeSpawnCommand.getMessages.getString("Spawn.SpawnSet")));
             } else if (args[0].equalsIgnoreCase("new")) {
                 HomeSpawnCommand.getSpawn.set("spawnnew.SpawnSet", "Yes");
                 HomeSpawnCommand.getSpawn.set("spawnnew.X", player.getLocation()
@@ -47,8 +48,8 @@ public class SetSpawn {
                         .getYaw());
                 HomeSpawnCommand.getSpawn.set("spawnnew.Pitch", player.getLocation()
                         .getPitch());
-                player.sendMessage(ChatColor.GOLD
-                        + HomeSpawnCommand.getMessages.getString("Spawn.SpawnNewSet"));
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                        HomeSpawnCommand.getMessages.getString("Spawn.SpawnNewSet")));
             } else {
                 this.plugin.help(player);
             }
@@ -60,8 +61,8 @@ public class SetSpawn {
             }
 
         } else {
-            player.sendMessage(ChatColor.DARK_RED
-                    + HomeSpawnCommand.getMessages.getString("NoPerms"));
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    HomeSpawnCommand.getMessages.getString("NoPerms")));
 
         }
     }

@@ -55,8 +55,8 @@ public class Home {
                 home.add(0.5, 0, 0.5);
                 hsc.TeleportPlayer(player, home, "Home");
             } else {
-                player.sendMessage(ChatColor.RED
-                        + HomeSpawnCommand.getMessages.getString("Home.NoHomeSet"));
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                        HomeSpawnCommand.getMessages.getString("Home.NoHomeSet")));
             }
         } else if (args.length == 1) {
             String home = args[0];
@@ -93,14 +93,14 @@ public class Home {
                                         + StringList);
                             }
                         } else {
-                            player.sendMessage(ChatColor.DARK_RED
-                                    + HomeSpawnCommand.getMessages
-                                    .getString("Home.NoHomeSet"));
+                            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                                    HomeSpawnCommand.getMessages
+                                            .getString("Home.NoHomeSet")));
                         }
                     } else {
-                        player.sendMessage(ChatColor.DARK_RED
-                                + HomeSpawnCommand.getMessages
-                                .getString("Home.NoHomeSet"));
+                        player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                                HomeSpawnCommand.getMessages
+                                        .getString("Home.NoHomeSet")));
                     }
                     return;
                 }
@@ -155,14 +155,14 @@ public class Home {
                         }
 
                     } else {
-                        player.sendMessage(ChatColor.DARK_RED
-                                + HomeSpawnCommand.getMessages
-                                .getString("Home.NoHomeSet"));
+                        player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                                HomeSpawnCommand.getMessages
+                                        .getString("Home.NoHomeSet")));
                     }
                 } else {
-                    player.sendMessage(ChatColor.DARK_RED
-                            + HomeSpawnCommand.getMessages
-                            .getString("Home.NoHomeSet"));
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                            HomeSpawnCommand.getMessages
+                                    .getString("Home.NoHomeSet")));
                 }
                 return;
             }

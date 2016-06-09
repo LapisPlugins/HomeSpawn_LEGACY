@@ -75,7 +75,8 @@ public class HomeSpawnListener implements Listener {
                 getName.save(file2);
                 if (plugin.getConfig().getBoolean("CommandBook")) {
                     PlayerInventory pi = player.getInventory();
-                    ItemStack commandBook = InstructionBook.getBook();
+                    InstructionBook book = new InstructionBook(plugin);
+                    ItemStack commandBook = book.getBook();
                     pi.addItem(commandBook);
                 }
             } catch (IOException e) {

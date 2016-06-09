@@ -16,7 +16,8 @@ public class HomeSpawn {
     }
 
     public void homeSpawn(String[] args, Player player) {
-        HashMap<String, Integer> perms = plugin.Permissions.get(plugin.PlayerPermission.get(player.getUniqueId()));
+        HashMap<String, Integer> perms = plugin.Permissions.get(
+                plugin.PlayerPermission.get(player.getUniqueId()));
         if (args.length == 0) {
             player.sendMessage(ChatColor.GOLD + "---------------"
                     + ChatColor.RED + "Homespawn" + ChatColor.GOLD
@@ -26,8 +27,8 @@ public class HomeSpawn {
             player.sendMessage(ChatColor.RED + "Version: "
                     + ChatColor.GOLD
                     + this.plugin.getDescription().getVersion());
-            player.sendMessage(ChatColor.RED + "Bukkit Dev:"
-                    + ChatColor.GOLD + " http://goo.gl/2Selqa");
+            player.sendMessage(ChatColor.RED + "Spigot:"
+                    + ChatColor.GOLD + " https://goo.gl/aWby6W");
             player.sendMessage(ChatColor.RED
                     + "Use /homespawn Help For Commands!");
             player.sendMessage(ChatColor.GOLD
@@ -48,32 +49,38 @@ public class HomeSpawn {
                 if (perms.get("updateNotify") == 1) {
                     LapisUpdater updater = new LapisUpdater(plugin);
                     if (args.length == 1) {
-                        String ID = plugin.getConfig().getBoolean("BetaVersions") ? "beta" : "stable";
+                        String ID = plugin.getConfig().getBoolean("BetaVersions")
+                                ? "beta" : "stable";
                         if (updater.downloadUpdate(ID)) {
                             player.sendMessage(ChatColor.GOLD + "Downloading Update...");
-                            player.sendMessage(ChatColor.GOLD + "The update will be installed" +
-                                    " when the server next starts!");
+                            player.sendMessage(ChatColor.GOLD + "The update will be installed"
+                                    + " when the server next starts!");
                         } else {
-                            player.sendMessage(ChatColor.GOLD + "Updating failed or there is no update!");
+                            player.sendMessage(ChatColor.GOLD + "Updating failed or there " +
+                                    "is no update!");
                         }
                     } else if (args.length == 2) {
                         String ID = args[1];
                         if (updater.downloadUpdate(ID)) {
                             player.sendMessage(ChatColor.GOLD + "Downloading Update...");
-                            player.sendMessage(ChatColor.GOLD + "The update will be installed" +
-                                    " when the server next starts!");
+                            player.sendMessage(ChatColor.GOLD + "The update will be installed"
+                                    + " when the server next starts!");
                         } else {
-                            player.sendMessage(ChatColor.GOLD + "Updating failed or there is no update!");
+                            player.sendMessage(ChatColor.GOLD + "Updating failed or there" +
+                                    " is no update!");
                         }
                     } else {
-                        player.sendMessage(ChatColor.RED + HomeSpawnCommand.getMessages.getString("Error.Args"));
+                        player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                                HomeSpawnCommand.getMessages.getString("Error.Args")));
                     }
                 } else {
-                    player.sendMessage(ChatColor.RED + HomeSpawnCommand.getMessages.getString("NoPerms"));
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                            HomeSpawnCommand.getMessages.getString("NoPerms")));
                 }
             }
         } else {
-            player.sendMessage("That Is Not A Recognised Command, Use /homespawn help For Commands");
+            player.sendMessage("That Is Not A Recognised Command, Use /homespawn help For " +
+                    "Commands");
         }
     }
 

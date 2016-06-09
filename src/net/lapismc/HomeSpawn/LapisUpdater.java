@@ -37,9 +37,13 @@ public class LapisUpdater {
     private boolean downloadUpdateJar() {
         if (updateCheck()) {
             try {
-                URL website = new URL("https://raw.githubusercontent.com/Dart2112/HomeSpawn/master/updater/" + ID.replace("s", "S").replace("b", "B") + "/Homespawn.jar");
+                URL website = new URL(
+                        "https://raw.githubusercontent.com/Dart2112/HomeSpawn/master/updater/"
+                                + ID.substring(0, 1).toUpperCase() + ID.substring(1) +
+                                "/Homespawn.jar");
                 ReadableByteChannel rbc = Channels.newChannel(website.openStream());
-                File update = new File(plugin.getDataFolder().getParent() + File.separator + "update");
+                File update = new File(plugin.getDataFolder().getParent() + File.separator +
+                        "update");
                 if (!update.exists()) {
                     update.mkdir();
                 }
@@ -70,9 +74,12 @@ public class LapisUpdater {
         File f = null;
         YamlConfiguration yaml = null;
         try {
-            URL website = new URL("https://raw.githubusercontent.com/Dart2112/HomeSpawn/master/updater/update.yml");
+            URL website = new URL(
+                    "https://raw.githubusercontent.com/Dart2112/HomeSpawn/master/updater" +
+                            "/update.yml");
             ReadableByteChannel rbc = Channels.newChannel(website.openStream());
-            f = new File(plugin.getDataFolder().getAbsolutePath() + File.separator + "update.yml");
+            f = new File(plugin.getDataFolder().getAbsolutePath() + File.separator +
+                    "update.yml");
             Date d = new Date(f.lastModified());
             Date d0 = new Date();
             d0.setTime(d0.getTime() - 3600);
@@ -95,8 +102,10 @@ public class LapisUpdater {
             if (!yaml.contains(ID)) {
                 return false;
             }
-            String oldVersionString = plugin.getDescription().getVersion().replace(".", "").replace("Beta ", "");
-            String newVersionString = yaml.getString(ID).replace(".", "").replace("Beta ", "");
+            String oldVersionString = plugin.getDescription().getVersion()
+                    .replace(".", "").replace("Beta ", "");
+            String newVersionString = yaml.getString(ID).replace(".", "")
+                    .replace("Beta ", "");
             oldVersion = Integer.parseInt(oldVersionString);
             newVersion = Integer.parseInt(newVersionString);
         } catch (Exception e) {
@@ -107,16 +116,20 @@ public class LapisUpdater {
             return false;
         }
         Boolean update = false;
-        if (yaml.getString(ID).contains("Beta") && !plugin.getDescription().getVersion().contains("Beta")) {
+        if (yaml.getString(ID).contains("Beta") && !plugin.getDescription()
+                .getVersion().contains("Beta")) {
             update = true;
         }
-        if (!yaml.getString(ID).contains("Beta") && plugin.getDescription().getVersion().contains("Beta")) {
+        if (!yaml.getString(ID).contains("Beta") && plugin.getDescription()
+                .getVersion().contains("Beta")) {
             update = true;
         }
-        if (yaml.getString(ID).contains("Beta") && plugin.getDescription().getVersion().contains("Beta")) {
+        if (yaml.getString(ID).contains("Beta") && plugin.getDescription()
+                .getVersion().contains("Beta")) {
             update = oldVersion < newVersion;
         }
-        if (!yaml.getString(ID).contains("Beta") && !plugin.getDescription().getVersion().contains("Beta")) {
+        if (!yaml.getString(ID).contains("Beta") && !plugin.getDescription()
+                .getVersion().contains("Beta")) {
             update = oldVersion < newVersion;
         }
         return update;
