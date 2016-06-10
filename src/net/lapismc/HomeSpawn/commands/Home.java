@@ -2,10 +2,6 @@ package net.lapismc.HomeSpawn.commands;
 
 import net.lapismc.HomeSpawn.HomeSpawn;
 import net.lapismc.HomeSpawn.HomeSpawnCommand;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -73,17 +69,23 @@ public class Home {
                                     " ");
                             if (isSpigot()) {
                                 for (String s : list) {
-                                    TextComponent h = new TextComponent(s);
+                                    net.md_5.bungee.api.chat.TextComponent h = new net.md_5.bungee.api.chat
+                                            .TextComponent(s);
                                     h.setColor(net.md_5.bungee.api.ChatColor.RED);
-                                    h.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-                                            new ComponentBuilder("Click To TP").create()));
+                                    h.setHoverEvent(new net.md_5.bungee.api.chat
+                                            .HoverEvent(net.md_5.bungee
+                                            .api.chat.HoverEvent.Action.SHOW_TEXT,
+                                            new net.md_5.bungee.api.chat.ComponentBuilder
+                                                    ("Click To TP").create()));
                                     if (s.equalsIgnoreCase("home")) {
-                                        h.setClickEvent(new ClickEvent(
-                                                ClickEvent.Action.RUN_COMMAND,
+                                        h.setClickEvent(new net.md_5.bungee.api.chat.ClickEvent(
+                                                net.md_5.bungee.api.chat.ClickEvent.Action
+                                                        .RUN_COMMAND,
                                                 "/home"));
                                     } else {
-                                        h.setClickEvent(new ClickEvent(
-                                                ClickEvent.Action.RUN_COMMAND,
+                                        h.setClickEvent(new net.md_5.bungee.api.chat.ClickEvent(
+                                                net.md_5.bungee.api.chat.ClickEvent.Action
+                                                        .RUN_COMMAND,
                                                 "/home " + s));
                                     }
                                     player.spigot().sendMessage(h);
@@ -134,17 +136,23 @@ public class Home {
                                 + "Your Current Homes Are:");
                         if (isSpigot()) {
                             for (String s : list) {
-                                TextComponent h = new TextComponent(s);
+                                net.md_5.bungee.api.chat.TextComponent h = new net.md_5
+                                        .bungee.api.chat.TextComponent(s);
                                 h.setColor(net.md_5.bungee.api.ChatColor.RED);
-                                h.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-                                        new ComponentBuilder("Click To TP").create()));
+                                h.setHoverEvent(new net.md_5.bungee.api.chat
+                                        .HoverEvent(net.md_5.bungee.api.chat.HoverEvent
+                                        .Action.SHOW_TEXT,
+                                        new net.md_5.bungee.api.chat
+                                                .ComponentBuilder("Click To TP").create()));
                                 if (s.equalsIgnoreCase("home")) {
-                                    h.setClickEvent(new ClickEvent(
-                                            ClickEvent.Action.RUN_COMMAND,
+                                    h.setClickEvent(new net.md_5.bungee.api.chat.ClickEvent(
+                                            net.md_5.bungee.api.chat.ClickEvent.Action
+                                                    .RUN_COMMAND,
                                             "/home"));
                                 } else {
-                                    h.setClickEvent(new ClickEvent(
-                                            ClickEvent.Action.RUN_COMMAND,
+                                    h.setClickEvent(new net.md_5.bungee.api.chat.ClickEvent(
+                                            net.md_5.bungee.api.chat.ClickEvent.Action
+                                                    .RUN_COMMAND,
                                             "/home " + s));
                                 }
                                 player.spigot().sendMessage(h);
