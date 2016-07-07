@@ -1,7 +1,6 @@
 package net.lapismc.HomeSpawn.commands;
 
 import net.lapismc.HomeSpawn.HomeSpawn;
-import net.lapismc.HomeSpawn.HomeSpawnCommand;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -21,17 +20,17 @@ public class DelSpawn {
         HashMap<String, Integer> perms = plugin.Permissions.get(plugin.PlayerPermission
                 .get(player.getUniqueId()));
         if (perms.get("sSpawn") == 1) {
-            if (Objects.equals(HomeSpawnCommand.getSpawn.getString("spawn.SpawnSet"), "No")
-                    || !HomeSpawnCommand.getSpawn.contains("spawn.SpawnSet")) {
+            if (Objects.equals(plugin.spawn.getString("spawn.SpawnSet"), "No")
+                    || !plugin.spawn.contains("spawn.SpawnSet")) {
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        HomeSpawnCommand.getMessages.getString("Spawn.NotSet")));
-            } else if (HomeSpawnCommand.getSpawn.getString("spawn.SpawnSet")
+                        plugin.messages.getString("Spawn.NotSet")));
+            } else if (plugin.spawn.getString("spawn.SpawnSet")
                     .equalsIgnoreCase("Yes")) {
-                HomeSpawnCommand.getSpawn.set("spawn.SpawnSet", "No");
+                plugin.spawn.set("spawn.SpawnSet", "No");
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        HomeSpawnCommand.getMessages.getString("Spawn.Removed")));
+                        plugin.messages.getString("Spawn.Removed")));
                 try {
-                    HomeSpawnCommand.getSpawn.save(this.plugin.spawnFile);
+                    plugin.spawn.save(this.plugin.spawnFile);
                     this.plugin.reload("silent");
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -40,7 +39,7 @@ public class DelSpawn {
 
         } else {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    HomeSpawnCommand.getMessages.getString("NoPerms")));
+                    plugin.messages.getString("NoPerms")));
         }
     }
 

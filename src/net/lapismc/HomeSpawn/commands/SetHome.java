@@ -1,7 +1,6 @@
 package net.lapismc.HomeSpawn.commands;
 
 import net.lapismc.HomeSpawn.HomeSpawn;
-import net.lapismc.HomeSpawn.HomeSpawnCommand;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -34,7 +33,7 @@ public class SetHome {
         if (getHomes.getInt(player.getUniqueId()
                 + ".Numb") >= perms.get("homes")) {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    HomeSpawnCommand.getMessages
+                    plugin.messages
                             .getString("Home.LimitReached")));
             return;
         }
@@ -47,21 +46,13 @@ public class SetHome {
                 getHomes.set(player.getUniqueId()
                         + ".Numb", "0");
             }
-            getHomes.createSection(player.getUniqueId() + ".x");
-            getHomes.createSection(player.getUniqueId() + ".y");
-            getHomes.createSection(player.getUniqueId() + ".z");
-            getHomes.createSection(player.getUniqueId() + ".world");
-            getHomes.createSection(player.getUniqueId() + ".Yaw");
-            getHomes.createSection(player.getUniqueId() + ".Pitch");
             if (!getHomes.contains("HasHome")) {
                 getHomes.createSection("HasHome");
             }
             int HomesNumb = getHomes.getInt(player
                     .getUniqueId() + ".Numb");
-            if (!getHomes.contains(player.getUniqueId() + ".HasHome")
-                    || !getHomes.getString(
-                    player.getUniqueId()
-                            + ".HasHome").equals("Yes")) {
+            if (!getHomes.contains("HasHome")
+                    || !getHomes.getString("HasHome").equals("Yes")) {
                 getHomes.set(player.getUniqueId()
                         + ".Numb", HomesNumb + 1);
             }
@@ -87,22 +78,15 @@ public class SetHome {
                     + ".Pitch", player.getLocation().getPitch());
             getHomes.set("HasHome", "Yes");
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    HomeSpawnCommand.getMessages.getString("Home.HomeSet")));
+                    plugin.messages.getString("Home.HomeSet")));
         } else if (args.length == 1) {
             if (perms.get("cHomes") == 1) {
                 String home = args[0];
-                if (home.equals("Home")) {
+                if (home.equalsIgnoreCase("Home")) {
                     player.sendMessage(ChatColor.RED
                             + "You Cannot Use The Home Name \"Home\", Please Choose Another!");
                     return;
                 }
-                getHomes.createSection(home);
-                getHomes.createSection(home + ".x");
-                getHomes.createSection(home + ".y");
-                getHomes.createSection(home + ".z");
-                getHomes.createSection(home + ".world");
-                getHomes.createSection(home + ".Yaw");
-                getHomes.createSection(home + ".Pitch");
                 if (!getHomes.contains(home + ".HasHome")) {
                     getHomes.createSection(home + ".HasHome");
                 }
@@ -136,14 +120,14 @@ public class SetHome {
                         .getLocation().getPitch());
                 getHomes.set(home + ".HasHome", "Yes");
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        HomeSpawnCommand.getMessages.getString("Home.HomeSet")));
+                        plugin.messages.getString("Home.HomeSet")));
             } else {
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        HomeSpawnCommand.getMessages.getString("NoPerms")));
+                        plugin.messages.getString("NoPerms")));
             }
         } else {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    HomeSpawnCommand.getMessages.getString("Error.Args+")));
+                    plugin.messages.getString("Error.Args+")));
         }
         this.plugin.savePlayerData(uuid);
     }

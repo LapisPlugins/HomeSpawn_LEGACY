@@ -19,8 +19,6 @@ import java.util.*;
 
 public class HomeSpawnCommand implements CommandExecutor {
 
-    public static YamlConfiguration getMessages;
-    public static YamlConfiguration getSpawn;
     private final HomeSpawn plugin;
     public HomeSpawnCommand cmd;
     private DelHome delHome;
@@ -52,7 +50,7 @@ public class HomeSpawnCommand implements CommandExecutor {
         List<String> homes = getHomes.getStringList(p.getUniqueId() + ".list");
         if (homes.isEmpty()) {
             p.sendMessage(ChatColor.DARK_RED
-                    + HomeSpawnCommand.getMessages.getString("Home.NoHomeSet"));
+                    + plugin.messages.getString("Home.NoHomeSet"));
             return;
         }
         ArrayList<DyeColor> dc = new ArrayList<>();
@@ -100,13 +98,13 @@ public class HomeSpawnCommand implements CommandExecutor {
             p.teleport(l);
             if (r.equalsIgnoreCase("Spawn")) {
                 p.sendMessage(ChatColor.GOLD
-                        + HomeSpawnCommand.getMessages.getString("Spawn.SentToSpawn"));
+                        + plugin.messages.getString("Spawn.SentToSpawn"));
             } else if (r.equalsIgnoreCase("Home")) {
                 p.sendMessage(ChatColor.GOLD
-                        + HomeSpawnCommand.getMessages.getString("Home.SentHome"));
+                        + plugin.messages.getString("Home.SentHome"));
             }
         } else {
-            String waitraw = ChatColor.GOLD + HomeSpawnCommand.getMessages.getString("Wait");
+            String waitraw = ChatColor.GOLD + plugin.messages.getString("Wait");
             String Wait = waitraw.replace("{time}", ChatColor.RED
                     + perms.get("TPD").toString()
                     + ChatColor.GOLD);
@@ -195,6 +193,18 @@ public class HomeSpawnCommand implements CommandExecutor {
                             "install update if available");
                 }
             } else {
+                sender.sendMessage(ChatColor.GOLD + "---------------"
+                        + ChatColor.RED + "Homespawn" + ChatColor.GOLD
+                        + "---------------");
+                sender.sendMessage(ChatColor.RED + "Author:"
+                        + ChatColor.GOLD + " Dart2112");
+                sender.sendMessage(ChatColor.RED + "Version: "
+                        + ChatColor.GOLD
+                        + this.plugin.getDescription().getVersion());
+                sender.sendMessage(ChatColor.RED + "Spigot:"
+                        + ChatColor.GOLD + " https://goo.gl/aWby6W");
+                sender.sendMessage(ChatColor.GOLD
+                        + "-----------------------------------------");
                 sender.sendMessage("HomeSpawn Console Commands!");
                 sender.sendMessage("/homespawn reload: Reloads all configs");
                 sender.sendMessage("/homespawn update: Will download and " +

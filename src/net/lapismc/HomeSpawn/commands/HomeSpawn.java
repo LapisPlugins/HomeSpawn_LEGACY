@@ -1,6 +1,5 @@
 package net.lapismc.HomeSpawn.commands;
 
-import net.lapismc.HomeSpawn.HomeSpawnCommand;
 import net.lapismc.HomeSpawn.LapisUpdater;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -10,14 +9,19 @@ import java.util.HashMap;
 public class HomeSpawn {
 
     private net.lapismc.HomeSpawn.HomeSpawn plugin;
+    private HomeSpawnPlayer homeSpawnPlayer;
 
     public HomeSpawn(net.lapismc.HomeSpawn.HomeSpawn p) {
         this.plugin = p;
+        this.homeSpawnPlayer = new HomeSpawnPlayer(plugin);
     }
 
     public void homeSpawn(String[] args, Player player) {
         HashMap<String, Integer> perms = plugin.Permissions.get(
                 plugin.PlayerPermission.get(player.getUniqueId()));
+        if (args[0] == "player") {
+            homeSpawnPlayer.HomeSpawnPlayer(args, player);
+        }
         if (args.length == 0) {
             player.sendMessage(ChatColor.GOLD + "---------------"
                     + ChatColor.RED + "Homespawn" + ChatColor.GOLD
@@ -71,11 +75,11 @@ public class HomeSpawn {
                         }
                     } else {
                         player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                                HomeSpawnCommand.getMessages.getString("Error.Args")));
+                                plugin.messages.getString("Error.Args")));
                     }
                 } else {
                     player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                            HomeSpawnCommand.getMessages.getString("NoPerms")));
+                            plugin.messages.getString("NoPerms")));
                 }
             }
         } else {

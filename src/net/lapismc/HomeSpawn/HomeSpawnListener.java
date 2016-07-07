@@ -14,6 +14,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -21,10 +22,7 @@ import org.bukkit.permissions.Permission;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class HomeSpawnListener implements Listener {
 
@@ -37,28 +35,17 @@ public class HomeSpawnListener implements Listener {
         this.plugin = plugin;
     }
 
-    public void setMessages() {
-        plugin.getServer().getScheduler().runTaskLaterAsynchronously(plugin, new Runnable() {
-            public void run() {
-                updater = new LapisUpdater(plugin);
-                getMessages = plugin.messages;
-                HomeSpawnCommand.getMessages = plugin.messages;
-                HomeSpawnCommand.getSpawn = plugin.spawn;
-            }
-        }, 20);
-    }
-
     @EventHandler(priority = EventPriority.HIGH)
-    void PlayerJoinEvent(PlayerJoinEvent event) {
+    public void PlayerJoinEvent(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         File file = new File(plugin.getDataFolder() + File.separator
                 + "PlayerData" + File.separator
                 + player.getUniqueId() + ".yml");
-        FileConfiguration getHomes = YamlConfiguration.loadConfiguration(file);
+        YamlConfiguration getHomes = YamlConfiguration.loadConfiguration(file);
         File file2 = new File(plugin.getDataFolder().getAbsolutePath()
                 + File.separator + "PlayerData" + File.separator
                 + "PlayerNames" + File.separator + player.getName() + ".yml");
-        FileConfiguration getName = YamlConfiguration.loadConfiguration(file2);
+        YamlConfiguration getName = YamlConfiguration.loadConfiguration(file2);
         if (file == null || file2 == null) {
             plugin.logger.severe("Player " + player.getName()
                     + "'s Data File Is Null!");
@@ -90,6 +77,7 @@ public class HomeSpawnListener implements Listener {
             try {
                 file.createNewFile();
                 getHomes.createSection("name");
+                getHomes.createSection("login");
                 getHomes.createSection("HasHome");
                 getHomes.createSection(player.getUniqueId() + ".Numb");
                 getHomes.save(file);
@@ -106,7 +94,9 @@ public class HomeSpawnListener implements Listener {
                         .severe("[HomeSpawn] Player Data File Creation Failed!");
                 return;
             }
+            plugin.reload("Silent");
         }
+        getHomes = plugin.HomeConfigs.get(player.getUniqueId());
         int priority = -1;
         for (Permission p : plugin.Permissions.keySet()) {
             if (player.hasPermission(p)) {
@@ -132,6 +122,15 @@ public class HomeSpawnListener implements Listener {
                         " or run \"/homespawn update\" to install it");
             }
         }
+        plugin.HomeConfigs.get(player.getUniqueId()).set("login", "-");
+    }
+
+    @EventHandler(priority = EventPriority.LOW)
+    public void PlayerQuit(PlayerQuitEvent e) {
+        Player p = e.getPlayer();
+        YamlConfiguration homes = plugin.HomeConfigs.get(p.getUniqueId());
+        Date d = new Date();
+        homes.set("login", d.getTime());
     }
 
     @EventHandler(priority = EventPriority.HIGH)

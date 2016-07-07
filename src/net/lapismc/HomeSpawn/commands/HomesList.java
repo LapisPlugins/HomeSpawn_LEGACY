@@ -67,11 +67,11 @@ public class HomesList {
                     }
                 } else {
                     player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                            HomeSpawnCommand.getMessages.getString("Home.NoHomeSet")));
+                            plugin.messages.getString("Home.NoHomeSet")));
                 }
             } else {
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        HomeSpawnCommand.getMessages.getString("Home.NoHomeSet")));
+                        plugin.messages.getString("Home.NoHomeSet")));
             }
         }
     }

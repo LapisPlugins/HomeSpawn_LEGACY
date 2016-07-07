@@ -23,19 +23,19 @@ public class Spawn {
         HashMap<String, Integer> perms = plugin.Permissions.get(plugin.PlayerPermission.
                 get(player.getUniqueId()));
         if (perms.get("spawn") == 1) {
-            if (!HomeSpawnCommand.getSpawn.contains("spawn.SpawnSet")) {
+            if (!plugin.spawn.contains("spawn.SpawnSet")) {
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        HomeSpawnCommand.getMessages.getString("Spawn.NotSet")));
+                        plugin.messages.getString("Spawn.NotSet")));
                 return;
             }
-            if (HomeSpawnCommand.getSpawn.getString("spawn.SpawnSet").equalsIgnoreCase(
+            if (plugin.spawn.getString("spawn.SpawnSet").equalsIgnoreCase(
                     "yes")) {
-                int x = HomeSpawnCommand.getSpawn.getInt("spawn.X");
-                int y = HomeSpawnCommand.getSpawn.getInt("spawn.Y");
-                int z = HomeSpawnCommand.getSpawn.getInt("spawn.Z");
-                float yaw = HomeSpawnCommand.getSpawn.getInt("spawn.Yaw");
-                float pitch = HomeSpawnCommand.getSpawn.getInt("spawn.Pitch");
-                String cworld = HomeSpawnCommand.getSpawn.getString("spawn.World");
+                int x = plugin.spawn.getInt("spawn.X");
+                int y = plugin.spawn.getInt("spawn.Y");
+                int z = plugin.spawn.getInt("spawn.Z");
+                float yaw = plugin.spawn.getInt("spawn.Yaw");
+                float pitch = plugin.spawn.getInt("spawn.Pitch");
+                String cworld = plugin.spawn.getString("spawn.World");
                 World world = this.plugin.getServer().getWorld(cworld);
                 Location Spawn = new Location(world, x, y, z, yaw,
                         pitch);
@@ -43,11 +43,11 @@ public class Spawn {
                 hsc.TeleportPlayer(player, Spawn, "Spawn");
             } else {
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        HomeSpawnCommand.getMessages.getString("Spawn.NotSet")));
+                        plugin.messages.getString("Spawn.NotSet")));
             }
         } else {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    HomeSpawnCommand.getMessages.getString("NoPerms")));
+                    plugin.messages.getString("NoPerms")));
         }
     }
 

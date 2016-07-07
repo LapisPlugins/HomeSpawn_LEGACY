@@ -52,7 +52,7 @@ public class Home {
                 hsc.TeleportPlayer(player, home, "Home");
             } else {
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        HomeSpawnCommand.getMessages.getString("Home.NoHomeSet")));
+                        plugin.messages.getString("Home.NoHomeSet")));
             }
         } else if (args.length == 1) {
             String home = args[0];
@@ -96,12 +96,12 @@ public class Home {
                             }
                         } else {
                             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                                    HomeSpawnCommand.getMessages
+                                    plugin.messages
                                             .getString("Home.NoHomeSet")));
                         }
                     } else {
                         player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                                HomeSpawnCommand.getMessages
+                                plugin.messages
                                         .getString("Home.NoHomeSet")));
                     }
                     return;
@@ -164,12 +164,12 @@ public class Home {
 
                     } else {
                         player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                                HomeSpawnCommand.getMessages
+                                plugin.messages
                                         .getString("Home.NoHomeSet")));
                     }
                 } else {
                     player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                            HomeSpawnCommand.getMessages
+                            plugin.messages
                                     .getString("Home.NoHomeSet")));
                 }
                 return;

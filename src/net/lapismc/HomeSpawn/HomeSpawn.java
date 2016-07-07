@@ -68,6 +68,7 @@ public class HomeSpawn extends JavaPlugin {
         nullPermMap.put("sSpawn", 0);
         nullPermMap.put("updateNotify", 0);
         nullPermMap.put("reload", 0);
+        nullPermMap.put("stats", 0);
         Permission np;
         if (Bukkit.getServer().getPluginManager().getPermission("homespawn.null") == null) {
             np = new Permission("homespawn.null", PermissionDefault.FALSE);
@@ -89,6 +90,7 @@ public class HomeSpawn extends JavaPlugin {
             int sSpawn = getConfig().getInt("Permissions." + perm + ".setspawn");
             int updateNotify = getConfig().getInt("Permissions." + perm + ".updateNotify");
             int reload = getConfig().getInt("Permissions." + perm + ".reload");
+            int stats = getConfig().getInt("Permissions." + perm + ".player stats");
             HashMap<String, Integer> permMap = new HashMap<>();
             permMap.put("priority", priority);
             permMap.put("homes", homes);
@@ -98,6 +100,7 @@ public class HomeSpawn extends JavaPlugin {
             permMap.put("sSpawn", sSpawn);
             permMap.put("updateNotify", updateNotify);
             permMap.put("reload", reload);
+            permMap.put("stats", stats);
             PermissionDefault PD = null;
             switch (Default) {
                 case 0:
@@ -228,7 +231,6 @@ public class HomeSpawn extends JavaPlugin {
         createPlayerData();
         createMessages();
         createPasswords();
-        pl.setMessages();
         loadPlayerData();
         loadName();
         configVersion();

@@ -1,5 +1,5 @@
 ##Dont Change This, It Will Reset The Config If You Do!
-ConfigVersion: 5
+ConfigVersion: 6
 ## If Set To True Console Will Be Notified If The Plugin Has Updates Available
 UpdateNotification: true
 ## If set to true the plugin will check if there is a beta version (Can be downloaded by enabling DownloadUpdates or
@@ -40,6 +40,8 @@ Permissions:
         updateNotify: 0
         ## Can they reload the plugin? 0=no 1=yes
         reload: 0
+        ##can they view player stats and teleport to other players homes? 0 = no 1 = yes
+        player stats: 0
     homespawn,vip:
         default: 0
         priority: 1
@@ -50,6 +52,7 @@ Permissions:
         setspawn: 0
         updateNotify: 0
         reload: 0
+        player stats: 0
     homespawn,admin:
         default: 2
         priority: 2
@@ -60,3 +63,4 @@ Permissions:
         setspawn: 1
         updateNotify: 1
         reload: 1
+        player stats: 1

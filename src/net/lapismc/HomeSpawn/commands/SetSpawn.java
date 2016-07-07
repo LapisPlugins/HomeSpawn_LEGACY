@@ -1,7 +1,6 @@
 package net.lapismc.HomeSpawn.commands;
 
 import net.lapismc.HomeSpawn.HomeSpawn;
-import net.lapismc.HomeSpawn.HomeSpawnCommand;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -21,40 +20,40 @@ public class SetSpawn {
                 .get(player.getUniqueId()));
         if (perms.get("sSpawn") == 1) {
             if (args.length == 0) {
-                HomeSpawnCommand.getSpawn.set("spawn.SpawnSet", "Yes");
-                HomeSpawnCommand.getSpawn.set("spawn.X", player.getLocation()
+                plugin.spawn.set("spawn.SpawnSet", "Yes");
+                plugin.spawn.set("spawn.X", player.getLocation()
                         .getBlockX());
-                HomeSpawnCommand.getSpawn.set("spawn.Y", player.getLocation()
+                plugin.spawn.set("spawn.Y", player.getLocation()
                         .getBlockY());
-                HomeSpawnCommand.getSpawn.set("spawn.Z", player.getLocation()
+                plugin.spawn.set("spawn.Z", player.getLocation()
                         .getBlockZ());
-                HomeSpawnCommand.getSpawn.set("spawn.World", player.getWorld().getName());
-                HomeSpawnCommand.getSpawn.set("spawn.Yaw", player.getLocation().getYaw());
-                HomeSpawnCommand.getSpawn.set("spawn.Pitch", player.getLocation()
+                plugin.spawn.set("spawn.World", player.getWorld().getName());
+                plugin.spawn.set("spawn.Yaw", player.getLocation().getYaw());
+                plugin.spawn.set("spawn.Pitch", player.getLocation()
                         .getPitch());
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        HomeSpawnCommand.getMessages.getString("Spawn.SpawnSet")));
+                        plugin.messages.getString("Spawn.SpawnSet")));
             } else if (args[0].equalsIgnoreCase("new")) {
-                HomeSpawnCommand.getSpawn.set("spawnnew.SpawnSet", "Yes");
-                HomeSpawnCommand.getSpawn.set("spawnnew.X", player.getLocation()
+                plugin.spawn.set("spawnnew.SpawnSet", "Yes");
+                plugin.spawn.set("spawnnew.X", player.getLocation()
                         .getBlockX());
-                HomeSpawnCommand.getSpawn.set("spawnnew.Y", player.getLocation()
+                plugin.spawn.set("spawnnew.Y", player.getLocation()
                         .getBlockY());
-                HomeSpawnCommand.getSpawn.set("spawnnew.Z", player.getLocation()
+                plugin.spawn.set("spawnnew.Z", player.getLocation()
                         .getBlockZ());
-                HomeSpawnCommand.getSpawn.set("spawnnew.World", player.getWorld()
+                plugin.spawn.set("spawnnew.World", player.getWorld()
                         .getName());
-                HomeSpawnCommand.getSpawn.set("spawnnew.Yaw", player.getLocation()
+                plugin.spawn.set("spawnnew.Yaw", player.getLocation()
                         .getYaw());
-                HomeSpawnCommand.getSpawn.set("spawnnew.Pitch", player.getLocation()
+                plugin.spawn.set("spawnnew.Pitch", player.getLocation()
                         .getPitch());
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        HomeSpawnCommand.getMessages.getString("Spawn.SpawnNewSet")));
+                        plugin.messages.getString("Spawn.SpawnNewSet")));
             } else {
                 this.plugin.help(player);
             }
             try {
-                HomeSpawnCommand.getSpawn.save(this.plugin.spawnFile);
+                plugin.spawn.save(this.plugin.spawnFile);
                 this.plugin.reload("Silent");
             } catch (IOException e) {
                 e.printStackTrace();
@@ -62,7 +61,7 @@ public class SetSpawn {
 
         } else {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    HomeSpawnCommand.getMessages.getString("NoPerms")));
+                    plugin.messages.getString("NoPerms")));
 
         }
     }
