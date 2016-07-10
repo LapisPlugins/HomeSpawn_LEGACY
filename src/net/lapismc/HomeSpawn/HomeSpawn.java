@@ -101,14 +101,25 @@ public class HomeSpawn extends JavaPlugin {
             permMap.put("updateNotify", updateNotify);
             permMap.put("reload", reload);
             permMap.put("stats", stats);
+            for (String s : permMap.keySet()) {
+                if (permMap.get(s) == null) {
+                    permMap.put(s, 0);
+                }
+            }
+            for (String s : nullPermMap.keySet()) {
+                if (!permMap.containsKey(s)) {
+                    permMap.put(s, 0);
+                }
+            }
             PermissionDefault PD = null;
             switch (Default) {
-                case 0:
-                    PD = PermissionDefault.FALSE;
                 case 1:
                     PD = PermissionDefault.TRUE;
                 case 2:
                     PD = PermissionDefault.OP;
+                case 0:
+                default:
+                    PD = PermissionDefault.FALSE;
             }
             Permission p;
             if (Bukkit.getServer().getPluginManager().getPermission(permName) == null) {
