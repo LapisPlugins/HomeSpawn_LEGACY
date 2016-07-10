@@ -33,15 +33,26 @@ public class HomeSpawnCommand implements CommandExecutor {
 
     public HomeSpawnCommand(HomeSpawn plugin) {
         this.plugin = plugin;
-        this.delHome = new DelHome(plugin);
-        this.delSpawn = new DelSpawn(plugin);
-        this.home = new Home(plugin, this);
-        this.homePassword = new HomePassword(plugin, this);
-        this.homesList = new HomesList(plugin, this);
+    }
+
+    protected void registerCommands() {
+        HomeSpawnComponents hsc = new HomeSpawnComponents();
+        if (hsc.home()) {
+            this.delHome = new DelHome(plugin);
+            this.delSpawn = new DelSpawn(plugin);
+            this.home = new Home(plugin, this);
+
+            this.homesList = new HomesList(plugin, this);
+        }
+        if (hsc.spawn()) {
+            this.setHome = new SetHome(plugin);
+            this.setSpawn = new SetSpawn(plugin);
+            this.spawn = new Spawn(plugin, this);
+        }
+        if (hsc.password()) {
+            this.homePassword = new HomePassword(plugin, this);
+        }
         this.homeSpawn = new net.lapismc.HomeSpawn.commands.HomeSpawn(plugin);
-        this.setHome = new SetHome(plugin);
-        this.setSpawn = new SetSpawn(plugin);
-        this.spawn = new Spawn(plugin, this);
     }
 
     public void showMenu(Player p) {

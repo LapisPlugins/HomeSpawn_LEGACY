@@ -1,10 +1,13 @@
 package net.lapismc.HomeSpawn.api;
 
 import net.lapismc.HomeSpawn.HomeSpawn;
+import net.lapismc.HomeSpawn.HomeSpawnComponents;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.Plugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -16,20 +19,35 @@ import java.util.UUID;
 public class PlayerData {
 
     private HomeSpawn plugin;
+    private ArrayList<Plugin> blocked = new ArrayList<>();
 
-    public PlayerData(HomeSpawn plugin) {
-        //check if API is enabled
-        //notify that a plugin is accessing the API (Excludes homespawn)
+    public PlayerData(Plugin plugin) {
+        if (plugin.getName().equalsIgnoreCase("HomeSpawn")) {
+            return;
+        }
+        HomeSpawnComponents hsc = new HomeSpawnComponents();
+        if (hsc.api()) {
+            this.plugin.logger.info("Plugin " + plugin.getName()
+                    + " has connected to the API");
+        } else {
+            this.plugin.logger.severe("Plugin "
+                    + plugin.getName() + " has attempted to connect to the HomeSpawn API," +
+                    " But as it is disabled the plugin was denied access");
+            blocked.add(plugin);
+        }
     }
 
-    protected void init(HomeSpawn p) {
+    public void init(HomeSpawn p) {
         this.plugin = p;
     }
 
     /**
      * Returns the currently loaded Player Data file will the given Player name
      */
-    public YamlConfiguration getHomeConfig(String PlayerName) {
+    public YamlConfiguration getHomeConfig(Plugin p, String PlayerName) {
+        if (blocked.contains(p)) {
+            return null;
+        }
         UUID uuid = plugin.PlayertoUUID.get(PlayerName);
         YamlConfiguration getHome = plugin.HomeConfigs.get(uuid);
         return getHome;
@@ -40,7 +58,10 @@ public class PlayerData {
      *
      * @throws IOException
      */
-    public void saveHomesConfig(YamlConfiguration HomeConfig) throws IOException {
+    public void saveHomesConfig(Plugin p, YamlConfiguration HomeConfig) throws IOException {
+        if (blocked.contains(p)) {
+            return;
+        }
         String name = HomeConfig.getName();
         File file = new File(plugin.getDataFolder().getAbsolutePath() + File.separator + "PlayerData" + File.separator + name);
         HomeConfig.save(file);
@@ -50,7 +71,10 @@ public class PlayerData {
     /**
      * Returns the loaded list of Player names and UUIDs for getting a UUID from a Player name
      */
-    public HashMap<String, UUID> PlayerNames() {
+    public HashMap<String, UUID> PlayerNames(Plugin p) {
+        if (blocked.contains(p)) {
+            return null;
+        }
         return plugin.PlayertoUUID;
     }
 

@@ -1,5 +1,7 @@
 package net.lapismc.HomeSpawn;
 
+import net.lapismc.HomeSpawn.api.Configs;
+import net.lapismc.HomeSpawn.api.PlayerData;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -206,6 +208,10 @@ public class HomeSpawn extends JavaPlugin {
         PluginManager pm = getServer().getPluginManager();
         pl = new HomeSpawnListener(this);
         pm.registerEvents(pl, this);
+        Configs c = new Configs(this);
+        c.init(this);
+        PlayerData pd = new PlayerData(this);
+        pd.init(this);
     }
 
     private void configVersion() {
@@ -640,16 +646,7 @@ public class HomeSpawn extends JavaPlugin {
     }
 
     private void Commands() {
-        HomeSpawnCommand hsc = new HomeSpawnCommand(this);
-        getCommand("home").setExecutor(hsc);
-        getCommand("sethome").setExecutor(hsc);
-        getCommand("delhome").setExecutor(hsc);
-        getCommand("spawn").setExecutor(hsc);
-        getCommand("setspawn").setExecutor(hsc);
-        getCommand("delspawn").setExecutor(hsc);
-        getCommand("homespawn").setExecutor(hsc);
-        getCommand("homepassword").setExecutor(hsc);
-        getCommand("homeslist").setExecutor(hsc);
-        logger.info("Commands Registered!");
+        HomeSpawnComponents hsc = new HomeSpawnComponents();
+        hsc.init(this);
     }
 }

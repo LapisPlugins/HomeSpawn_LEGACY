@@ -1,6 +1,7 @@
 package net.lapismc.HomeSpawn.api;
 
 import net.lapismc.HomeSpawn.HomeSpawn;
+import net.lapismc.HomeSpawn.HomeSpawnComponents;
 import net.lapismc.HomeSpawn.PasswordHash;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
@@ -8,6 +9,7 @@ import org.bukkit.plugin.Plugin;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.ArrayList;
 
 /**
  * api Class to get Config Files
@@ -15,14 +17,27 @@ import java.security.spec.InvalidKeySpecException;
  * @author Dart2112
  */
 public class Configs {
+
     private HomeSpawn plugin;
+    private ArrayList<Plugin> blocked = new ArrayList<>();
 
     public Configs(Plugin plugin) {
-        //check if API is enabled
-        //report to console that Plugin plugin is using the API (Excluding homespawn)
+        if (plugin.getName().equalsIgnoreCase("HomeSpawn")) {
+            return;
+        }
+        HomeSpawnComponents hsc = new HomeSpawnComponents();
+        if (hsc.api()) {
+            this.plugin.logger.info("Plugin " + plugin.getName()
+                    + " has connected to the API");
+        } else {
+            this.plugin.logger.severe("Plugin "
+                    + plugin.getName() + " has attempted to connect to the HomeSpawn API," +
+                    " But as it is disabled the plugin was denied access");
+            blocked.add(plugin);
+        }
     }
 
-    protected void init(HomeSpawn p) {
+    public void init(HomeSpawn p) {
         this.plugin = p;
     }
 
@@ -31,14 +46,20 @@ public class Configs {
      *
      * @throws IOException
      */
-    public void reloadConfigs() throws IOException {
+    public void reloadConfigs(Plugin p) throws IOException {
+        if (blocked.contains(p)) {
+            return;
+        }
         plugin.reload("Silent");
     }
 
     /**
      * Returns the currently loaded Spawn.yml
      */
-    public YamlConfiguration getSpawnConfig() {
+    public YamlConfiguration getSpawnConfig(Plugin p) {
+        if (blocked.contains(p)) {
+            return null;
+        }
         return plugin.spawn;
     }
 
@@ -47,7 +68,10 @@ public class Configs {
      *
      * @throws IOException
      */
-    public void saveSpawnConfig(YamlConfiguration SpawnConfig) throws IOException {
+    public void saveSpawnConfig(Plugin p, YamlConfiguration SpawnConfig) throws IOException {
+        if (blocked.contains(p)) {
+            return;
+        }
         plugin.spawn = SpawnConfig;
         plugin.spawn.save(plugin.spawnFile);
         plugin.reload("Silent");
@@ -56,7 +80,10 @@ public class Configs {
     /**
      * Returns the currently loaded Messages.yml
      */
-    public YamlConfiguration getMessagesConfig() {
+    public YamlConfiguration getMessagesConfig(Plugin p) {
+        if (blocked.contains(p)) {
+            return null;
+        }
         return plugin.messages;
     }
 
@@ -65,7 +92,10 @@ public class Configs {
      *
      * @throws IOException
      */
-    public void saveMessagesConfig(YamlConfiguration MessagesConfig) throws IOException {
+    public void saveMessagesConfig(Plugin p, YamlConfiguration MessagesConfig) throws IOException {
+        if (blocked.contains(p)) {
+            return;
+        }
         plugin.messages = MessagesConfig;
         plugin.messages.save(plugin.messagesFile);
         plugin.reload("Silent");
@@ -74,7 +104,10 @@ public class Configs {
     /**
      * Returns the currently loaded Passwords.yml
      */
-    public YamlConfiguration getPasswords() {
+    public YamlConfiguration getPasswords(Plugin p) {
+        if (blocked.contains(p)) {
+            return null;
+        }
         return plugin.passwords;
     }
 
@@ -83,7 +116,10 @@ public class Configs {
      *
      * @throws IOException
      */
-    public void savePasswords(YamlConfiguration Passwords) throws IOException {
+    public void savePasswords(Plugin p, YamlConfiguration Passwords) throws IOException {
+        if (blocked.contains(p)) {
+            return;
+        }
         plugin.passwords = Passwords;
         plugin.passwords.save(plugin.passwordsFile);
         plugin.reload("Silent");
@@ -94,8 +130,11 @@ public class Configs {
      *
      * @throws NoSuchAlgorithmException and InvalidKeySpecException
      */
-    public boolean checkPassword(String playerName, String Password) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        String hash = getPasswords().getString(playerName);
+    public boolean checkPassword(Plugin p, String playerName, String Password) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        if (blocked.contains(p)) {
+            return false;
+        }
+        String hash = getPasswords(p).getString(playerName);
         return PasswordHash.validatePassword(Password, hash);
     }
 
@@ -104,11 +143,14 @@ public class Configs {
      *
      * @throws IOException, NoSuchAlgorithmException and InvalidKeySpecException
      */
-    public void setPassword(String playerName, String rawPassword) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
+    public void setPassword(Plugin p, String playerName, String rawPassword) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
+        if (blocked.contains(p)) {
+            return;
+        }
         String hash = PasswordHash.createHash(rawPassword);
-        YamlConfiguration passwords = getPasswords();
+        YamlConfiguration passwords = getPasswords(p);
         passwords.set(playerName, hash);
-        savePasswords(passwords);
+        savePasswords(p, passwords);
     }
 
 }
