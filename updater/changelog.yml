@@ -1,0 +1,12 @@
+ChangeLog:
+    Beta 0.1.7:
+        - "Basic Player Stats (no chat colors)"
+        - "Advanced Permission Checks"
+        - "Other Bug Fixes!"
+    Beta 0.1.8:
+        - "Metrics is fixed"
+        - "Components.yml for Disabling Parts of the Plugin"
+        - "Reporting on Permission Errors"
+        - "API Usage Reports to Console"
+        - "Moved Metrics to Main Package"
+        - "Added This Change Log and the Code To Download it During Update!"

@@ -1,7 +1,6 @@
 package net.lapismc.HomeSpawn;
 
-import net.lapismc.HomeSpawn.api.Configs;
-import net.lapismc.HomeSpawn.api.PlayerData;
+import net.lapismc.HomeSpawn.Metrics.Graph;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -19,7 +18,6 @@ import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
-import org.mcstats.Metrics;
 
 import java.io.File;
 import java.io.IOException;
@@ -106,11 +104,17 @@ public class HomeSpawn extends JavaPlugin {
             for (String s : permMap.keySet()) {
                 if (permMap.get(s) == null) {
                     permMap.put(s, 0);
+                    logger.severe("Permission " + permName + " is missing the " + s
+                            + " value! It has been set to 0 by defult, please fix this" +
+                            " in the config!");
                 }
             }
             for (String s : nullPermMap.keySet()) {
                 if (!permMap.containsKey(s)) {
                     permMap.put(s, 0);
+                    logger.severe("Permission " + permName + " is missing the " + s
+                            + " value! It has been set to 0 by defult, please fix this" +
+                            " in the config!");
                 }
             }
             PermissionDefault PD = null;
@@ -140,7 +144,7 @@ public class HomeSpawn extends JavaPlugin {
         if (getConfig().getBoolean("Metrics")) {
             try {
                 Metrics metrics = new Metrics(this);
-                Metrics.Graph averageHomesGraph = metrics.createGraph();
+                Graph averageHomesGraph = metrics.createGraph("Average Number Of Homes");
                 int homes = 0;
                 int files = HomeConfigs.size();
                 for (YamlConfiguration yaml : HomeConfigs.values()) {
@@ -208,16 +212,12 @@ public class HomeSpawn extends JavaPlugin {
         PluginManager pm = getServer().getPluginManager();
         pl = new HomeSpawnListener(this);
         pm.registerEvents(pl, this);
-        Configs c = new Configs(this);
-        c.init(this);
-        PlayerData pd = new PlayerData(this);
-        pd.init(this);
     }
 
     private void configVersion() {
         boolean Config = false;
         try {
-            if (getConfig().getInt("ConfigVersion") != 5) {
+            if (getConfig().getInt("ConfigVersion") != 6) {
                 Config = true;
             }
         } catch (Exception e) {

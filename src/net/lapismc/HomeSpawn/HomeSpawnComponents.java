@@ -1,6 +1,8 @@
 package net.lapismc.HomeSpawn;
 
 
+import net.lapismc.HomeSpawn.api.Configs;
+import net.lapismc.HomeSpawn.api.PlayerData;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
@@ -22,17 +24,22 @@ public class HomeSpawnComponents {
         if (!f.exists()) {
             try {
                 f.createNewFile();
+                comp = YamlConfiguration.loadConfiguration(f);
+                comp.set("Homes", true);
+                comp.set("Spawn", true);
+                comp.set("HomeSpawnPassword", true);
+                comp.set("API", true);
+                comp.save(f);
             } catch (IOException e) {
-
+                e.printStackTrace();
             }
-            comp = YamlConfiguration.loadConfiguration(f);
-            comp.set("Homes", true);
-            comp.set("Spawn", true);
-            comp.set("HomeSpawnPassword", true);
-            comp.set("API", true);
         }
         comp = YamlConfiguration.loadConfiguration(f);
         HomeSpawnCommand hsc = new HomeSpawnCommand(plugin);
+        Configs c = new Configs(plugin);
+        c.init(plugin);
+        PlayerData pd = new PlayerData(plugin);
+        pd.init(plugin);
         if (home()) {
             plugin.getCommand("home").setExecutor(hsc);
             plugin.getCommand("sethome").setExecutor(hsc);

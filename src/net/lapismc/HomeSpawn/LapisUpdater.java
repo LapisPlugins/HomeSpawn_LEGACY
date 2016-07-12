@@ -37,6 +37,12 @@ public class LapisUpdater {
     private boolean downloadUpdateJar() {
         if (updateCheck()) {
             try {
+                URL website1 = new URL(
+                        "https://raw.githubusercontent.com/Dart2112/HomeSpawn/master/updater" +
+                                "/changelog.yml");
+                ReadableByteChannel rbc1 = Channels.newChannel(website1.openStream());
+                File f1 = new File(plugin.getDataFolder().getAbsolutePath() + File.separator +
+                        "ChangeLog.yml");
                 URL website = new URL(
                         "https://raw.githubusercontent.com/Dart2112/HomeSpawn/master/updater/"
                                 + ID.substring(0, 1).toUpperCase() + ID.substring(1) +
@@ -56,6 +62,11 @@ public class LapisUpdater {
                 rbc.close();
                 fos.flush();
                 fos.close();
+                FileOutputStream fos1 = new FileOutputStream(f1);
+                fos1.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+                rbc1.close();
+                fos1.flush();
+                fos1.close();
                 return true;
             } catch (IOException e) {
                 plugin.logger.severe("HomeSpawn updater failed to download updates!");
