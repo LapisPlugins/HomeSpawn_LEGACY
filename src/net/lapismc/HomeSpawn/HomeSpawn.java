@@ -242,6 +242,11 @@ public class HomeSpawn extends JavaPlugin {
     }
 
     private void Configs() {
+        File f = new File(Bukkit.getWorldContainer() + File.separator
+                + "plugins" + File.separator + "Homespawn");
+        if (f.exists()) {
+            f.renameTo(new File(f.getParent() + File.separator + "HomeSpawn"));
+        }
         saveDefaultConfig();
         createSpawn();
         createBook();
