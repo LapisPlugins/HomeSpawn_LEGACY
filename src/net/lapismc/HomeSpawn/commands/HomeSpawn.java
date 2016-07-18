@@ -60,8 +60,7 @@ public class HomeSpawn {
                             player.sendMessage(ChatColor.GOLD + "The update will be installed"
                                     + " when the server next starts!");
                         } else {
-                            player.sendMessage(ChatColor.GOLD + "Updating failed or there " +
-                                    "is no update!");
+                            player.sendMessage(ChatColor.GOLD + "Updating failed!");
                         }
                     } else if (args.length == 2) {
                         String ID = args[1];
@@ -70,8 +69,7 @@ public class HomeSpawn {
                             player.sendMessage(ChatColor.GOLD + "The update will be installed"
                                     + " when the server next starts!");
                         } else {
-                            player.sendMessage(ChatColor.GOLD + "Updating failed or there" +
-                                    " is no update!");
+                            player.sendMessage(ChatColor.GOLD + "Updating failed!");
                         }
                     } else {
                         player.sendMessage(ChatColor.translateAlternateColorCodes('&',

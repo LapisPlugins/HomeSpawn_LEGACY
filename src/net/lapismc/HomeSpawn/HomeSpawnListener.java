@@ -61,6 +61,7 @@ public class HomeSpawnListener implements Listener {
                 getName.set("Name", player.getName());
                 getName.set("UUID", player.getUniqueId().toString());
                 getName.save(file2);
+                plugin.spawnNew(player);
                 if (plugin.getConfig().getBoolean("CommandBook")) {
                     PlayerInventory pi = player.getInventory();
                     InstructionBook book = new InstructionBook(plugin);
@@ -86,7 +87,6 @@ public class HomeSpawnListener implements Listener {
                 getHomes.set("HasHome", "No");
                 getHomes.set(player.getUniqueId() + ".Numb", 0);
                 getHomes.save(file);
-                plugin.spawnNew(player);
                 plugin.loadPlayerData();
                 plugin.loadName();
             } catch (IOException e) {
