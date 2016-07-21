@@ -23,13 +23,15 @@ public class InstructionBook {
     public ItemStack getBook() {
         ItemStack book = new ItemStack(Material.WRITTEN_BOOK, 1);
         BookMeta meta = (BookMeta) book.getItemMeta();
-        meta.setTitle(yaml.getString("Title"));
+        meta.setTitle(ChatColor.translateAlternateColorCodes
+                ('&', yaml.getString("Book.Title")));
         meta.setAuthor(ChatColor.AQUA + "Dart2112");
         int zero = 0;
         int pages = yaml.getInt("Book.NumbOfPages");
         while (pages > zero) {
             zero++;
-            meta.addPage(yaml.getString("Book." + zero));
+            meta.addPage(ChatColor.translateAlternateColorCodes
+                    ('&', yaml.getString("Book." + zero)));
         }
         book.setItemMeta(meta);
         return book;
