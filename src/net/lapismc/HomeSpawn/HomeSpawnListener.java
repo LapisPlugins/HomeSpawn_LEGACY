@@ -121,9 +121,7 @@ public class HomeSpawnListener implements Listener {
                     if (!plugin.getConfig().getBoolean("DownloadUpdates") && updater.checkUpdate("main")) {
                         player.sendMessage(ChatColor.DARK_GRAY
                                 + "[" + ChatColor.AQUA + "HomeSpawn" + ChatColor.DARK_GRAY
-                                + "]" + ChatColor.GOLD + " An update is available! check the changes" +
-                                " at https://www.spigotmc.org/resources/homespawn.14108/updates," +
-                                " or run \"/homespawn update\" to install it");
+                                + "]" + ChatColor.GOLD + " An update is available! run \"/homespawn update\" to install it!");
                     }
                 }
             });
