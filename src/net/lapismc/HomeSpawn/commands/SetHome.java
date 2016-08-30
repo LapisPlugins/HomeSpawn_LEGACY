@@ -1,6 +1,8 @@
 package net.lapismc.HomeSpawn.commands;
 
 import net.lapismc.HomeSpawn.HomeSpawn;
+import net.lapismc.HomeSpawn.api.events.HomeCreateEvent;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -85,6 +87,11 @@ public class SetHome {
                 if (home.equalsIgnoreCase("Home")) {
                     player.sendMessage(ChatColor.RED
                             + "You Cannot Use The Home Name \"Home\", Please Choose Another!");
+                    return;
+                }
+                HomeCreateEvent HCE = new HomeCreateEvent(player, player.getWorld(), home);
+                Bukkit.getPluginManager().callEvent(HCE);
+                if (HCE.isCancelled()) {
                     return;
                 }
                 if (!getHomes.contains(home + ".HasHome")) {
