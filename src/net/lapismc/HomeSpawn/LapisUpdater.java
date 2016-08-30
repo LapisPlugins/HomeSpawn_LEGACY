@@ -67,6 +67,9 @@ public class LapisUpdater {
                 rbc1.close();
                 fos1.flush();
                 fos1.close();
+                YamlConfiguration cl = YamlConfiguration.loadConfiguration(f1);
+                plugin.logger.info("Changes in newest Version \n" +
+                        cl.getStringList("ChangeLog." + plugin.getDescription().getVersion()));
                 return true;
             } catch (IOException e) {
                 plugin.logger.severe("HomeSpawn updater failed to download updates!");
