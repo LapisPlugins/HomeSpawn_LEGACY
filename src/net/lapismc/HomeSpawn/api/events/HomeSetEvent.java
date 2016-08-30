@@ -6,7 +6,7 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class HomeCreateEvent extends Event implements Cancellable {
+public class HomeSetEvent extends Event implements Cancellable {
 
     private final HandlerList handlers = new HandlerList();
     private String homeName;
@@ -14,7 +14,7 @@ public class HomeCreateEvent extends Event implements Cancellable {
     private Player p;
     private boolean cancelled;
 
-    public HomeCreateEvent(Player p, World w, String name) {
+    public HomeSetEvent(Player p, World w, String name) {
         homeName = name;
         this.world = w;
         this.p = p;

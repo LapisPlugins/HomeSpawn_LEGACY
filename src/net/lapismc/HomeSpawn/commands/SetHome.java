@@ -1,7 +1,7 @@
 package net.lapismc.HomeSpawn.commands;
 
 import net.lapismc.HomeSpawn.HomeSpawn;
-import net.lapismc.HomeSpawn.api.events.HomeCreateEvent;
+import net.lapismc.HomeSpawn.api.events.HomeSetEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -51,6 +51,11 @@ public class SetHome {
             if (!getHomes.contains("HasHome")) {
                 getHomes.createSection("HasHome");
             }
+            HomeSetEvent HCE = new HomeSetEvent(player, player.getWorld(), "Home");
+            Bukkit.getPluginManager().callEvent(HCE);
+            if (HCE.isCancelled()) {
+                return;
+            }
             int HomesNumb = getHomes.getInt(player
                     .getUniqueId() + ".Numb");
             if (!getHomes.contains("HasHome")
@@ -89,7 +94,7 @@ public class SetHome {
                             + "You Cannot Use The Home Name \"Home\", Please Choose Another!");
                     return;
                 }
-                HomeCreateEvent HCE = new HomeCreateEvent(player, player.getWorld(), home);
+                HomeSetEvent HCE = new HomeSetEvent(player, player.getWorld(), home);
                 Bukkit.getPluginManager().callEvent(HCE);
                 if (HCE.isCancelled()) {
                     return;
