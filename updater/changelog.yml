@@ -10,3 +10,9 @@ ChangeLog:
         - "API Usage Reports to Console"
         - "Moved Metrics to Main Package"
         - "Added This Change Log and the Code To Download it During Update!"
+        - "Made Updating All Async"
+        - "Added Updating of DataFile"
+        - "Moved Spawn New to PlayerData Name File Creation"
+        - "Fixed the Homespawn Book!"
+    Beta 0.1.9:
+        - "Update to Push Changes Above!"

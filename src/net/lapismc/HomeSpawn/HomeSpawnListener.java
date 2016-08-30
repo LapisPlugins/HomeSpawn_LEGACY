@@ -1,5 +1,6 @@
 package net.lapismc.HomeSpawn;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -37,7 +38,7 @@ public class HomeSpawnListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void PlayerJoinEvent(PlayerJoinEvent event) {
-        Player player = event.getPlayer();
+        final Player player = event.getPlayer();
         File file = new File(plugin.getDataFolder() + File.separator
                 + "PlayerData" + File.separator
                 + player.getUniqueId() + ".yml");
@@ -60,6 +61,7 @@ public class HomeSpawnListener implements Listener {
                 getName.set("Name", player.getName());
                 getName.set("UUID", player.getUniqueId().toString());
                 getName.save(file2);
+                plugin.spawnNew(player);
                 if (plugin.getConfig().getBoolean("CommandBook")) {
                     PlayerInventory pi = player.getInventory();
                     InstructionBook book = new InstructionBook(plugin);
@@ -85,7 +87,6 @@ public class HomeSpawnListener implements Listener {
                 getHomes.set("HasHome", "No");
                 getHomes.set(player.getUniqueId() + ".Numb", 0);
                 getHomes.save(file);
-                plugin.spawnNew(player);
                 plugin.loadPlayerData();
                 plugin.loadName();
             } catch (IOException e) {
@@ -114,13 +115,16 @@ public class HomeSpawnListener implements Listener {
                 plugin.PlayerPermission.get(player.getUniqueId()).getName());
         HashMap<String, Integer> perms = plugin.Permissions.get(plugin.PlayerPermission.get(player.getUniqueId()));
         if (perms.get("updateNotify") == 1) {
-            if (!plugin.getConfig().getBoolean("DownloadUpdates") && updater.checkUpdate("main")) {
-                player.sendMessage(ChatColor.DARK_GRAY
-                        + "[" + ChatColor.AQUA + "HomeSpawn" + ChatColor.DARK_GRAY
-                        + "]" + ChatColor.GOLD + " An update is available! check the changes" +
-                        " at https://www.spigotmc.org/resources/homespawn.14108/updates," +
-                        " or run \"/homespawn update\" to install it");
-            }
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+                @Override
+                public void run() {
+                    if (!plugin.getConfig().getBoolean("DownloadUpdates") && updater.checkUpdate("main")) {
+                        player.sendMessage(ChatColor.DARK_GRAY
+                                + "[" + ChatColor.AQUA + "HomeSpawn" + ChatColor.DARK_GRAY
+                                + "]" + ChatColor.GOLD + " An update is available! run \"/homespawn update\" to install it!");
+                    }
+                }
+            });
         }
         plugin.HomeConfigs.get(player.getUniqueId()).set("login", "-");
     }
