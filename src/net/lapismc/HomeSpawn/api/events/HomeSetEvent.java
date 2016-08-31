@@ -18,6 +18,7 @@ public class HomeSetEvent extends Event implements Cancellable {
         homeName = name;
         this.world = w;
         this.p = p;
+        this.cancelled = false;
     }
 
     public String getHomeName() {
