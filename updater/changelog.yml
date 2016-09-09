@@ -16,3 +16,7 @@ ChangeLog:
         - "Fixed the Homespawn Book!"
     Beta 0.1.9:
         - "Update to Push Changes Above!"
+    Beta 0.2.0:
+        - "New API Events to Listen for Home Setting and Home Teleporting"
+        - "Added Console Printout of Changes After Downloading Updates(Read From This Changelog File)"
+        - "Optomisation and Bug Fixing"
