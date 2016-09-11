@@ -7,21 +7,22 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.permissions.Permission;
-import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -58,86 +59,8 @@ public class HomeSpawn extends JavaPlugin {
     }
 
     protected void Permissions() {
-        Permissions.clear();
-        HashMap<String, Integer> nullPermMap = new HashMap<>();
-        nullPermMap.put("priority", 0);
-        nullPermMap.put("homes", 0);
-        nullPermMap.put("spawn", 1);
-        nullPermMap.put("cHomes", 0);
-        nullPermMap.put("TPD", 0);
-        nullPermMap.put("sSpawn", 0);
-        nullPermMap.put("updateNotify", 0);
-        nullPermMap.put("reload", 0);
-        nullPermMap.put("stats", 0);
-        Permission np;
-        if (Bukkit.getServer().getPluginManager().getPermission("homespawn.null") == null) {
-            np = new Permission("homespawn.null", PermissionDefault.FALSE);
-            Bukkit.getPluginManager().addPermission(np);
-        } else {
-            np = Bukkit.getServer().getPluginManager().getPermission("homespawn.null");
-        }
-        Permissions.put(np, nullPermMap);
-        ConfigurationSection permsSection = getConfig().getConfigurationSection("Permissions");
-        Set<String> perms = permsSection.getKeys(false);
-        for (String perm : perms) {
-            String permName = perm.replace(",", ".");
-            int Default = getConfig().getInt("Permissions." + perm + ".default");
-            int priority = getConfig().getInt("Permissions." + perm + ".priority");
-            int homes = getConfig().getInt("Permissions." + perm + ".homes");
-            int spawn = getConfig().getInt("Permissions." + perm + ".spawn");
-            int cHomes = getConfig().getInt("Permissions." + perm + ".set custom homes");
-            int TPD = getConfig().getInt("Permissions." + perm + ".TP delay");
-            int sSpawn = getConfig().getInt("Permissions." + perm + ".setspawn");
-            int updateNotify = getConfig().getInt("Permissions." + perm + ".updateNotify");
-            int reload = getConfig().getInt("Permissions." + perm + ".reload");
-            int stats = getConfig().getInt("Permissions." + perm + ".player stats");
-            HashMap<String, Integer> permMap = new HashMap<>();
-            permMap.put("priority", priority);
-            permMap.put("homes", homes);
-            permMap.put("spawn", spawn);
-            permMap.put("cHomes", cHomes);
-            permMap.put("TPD", TPD);
-            permMap.put("sSpawn", sSpawn);
-            permMap.put("updateNotify", updateNotify);
-            permMap.put("reload", reload);
-            permMap.put("stats", stats);
-            for (String s : permMap.keySet()) {
-                if (permMap.get(s) == null) {
-                    permMap.put(s, 0);
-                    logger.severe("Permission " + permName + " is missing the " + s
-                            + " value! It has been set to 0 by defult, please fix this" +
-                            " in the config!");
-                }
-            }
-            for (String s : nullPermMap.keySet()) {
-                if (!permMap.containsKey(s)) {
-                    permMap.put(s, 0);
-                    logger.severe("Permission " + permName + " is missing the " + s
-                            + " value! It has been set to 0 by defult, please fix this" +
-                            " in the config!");
-                }
-            }
-            PermissionDefault PD = null;
-            switch (Default) {
-                case 1:
-                    PD = PermissionDefault.TRUE;
-                case 2:
-                    PD = PermissionDefault.OP;
-                case 0:
-                default:
-                    PD = PermissionDefault.FALSE;
-            }
-            Permission p;
-            if (Bukkit.getServer().getPluginManager().getPermission(permName) == null) {
-                p = new Permission(permName, PD);
-                Bukkit.getPluginManager().addPermission(p);
-            } else {
-                p = Bukkit.getServer().getPluginManager().getPermission(permName);
-            }
-            Permissions.put(p, permMap);
-            debug("Loaded permission " + p.getName());
-        }
-        logger.info("Permissions Loaded!");
+        HomeSpawnPermissions hsp = new HomeSpawnPermissions(this);
+        hsp.init();
     }
 
     private void Metrics() {
