@@ -19,4 +19,6 @@ ChangeLog:
     Beta 0.2.0:
         - "New API Events to Listen for Home Setting and Home Teleporting"
         - "Added Console Printout of Changes After Downloading Updates(Read From This Changelog File)"
+        - "Moved Permissions to Their Own Class Ready For Permission Syncing With WarpPoint"
+        - "Fixed Permission Defaults"
         - "Optomisation and Bug Fixing"

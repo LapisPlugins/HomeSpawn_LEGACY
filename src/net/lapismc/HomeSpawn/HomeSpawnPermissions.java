@@ -80,8 +80,10 @@ public class HomeSpawnPermissions {
             switch (Default) {
                 case 1:
                     PD = PermissionDefault.TRUE;
+                    break;
                 case 2:
                     PD = PermissionDefault.OP;
+                    break;
                 case 0:
                 default:
                     PD = PermissionDefault.FALSE;
