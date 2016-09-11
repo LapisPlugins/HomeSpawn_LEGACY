@@ -49,7 +49,7 @@ public class Home {
                 Location home = new Location(world, x, y, z, yaw,
                         pitch);
                 home.add(0.5, 0, 0.5);
-                hsc.TeleportPlayer(player, home, "Home");
+                hsc.TeleportPlayer(player, home, "Home", "Home");
             } else {
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                         plugin.messages.getString("Home.NoHomeSet")));
@@ -121,7 +121,7 @@ public class Home {
                     Location home2 = new Location(world, x, y, z,
                             yaw, pitch);
                     home2.add(0.5, 0, 0.5);
-                    hsc.TeleportPlayer(player, home2, "Home");
+                    hsc.TeleportPlayer(player, home2, "Home", home);
                 }
             } else {
                 player.sendMessage(ChatColor.RED

@@ -40,7 +40,7 @@ public class Spawn {
                 Location Spawn = new Location(world, x, y, z, yaw,
                         pitch);
                 Spawn.add(0.5, 0, 0.5);
-                hsc.TeleportPlayer(player, Spawn, "Spawn");
+                hsc.TeleportPlayer(player, Spawn, "Spawn", null);
             } else {
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                         plugin.messages.getString("Spawn.NotSet")));

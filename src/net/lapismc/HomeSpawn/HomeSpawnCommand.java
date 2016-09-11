@@ -1,5 +1,6 @@
 package net.lapismc.HomeSpawn;
 
+import net.lapismc.HomeSpawn.api.events.HomeTeleportEvent;
 import net.lapismc.HomeSpawn.commands.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -100,13 +101,17 @@ public class HomeSpawnCommand implements CommandExecutor {
         return getHomes;
     }
 
-    public void TeleportPlayer(Player p, Location l, String r) {
+    public void TeleportPlayer(Player p, Location l, String r, String name) {
         HashMap<String, Integer> perms = plugin.Permissions.get(plugin.PlayerPermission.get(p.getUniqueId()));
         if (perms.get("TPD") == 0) {
             if (!l.getChunk().isLoaded()) {
                 l.getChunk().load();
             }
             p.teleport(l);
+            if (r.equalsIgnoreCase("Home") && name != null) {
+                HomeTeleportEvent hte = new HomeTeleportEvent(p, l, name);
+                Bukkit.getPluginManager().callEvent(hte);
+            }
             if (r.equalsIgnoreCase("Spawn")) {
                 p.sendMessage(ChatColor.GOLD
                         + plugin.messages.getString("Spawn.SentToSpawn"));
