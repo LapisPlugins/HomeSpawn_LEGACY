@@ -10,6 +10,7 @@ public class HomeTeleportEvent extends Event implements Cancellable {
 
     private final HandlerList handlers = new HandlerList();
     private String homeName;
+    private String cancelReason;
     private Location location;
     private Player p;
     private boolean cancelled;
@@ -37,8 +38,22 @@ public class HomeTeleportEvent extends Event implements Cancellable {
         return cancelled;
     }
 
+    @Deprecated
     public void setCancelled(boolean cancel) {
         cancelled = cancel;
+    }
+
+    public void setCancelled(boolean cancel, String reason) {
+        cancelled = cancel;
+        cancelReason = reason;
+    }
+
+    public String getCancelReason() {
+        if (cancelled) {
+            return cancelReason;
+        } else {
+            return null;
+        }
     }
 
     public HandlerList getHandlers() {

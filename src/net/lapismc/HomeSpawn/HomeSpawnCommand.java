@@ -107,10 +107,20 @@ public class HomeSpawnCommand implements CommandExecutor {
             if (!l.getChunk().isLoaded()) {
                 l.getChunk().load();
             }
-            p.teleport(l);
             if (r.equalsIgnoreCase("Home") && name != null) {
                 HomeTeleportEvent hte = new HomeTeleportEvent(p, l, name);
                 Bukkit.getPluginManager().callEvent(hte);
+                if (!hte.isCancelled()) {
+                    p.teleport(l);
+                } else {
+                    if (hte.getCancelReason() != null) {
+                        p.sendMessage(hte.getCancelReason());
+                    } else {
+                        p.sendMessage(ChatColor.RED + "An external plugin has canceled your teleport for an unknown reason");
+                    }
+                }
+            } else {
+                p.teleport(l);
             }
             if (r.equalsIgnoreCase("Spawn")) {
                 p.sendMessage(ChatColor.GOLD
