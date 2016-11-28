@@ -1,12 +1,23 @@
 <project>
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.lapismc</groupId>
-    <artifactId>HomeSpawn</artifactId>
+    <artifactId>Homespawn</artifactId>
     <version>Beta 0.2.0</version>
     <build>
         <finalName>${project.artifactId}</finalName>
         <defaultGoal>clean install</defaultGoal>
         <sourceDirectory>${basedir}/src/</sourceDirectory>
+        <resources>
+            <resource>
+                <targetPath>.</targetPath>
+                <directory>src</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>plugin.yml</include>
+                    <include>config.yml</include>
+                </includes>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -16,6 +27,19 @@
                     <source>1.7</source>
                     <target>1.7</target>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>1.4</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
 
@@ -35,6 +59,7 @@
             <groupId>org.ocpsoft.prettytime</groupId>
             <artifactId>prettytime</artifactId>
             <version>3.2.7.Final</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.spigotmc</groupId>
