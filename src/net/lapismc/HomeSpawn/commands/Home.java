@@ -59,41 +59,16 @@ public class Home {
             if (getHomes.contains(home + ".HasHome")) {
                 if (!getHomes.getString(home + ".HasHome")
                         .equalsIgnoreCase("yes")) {
-                    player.sendMessage(ChatColor.RED
-                            + "A home with this name does not exist!");
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.messages.getString("Home.NoHomeName")));
                     if (getHomes.getInt(player.getUniqueId() + ".Numb") > 0) {
                         if (!list.isEmpty()) {
                             String list2 = list.toString();
                             String list3 = list2.replace("[", " ");
                             String StringList = list3.replace("]",
                                     " ");
-                            if (isSpigot()) {
-                                for (String s : list) {
-                                    net.md_5.bungee.api.chat.TextComponent h = new net.md_5.bungee.api.chat
-                                            .TextComponent(s);
-                                    h.setColor(net.md_5.bungee.api.ChatColor.RED);
-                                    h.setHoverEvent(new net.md_5.bungee.api.chat
-                                            .HoverEvent(net.md_5.bungee
-                                            .api.chat.HoverEvent.Action.SHOW_TEXT,
-                                            new net.md_5.bungee.api.chat.ComponentBuilder
-                                                    ("Click To TP").create()));
-                                    if (s.equalsIgnoreCase("home")) {
-                                        h.setClickEvent(new net.md_5.bungee.api.chat.ClickEvent(
-                                                net.md_5.bungee.api.chat.ClickEvent.Action
-                                                        .RUN_COMMAND,
-                                                "/home"));
-                                    } else {
-                                        h.setClickEvent(new net.md_5.bungee.api.chat.ClickEvent(
-                                                net.md_5.bungee.api.chat.ClickEvent.Action
-                                                        .RUN_COMMAND,
-                                                "/home " + s));
-                                    }
-                                    player.spigot().sendMessage(h);
-                                }
-                            } else {
-                                player.sendMessage(ChatColor.RED
-                                        + StringList);
-                            }
+                            player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.messages.getString("Home.CurrentHomes")));
+                            player.sendMessage(ChatColor.RED + StringList);
+
                         } else {
                             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                                     plugin.messages
@@ -134,33 +109,8 @@ public class Home {
                         String StringList = list3.replace("]", " ");
                         player.sendMessage(ChatColor.GOLD
                                 + "Your Current Homes Are:");
-                        if (isSpigot()) {
-                            for (String s : list) {
-                                net.md_5.bungee.api.chat.TextComponent h = new net.md_5
-                                        .bungee.api.chat.TextComponent(s);
-                                h.setColor(net.md_5.bungee.api.ChatColor.RED);
-                                h.setHoverEvent(new net.md_5.bungee.api.chat
-                                        .HoverEvent(net.md_5.bungee.api.chat.HoverEvent
-                                        .Action.SHOW_TEXT,
-                                        new net.md_5.bungee.api.chat
-                                                .ComponentBuilder("Click To TP").create()));
-                                if (s.equalsIgnoreCase("home")) {
-                                    h.setClickEvent(new net.md_5.bungee.api.chat.ClickEvent(
-                                            net.md_5.bungee.api.chat.ClickEvent.Action
-                                                    .RUN_COMMAND,
-                                            "/home"));
-                                } else {
-                                    h.setClickEvent(new net.md_5.bungee.api.chat.ClickEvent(
-                                            net.md_5.bungee.api.chat.ClickEvent.Action
-                                                    .RUN_COMMAND,
-                                            "/home " + s));
-                                }
-                                player.spigot().sendMessage(h);
-                            }
-                        } else {
-                            player.sendMessage(ChatColor.RED
-                                    + StringList);
-                        }
+                        player.sendMessage(ChatColor.RED + StringList);
+
 
                     } else {
                         player.sendMessage(ChatColor.translateAlternateColorCodes('&',
@@ -174,15 +124,6 @@ public class Home {
                 }
                 return;
             }
-        }
-    }
-
-    private boolean isSpigot() {
-        try {
-            Class.forName("net.md_5.bungee.api.chat.TextCompnent");
-            return true;
-        } catch (Exception e) {
-            return false;
         }
     }
 }

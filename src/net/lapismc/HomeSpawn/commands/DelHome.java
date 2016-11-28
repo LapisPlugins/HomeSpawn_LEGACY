@@ -56,8 +56,7 @@ public class DelHome {
                         String list2 = list.toString();
                         String list3 = list2.replace("[", " ");
                         String StringList = list3.replace("]", " ");
-                        player.sendMessage(ChatColor.GOLD
-                                + "Your Current Homes Are:");
+                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.messages.getString("Home.CurrentHomes")));
                         player.sendMessage(ChatColor.RED
                                 + StringList);
                     } else {
@@ -78,15 +77,14 @@ public class DelHome {
                     || getHomes.getString(home + ".HasHome")
                     .equalsIgnoreCase("no")) {
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        plugin.messages.getString("Home.NoHomeSet")));
+                        plugin.messages.getString("Home.NoHomeName")));
                 if (getHomes.getInt(player.getUniqueId()
                         + ".Numb") > 0) {
                     if (!list.isEmpty()) {
                         String list2 = list.toString();
                         String list3 = list2.replace("[", " ");
                         String StringList = list3.replace("]", " ");
-                        player.sendMessage(ChatColor.GOLD
-                                + "Your Current Homes Are:");
+                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.messages.getString("Home.CurrentHomes")));
                         player.sendMessage(ChatColor.RED
                                 + StringList);
                     } else {
@@ -114,15 +112,14 @@ public class DelHome {
                 this.plugin.savePlayerData(uuid);
             } else {
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        plugin.messages.getString("Home.NoHomeSet")));
+                        plugin.messages.getString("Home.NoHomeName")));
                 if (getHomes.getInt(player.getUniqueId()
                         + ".Numb") > 0) {
                     if (!list.isEmpty()) {
                         String list2 = list.toString();
                         String list3 = list2.replace("[", " ");
                         String StringList = list3.replace("]", " ");
-                        player.sendMessage(ChatColor.GOLD
-                                + "Your Current Homes Are:");
+                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.messages.getString("Home.CurrentHomes")));
                         player.sendMessage(ChatColor.RED
                                 + StringList);
                     } else {

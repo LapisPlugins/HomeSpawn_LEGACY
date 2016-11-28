@@ -37,22 +37,14 @@ public class HomeSpawnCommand implements CommandExecutor {
     }
 
     protected void registerCommands() {
-        HomeSpawnComponents hsc = new HomeSpawnComponents();
-        if (hsc.home()) {
-            this.delHome = new DelHome(plugin);
-            this.delSpawn = new DelSpawn(plugin);
-            this.home = new Home(plugin, this);
-
-            this.homesList = new HomesList(plugin, this);
-        }
-        if (hsc.spawn()) {
-            this.setHome = new SetHome(plugin);
-            this.setSpawn = new SetSpawn(plugin);
-            this.spawn = new Spawn(plugin, this);
-        }
-        if (hsc.password()) {
-            this.homePassword = new HomePassword(plugin, this);
-        }
+        this.delHome = new DelHome(plugin);
+        this.delSpawn = new DelSpawn(plugin);
+        this.home = new Home(plugin, this);
+        this.homesList = new HomesList(plugin, this);
+        this.setHome = new SetHome(plugin);
+        this.setSpawn = new SetSpawn(plugin);
+        this.spawn = new Spawn(plugin, this);
+        this.homePassword = new HomePassword(plugin, this);
         this.homeSpawn = new net.lapismc.HomeSpawn.commands.HomeSpawn(plugin);
     }
 
@@ -123,17 +115,13 @@ public class HomeSpawnCommand implements CommandExecutor {
                 p.teleport(l);
             }
             if (r.equalsIgnoreCase("Spawn")) {
-                p.sendMessage(ChatColor.GOLD
-                        + plugin.messages.getString("Spawn.SentToSpawn"));
+                p.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.messages.getString("Spawn.SentToSpawn")));
             } else if (r.equalsIgnoreCase("Home")) {
-                p.sendMessage(ChatColor.GOLD
-                        + plugin.messages.getString("Home.SentHome"));
+                p.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.messages.getString("Home.SentHome")));
             }
         } else {
-            String waitraw = ChatColor.GOLD + plugin.messages.getString("Wait");
-            String Wait = waitraw.replace("{time}", ChatColor.RED
-                    + perms.get("TPD").toString()
-                    + ChatColor.GOLD);
+            String waitraw = ChatColor.translateAlternateColorCodes('&', plugin.messages.getString("Wait"));
+            String Wait = waitraw.replace("{time}", perms.get("TPD").toString());
             p.sendMessage(Wait);
             this.plugin.HomeSpawnLocations.put(p, l);
             this.plugin.HomeSpawnTimeLeft.put(p, perms.get("TPD"));
@@ -209,6 +197,12 @@ public class HomeSpawnCommand implements CommandExecutor {
                     sender.sendMessage(ChatColor.RED + "Version: "
                             + ChatColor.GOLD
                             + this.plugin.getDescription().getVersion());
+                    String version = System.getProperty("java.version");
+                    int pos = version.indexOf('.');
+                    pos = version.indexOf('.', pos + 1);
+                    Double versionDouble = Double.parseDouble(version.substring(0, pos));
+                    sender.sendMessage(ChatColor.RED + "Java Version: " + ChatColor.GOLD
+                            + versionDouble);
                     sender.sendMessage(ChatColor.RED + "Spigot:"
                             + ChatColor.GOLD + " https://goo.gl/aWby6W");
                     sender.sendMessage(ChatColor.GOLD
@@ -227,6 +221,12 @@ public class HomeSpawnCommand implements CommandExecutor {
                 sender.sendMessage(ChatColor.RED + "Version: "
                         + ChatColor.GOLD
                         + this.plugin.getDescription().getVersion());
+                String version = System.getProperty("java.version");
+                int pos = version.indexOf('.');
+                pos = version.indexOf('.', pos + 1);
+                Double versionDouble = Double.parseDouble(version.substring(0, pos));
+                sender.sendMessage(ChatColor.RED + "Java Version: " + ChatColor.GOLD
+                        + versionDouble);
                 sender.sendMessage(ChatColor.RED + "Spigot:"
                         + ChatColor.GOLD + " https://goo.gl/aWby6W");
                 sender.sendMessage(ChatColor.GOLD

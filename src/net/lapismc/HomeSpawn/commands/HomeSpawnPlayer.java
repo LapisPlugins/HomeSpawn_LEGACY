@@ -9,7 +9,10 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.ocpsoft.prettytime.PrettyTime;
 
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
 
 public class HomeSpawnPlayer {
 
@@ -23,28 +26,31 @@ public class HomeSpawnPlayer {
     public void HomeSpawnPlayer(String[] args, Player player) {
         HashMap<String, Integer> perms = plugin.Permissions.get(plugin.PlayerPermission.
                 get(player.getUniqueId()));
-        if (perms.get(player.getUniqueId()) == 0) {
+        if (perms.get("stats") == 0) {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                     plugin.messages.getString("NoPerms")));
             return;
         }
-        if (args.length == 1) {
+        if (args.length != 2 && args.length != 3) {
             help(player);
         } else if (args.length == 2) {
             String name = args[1];
             UUID uuid;
             YamlConfiguration homes;
-            try {
-                uuid = plugin.PlayertoUUID.get(name);
-                homes = plugin.HomeConfigs.get(uuid);
-            } catch (Exception e) {
-                player.sendMessage("Player name incorrect or that player has no HomeSpawn data");
+            uuid = plugin.PlayertoUUID.get(name);
+            if (uuid == null) {
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.messages.getString("NoPlayerData")));
+                return;
+            }
+            homes = plugin.HomeConfigs.get(uuid);
+            if (homes == null) {
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.messages.getString("NoPlayerData")));
                 return;
             }
             HashMap<String, Integer> uuidperms = plugin.Permissions.get(plugin.PlayerPermission.
                     get(uuid));
-            player.sendMessage("----- Stats for " + name + " -----");
-            player.sendMessage("Players Permission: " + plugin.PlayerPermission.get(uuid).getName());
+            player.sendMessage(ChatColor.RED + "----- " + ChatColor.GOLD + "Stats for " + ChatColor.BLUE + name + ChatColor.RED + " -----");
+            player.sendMessage(ChatColor.RED + "Players Permission: " + ChatColor.GOLD + plugin.PlayerPermission.get(uuid).getName());
             String time;
             if (homes.get("login") == null) {
                 time = "Before Player Stats Were Introduced";
@@ -58,23 +64,32 @@ public class HomeSpawnPlayer {
             } else {
                 time = p.format(new Date(homes.getLong("login")));
             }
-            player.sendMessage("Player " + name + " was last online: " + time);
-            player.sendMessage(plugin.getConfig().getInt(uuid.toString() + ".Numb") + " out of " + perms.get("homes")
+            player.sendMessage(ChatColor.RED + "Player " + ChatColor.BLUE + name + ChatColor.RED + " was last online: "
+                    + ChatColor.GOLD + time);
+            String usedHomes = String.valueOf(homes.getInt(uuid.toString() + ".Numb"));
+            player.sendMessage(ChatColor.GOLD + usedHomes + ChatColor.RED + " out of " + ChatColor.GOLD + perms.get("homes")
                     + " homes used");
             if (homes.getInt(uuid.toString() + ".Numb") > 0) {
-                player.sendMessage("The players home(s) are:");
-                List<String> l = plugin.getConfig().getStringList(uuid.toString() + ".list");
-                player.sendMessage(l.toString().replace('[', ' ').replace(']', ' '));
+                player.sendMessage(ChatColor.RED + "The players home(s) are:");
+                List<String> list = homes.getStringList(player
+                        .getUniqueId() + ".list");
+                String list2 = list.toString();
+                String list3 = list2.replace("[", " ");
+                String StringList = list3.replace("]", " ");
+                player.sendMessage(ChatColor.GOLD + StringList);
             }
         } else if (args.length == 3) {
             String name = args[1];
             UUID uuid;
             YamlConfiguration homes;
-            try {
-                uuid = plugin.PlayertoUUID.get(name);
-                homes = plugin.HomeConfigs.get(uuid);
-            } catch (Exception e) {
-                player.sendMessage("Player name incorrect or that player has no HomeSpawn data");
+            uuid = plugin.PlayertoUUID.get(name);
+            if (uuid == null) {
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.messages.getString("NoPlayerData")));
+                return;
+            }
+            homes = plugin.HomeConfigs.get(uuid);
+            if (homes == null) {
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.messages.getString("NoPlayerData")));
                 return;
             }
             teleportPlayer(player, args[2], homes);
@@ -84,17 +99,33 @@ public class HomeSpawnPlayer {
     }
 
     private void help(Player player) {
-        ArrayList<String> help = new ArrayList<String>();
-        help.add("Player Stats Help");
-        help.add("/homespawn player: Displays this help");
-        help.add("/homespawn player (name): Shows the stats of the player given");
-        help.add("/homespawn player (name) (home name): Teleports you to that players" +
+        player.sendMessage(ChatColor.RED + "--------" + ChatColor.GOLD + " Player Stats Help " + ChatColor.RED + "--------");
+        player.sendMessage(ChatColor.RED + "/homespawn player:" + ChatColor.GOLD + " Displays this help");
+        player.sendMessage(ChatColor.RED + "/homespawn player (name):" + ChatColor.GOLD + " Shows the stats of the player given");
+        player.sendMessage(ChatColor.RED + "/homespawn player (name) (home name):" + ChatColor.GOLD + " Teleports you to that players" +
                 " home of that name");
-        player.sendMessage((String[]) help.toArray());
     }
 
     private void teleportPlayer(Player player, String home, YamlConfiguration getHomes) {
-        if (getHomes.getString(home + ".HasHome")
+        if (home.equalsIgnoreCase("home") && getHomes.getString("HasHome").equalsIgnoreCase("yes")) {
+            String uuid = getHomes.getString("name");
+            int x = getHomes.getInt(uuid + ".x");
+            int y = getHomes.getInt(uuid + ".y");
+            int z = getHomes.getInt(uuid + ".z");
+            float yaw = getHomes.getInt(uuid + ".Yaw");
+            float pitch = getHomes.getInt(uuid + ".Pitch");
+            String cworld = getHomes.getString(uuid
+                    + ".world");
+            World world = plugin.getServer().getWorld(
+                    cworld);
+            Location home2 = new Location(world, x, y, z,
+                    yaw, pitch);
+            home2.add(0.5, 0, 0.5);
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.messages.getString("Home.SentHome")));
+            player.teleport(home2);
+            return;
+        }
+        if (getHomes.contains(home) && getHomes.getString(home + ".HasHome")
                 .equalsIgnoreCase("yes")) {
             int x = getHomes.getInt(home + ".x");
             int y = getHomes.getInt(home + ".y");
@@ -103,16 +134,15 @@ public class HomeSpawnPlayer {
             float pitch = getHomes.getInt(home + ".Pitch");
             String cworld = getHomes.getString(home
                     + ".world");
-            World world = this.plugin.getServer().getWorld(
+            World world = plugin.getServer().getWorld(
                     cworld);
             Location home2 = new Location(world, x, y, z,
                     yaw, pitch);
             home2.add(0.5, 0, 0.5);
-            player.sendMessage(ChatColor.GOLD
-                    + plugin.messages.getString("Home.SentHome"));
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.messages.getString("Home.SentHome")));
             player.teleport(home2);
         } else {
-            player.sendMessage("A home with that name doesn't exist!");
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.messages.getString("Home.NoHomeName")));
         }
     }
 }

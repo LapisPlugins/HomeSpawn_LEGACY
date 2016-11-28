@@ -45,13 +45,11 @@ public class HomePassword {
                         } catch (NoSuchAlgorithmException
                                 | InvalidKeySpecException e1) {
                             e1.printStackTrace();
-                            player.sendMessage(ChatColor.RED
-                                    + "Failed To Save Password!");
+                            player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.messages.getString("Password.SaveFailed")));
                             return;
                         }
                         getPasswords.set(player.getName(), passHash);
-                        player.sendMessage(ChatColor.GOLD
-                                + "Password Set To:");
+                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.messages.getString("Password.SetTo")));
                         player.sendMessage(ChatColor.RED + pass);
                         try {
                             getPasswords.save(file3);
@@ -59,8 +57,7 @@ public class HomePassword {
                             e.printStackTrace();
                         }
                     } else {
-                        player.sendMessage(ChatColor.RED
-                                + "Your 2 passwords didn't match!");
+                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.messages.getString("Password.NoMatch")));
                     }
                 }
             } else if (args.length <= 1) {
@@ -88,8 +85,7 @@ public class HomePassword {
                     } catch (NoSuchAlgorithmException
                             | InvalidKeySpecException e2) {
                         e2.printStackTrace();
-                        player.sendMessage(ChatColor.RED
-                                + "An Error Stopped Us From Checking Your Password, Please Try Again Later");
+                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.messages.getString("Password.CheckError")));
                     }
                     if (namefile.exists() && Password) {
                         String uuid = getOldName.getString("UUID");

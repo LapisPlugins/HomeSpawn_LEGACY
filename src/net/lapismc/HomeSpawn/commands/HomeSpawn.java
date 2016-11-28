@@ -19,9 +19,6 @@ public class HomeSpawn {
     public void homeSpawn(String[] args, Player player) {
         HashMap<String, Integer> perms = plugin.Permissions.get(
                 plugin.PlayerPermission.get(player.getUniqueId()));
-        if (args[0] == "player") {
-            homeSpawnPlayer.HomeSpawnPlayer(args, player);
-        }
         if (args.length == 0) {
             player.sendMessage(ChatColor.GOLD + "---------------"
                     + ChatColor.RED + "Homespawn" + ChatColor.GOLD
@@ -31,13 +28,19 @@ public class HomeSpawn {
             player.sendMessage(ChatColor.RED + "Version: "
                     + ChatColor.GOLD
                     + this.plugin.getDescription().getVersion());
+            String version = System.getProperty("java.version");
+            int pos = version.indexOf('.');
+            pos = version.indexOf('.', pos + 1);
+            Double versionDouble = Double.parseDouble(version.substring(0, pos));
+            player.sendMessage(ChatColor.RED + "Java Version: " + ChatColor.GOLD
+                    + versionDouble);
             player.sendMessage(ChatColor.RED + "Spigot:"
                     + ChatColor.GOLD + " https://goo.gl/aWby6W");
             player.sendMessage(ChatColor.RED
                     + "Use /homespawn Help For Commands!");
             player.sendMessage(ChatColor.GOLD
                     + "-----------------------------------------");
-        } else if (args.length == 1) {
+        } else if (args.length == 1 && !args[0].equalsIgnoreCase("player")) {
             if (args[0].equalsIgnoreCase("reload")) {
                 if (perms.get("reload") == 1) {
                     this.plugin.reload(player);
@@ -79,6 +82,8 @@ public class HomeSpawn {
                     player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                             plugin.messages.getString("NoPerms")));
                 }
+            } else if (args[0].equalsIgnoreCase("player")) {
+                homeSpawnPlayer.HomeSpawnPlayer(args, player);
             }
         } else {
             player.sendMessage("That Is Not A Recognised Command, Use /homespawn help For " +

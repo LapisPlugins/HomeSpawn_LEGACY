@@ -23,13 +23,15 @@ import org.bukkit.permissions.Permission;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Objects;
 
 public class HomeSpawnListener implements Listener {
 
     private final List<Player> Players = new ArrayList<>();
     private YamlConfiguration getMessages;
-    private LapisUpdater updater;
     private HomeSpawn plugin;
 
     public HomeSpawnListener(HomeSpawn plugin) {
@@ -118,7 +120,7 @@ public class HomeSpawnListener implements Listener {
             Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
                 @Override
                 public void run() {
-                    if (!plugin.getConfig().getBoolean("DownloadUpdates") && updater.checkUpdate("main")) {
+                    if (!plugin.getConfig().getBoolean("DownloadUpdates") && plugin.updater.checkUpdate("main")) {
                         player.sendMessage(ChatColor.DARK_GRAY
                                 + "[" + ChatColor.AQUA + "HomeSpawn" + ChatColor.DARK_GRAY
                                 + "]" + ChatColor.GOLD + " An update is available! run \"/homespawn update\" to install it!");
@@ -133,8 +135,8 @@ public class HomeSpawnListener implements Listener {
     public void PlayerQuit(PlayerQuitEvent e) {
         Player p = e.getPlayer();
         YamlConfiguration homes = plugin.HomeConfigs.get(p.getUniqueId());
-        Date d = new Date();
-        homes.set("login", d.getTime());
+        homes.set("login", System.currentTimeMillis());
+        plugin.savePlayerData(p.getUniqueId());
     }
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -158,8 +160,7 @@ public class HomeSpawnListener implements Listener {
                     if (!Players.contains(p)) {
                         plugin.HomeSpawnLocations.put(p, null);
                         plugin.HomeSpawnTimeLeft.remove(p);
-                        p.sendMessage(ChatColor.GOLD
-                                + "Teleport Canceled Because You Moved!");
+                        p.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.messages.getString("TeleportCancelMove")));
                     } else {
                         e.setCancelled(true);
                         plugin.HomeSpawnTimeLeft.put(p, 1);
@@ -180,8 +181,7 @@ public class HomeSpawnListener implements Listener {
                     Arrow arrow = (Arrow) Hitter;
                     if (arrow.getShooter() instanceof Player) {
                         plugin.HomeSpawnLocations.put(p, null);
-                        p.sendMessage(ChatColor.GOLD
-                                + "Teleport Canceled Because You Were Hit!");
+                        p.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.messages.getString("TeleportCancelPvP")));
                     } else if (arrow.getShooter() instanceof Skeleton) {
                         Players.add(p);
                         e.setCancelled(true);
@@ -191,8 +191,7 @@ public class HomeSpawnListener implements Listener {
                     Wolf wolf = (Wolf) Hitter;
                     if (wolf.isTamed()) {
                         plugin.HomeSpawnLocations.put(p, null);
-                        p.sendMessage(ChatColor.GOLD
-                                + "Teleport Canceled Because You Were Hit!");
+                        p.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.messages.getString("TeleportCancelPvP")));
                     } else {
                         Players.add(p);
                         e.setCancelled(true);
@@ -201,8 +200,7 @@ public class HomeSpawnListener implements Listener {
                 if (Hitter instanceof Player) {
                     plugin.HomeSpawnLocations.put(p, null);
                     plugin.HomeSpawnTimeLeft.remove(p);
-                    p.sendMessage(ChatColor.GOLD
-                            + "Teleport Canceled Because You Were Hit!");
+                    p.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.messages.getString("TeleportCancelPvP")));
                 } else {
                     Players.add(p);
                     e.setCancelled(false);
@@ -282,12 +280,10 @@ public class HomeSpawnListener implements Listener {
         HashMap<String, Integer> perms = plugin.Permissions.get(plugin.PlayerPermission.get(p.getUniqueId()));
         if (perms.get("TPD") == 0) {
             p.teleport(l);
-            p.sendMessage(ChatColor.GOLD + getMessages.getString("Home.SentHome"));
+            p.sendMessage(ChatColor.translateAlternateColorCodes('&', getMessages.getString("Home.SentHome")));
         } else {
-            String waitraw = ChatColor.GOLD + getMessages.getString("Wait");
-            String Wait = waitraw.replace("{time}", ChatColor.RED
-                    + perms.get("TPD").toString()
-                    + ChatColor.GOLD);
+            String waitraw = ChatColor.translateAlternateColorCodes('&', plugin.messages.getString("Wait"));
+            String Wait = waitraw.replace("{time}", perms.get("TPD").toString());
             p.sendMessage(Wait);
             plugin.HomeSpawnLocations.put(p, l);
             plugin.HomeSpawnTimeLeft.put(p, perms.get("TPD"));

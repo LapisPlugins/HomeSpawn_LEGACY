@@ -55,7 +55,7 @@ public class HomeSpawnComponents {
             plugin.getCommand("homepassword").setExecutor(hsc);
         }
         plugin.getCommand("homespawn").setExecutor(hsc);
-
+        hsc.registerCommands();
         plugin.logger.info("Commands Registered!");
     }
 

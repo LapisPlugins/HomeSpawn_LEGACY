@@ -39,32 +39,9 @@ public class HomesList {
                     String list2 = list.toString();
                     String list3 = list2.replace("[", " ");
                     String StringList = list3.replace("]", " ");
-                    player.sendMessage(ChatColor.GOLD
-                            + "Your Current Homes Are:");
-                    if (isSpigot()) {
-                        for (String s : list) {
-                            net.md_5.bungee.api.chat.TextComponent h = new net.
-                                    md_5.bungee.api.chat.TextComponent(s);
-                            h.setColor(net.md_5.bungee.api.ChatColor.RED);
-                            h.setHoverEvent(new net.md_5.bungee.api.chat.HoverEvent
-                                    (net.md_5.bungee.api.chat.HoverEvent.Action.SHOW_TEXT,
-                                            new net.md_5.bungee.api.chat.ComponentBuilder
-                                                    ("Click To TP").create()));
-                            if (s.equalsIgnoreCase("home")) {
-                                h.setClickEvent(new net.md_5.bungee.api.chat.ClickEvent(
-                                        net.md_5.bungee.api.chat.ClickEvent.Action.RUN_COMMAND,
-                                        "/home"));
-                            } else {
-                                h.setClickEvent(new net.md_5.bungee.api.chat.ClickEvent(
-                                        net.md_5.bungee.api.chat.ClickEvent.Action.RUN_COMMAND,
-                                        "/home " + s));
-                            }
-                            player.spigot().sendMessage(h);
-                        }
-                    } else {
-                        player.sendMessage(ChatColor.RED
-                                + StringList);
-                    }
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.messages.getString("Home.CurrentHomes")));
+                    player.sendMessage(ChatColor.RED + StringList);
+
                 } else {
                     player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                             plugin.messages.getString("Home.NoHomeSet")));
@@ -73,15 +50,6 @@ public class HomesList {
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                         plugin.messages.getString("Home.NoHomeSet")));
             }
-        }
-    }
-
-    private boolean isSpigot() {
-        try {
-            Class.forName("net.md_5.bungee.api.chat.TextCompnent");
-            return true;
-        } catch (Exception e) {
-            return false;
         }
     }
 }

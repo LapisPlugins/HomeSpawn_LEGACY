@@ -24,7 +24,7 @@ public class InstructionBook {
         ItemStack book = new ItemStack(Material.WRITTEN_BOOK, 1);
         BookMeta meta = (BookMeta) book.getItemMeta();
         meta.setTitle(ChatColor.translateAlternateColorCodes
-                ('&', yaml.getString("Book.Title")));
+                ('&', yaml.getString("Title")));
         meta.setAuthor(ChatColor.AQUA + "Dart2112");
         int zero = 0;
         int pages = yaml.getInt("Book.NumbOfPages");

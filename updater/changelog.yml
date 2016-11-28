@@ -2,18 +2,18 @@ ChangeLog:
     Beta 0.1.7:
         - "Basic Player Stats (no chat colors)"
         - "Advanced Permission Checks"
-        - "Other Bug Fixes!"
+        - "Other Bug Fixes"
     Beta 0.1.8:
         - "Metrics is fixed"
         - "Components.yml for Disabling Parts of the Plugin"
         - "Reporting on Permission Errors"
         - "API Usage Reports to Console"
         - "Moved Metrics to Main Package"
-        - "Added This Change Log and the Code To Download it During Update!"
+        - "Added This Change Log and the Code To Download it During Update"
         - "Made Updating All Async"
         - "Added Updating of DataFile"
         - "Moved Spawn New to PlayerData Name File Creation"
-        - "Fixed the Homespawn Book!"
+        - "Fixed the Homespawn Book"
     Beta 0.1.9:
         - "Update to Push Changes Above!"
     Beta 0.2.0:
@@ -22,3 +22,9 @@ ChangeLog:
         - "Moved Permissions to Their Own Class Ready For Permission Syncing With WarpPoint"
         - "Fixed Permission Defaults"
         - "Optomisation and Bug Fixing"
+    Stable 2.0.2:
+        - "All Beta Features From Beta 0.1.7 to 0.2.0"
+        - "Support For Minecraft 1.8-1.11"
+        - "Bugs in /homespawn player fixed and colors also added"
+        - "Many New Messages In Messages.yml, Please Delete And Reload To Get The New Messages"
+        - "General Bug Fixes and Performance Improvements"

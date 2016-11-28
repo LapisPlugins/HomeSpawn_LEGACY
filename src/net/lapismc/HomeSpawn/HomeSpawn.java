@@ -17,8 +17,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -138,17 +137,7 @@ public class HomeSpawn extends JavaPlugin {
     }
 
     private void configVersion() {
-        boolean Config = false;
-        try {
-            if (getConfig().getInt("ConfigVersion") != 6) {
-                Config = true;
-            }
-        } catch (Exception e) {
-            if (getConfig().getString("ConfigVersion").startsWith("Not Used Yet")) {
-                Config = true;
-            }
-        }
-        if (Config) {
+        if (getConfig().getInt("ConfigVersion") != 6) {
             File oldConfig = new File(this.getDataFolder() + File.separator + "config.yml");
             File backupConfig = new File(this.getDataFolder() + File.separator +
                     "Backup_config.yml");
@@ -257,86 +246,26 @@ public class HomeSpawn extends JavaPlugin {
     }
 
     private void createMessages() {
-        File file2 = new File(getDataFolder().getAbsolutePath()
-                + File.separator + "Messages.yml");
-        FileConfiguration getMessages = YamlConfiguration
-                .loadConfiguration(file2);
-        if (!file2.exists()) {
+        messagesFile = new File(getDataFolder().getAbsolutePath() + File.separator + "Messages.yml");
+        if (!messagesFile.exists()) {
+            InputStream is = null;
+            OutputStream os = null;
             try {
-                file2.createNewFile();
-                getMessages.createSection("Home");
-                getMessages.createSection("Home.HomeSet");
-                getMessages.createSection("Home.SentHome");
-                getMessages.createSection("Home.NoHomeSet");
-                getMessages.createSection("Home.HomeRemoved");
-                getMessages.createSection("Home.LimitReached");
-                getMessages.createSection("Spawn");
-                getMessages.createSection("Spawn.NotSet");
-                getMessages.createSection("Spawn.SpawnSet");
-                getMessages.createSection("Spawn.SpawnNewSet");
-                getMessages.createSection("Spawn.SentToSpawn");
-                getMessages.createSection("Spawn.Removed");
-                getMessages.createSection("Wait");
-                getMessages.createSection("NoPerms");
-                getMessages.createSection("Error.Args");
-                getMessages.createSection("Error.Args+");
-                getMessages.createSection("Error.Args-");
-                getMessages.save(file2);
-                setDefaultMessages();
-            } catch (IOException e) {
-                this.logger.log(Level.SEVERE, "An error has occurred while trying to save" +
-                        " HomeSpawn messages data");
-                this.logger.log(Level.SEVERE, "The error follows, Please report it to dart2112");
-                e.printStackTrace();
+                messagesFile.createNewFile();
+                is = getResource("Messages.yml");
+                int readBytes;
+                byte[] buffer = new byte[4096];
+                os = new FileOutputStream(messagesFile);
+                while ((readBytes = is.read(buffer)) > 0) {
+                    os.write(buffer, 0, readBytes);
+                }
+                is.close();
+                os.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
             }
         }
-        messages = YamlConfiguration.loadConfiguration(file2);
-        messagesFile = file2;
-    }
-
-    private void setDefaultMessages() {
-        File file2 = new File(getDataFolder().getAbsolutePath()
-                + File.separator + "Messages.yml");
-        FileConfiguration getMessages = YamlConfiguration
-                .loadConfiguration(file2);
-        if (file2.exists()) {
-            getMessages.set("Home.HomeSet", "Home Set, You Can Now Use /home");
-            getMessages.set("Home.SentHome", "Welcome Home");
-            getMessages.set("Home.NoHomeSet",
-                    "You First Need To Set a Home With /sethome");
-            getMessages.set("Home.HomeRemoved", "Home Removed");
-            getMessages.set("Home.LimitReached",
-                    "Sorry But You have Reached The Max Limit Of Homes, "
-                            + "Please Use /delhome To Remove A Home");
-            getMessages.set("Spawn.NotSet",
-                    "You First Need To Set a Spawn With /setspawn");
-            getMessages.set("Spawn.SpawnSet",
-                    "Spawn Set, You Can Now Use /spawn");
-            getMessages
-                    .set("Spawn.SpawnNewSet",
-                            "Spawn New Set, All New Players Will Be Sent To This Location");
-            getMessages.set("Spawn.SentToSpawn", "Welcome To Spawn");
-            getMessages.set("Spawn.Removed", "Spawn Removed!");
-            getMessages
-                    .set("Wait",
-                            "You Must Wait {time} Seconds Before You Can Be Teleported,"
-                                    + " If You Move Or Get Hit By Another Player Your Teleport Will Be Canceled");
-            getMessages.set("NoPerms", "You Don't Have Permission To Do That!");
-            getMessages.set("Error.Args+", "Too Much Infomation!");
-            getMessages.set("Error.Args-", "Not Enough Infomation");
-            getMessages.set("Error.Args", "Too Little or Too Much Infomation");
-            try {
-                getMessages.save(file2);
-            } catch (IOException e) {
-                this.logger.log(Level.SEVERE, "An error has occurred while trying to save" +
-                        " HomeSpawn messages data");
-                this.logger.log(Level.SEVERE, "The error follows, Please report it to dart2112");
-                e.printStackTrace();
-            }
-        } else {
-            createMessages();
-        }
-
+        messages = YamlConfiguration.loadConfiguration(messagesFile);
     }
 
     private void createPlayerData() {

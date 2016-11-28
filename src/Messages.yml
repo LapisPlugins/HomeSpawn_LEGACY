@@ -1,0 +1,28 @@
+Home:
+  HomeSet: "&6Home Set, You Can Now Use &4/home"
+  SentHome: "&6Welcome Home"
+  NoHomeSet: "&4You First Need To Set a Home With &6/sethome"
+  NoHomeName: "&4A Home With This Name Does not Exist!"
+  CurrentHomes: "&6Your Current Homes Are:"
+  HomeRemoved: "&6Home Removed"
+  LimitReached: "&4Sorry But You have Reached The Max Limit Of Homes, Please Use &6/delhome &4To Remove A Home"
+Spawn:
+  NotSet: "&4You First Need To Set a Spawn With &6/setspawn"
+  SpawnSet: "&6Spawn Set, You Can Now Use &4/spawn"
+  SpawnNewSet: "&6Spawn New Set, All New Players Will Be Sent To This Location"
+  SentToSpawn: "&6Welcome To Spawn"
+  Removed: "&6Spawn Removed!"
+Password:
+  SaveFailed: "&4Failed To Save Password!"
+  SetTo: "&6Password Set To:"
+  NoMatch: "&4The Two Passwords Entered Did not Match!"
+  CheckError: "&4An Error Stopped Us From Checking Your Password, Please Try Again Later!"
+Wait: "&6You Must Wait &4{time} &6Seconds Before You Can Be Teleported, If You Move Or Get Hit By Another Player Your Teleport Will Be Canceled"
+TeleportCancelMove: "&4Teleport Was Canceled Because You Moved!"
+TeleportCancelPvP: "&4Teleport Cancelled Because Of PvP!"
+NoPlayerData: "&4Player name incorrect or that player has no HomeSpawn data"
+NoPerms: "&4You Dont Have Permission To Do That!"
+Error:
+  Args: "&4Too Little or Too Much Information!"
+  Args+: "&4Too Much Information!"
+  Args-: "&4Not Enough Information!"
