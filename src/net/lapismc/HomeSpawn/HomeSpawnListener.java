@@ -36,6 +36,7 @@ public class HomeSpawnListener implements Listener {
 
     public HomeSpawnListener(HomeSpawn plugin) {
         this.plugin = plugin;
+        getMessages = plugin.messages;
     }
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -255,6 +256,7 @@ public class HomeSpawnListener implements Listener {
                     TeleportPlayer(p, home2);
                 }
             }
+            e.getWhoClicked().closeInventory();
             Inventory inv = plugin.HomesListInvs.get(p);
             inv.clear();
             plugin.HomesListInvs.put(p, inv);
