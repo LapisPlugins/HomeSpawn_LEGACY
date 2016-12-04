@@ -31,12 +31,10 @@ import java.util.Objects;
 public class HomeSpawnListener implements Listener {
 
     private final List<Player> Players = new ArrayList<>();
-    private YamlConfiguration getMessages;
     private HomeSpawn plugin;
 
     public HomeSpawnListener(HomeSpawn plugin) {
         this.plugin = plugin;
-        getMessages = plugin.messages;
     }
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -282,7 +280,7 @@ public class HomeSpawnListener implements Listener {
         HashMap<String, Integer> perms = plugin.Permissions.get(plugin.PlayerPermission.get(p.getUniqueId()));
         if (perms.get("TPD") == 0) {
             p.teleport(l);
-            p.sendMessage(ChatColor.translateAlternateColorCodes('&', getMessages.getString("Home.SentHome")));
+            p.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.messages.getString("Home.SentHome")));
         } else {
             String waitraw = ChatColor.translateAlternateColorCodes('&', plugin.messages.getString("Wait"));
             String Wait = waitraw.replace("{time}", perms.get("TPD").toString());
