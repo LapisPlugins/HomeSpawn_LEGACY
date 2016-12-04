@@ -53,8 +53,8 @@ public class HomeSpawnCommand implements CommandExecutor {
         YamlConfiguration getHomes = this.plugin.HomeConfigs.get(uuid);
         List<String> homes = getHomes.getStringList(p.getUniqueId() + ".list");
         if (homes.isEmpty()) {
-            p.sendMessage(ChatColor.DARK_RED
-                    + plugin.messages.getString("Home.NoHomeSet"));
+            p.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.messages.getString("Home.NoHomeSet")));
             return;
         }
         ArrayList<DyeColor> dc = new ArrayList<>();

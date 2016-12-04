@@ -1,6 +1,7 @@
 name: HomeSpawn
 main: net.lapismc.HomeSpawn.HomeSpawn
 version: 2.0.2
+loadbefore: [Essentials]
 description: >
              The Basic Home And Spawn Plugin
 commands:

@@ -59,9 +59,9 @@ public class Home {
             if (getHomes.contains(home + ".HasHome")) {
                 if (!getHomes.getString(home + ".HasHome")
                         .equalsIgnoreCase("yes")) {
-                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.messages.getString("Home.NoHomeName")));
                     if (getHomes.getInt(player.getUniqueId() + ".Numb") > 0) {
                         if (!list.isEmpty()) {
+                            player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.messages.getString("Home.NoHomeName")));
                             String list2 = list.toString();
                             String list3 = list2.replace("[", " ");
                             String StringList = list3.replace("]",
