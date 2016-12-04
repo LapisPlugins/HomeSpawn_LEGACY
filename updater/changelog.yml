@@ -28,3 +28,7 @@ ChangeLog:
         - "Bugs in /homespawn player fixed and colors also added"
         - "Many New Messages In Messages.yml, Please Delete And Reload To Get The New Messages"
         - "General Bug Fixes and Performance Improvements"
+    Stable 2.0.3 & Beta 0.2.1:
+        - "Boots before essentials to avoid conflicts"
+        - "Messages.yml handling fixes"
+        - "Working on a null for OP players with teleporting from /homeslist GUI"
