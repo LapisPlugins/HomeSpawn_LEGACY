@@ -32,3 +32,5 @@ ChangeLog:
         - "Boots before essentials to avoid conflicts"
         - "Messages.yml handling fixes"
         - "Working on a null for OP players with teleporting from /homeslist GUI"
+    Stable 2.0.4:
+        - "Bug fixes and other small changes"

@@ -18,10 +18,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -468,7 +465,8 @@ public class HomeSpawn extends JavaPlugin {
                         if (HomeSpawnTimeLeft.isEmpty()) {
                             return;
                         }
-                        for (int Time : HomeSpawnTimeLeft.values()) {
+                        Collection<Integer> values = HomeSpawnTimeLeft.values();
+                        for (int Time : values) {
                             int NewTime = Time - 1;
                             if (NewTime > 0) {
                                 HomeSpawnTimeLeft.put(p, NewTime);
