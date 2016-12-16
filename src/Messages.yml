@@ -23,6 +23,7 @@ TeleportCancelPvP: "&4Teleport Cancelled Because Of PvP!"
 NoPlayerData: "&4Player name incorrect or that player has no HomeSpawn data"
 NoPerms: "&4You Dont Have Permission To Do That!"
 Error:
+  Config: "&4 A Configuration Error Has Occurred, Please Try Again Later!"
   Args: "&4Too Little or Too Much Information!"
   Args+: "&4Too Much Information!"
   Args-: "&4Not Enough Information!"

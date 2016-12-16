@@ -27,6 +27,12 @@ public class Home {
                 (plugin.PlayerPermission.get(player.getUniqueId()));
         UUID uuid = this.plugin.PlayertoUUID.get(player.getName());
         YamlConfiguration getHomes = this.plugin.HomeConfigs.get(uuid);
+        if (getHomes == null) {
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.messages.getString("Error.Config")));
+            plugin.reload(null);
+            return;
+        }
         if (!getHomes.contains(player.getUniqueId()
                 + ".list")) {
             getHomes.createSection(player.getUniqueId()
