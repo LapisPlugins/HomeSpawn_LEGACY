@@ -34,3 +34,5 @@ ChangeLog:
         - "Working on a null for OP players with teleporting from /homeslist GUI"
     Stable 2.0.4:
         - "Bug fixes and other small changes"
+    Stable 2.0.5:
+        - "More bug fixes, this time for homespawn configurations being null."
