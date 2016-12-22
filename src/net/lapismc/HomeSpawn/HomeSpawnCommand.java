@@ -51,6 +51,12 @@ public class HomeSpawnCommand implements CommandExecutor {
     public void showMenu(Player p) {
         UUID uuid = this.plugin.PlayertoUUID.get(p.getName());
         YamlConfiguration getHomes = this.plugin.HomeConfigs.get(uuid);
+        if (getHomes == null) {
+            p.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.messages.getString("Error.Config")));
+            plugin.reload(null);
+            return;
+        }
         List<String> homes = getHomes.getStringList(p.getUniqueId() + ".list");
         if (homes.isEmpty()) {
             p.sendMessage(ChatColor.translateAlternateColorCodes('&',

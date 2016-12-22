@@ -36,3 +36,5 @@ ChangeLog:
         - "Bug fixes and other small changes"
     Stable 2.0.5:
         - "More bug fixes, this time for homespawn configurations being null."
+    Stable 2.0.6:
+        - "More null fixes"

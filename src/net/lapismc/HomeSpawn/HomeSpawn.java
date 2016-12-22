@@ -60,38 +60,33 @@ public class HomeSpawn extends JavaPlugin {
     }
 
     private void Metrics() {
-        if (getConfig().getBoolean("Metrics")) {
-            try {
-                Metrics metrics = new Metrics(this);
-                Graph averageHomesGraph = metrics.createGraph("Average Number Of Homes");
-                int homes = 0;
-                int files = HomeConfigs.size();
-                for (YamlConfiguration yaml : HomeConfigs.values()) {
-                    homes = homes + yaml.getInt(yaml.getString("name") + ".Numb");
-                }
-                int average;
-                if (files != 0) {
-                    average = homes % files == 0 ? homes / files : homes / files + 1;
-                } else {
-                    average = 0;
-                }
-                averageHomesGraph.addPlotter(new Metrics.Plotter(average + "") {
-                    @Override
-                    public int getValue() {
-                        return 1;
-                    }
-                });
-                metrics.start();
-                debug("Send stats to metrics");
-            } catch (IOException e) {
-                this.logger.log(Level.SEVERE, "An error has occurred while trying to" +
-                        " start HomeSpawn metrics");
-                this.logger.log(Level.SEVERE, "The error follows, Please report it to dart2112");
-                e.printStackTrace();
+        try {
+            Metrics metrics = new Metrics(this);
+            Graph averageHomesGraph = metrics.createGraph("Average Number Of Homes");
+            int homes = 0;
+            int files = HomeConfigs.size();
+            for (YamlConfiguration yaml : HomeConfigs.values()) {
+                homes = homes + yaml.getInt(yaml.getString("name") + ".Numb");
             }
-        } else {
-            getLogger()
-                    .info("Metrics wasn't started because it is disabled in the config!");
+            int average;
+            if (files != 0) {
+                average = homes % files == 0 ? homes / files : homes / files + 1;
+            } else {
+                average = 0;
+            }
+            averageHomesGraph.addPlotter(new Metrics.Plotter(average + "") {
+                @Override
+                public int getValue() {
+                    return 1;
+                }
+            });
+            metrics.start();
+            debug("Send stats to metrics");
+        } catch (IOException e) {
+            this.logger.log(Level.SEVERE, "An error has occurred while trying to" +
+                    " start HomeSpawn metrics");
+            this.logger.log(Level.SEVERE, "The error follows, Please report it to dart2112");
+            e.printStackTrace();
         }
     }
 
