@@ -94,7 +94,7 @@ public class HomeSpawn extends JavaPlugin {
         Bukkit.getScheduler().runTaskAsynchronously(this, new Runnable() {
             @Override
             public void run() {
-                updater = new LapisUpdater(p);
+                updater = new LapisUpdater(p, "Homespawn.jar", "Dart2112", "HomeSpawn", "master");
                 String ID = getConfig().getBoolean("BetaVersions") == true ? "beta" : "stable";
                 if (updater.checkUpdate(ID)) {
                     if (getConfig().getBoolean("UpdateNotification") && !getConfig()
@@ -180,9 +180,9 @@ public class HomeSpawn extends JavaPlugin {
         File[] playerdataArray = file.listFiles();
         for (File f : playerdataArray) {
             if (f.isFile() && !f.getName().contains("Passwords")) {
-                    YamlConfiguration Yaml = YamlConfiguration.loadConfiguration(f);
-                    HomeConfigs.put(UUID.fromString(Yaml.getString("name")), Yaml);
-                    HomeConfigsFiles.put(UUID.fromString(Yaml.getString("name")), f);
+                YamlConfiguration Yaml = YamlConfiguration.loadConfiguration(f);
+                HomeConfigs.put(UUID.fromString(Yaml.getString("name")), Yaml);
+                HomeConfigsFiles.put(UUID.fromString(Yaml.getString("name")), f);
             }
         }
     }

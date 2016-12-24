@@ -15,21 +15,29 @@ public class LapisUpdater {
 
     private String ID;
     private String result;
+    private String jarName;
+    private String username;
+    private String repoName;
+    private String branch;
     private HomeSpawn plugin;
     private Boolean force;
 
-    public LapisUpdater(HomeSpawn plugin) {
+    public LapisUpdater(HomeSpawn plugin, String jarName, String username, String repoName, String branch) {
         this.plugin = plugin;
+        this.jarName = jarName;
+        this.username = username;
+        this.repoName = repoName;
+        this.branch = branch;
     }
 
     public boolean checkUpdate(String ID) {
-        this.ID = ID;
+        this.ID = ID.substring(0, 1).toUpperCase() + ID.substring(1);
         this.force = false;
         return updateCheck();
     }
 
     public boolean downloadUpdate(String ID) {
-        this.ID = ID;
+        this.ID = ID.substring(0, 1).toUpperCase() + ID.substring(1);
         this.force = true;
         return downloadUpdateJar();
     }
@@ -37,39 +45,39 @@ public class LapisUpdater {
     private boolean downloadUpdateJar() {
         if (updateCheck()) {
             try {
-                URL website1 = new URL(
-                        "https://raw.githubusercontent.com/Dart2112/HomeSpawn/master/updater" +
+                URL changeLogURL = new URL(
+                        "https://raw.githubusercontent.com/" + username + "/" + repoName + "/" + branch + "/updater" +
                                 "/changelog.yml");
-                ReadableByteChannel rbc1 = Channels.newChannel(website1.openStream());
-                File f1 = new File(plugin.getDataFolder().getAbsolutePath() + File.separator +
+                ReadableByteChannel changelogByteChannel = Channels.newChannel(changeLogURL.openStream());
+                File changeLogFile = new File(plugin.getDataFolder().getAbsolutePath() + File.separator +
                         "ChangeLog.yml");
-                URL website = new URL(
-                        "https://raw.githubusercontent.com/Dart2112/HomeSpawn/master/updater/"
-                                + ID.substring(0, 1).toUpperCase() + ID.substring(1) +
-                                "/Homespawn.jar");
-                ReadableByteChannel rbc = Channels.newChannel(website.openStream());
+                URL jarURL = new URL(
+                        "https://raw.githubusercontent.com/" + username + "/" + repoName + "/" + branch + "/updater/"
+                                + ID + "/" + jarName + ".jar");
+                ReadableByteChannel jarByteChannel = Channels.newChannel(jarURL.openStream());
                 File update = new File(plugin.getDataFolder().getParent() + File.separator +
                         "update");
                 if (!update.exists()) {
                     update.mkdir();
                 }
-                File f = new File(update.getAbsolutePath() + File.separator + "Homespawn.jar");
-                if (!f.exists()) {
-                    f.createNewFile();
+                File jar = new File(update.getAbsolutePath() + File.separator + "Homespawn.jar");
+                if (!jar.exists()) {
+                    jar.createNewFile();
                 }
-                FileOutputStream fos = new FileOutputStream(f);
-                fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-                rbc.close();
-                fos.flush();
-                fos.close();
-                FileOutputStream fos1 = new FileOutputStream(f1);
-                fos1.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-                rbc1.close();
-                fos1.flush();
-                fos1.close();
-                YamlConfiguration cl = YamlConfiguration.loadConfiguration(f1);
+                FileOutputStream jarOutputStream = new FileOutputStream(jar);
+                jarOutputStream.getChannel().transferFrom(jarByteChannel, 0, Long.MAX_VALUE);
+                jarByteChannel.close();
+                jarOutputStream.flush();
+                jarOutputStream.close();
+
+                FileOutputStream changeLogOutputStream = new FileOutputStream(changeLogFile);
+                changeLogOutputStream.getChannel().transferFrom(changelogByteChannel, 0, Long.MAX_VALUE);
+                changelogByteChannel.close();
+                changeLogOutputStream.flush();
+                changeLogOutputStream.close();
+                YamlConfiguration changeLog = YamlConfiguration.loadConfiguration(changeLogFile);
                 plugin.logger.info("Changes in newest Version \n" +
-                        cl.getStringList("ChangeLog." + plugin.getDescription().getVersion()));
+                        changeLog.getStringList("ChangeLog." + ID + " " + plugin.getDescription().getVersion()));
                 return true;
             } catch (IOException e) {
                 plugin.logger.severe("HomeSpawn updater failed to download updates!");
