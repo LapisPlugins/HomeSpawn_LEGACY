@@ -30,7 +30,7 @@ public class Home {
         if (getHomes == null) {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                     plugin.messages.getString("Error.Config")));
-            plugin.reload(null);
+            plugin.reload("Silent");
             return;
         }
         if (!getHomes.contains(player.getUniqueId()

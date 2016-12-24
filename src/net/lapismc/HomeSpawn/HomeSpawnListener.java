@@ -43,7 +43,7 @@ public class HomeSpawnListener implements Listener {
         File file = new File(plugin.getDataFolder() + File.separator
                 + "PlayerData" + File.separator
                 + player.getUniqueId() + ".yml");
-        YamlConfiguration getHomes = YamlConfiguration.loadConfiguration(file);
+        YamlConfiguration getHomes = plugin.HomeConfigs.get(player.getUniqueId());
         File file2 = new File(plugin.getDataFolder().getAbsolutePath()
                 + File.separator + "PlayerData" + File.separator
                 + "PlayerNames" + File.separator + player.getName() + ".yml");

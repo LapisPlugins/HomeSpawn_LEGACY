@@ -54,7 +54,7 @@ public class HomeSpawnCommand implements CommandExecutor {
         if (getHomes == null) {
             p.sendMessage(ChatColor.translateAlternateColorCodes('&',
                     plugin.messages.getString("Error.Config")));
-            plugin.reload(null);
+            plugin.reload("Silent");
             return;
         }
         List<String> homes = getHomes.getStringList(p.getUniqueId() + ".list");

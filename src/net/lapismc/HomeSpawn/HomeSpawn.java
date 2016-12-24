@@ -179,12 +179,10 @@ public class HomeSpawn extends JavaPlugin {
         File file = new File(getDataFolder().getAbsolutePath() + File.separator + "PlayerData");
         File[] playerdataArray = file.listFiles();
         for (File f : playerdataArray) {
-            if (f.isFile()) {
-                if (!f.getName().contains("Passwords")) {
+            if (f.isFile() && !f.getName().contains("Passwords")) {
                     YamlConfiguration Yaml = YamlConfiguration.loadConfiguration(f);
                     HomeConfigs.put(UUID.fromString(Yaml.getString("name")), Yaml);
                     HomeConfigsFiles.put(UUID.fromString(Yaml.getString("name")), f);
-                }
             }
         }
     }
