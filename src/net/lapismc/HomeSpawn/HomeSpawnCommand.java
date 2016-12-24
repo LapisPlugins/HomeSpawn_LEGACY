@@ -186,8 +186,7 @@ public class HomeSpawnCommand implements CommandExecutor {
                     this.plugin.reload(p);
                 } else if (args[0].equalsIgnoreCase("update")) {
                     String ID = plugin.getConfig().getBoolean("BetaVersions") ? "beta" : "stable";
-                    LapisUpdater updater = new LapisUpdater(plugin);
-                    if (updater.downloadUpdate(ID)) {
+                    if (plugin.updater.downloadUpdate(ID)) {
                         sender.sendMessage(ChatColor.GOLD + "Downloading Update...");
                         sender.sendMessage(ChatColor.GOLD + "The update will be installed" +
                                 " when the server next starts!");
