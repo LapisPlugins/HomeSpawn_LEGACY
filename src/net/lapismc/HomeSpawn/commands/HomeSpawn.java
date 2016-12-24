@@ -1,6 +1,5 @@
 package net.lapismc.HomeSpawn.commands;
 
-import net.lapismc.HomeSpawn.LapisUpdater;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -54,11 +53,10 @@ public class HomeSpawn {
         } else if (args.length > 0) {
             if (args[0].equalsIgnoreCase("update")) {
                 if (perms.get("updateNotify") == 1) {
-                    LapisUpdater updater = new LapisUpdater(plugin);
                     if (args.length == 1) {
                         String ID = plugin.getConfig().getBoolean("BetaVersions")
                                 ? "beta" : "stable";
-                        if (updater.downloadUpdate(ID)) {
+                        if (plugin.updater.downloadUpdate(ID)) {
                             player.sendMessage(ChatColor.GOLD + "Downloading Update...");
                             player.sendMessage(ChatColor.GOLD + "The update will be installed"
                                     + " when the server next starts!");
@@ -67,7 +65,7 @@ public class HomeSpawn {
                         }
                     } else if (args.length == 2) {
                         String ID = args[1];
-                        if (updater.downloadUpdate(ID)) {
+                        if (plugin.updater.downloadUpdate(ID)) {
                             player.sendMessage(ChatColor.GOLD + "Downloading Update...");
                             player.sendMessage(ChatColor.GOLD + "The update will be installed"
                                     + " when the server next starts!");
