@@ -129,7 +129,7 @@ public class HomeSpawn extends JavaPlugin {
     }
 
     private void configVersion() {
-        if (getConfig().getInt("ConfigVersion") != 6) {
+        if (getConfig().getInt("ConfigVersion") != 7) {
             File oldConfig = new File(this.getDataFolder() + File.separator + "config.yml");
             File backupConfig = new File(this.getDataFolder() + File.separator +
                     "Backup_config.yml");
