@@ -23,21 +23,21 @@ public class Home {
     }
 
     public void home(String[] args, Player player) {
-        HashMap<String, Integer> perms = plugin.permissions.Permissions.get
-                (plugin.permissions.PlayerPermission.get(player.getUniqueId()));
+        HashMap<String, Integer> perms = plugin.HSPermissions.Permissions.get
+                (plugin.HSPermissions.PlayerPermission.get(player.getUniqueId()));
         UUID uuid = this.plugin.PlayertoUUID.get(player.getName());
-        YamlConfiguration getHomes = this.plugin.HomeConfigs.get(uuid);
+        YamlConfiguration getHomes = this.plugin.HSConfig.HomeConfigs.get(uuid);
         if (getHomes == null) {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.messages.getString("Error.Config")));
-            plugin.reload("Silent");
+                    plugin.HSConfig.messages.getString("Error.Config")));
+            plugin.HSConfig.reload("Silent");
             return;
         }
         if (!getHomes.contains(player.getUniqueId()
                 + ".list")) {
             getHomes.createSection(player.getUniqueId()
                     + ".list");
-            this.plugin.savePlayerData(uuid);
+            this.plugin.HSConfig.savePlayerData(uuid);
         }
         List<String> list = getHomes.getStringList(player
                 .getUniqueId() + ".list");
@@ -58,7 +58,7 @@ public class Home {
                 hsc.TeleportPlayer(player, home, "Home", "Home");
             } else {
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        plugin.messages.getString("Home.NoHomeSet")));
+                        plugin.HSConfig.messages.getString("Home.NoHomeSet")));
             }
         } else if (args.length == 1) {
             String home = args[0];
@@ -67,22 +67,22 @@ public class Home {
                         .equalsIgnoreCase("yes")) {
                     if (getHomes.getInt(player.getUniqueId() + ".Numb") > 0) {
                         if (!list.isEmpty()) {
-                            player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.messages.getString("Home.NoHomeName")));
+                            player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.HSConfig.messages.getString("Home.NoHomeName")));
                             String list2 = list.toString();
                             String list3 = list2.replace("[", " ");
                             String StringList = list3.replace("]",
                                     " ");
-                            player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.messages.getString("Home.CurrentHomes")));
+                            player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.HSConfig.messages.getString("Home.CurrentHomes")));
                             player.sendMessage(ChatColor.RED + StringList);
 
                         } else {
                             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                                    plugin.messages
+                                    plugin.HSConfig.messages
                                             .getString("Home.NoHomeSet")));
                         }
                     } else {
                         player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                                plugin.messages
+                                plugin.HSConfig.messages
                                         .getString("Home.NoHomeSet")));
                     }
                     return;
@@ -120,12 +120,12 @@ public class Home {
 
                     } else {
                         player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                                plugin.messages
+                                plugin.HSConfig.messages
                                         .getString("Home.NoHomeSet")));
                     }
                 } else {
                     player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                            plugin.messages
+                            plugin.HSConfig.messages
                                     .getString("Home.NoHomeSet")));
                 }
                 return;

@@ -43,7 +43,7 @@ public class HomeSpawnListener implements Listener {
         File file = new File(plugin.getDataFolder() + File.separator
                 + "PlayerData" + File.separator
                 + player.getUniqueId() + ".yml");
-        YamlConfiguration getHomes = plugin.HomeConfigs.get(player.getUniqueId());
+        YamlConfiguration getHomes = plugin.HSConfig.HomeConfigs.get(player.getUniqueId());
         File file2 = new File(plugin.getDataFolder().getAbsolutePath()
                 + File.separator + "PlayerData" + File.separator
                 + "PlayerNames" + File.separator + player.getName() + ".yml");
@@ -88,33 +88,33 @@ public class HomeSpawnListener implements Listener {
                 getHomes.set("HasHome", "No");
                 getHomes.set(player.getUniqueId() + ".Numb", 0);
                 getHomes.save(file);
-                plugin.loadPlayerData();
-                plugin.loadName();
+                plugin.HSConfig.loadPlayerData();
+                plugin.HSConfig.loadName();
             } catch (IOException e) {
                 e.printStackTrace();
                 plugin.logger
                         .severe("[HomeSpawn] Player Data File Creation Failed!");
                 return;
             }
-            plugin.reload("Silent");
+            plugin.HSConfig.reload("Silent");
         }
-        getHomes = plugin.HomeConfigs.get(player.getUniqueId());
+        getHomes = plugin.HSConfig.HomeConfigs.get(player.getUniqueId());
         int priority = -1;
-        for (Permission p : plugin.permissions.Permissions.keySet()) {
+        for (Permission p : plugin.HSPermissions.Permissions.keySet()) {
             if (player.hasPermission(p)) {
-                if (priority == -1 || plugin.permissions.Permissions.get(p).get("priority") > priority) {
-                    plugin.permissions.PlayerPermission.put(player.getUniqueId(), p);
-                    priority = plugin.permissions.Permissions.get(p).get("priority");
+                if (priority == -1 || plugin.HSPermissions.Permissions.get(p).get("priority") > priority) {
+                    plugin.HSPermissions.PlayerPermission.put(player.getUniqueId(), p);
+                    priority = plugin.HSPermissions.Permissions.get(p).get("priority");
                 }
             }
         }
-        if (!plugin.permissions.PlayerPermission.containsKey(player.getUniqueId())) {
+        if (!plugin.HSPermissions.PlayerPermission.containsKey(player.getUniqueId())) {
             Permission nulled = new Permission("homespawn.null");
-            plugin.permissions.PlayerPermission.put(player.getUniqueId(), nulled);
+            plugin.HSPermissions.PlayerPermission.put(player.getUniqueId(), nulled);
         }
         plugin.logger.info("Player " + player.getName() + " has been given the permission " +
-                plugin.permissions.PlayerPermission.get(player.getUniqueId()).getName());
-        HashMap<String, Integer> perms = plugin.permissions.Permissions.get(plugin.permissions.
+                plugin.HSPermissions.PlayerPermission.get(player.getUniqueId()).getName());
+        HashMap<String, Integer> perms = plugin.HSPermissions.Permissions.get(plugin.HSPermissions.
                 PlayerPermission.get(player.getUniqueId()));
         if (perms.get("updateNotify") == 1) {
             Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
@@ -129,15 +129,15 @@ public class HomeSpawnListener implements Listener {
                 }
             });
         }
-        plugin.HomeConfigs.get(player.getUniqueId()).set("login", "-");
+        plugin.HSConfig.HomeConfigs.get(player.getUniqueId()).set("login", "-");
     }
 
     @EventHandler(priority = EventPriority.LOW)
     public void PlayerQuit(PlayerQuitEvent e) {
         Player p = e.getPlayer();
-        YamlConfiguration homes = plugin.HomeConfigs.get(p.getUniqueId());
+        YamlConfiguration homes = plugin.HSConfig.HomeConfigs.get(p.getUniqueId());
         homes.set("login", System.currentTimeMillis());
-        plugin.savePlayerData(p.getUniqueId());
+        plugin.HSConfig.savePlayerData(p.getUniqueId());
     }
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -162,7 +162,7 @@ public class HomeSpawnListener implements Listener {
                         plugin.HomeSpawnLocations.put(p, null);
                         plugin.HomeSpawnTimeLeft.remove(p);
                         p.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                                plugin.messages.getString("TeleportCancelMove")));
+                                plugin.HSConfig.messages.getString("TeleportCancelMove")));
                     } else {
                         e.setCancelled(true);
                         plugin.HomeSpawnTimeLeft.put(p, 1);
@@ -184,7 +184,7 @@ public class HomeSpawnListener implements Listener {
                     if (arrow.getShooter() instanceof Player) {
                         plugin.HomeSpawnLocations.put(p, null);
                         p.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                                plugin.messages.getString("TeleportCancelPvP")));
+                                plugin.HSConfig.messages.getString("TeleportCancelPvP")));
                     } else if (arrow.getShooter() instanceof Skeleton) {
                         Players.add(p);
                         e.setCancelled(true);
@@ -195,7 +195,7 @@ public class HomeSpawnListener implements Listener {
                     if (wolf.isTamed()) {
                         plugin.HomeSpawnLocations.put(p, null);
                         p.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                                plugin.messages.getString("TeleportCancelPvP")));
+                                plugin.HSConfig.messages.getString("TeleportCancelPvP")));
                     } else {
                         Players.add(p);
                         e.setCancelled(true);
@@ -205,7 +205,7 @@ public class HomeSpawnListener implements Listener {
                     plugin.HomeSpawnLocations.put(p, null);
                     plugin.HomeSpawnTimeLeft.remove(p);
                     p.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                            plugin.messages.getString("TeleportCancelPvP")));
+                            plugin.HSConfig.messages.getString("TeleportCancelPvP")));
                 } else {
                     Players.add(p);
                     e.setCancelled(false);
@@ -284,13 +284,13 @@ public class HomeSpawnListener implements Listener {
     }
 
     private void TeleportPlayer(Player p, Location l) {
-        HashMap<String, Integer> perms = plugin.permissions.Permissions.get(plugin.permissions.
+        HashMap<String, Integer> perms = plugin.HSPermissions.Permissions.get(plugin.HSPermissions.
                 PlayerPermission.get(p.getUniqueId()));
         if (perms.get("TPD") == 0) {
             p.teleport(l);
-            p.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.messages.getString("Home.SentHome")));
+            p.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.HSConfig.messages.getString("Home.SentHome")));
         } else {
-            String waitraw = ChatColor.translateAlternateColorCodes('&', plugin.messages.getString("Wait"));
+            String waitraw = ChatColor.translateAlternateColorCodes('&', plugin.HSConfig.messages.getString("Wait"));
             String Wait = waitraw.replace("{time}", perms.get("TPD").toString());
             p.sendMessage(Wait);
             plugin.HomeSpawnLocations.put(p, l);

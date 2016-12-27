@@ -45,11 +45,11 @@ public class HomePassword {
                         } catch (NoSuchAlgorithmException
                                 | InvalidKeySpecException e1) {
                             e1.printStackTrace();
-                            player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.messages.getString("Password.SaveFailed")));
+                            player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.HSConfig.messages.getString("Password.SaveFailed")));
                             return;
                         }
                         getPasswords.set(player.getName(), passHash);
-                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.messages.getString("Password.SetTo")));
+                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.HSConfig.messages.getString("Password.SetTo")));
                         player.sendMessage(ChatColor.RED + pass);
                         try {
                             getPasswords.save(file3);
@@ -57,7 +57,7 @@ public class HomePassword {
                             e.printStackTrace();
                         }
                     } else {
-                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.messages.getString("Password.NoMatch")));
+                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.HSConfig.messages.getString("Password.NoMatch")));
                     }
                 }
             } else if (args.length <= 1) {
@@ -85,7 +85,7 @@ public class HomePassword {
                     } catch (NoSuchAlgorithmException
                             | InvalidKeySpecException e2) {
                         e2.printStackTrace();
-                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.messages.getString("Password.CheckError")));
+                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.HSConfig.messages.getString("Password.CheckError")));
                     }
                     if (namefile.exists() && Password) {
                         String uuid = getOldName.getString("UUID");

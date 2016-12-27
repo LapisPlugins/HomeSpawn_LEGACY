@@ -50,17 +50,17 @@ public class HomeSpawnCommand implements CommandExecutor {
 
     public void showMenu(Player p) {
         UUID uuid = this.plugin.PlayertoUUID.get(p.getName());
-        YamlConfiguration getHomes = this.plugin.HomeConfigs.get(uuid);
+        YamlConfiguration getHomes = this.plugin.HSConfig.HomeConfigs.get(uuid);
         if (getHomes == null) {
             p.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.messages.getString("Error.Config")));
-            plugin.reload("Silent");
+                    plugin.HSConfig.messages.getString("Error.Config")));
+            plugin.HSConfig.reload("Silent");
             return;
         }
         List<String> homes = getHomes.getStringList(p.getUniqueId() + ".list");
         if (homes.isEmpty()) {
             p.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.messages.getString("Home.NoHomeSet")));
+                    plugin.HSConfig.messages.getString("Home.NoHomeSet")));
             return;
         }
         ArrayList<DyeColor> dc = new ArrayList<>();
@@ -95,12 +95,12 @@ public class HomeSpawnCommand implements CommandExecutor {
 
     private YamlConfiguration GetHome(String p) {
         UUID uuid = this.plugin.PlayertoUUID.get(p);
-        YamlConfiguration getHomes = this.plugin.HomeConfigs.get(uuid);
+        YamlConfiguration getHomes = this.plugin.HSConfig.HomeConfigs.get(uuid);
         return getHomes;
     }
 
     public void TeleportPlayer(Player p, Location l, String r, String name) {
-        HashMap<String, Integer> perms = plugin.permissions.Permissions.get(plugin.permissions.PlayerPermission.get(p.getUniqueId()));
+        HashMap<String, Integer> perms = plugin.HSPermissions.Permissions.get(plugin.HSPermissions.PlayerPermission.get(p.getUniqueId()));
         if (perms.get("TPD") == 0) {
             if (!l.getChunk().isLoaded()) {
                 l.getChunk().load();
@@ -121,12 +121,12 @@ public class HomeSpawnCommand implements CommandExecutor {
                 p.teleport(l);
             }
             if (r.equalsIgnoreCase("Spawn")) {
-                p.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.messages.getString("Spawn.SentToSpawn")));
+                p.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.HSConfig.messages.getString("Spawn.SentToSpawn")));
             } else if (r.equalsIgnoreCase("Home")) {
-                p.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.messages.getString("Home.SentHome")));
+                p.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.HSConfig.messages.getString("Home.SentHome")));
             }
         } else {
-            String waitraw = ChatColor.translateAlternateColorCodes('&', plugin.messages.getString("Wait"));
+            String waitraw = ChatColor.translateAlternateColorCodes('&', plugin.HSConfig.messages.getString("Wait"));
             String Wait = waitraw.replace("{time}", perms.get("TPD").toString());
             p.sendMessage(Wait);
             this.plugin.HomeSpawnLocations.put(p, l);
@@ -157,8 +157,8 @@ public class HomeSpawnCommand implements CommandExecutor {
                              String commandLabel, String[] args) {
         if (sender instanceof Player) {
             Player player = (Player) sender;
-            if (plugin.permissions.Permissions.get(plugin.permissions.PlayerPermission.get(player.getUniqueId())) == null) {
-                plugin.permissions.init();
+            if (plugin.HSPermissions.Permissions.get(plugin.HSPermissions.PlayerPermission.get(player.getUniqueId())) == null) {
+                plugin.HSPermissions.init();
             }
             if (cmd.getName().equalsIgnoreCase("sethome")) {
                 setHome.setHome(args, player);
@@ -183,7 +183,7 @@ public class HomeSpawnCommand implements CommandExecutor {
             if (args.length == 1) {
                 if (args[0].equalsIgnoreCase("reload")) {
                     Player p = null;
-                    this.plugin.reload(p);
+                    this.plugin.HSConfig.reload(p);
                 } else if (args[0].equalsIgnoreCase("update")) {
                     String ID = plugin.getConfig().getBoolean("BetaVersions") ? "beta" : "stable";
                     if (plugin.updater.downloadUpdate(ID)) {

@@ -50,7 +50,7 @@ public class Configs {
         if (blocked.contains(p)) {
             return;
         }
-        plugin.reload("Silent");
+        plugin.HSConfig.reload("Silent");
     }
 
     /**
@@ -60,7 +60,7 @@ public class Configs {
         if (blocked.contains(p)) {
             return null;
         }
-        return plugin.spawn;
+        return plugin.HSConfig.spawn;
     }
 
     /**
@@ -72,9 +72,9 @@ public class Configs {
         if (blocked.contains(p)) {
             return;
         }
-        plugin.spawn = SpawnConfig;
-        plugin.spawn.save(plugin.spawnFile);
-        plugin.reload("Silent");
+        plugin.HSConfig.spawn = SpawnConfig;
+        plugin.HSConfig.spawn.save(plugin.HSConfig.spawnFile);
+        plugin.HSConfig.reload("Silent");
     }
 
     /**
@@ -84,7 +84,7 @@ public class Configs {
         if (blocked.contains(p)) {
             return null;
         }
-        return plugin.messages;
+        return plugin.HSConfig.messages;
     }
 
     /**
@@ -96,9 +96,9 @@ public class Configs {
         if (blocked.contains(p)) {
             return;
         }
-        plugin.messages = MessagesConfig;
-        plugin.messages.save(plugin.messagesFile);
-        plugin.reload("Silent");
+        plugin.HSConfig.messages = MessagesConfig;
+        plugin.HSConfig.messages.save(plugin.HSConfig.messagesFile);
+        plugin.HSConfig.reload("Silent");
     }
 
     /**
@@ -108,7 +108,7 @@ public class Configs {
         if (blocked.contains(p)) {
             return null;
         }
-        return plugin.passwords;
+        return plugin.HSConfig.passwords;
     }
 
     /**
@@ -120,9 +120,9 @@ public class Configs {
         if (blocked.contains(p)) {
             return;
         }
-        plugin.passwords = Passwords;
-        plugin.passwords.save(plugin.passwordsFile);
-        plugin.reload("Silent");
+        plugin.HSConfig.passwords = Passwords;
+        plugin.HSConfig.passwords.save(plugin.HSConfig.passwordsFile);
+        plugin.HSConfig.reload("Silent");
     }
 
     /**

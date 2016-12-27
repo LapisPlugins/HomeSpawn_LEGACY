@@ -17,21 +17,21 @@ public class DelSpawn {
     }
 
     public void delSpawn(String[] args, Player player) {
-        HashMap<String, Integer> perms = plugin.permissions.Permissions.get(plugin.permissions.PlayerPermission
+        HashMap<String, Integer> perms = plugin.HSPermissions.Permissions.get(plugin.HSPermissions.PlayerPermission
                 .get(player.getUniqueId()));
         if (perms.get("sSpawn") == 1) {
-            if (Objects.equals(plugin.spawn.getString("spawn.SpawnSet"), "No")
-                    || !plugin.spawn.contains("spawn.SpawnSet")) {
+            if (Objects.equals(plugin.HSConfig.spawn.getString("spawn.SpawnSet"), "No")
+                    || !plugin.HSConfig.spawn.contains("spawn.SpawnSet")) {
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        plugin.messages.getString("Spawn.NotSet")));
-            } else if (plugin.spawn.getString("spawn.SpawnSet")
+                        plugin.HSConfig.messages.getString("Spawn.NotSet")));
+            } else if (plugin.HSConfig.spawn.getString("spawn.SpawnSet")
                     .equalsIgnoreCase("Yes")) {
-                plugin.spawn.set("spawn.SpawnSet", "No");
+                plugin.HSConfig.spawn.set("spawn.SpawnSet", "No");
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        plugin.messages.getString("Spawn.Removed")));
+                        plugin.HSConfig.messages.getString("Spawn.Removed")));
                 try {
-                    plugin.spawn.save(this.plugin.spawnFile);
-                    this.plugin.reload("silent");
+                    plugin.HSConfig.spawn.save(this.plugin.HSConfig.spawnFile);
+                    this.plugin.HSConfig.reload("silent");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -39,7 +39,7 @@ public class DelSpawn {
 
         } else {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.messages.getString("NoPerms")));
+                    plugin.HSConfig.messages.getString("NoPerms")));
         }
     }
 

@@ -20,22 +20,22 @@ public class SetHome {
     }
 
     public void setHome(String[] args, Player player) {
-        HashMap<String, Integer> perms = plugin.permissions.Permissions.get(plugin.permissions.PlayerPermission.
+        HashMap<String, Integer> perms = plugin.HSPermissions.Permissions.get(plugin.HSPermissions.PlayerPermission.
                 get(player.getUniqueId()));
         UUID uuid = this.plugin.PlayertoUUID.get(player.getName());
-        YamlConfiguration getHomes = this.plugin.HomeConfigs.get(uuid);
+        YamlConfiguration getHomes = this.plugin.HSConfig.HomeConfigs.get(uuid);
         if (!getHomes.contains(player.getUniqueId()
                 + ".list")) {
             getHomes.createSection(player.getUniqueId()
                     + ".list");
-            this.plugin.savePlayerData(uuid);
+            this.plugin.HSConfig.savePlayerData(uuid);
         }
         List<String> list = getHomes.getStringList(player
                 .getUniqueId() + ".list");
         if (getHomes.getInt(player.getUniqueId()
                 + ".Numb") >= perms.get("homes")) {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.messages
+                    plugin.HSConfig.messages
                             .getString("Home.LimitReached")));
             return;
         }
@@ -85,7 +85,7 @@ public class SetHome {
                     + ".Pitch", player.getLocation().getPitch());
             getHomes.set("HasHome", "Yes");
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.messages.getString("Home.HomeSet")));
+                    plugin.HSConfig.messages.getString("Home.HomeSet")));
         } else if (args.length == 1) {
             if (perms.get("cHomes") == 1) {
                 String home = args[0];
@@ -132,16 +132,16 @@ public class SetHome {
                         .getLocation().getPitch());
                 getHomes.set(home + ".HasHome", "Yes");
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        plugin.messages.getString("Home.HomeSet")));
+                        plugin.HSConfig.messages.getString("Home.HomeSet")));
             } else {
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        plugin.messages.getString("NoPerms")));
+                        plugin.HSConfig.messages.getString("NoPerms")));
             }
         } else {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.messages.getString("Error.Args+")));
+                    plugin.HSConfig.messages.getString("Error.Args+")));
         }
-        this.plugin.savePlayerData(uuid);
+        this.plugin.HSConfig.savePlayerData(uuid);
     }
 
 }

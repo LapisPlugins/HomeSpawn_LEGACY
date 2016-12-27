@@ -16,52 +16,52 @@ public class SetSpawn {
     }
 
     public void setSpawn(String[] args, Player player) {
-        HashMap<String, Integer> perms = plugin.permissions.Permissions.get(plugin.permissions.PlayerPermission
+        HashMap<String, Integer> perms = plugin.HSPermissions.Permissions.get(plugin.HSPermissions.PlayerPermission
                 .get(player.getUniqueId()));
         if (perms.get("sSpawn") == 1) {
             if (args.length == 0) {
-                plugin.spawn.set("spawn.SpawnSet", "Yes");
-                plugin.spawn.set("spawn.X", player.getLocation()
+                plugin.HSConfig.spawn.set("spawn.SpawnSet", "Yes");
+                plugin.HSConfig.spawn.set("spawn.X", player.getLocation()
                         .getBlockX());
-                plugin.spawn.set("spawn.Y", player.getLocation()
+                plugin.HSConfig.spawn.set("spawn.Y", player.getLocation()
                         .getBlockY());
-                plugin.spawn.set("spawn.Z", player.getLocation()
+                plugin.HSConfig.spawn.set("spawn.Z", player.getLocation()
                         .getBlockZ());
-                plugin.spawn.set("spawn.World", player.getWorld().getName());
-                plugin.spawn.set("spawn.Yaw", player.getLocation().getYaw());
-                plugin.spawn.set("spawn.Pitch", player.getLocation()
+                plugin.HSConfig.spawn.set("spawn.World", player.getWorld().getName());
+                plugin.HSConfig.spawn.set("spawn.Yaw", player.getLocation().getYaw());
+                plugin.HSConfig.spawn.set("spawn.Pitch", player.getLocation()
                         .getPitch());
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        plugin.messages.getString("Spawn.SpawnSet")));
+                        plugin.HSConfig.messages.getString("Spawn.SpawnSet")));
             } else if (args[0].equalsIgnoreCase("new")) {
-                plugin.spawn.set("spawnnew.SpawnSet", "Yes");
-                plugin.spawn.set("spawnnew.X", player.getLocation()
+                plugin.HSConfig.spawn.set("spawnnew.SpawnSet", "Yes");
+                plugin.HSConfig.spawn.set("spawnnew.X", player.getLocation()
                         .getBlockX());
-                plugin.spawn.set("spawnnew.Y", player.getLocation()
+                plugin.HSConfig.spawn.set("spawnnew.Y", player.getLocation()
                         .getBlockY());
-                plugin.spawn.set("spawnnew.Z", player.getLocation()
+                plugin.HSConfig.spawn.set("spawnnew.Z", player.getLocation()
                         .getBlockZ());
-                plugin.spawn.set("spawnnew.World", player.getWorld()
+                plugin.HSConfig.spawn.set("spawnnew.World", player.getWorld()
                         .getName());
-                plugin.spawn.set("spawnnew.Yaw", player.getLocation()
+                plugin.HSConfig.spawn.set("spawnnew.Yaw", player.getLocation()
                         .getYaw());
-                plugin.spawn.set("spawnnew.Pitch", player.getLocation()
+                plugin.HSConfig.spawn.set("spawnnew.Pitch", player.getLocation()
                         .getPitch());
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        plugin.messages.getString("Spawn.SpawnNewSet")));
+                        plugin.HSConfig.messages.getString("Spawn.SpawnNewSet")));
             } else {
                 this.plugin.help(player);
             }
             try {
-                plugin.spawn.save(this.plugin.spawnFile);
-                this.plugin.reload("Silent");
+                plugin.HSConfig.spawn.save(this.plugin.HSConfig.spawnFile);
+                this.plugin.HSConfig.reload("Silent");
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
         } else {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.messages.getString("NoPerms")));
+                    plugin.HSConfig.messages.getString("NoPerms")));
 
         }
     }

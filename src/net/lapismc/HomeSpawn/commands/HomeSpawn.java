@@ -16,8 +16,8 @@ public class HomeSpawn {
     }
 
     public void homeSpawn(String[] args, Player player) {
-        HashMap<String, Integer> perms = plugin.permissions.Permissions.get(
-                plugin.permissions.PlayerPermission.get(player.getUniqueId()));
+        HashMap<String, Integer> perms = plugin.HSPermissions.Permissions.get(
+                plugin.HSPermissions.PlayerPermission.get(player.getUniqueId()));
         if (args.length == 0) {
             player.sendMessage(ChatColor.GOLD + "---------------"
                     + ChatColor.RED + "Homespawn" + ChatColor.GOLD
@@ -42,7 +42,7 @@ public class HomeSpawn {
         } else if (args.length == 1 && !args[0].equalsIgnoreCase("player")) {
             if (args[0].equalsIgnoreCase("reload")) {
                 if (perms.get("reload") == 1) {
-                    this.plugin.reload(player);
+                    this.plugin.HSConfig.reload(player);
                 } else {
                     player.sendMessage(ChatColor.RED
                             + "You Don't Have Permission To Do That");
@@ -74,11 +74,11 @@ public class HomeSpawn {
                         }
                     } else {
                         player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                                plugin.messages.getString("Error.Args")));
+                                plugin.HSConfig.messages.getString("Error.Args")));
                     }
                 } else {
                     player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                            plugin.messages.getString("NoPerms")));
+                            plugin.HSConfig.messages.getString("NoPerms")));
                 }
             } else if (args[0].equalsIgnoreCase("player")) {
                 homeSpawnPlayer.HomeSpawnPlayer(args, player);

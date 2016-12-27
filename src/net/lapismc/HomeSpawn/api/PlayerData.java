@@ -49,7 +49,7 @@ public class PlayerData {
             return null;
         }
         UUID uuid = plugin.PlayertoUUID.get(PlayerName);
-        YamlConfiguration getHome = plugin.HomeConfigs.get(uuid);
+        YamlConfiguration getHome = plugin.HSConfig.HomeConfigs.get(uuid);
         return getHome;
     }
 
@@ -65,7 +65,7 @@ public class PlayerData {
         String name = HomeConfig.getName();
         File file = new File(plugin.getDataFolder().getAbsolutePath() + File.separator + "PlayerData" + File.separator + name);
         HomeConfig.save(file);
-        plugin.reload("Silent");
+        plugin.HSConfig.reload("Silent");
     }
 
     /**
