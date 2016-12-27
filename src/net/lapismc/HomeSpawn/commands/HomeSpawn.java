@@ -16,8 +16,8 @@ public class HomeSpawn {
     }
 
     public void homeSpawn(String[] args, Player player) {
-        HashMap<String, Integer> perms = plugin.Permissions.get(
-                plugin.PlayerPermission.get(player.getUniqueId()));
+        HashMap<String, Integer> perms = plugin.permissions.Permissions.get(
+                plugin.permissions.PlayerPermission.get(player.getUniqueId()));
         if (args.length == 0) {
             player.sendMessage(ChatColor.GOLD + "---------------"
                     + ChatColor.RED + "Homespawn" + ChatColor.GOLD

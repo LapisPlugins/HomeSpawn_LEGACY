@@ -24,7 +24,7 @@ public class HomeSpawnPlayer {
     }
 
     public void HomeSpawnPlayer(String[] args, Player player) {
-        HashMap<String, Integer> perms = plugin.Permissions.get(plugin.PlayerPermission.
+        HashMap<String, Integer> perms = plugin.permissions.Permissions.get(plugin.permissions.PlayerPermission.
                 get(player.getUniqueId()));
         if (perms.get("stats") == 0) {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
@@ -47,10 +47,10 @@ public class HomeSpawnPlayer {
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.messages.getString("NoPlayerData")));
                 return;
             }
-            HashMap<String, Integer> uuidperms = plugin.Permissions.get(plugin.PlayerPermission.
+            HashMap<String, Integer> uuidperms = plugin.permissions.Permissions.get(plugin.permissions.PlayerPermission.
                     get(uuid));
             player.sendMessage(ChatColor.RED + "----- " + ChatColor.GOLD + "Stats for " + ChatColor.BLUE + name + ChatColor.RED + " -----");
-            player.sendMessage(ChatColor.RED + "Players Permission: " + ChatColor.GOLD + plugin.PlayerPermission.get(uuid).getName());
+            player.sendMessage(ChatColor.RED + "Players Permission: " + ChatColor.GOLD + plugin.permissions.PlayerPermission.get(uuid).getName());
             String time;
             if (homes.get("login") == null) {
                 time = "Before Player Stats Were Introduced";

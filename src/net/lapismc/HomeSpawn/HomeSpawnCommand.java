@@ -100,7 +100,7 @@ public class HomeSpawnCommand implements CommandExecutor {
     }
 
     public void TeleportPlayer(Player p, Location l, String r, String name) {
-        HashMap<String, Integer> perms = plugin.Permissions.get(plugin.PlayerPermission.get(p.getUniqueId()));
+        HashMap<String, Integer> perms = plugin.permissions.Permissions.get(plugin.permissions.PlayerPermission.get(p.getUniqueId()));
         if (perms.get("TPD") == 0) {
             if (!l.getChunk().isLoaded()) {
                 l.getChunk().load();
@@ -157,8 +157,8 @@ public class HomeSpawnCommand implements CommandExecutor {
                              String commandLabel, String[] args) {
         if (sender instanceof Player) {
             Player player = (Player) sender;
-            if (plugin.Permissions.get(plugin.PlayerPermission.get(player.getUniqueId())) == null) {
-                plugin.Permissions();
+            if (plugin.permissions.Permissions.get(plugin.permissions.PlayerPermission.get(player.getUniqueId())) == null) {
+                plugin.permissions.init();
             }
             if (cmd.getName().equalsIgnoreCase("sethome")) {
                 setHome.setHome(args, player);

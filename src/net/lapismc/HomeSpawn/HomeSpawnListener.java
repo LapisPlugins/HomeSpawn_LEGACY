@@ -100,21 +100,22 @@ public class HomeSpawnListener implements Listener {
         }
         getHomes = plugin.HomeConfigs.get(player.getUniqueId());
         int priority = -1;
-        for (Permission p : plugin.Permissions.keySet()) {
+        for (Permission p : plugin.permissions.Permissions.keySet()) {
             if (player.hasPermission(p)) {
-                if (priority == -1 || plugin.Permissions.get(p).get("priority") > priority) {
-                    plugin.PlayerPermission.put(player.getUniqueId(), p);
-                    priority = plugin.Permissions.get(p).get("priority");
+                if (priority == -1 || plugin.permissions.Permissions.get(p).get("priority") > priority) {
+                    plugin.permissions.PlayerPermission.put(player.getUniqueId(), p);
+                    priority = plugin.permissions.Permissions.get(p).get("priority");
                 }
             }
         }
-        if (!plugin.PlayerPermission.containsKey(player.getUniqueId())) {
+        if (!plugin.permissions.PlayerPermission.containsKey(player.getUniqueId())) {
             Permission nulled = new Permission("homespawn.null");
-            plugin.PlayerPermission.put(player.getUniqueId(), nulled);
+            plugin.permissions.PlayerPermission.put(player.getUniqueId(), nulled);
         }
         plugin.logger.info("Player " + player.getName() + " has been given the permission " +
-                plugin.PlayerPermission.get(player.getUniqueId()).getName());
-        HashMap<String, Integer> perms = plugin.Permissions.get(plugin.PlayerPermission.get(player.getUniqueId()));
+                plugin.permissions.PlayerPermission.get(player.getUniqueId()).getName());
+        HashMap<String, Integer> perms = plugin.permissions.Permissions.get(plugin.permissions.
+                PlayerPermission.get(player.getUniqueId()));
         if (perms.get("updateNotify") == 1) {
             Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
                 @Override
@@ -122,7 +123,8 @@ public class HomeSpawnListener implements Listener {
                     if (!plugin.getConfig().getBoolean("DownloadUpdates") && plugin.updater.checkUpdate("main")) {
                         player.sendMessage(ChatColor.DARK_GRAY
                                 + "[" + ChatColor.AQUA + "HomeSpawn" + ChatColor.DARK_GRAY
-                                + "]" + ChatColor.GOLD + " An update is available! run \"/homespawn update\" to install it!");
+                                + "]" + ChatColor.GOLD + " An update is available! run \"/homespawn update\"" +
+                                " to install it!");
                     }
                 }
             });
@@ -159,7 +161,8 @@ public class HomeSpawnListener implements Listener {
                     if (!Players.contains(p)) {
                         plugin.HomeSpawnLocations.put(p, null);
                         plugin.HomeSpawnTimeLeft.remove(p);
-                        p.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.messages.getString("TeleportCancelMove")));
+                        p.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                                plugin.messages.getString("TeleportCancelMove")));
                     } else {
                         e.setCancelled(true);
                         plugin.HomeSpawnTimeLeft.put(p, 1);
@@ -180,7 +183,8 @@ public class HomeSpawnListener implements Listener {
                     Arrow arrow = (Arrow) Hitter;
                     if (arrow.getShooter() instanceof Player) {
                         plugin.HomeSpawnLocations.put(p, null);
-                        p.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.messages.getString("TeleportCancelPvP")));
+                        p.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                                plugin.messages.getString("TeleportCancelPvP")));
                     } else if (arrow.getShooter() instanceof Skeleton) {
                         Players.add(p);
                         e.setCancelled(true);
@@ -190,7 +194,8 @@ public class HomeSpawnListener implements Listener {
                     Wolf wolf = (Wolf) Hitter;
                     if (wolf.isTamed()) {
                         plugin.HomeSpawnLocations.put(p, null);
-                        p.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.messages.getString("TeleportCancelPvP")));
+                        p.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                                plugin.messages.getString("TeleportCancelPvP")));
                     } else {
                         Players.add(p);
                         e.setCancelled(true);
@@ -199,7 +204,8 @@ public class HomeSpawnListener implements Listener {
                 if (Hitter instanceof Player) {
                     plugin.HomeSpawnLocations.put(p, null);
                     plugin.HomeSpawnTimeLeft.remove(p);
-                    p.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.messages.getString("TeleportCancelPvP")));
+                    p.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                            plugin.messages.getString("TeleportCancelPvP")));
                 } else {
                     Players.add(p);
                     e.setCancelled(false);
@@ -268,7 +274,8 @@ public class HomeSpawnListener implements Listener {
     public void onInvExit(InventoryCloseEvent e) {
         if (!(e.getPlayer() == null && e.getInventory() == null)) {
             Player p = (Player) e.getPlayer();
-            if (plugin.HomesListInvs.containsKey(p) && Objects.equals(e.getInventory().getName(), plugin.HomesListInvs.get(p).getName())) {
+            if (plugin.HomesListInvs.containsKey(p) && Objects.equals(e.getInventory().getName(),
+                    plugin.HomesListInvs.get(p).getName())) {
                 Inventory inv = plugin.HomesListInvs.get(p);
                 inv.clear();
                 plugin.HomesListInvs.put(p, inv);
@@ -277,7 +284,8 @@ public class HomeSpawnListener implements Listener {
     }
 
     private void TeleportPlayer(Player p, Location l) {
-        HashMap<String, Integer> perms = plugin.Permissions.get(plugin.PlayerPermission.get(p.getUniqueId()));
+        HashMap<String, Integer> perms = plugin.permissions.Permissions.get(plugin.permissions.
+                PlayerPermission.get(p.getUniqueId()));
         if (perms.get("TPD") == 0) {
             p.teleport(l);
             p.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.messages.getString("Home.SentHome")));

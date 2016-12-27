@@ -17,7 +17,7 @@ public class DelSpawn {
     }
 
     public void delSpawn(String[] args, Player player) {
-        HashMap<String, Integer> perms = plugin.Permissions.get(plugin.PlayerPermission
+        HashMap<String, Integer> perms = plugin.permissions.Permissions.get(plugin.permissions.PlayerPermission
                 .get(player.getUniqueId()));
         if (perms.get("sSpawn") == 1) {
             if (Objects.equals(plugin.spawn.getString("spawn.SpawnSet"), "No")

@@ -20,7 +20,7 @@ public class Spawn {
     }
 
     public void spawn(String[] args, Player player) {
-        HashMap<String, Integer> perms = plugin.Permissions.get(plugin.PlayerPermission.
+        HashMap<String, Integer> perms = plugin.permissions.Permissions.get(plugin.permissions.PlayerPermission.
                 get(player.getUniqueId()));
         if (perms.get("spawn") == 1) {
             if (!plugin.spawn.contains("spawn.SpawnSet")) {

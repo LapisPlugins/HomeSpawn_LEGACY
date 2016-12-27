@@ -23,8 +23,8 @@ public class Home {
     }
 
     public void home(String[] args, Player player) {
-        HashMap<String, Integer> perms = plugin.Permissions.get
-                (plugin.PlayerPermission.get(player.getUniqueId()));
+        HashMap<String, Integer> perms = plugin.permissions.Permissions.get
+                (plugin.permissions.PlayerPermission.get(player.getUniqueId()));
         UUID uuid = this.plugin.PlayertoUUID.get(player.getName());
         YamlConfiguration getHomes = this.plugin.HomeConfigs.get(uuid);
         if (getHomes == null) {

@@ -27,14 +27,13 @@ public class HomeSpawn extends JavaPlugin {
     public final Logger logger = getLogger();
     public final HashMap<UUID, YamlConfiguration> HomeConfigs = new HashMap<>();
     public final HashMap<String, UUID> PlayertoUUID = new HashMap<>();
-    public final HashMap<Permission, HashMap<String, Integer>> Permissions = new HashMap<>();
-    public final HashMap<UUID, Permission> PlayerPermission = new HashMap<>();
     final HashMap<Player, Location> HomeSpawnLocations = new HashMap<>();
     final HashMap<Player, Integer> HomeSpawnTimeLeft = new HashMap<>();
     final HashMap<Player, Inventory> HomesListInvs = new HashMap<>();
     private final HashMap<UUID, File> HomeConfigsFiles = new HashMap<>();
     public HomeSpawn plugin;
     public LapisUpdater updater;
+    public HomeSpawnPermissions permissions;
     public YamlConfiguration spawn;
     public File spawnFile;
     public YamlConfiguration messages;
@@ -47,16 +46,12 @@ public class HomeSpawn extends JavaPlugin {
     public void onEnable() {
         Enable();
         Configs();
-        Update(this);
-        Permissions();
+        Update();
+        permissions = new HomeSpawnPermissions(this);
+        permissions.init();
         Commands();
         CommandDelay();
         Metrics();
-    }
-
-    protected void Permissions() {
-        HomeSpawnPermissions hsp = new HomeSpawnPermissions(this);
-        hsp.init();
     }
 
     private void Metrics() {
@@ -90,7 +85,8 @@ public class HomeSpawn extends JavaPlugin {
         }
     }
 
-    private void Update(final HomeSpawn p) {
+    private void Update() {
+        final HomeSpawn p = this;
         Bukkit.getScheduler().runTaskAsynchronously(this, new Runnable() {
             @Override
             public void run() {
@@ -343,9 +339,9 @@ public class HomeSpawn extends JavaPlugin {
             passwords = YamlConfiguration.loadConfiguration(passwordsFile);
             loadPlayerData();
             loadName();
-            Permissions();
-            for (Permission p : Permissions.keySet()) {
-                if (Permissions.get(p).get("reload").equals(1)) {
+            permissions.init();
+            for (Permission p : permissions.Permissions.keySet()) {
+                if (permissions.Permissions.get(p).get("reload").equals(1)) {
                     Bukkit.broadcast(ChatColor.RED + "Console" + ChatColor.GOLD + " Has Reloaded Homespawn!", p.getName());
                 }
             }
@@ -357,11 +353,11 @@ public class HomeSpawn extends JavaPlugin {
             passwords = YamlConfiguration.loadConfiguration(passwordsFile);
             loadPlayerData();
             loadName();
-            Permissions();
+            permissions.init();
             player.sendMessage(ChatColor.GOLD
                     + "You have reloaded the configs for Homespawn!");
-            for (Permission p : Permissions.keySet()) {
-                if (Permissions.get(p).get("reload").equals(1)) {
+            for (Permission p : permissions.Permissions.keySet()) {
+                if (permissions.Permissions.get(p).get("reload").equals(1)) {
                     Bukkit.broadcast(ChatColor.GOLD + "Player " + ChatColor.RED + player.getName() + ChatColor.GOLD
                             + " Has Reloaded Homespawn!", p.getName());
                 }
@@ -376,8 +372,8 @@ public class HomeSpawn extends JavaPlugin {
             player.sendMessage(ChatColor.GOLD + "---------------"
                     + ChatColor.RED + "Homespawn" + ChatColor.GOLD
                     + "---------------");
-            if (Permissions.get(PlayerPermission.get(player.getUniqueId())).get("cHomes") == 1 &&
-                    Permissions.get(PlayerPermission.get(player.getUniqueId())).get("homes") > 0) {
+            if (permissions.Permissions.get(permissions.PlayerPermission.get(player.getUniqueId())).get("cHomes") == 1 &&
+                    permissions.Permissions.get(permissions.PlayerPermission.get(player.getUniqueId())).get("homes") > 0) {
                 player.sendMessage(ChatColor.RED + "/home [name]:" + ChatColor.GOLD
                         + " Sends You To The Home Specified");
                 player.sendMessage(ChatColor.RED + "/sethome [name]:"
@@ -385,7 +381,8 @@ public class HomeSpawn extends JavaPlugin {
                         + " Sets Your Home At Your Current Location");
                 player.sendMessage(ChatColor.RED + "/delhome [name]:"
                         + ChatColor.GOLD + " Removes The Specified Home");
-            } else if (Permissions.get(PlayerPermission.get(player.getUniqueId())).get("homes") > 0) {
+            } else if (permissions.Permissions.get(permissions.PlayerPermission.get
+                    (player.getUniqueId())).get("homes") > 0) {
                 player.sendMessage(ChatColor.RED + "/home:" + ChatColor.GOLD
                         + " Sends You To Your Home");
                 player.sendMessage(ChatColor.RED + "/sethome:"
@@ -394,7 +391,8 @@ public class HomeSpawn extends JavaPlugin {
                 player.sendMessage(ChatColor.RED + "/delhome:"
                         + ChatColor.GOLD + " Removes Your Home");
             }
-            if (Permissions.get(PlayerPermission.get(player.getUniqueId())).get("spawn") == 1) {
+            if (permissions.Permissions.get(permissions.PlayerPermission.get
+                    (player.getUniqueId())).get("spawn") == 1) {
                 player.sendMessage(ChatColor.RED + "/spawn:" + ChatColor.GOLD
                         + " Sends You To Spawn");
             }
@@ -403,7 +401,7 @@ public class HomeSpawn extends JavaPlugin {
                         + ChatColor.GOLD
                         + " Displays The Home Transfer Commands");
             }
-            if (Permissions.get(PlayerPermission.get(player.getUniqueId())).get("sSpawn").equals(1)) {
+            if (permissions.Permissions.get(permissions.PlayerPermission.get(player.getUniqueId())).get("sSpawn").equals(1)) {
                 player.sendMessage(ChatColor.RED + "/setspawn:"
                         + ChatColor.GOLD + " Sets The Server Spawn");
                 player.sendMessage(ChatColor.RED + "/setspawn new:"
@@ -414,11 +412,11 @@ public class HomeSpawn extends JavaPlugin {
             }
             player.sendMessage(ChatColor.RED + "/homespawn:"
                     + ChatColor.GOLD + " Displays Plugin Information");
-            if (Permissions.get(PlayerPermission.get(player.getUniqueId())).get("reload").equals(1)) {
+            if (permissions.Permissions.get(permissions.PlayerPermission.get(player.getUniqueId())).get("reload").equals(1)) {
                 player.sendMessage(ChatColor.RED + "/homespawn reload:"
                         + ChatColor.GOLD + " Reloads The Plugin Configs");
             }
-            if (Permissions.get(PlayerPermission.get(player.getUniqueId())).get("updateNotify").equals(1)) {
+            if (permissions.Permissions.get(permissions.PlayerPermission.get(player.getUniqueId())).get("updateNotify").equals(1)) {
                 player.sendMessage(ChatColor.RED + "/homespawn update (beta/stable):"
                         + ChatColor.GOLD + " Installs updates if available, you can also choose beta or stable.");
             }

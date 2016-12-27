@@ -7,9 +7,12 @@ import org.bukkit.permissions.PermissionDefault;
 
 import java.util.HashMap;
 import java.util.Set;
+import java.util.UUID;
 
 public class HomeSpawnPermissions {
 
+    public final HashMap<Permission, HashMap<String, Integer>> Permissions = new HashMap<>();
+    public final HashMap<UUID, Permission> PlayerPermission = new HashMap<>();
     private HomeSpawn plugin;
 
     protected HomeSpawnPermissions(HomeSpawn p) {
@@ -17,7 +20,7 @@ public class HomeSpawnPermissions {
     }
 
     protected void init() {
-        plugin.Permissions.clear();
+        Permissions.clear();
         HashMap<String, Integer> nullPermMap = new HashMap<>();
         nullPermMap.put("priority", 0);
         nullPermMap.put("homes", 0);
@@ -35,7 +38,7 @@ public class HomeSpawnPermissions {
         } else {
             np = Bukkit.getServer().getPluginManager().getPermission("homespawn.null");
         }
-        plugin.Permissions.put(np, nullPermMap);
+        Permissions.put(np, nullPermMap);
         ConfigurationSection permsSection = plugin.getConfig().getConfigurationSection("Permissions");
         Set<String> perms = permsSection.getKeys(false);
         for (String perm : perms) {
@@ -95,7 +98,7 @@ public class HomeSpawnPermissions {
             } else {
                 p = Bukkit.getServer().getPluginManager().getPermission(permName);
             }
-            plugin.Permissions.put(p, permMap);
+            Permissions.put(p, permMap);
             plugin.debug("Loaded permission " + p.getName());
         }
         plugin.logger.info("Permissions Loaded!");

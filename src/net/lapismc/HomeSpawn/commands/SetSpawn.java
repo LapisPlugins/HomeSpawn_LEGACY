@@ -16,7 +16,7 @@ public class SetSpawn {
     }
 
     public void setSpawn(String[] args, Player player) {
-        HashMap<String, Integer> perms = plugin.Permissions.get(plugin.PlayerPermission
+        HashMap<String, Integer> perms = plugin.permissions.Permissions.get(plugin.permissions.PlayerPermission
                 .get(player.getUniqueId()));
         if (perms.get("sSpawn") == 1) {
             if (args.length == 0) {
