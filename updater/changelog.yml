@@ -40,3 +40,5 @@ ChangeLog:
         - "More null fixes"
     Stable 2.0.7:
         - "Fix to config version"
+    Stable 2.0.8:
+        - "Made adjustments to config handling"
