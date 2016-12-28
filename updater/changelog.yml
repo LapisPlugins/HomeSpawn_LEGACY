@@ -42,3 +42,5 @@ ChangeLog:
         - "Fix to config version"
     Stable 2.0.8:
         - "Made adjustments to config handling"
+    Stable 2.0.9:
+        - "Fixed critical error with config handling"

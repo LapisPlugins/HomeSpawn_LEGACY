@@ -35,6 +35,7 @@ public class HomeSpawn extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        HSConfig = new HomeSpawnConfiguration(this);
         Enable();
         Update();
         HSPermissions = new HomeSpawnPermissions(this);

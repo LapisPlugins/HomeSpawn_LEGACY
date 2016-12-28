@@ -14,8 +14,6 @@ public class HomeSpawnComponents {
     File f;
     YamlConfiguration comp;
 
-    public HomeSpawnComponents() {
-    }
 
     public void init(HomeSpawn plugin) {
         this.plugin = plugin;
