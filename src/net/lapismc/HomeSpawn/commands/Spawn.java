@@ -22,6 +22,11 @@ public class Spawn {
     public void spawn(String[] args, Player player) {
         HashMap<String, Integer> perms = plugin.HSPermissions.Permissions.get(plugin.HSPermissions.PlayerPermission.
                 get(player.getUniqueId()));
+        if (perms == null) {
+            plugin.HSPermissions.init();
+            perms = plugin.HSPermissions.Permissions.get(plugin.HSPermissions.PlayerPermission.
+                    get(player.getUniqueId()));
+        }
         if (perms.get("spawn") == 1) {
             if (!plugin.HSConfig.spawn.contains("spawn.SpawnSet")) {
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',

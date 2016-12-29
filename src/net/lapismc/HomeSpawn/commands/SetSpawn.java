@@ -18,6 +18,11 @@ public class SetSpawn {
     public void setSpawn(String[] args, Player player) {
         HashMap<String, Integer> perms = plugin.HSPermissions.Permissions.get(plugin.HSPermissions.PlayerPermission
                 .get(player.getUniqueId()));
+        if (perms == null) {
+            plugin.HSPermissions.init();
+            perms = plugin.HSPermissions.Permissions.get(plugin.HSPermissions.PlayerPermission.
+                    get(player.getUniqueId()));
+        }
         if (perms.get("sSpawn") == 1) {
             if (args.length == 0) {
                 plugin.HSConfig.spawn.set("spawn.SpawnSet", "Yes");

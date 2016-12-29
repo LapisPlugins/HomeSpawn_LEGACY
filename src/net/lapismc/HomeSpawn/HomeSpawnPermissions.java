@@ -19,7 +19,7 @@ public class HomeSpawnPermissions {
         plugin = p;
     }
 
-    protected void init() {
+    public void init() {
         Permissions.clear();
         HashMap<String, Integer> nullPermMap = new HashMap<>();
         nullPermMap.put("priority", 0);

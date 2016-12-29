@@ -19,6 +19,11 @@ public class DelSpawn {
     public void delSpawn(String[] args, Player player) {
         HashMap<String, Integer> perms = plugin.HSPermissions.Permissions.get(plugin.HSPermissions.PlayerPermission
                 .get(player.getUniqueId()));
+        if (perms == null) {
+            plugin.HSPermissions.init();
+            perms = plugin.HSPermissions.Permissions.get(plugin.HSPermissions.PlayerPermission.
+                    get(player.getUniqueId()));
+        }
         if (perms.get("sSpawn") == 1) {
             if (Objects.equals(plugin.HSConfig.spawn.getString("spawn.SpawnSet"), "No")
                     || !plugin.HSConfig.spawn.contains("spawn.SpawnSet")) {
