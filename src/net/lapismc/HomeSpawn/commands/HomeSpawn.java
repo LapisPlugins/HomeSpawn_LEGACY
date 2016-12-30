@@ -61,7 +61,7 @@ public class HomeSpawn {
                     if (args.length == 1) {
                         String ID = plugin.getConfig().getBoolean("BetaVersions")
                                 ? "beta" : "stable";
-                        if (plugin.updater.downloadUpdate(ID)) {
+                        if (plugin.lapisUpdater.downloadUpdate(ID)) {
                             player.sendMessage(ChatColor.GOLD + "Downloading Update...");
                             player.sendMessage(ChatColor.GOLD + "The update will be installed"
                                     + " when the server next starts!");
@@ -70,7 +70,7 @@ public class HomeSpawn {
                         }
                     } else if (args.length == 2) {
                         String ID = args[1];
-                        if (plugin.updater.downloadUpdate(ID)) {
+                        if (plugin.lapisUpdater.downloadUpdate(ID)) {
                             player.sendMessage(ChatColor.GOLD + "Downloading Update...");
                             player.sendMessage(ChatColor.GOLD + "The update will be installed"
                                     + " when the server next starts!");

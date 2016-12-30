@@ -8,11 +8,11 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Objects;
 
-public class DelSpawn {
+public class HomeSpawnDelSpawn {
 
     private HomeSpawn plugin;
 
-    public DelSpawn(HomeSpawn p) {
+    public HomeSpawnDelSpawn(HomeSpawn p) {
         this.plugin = p;
     }
 
@@ -28,12 +28,12 @@ public class DelSpawn {
             if (Objects.equals(plugin.HSConfig.spawn.getString("spawn.SpawnSet"), "No")
                     || !plugin.HSConfig.spawn.contains("spawn.SpawnSet")) {
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        plugin.HSConfig.messages.getString("Spawn.NotSet")));
+                        plugin.HSConfig.messages.getString("HomeSpawnSpawn.NotSet")));
             } else if (plugin.HSConfig.spawn.getString("spawn.SpawnSet")
                     .equalsIgnoreCase("Yes")) {
                 plugin.HSConfig.spawn.set("spawn.SpawnSet", "No");
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        plugin.HSConfig.messages.getString("Spawn.Removed")));
+                        plugin.HSConfig.messages.getString("HomeSpawnSpawn.Removed")));
                 try {
                     plugin.HSConfig.spawn.save(this.plugin.HSConfig.spawnFile);
                     this.plugin.HSConfig.reload("silent");

@@ -1,8 +1,8 @@
 package net.lapismc.HomeSpawn;
 
 
-import net.lapismc.HomeSpawn.api.Configs;
-import net.lapismc.HomeSpawn.api.PlayerData;
+import net.lapismc.HomeSpawn.api.HomeSpawnConfigs;
+import net.lapismc.HomeSpawn.api.HomeSpawnPlayerData;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
@@ -24,7 +24,7 @@ public class HomeSpawnComponents {
                 f.createNewFile();
                 comp = YamlConfiguration.loadConfiguration(f);
                 comp.set("Homes", true);
-                comp.set("Spawn", true);
+                comp.set("HomeSpawnSpawn", true);
                 comp.set("HomeSpawnPassword", true);
                 comp.set("API", true);
                 comp.save(f);
@@ -33,27 +33,27 @@ public class HomeSpawnComponents {
             }
         }
         comp = YamlConfiguration.loadConfiguration(f);
-        HomeSpawnCommand hsc = new HomeSpawnCommand(plugin);
-        Configs c = new Configs(plugin);
+        plugin.HSCommand = new HomeSpawnCommand(plugin);
+        HomeSpawnConfigs c = new HomeSpawnConfigs(plugin);
         c.init(plugin);
-        PlayerData pd = new PlayerData(plugin);
+        HomeSpawnPlayerData pd = new HomeSpawnPlayerData(plugin);
         pd.init(plugin);
         if (home()) {
-            plugin.getCommand("home").setExecutor(hsc);
-            plugin.getCommand("sethome").setExecutor(hsc);
-            plugin.getCommand("delhome").setExecutor(hsc);
-            plugin.getCommand("homeslist").setExecutor(hsc);
+            plugin.getCommand("home").setExecutor(plugin.HSCommand);
+            plugin.getCommand("sethome").setExecutor(plugin.HSCommand);
+            plugin.getCommand("delhome").setExecutor(plugin.HSCommand);
+            plugin.getCommand("homeslist").setExecutor(plugin.HSCommand);
         }
         if (spawn()) {
-            plugin.getCommand("spawn").setExecutor(hsc);
-            plugin.getCommand("setspawn").setExecutor(hsc);
-            plugin.getCommand("delspawn").setExecutor(hsc);
+            plugin.getCommand("spawn").setExecutor(plugin.HSCommand);
+            plugin.getCommand("setspawn").setExecutor(plugin.HSCommand);
+            plugin.getCommand("delspawn").setExecutor(plugin.HSCommand);
         }
         if (password()) {
-            plugin.getCommand("homepassword").setExecutor(hsc);
+            plugin.getCommand("homepassword").setExecutor(plugin.HSCommand);
         }
-        plugin.getCommand("homespawn").setExecutor(hsc);
-        hsc.registerCommands();
+        plugin.getCommand("homespawn").setExecutor(plugin.HSCommand);
+        plugin.HSCommand.registerCommands();
         plugin.logger.info("Commands Registered!");
     }
 
@@ -62,7 +62,7 @@ public class HomeSpawnComponents {
     }
 
     public boolean spawn() {
-        return comp.getBoolean("Spawn");
+        return comp.getBoolean("HomeSpawnSpawn");
     }
 
     public boolean password() {

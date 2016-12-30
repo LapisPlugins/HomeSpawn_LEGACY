@@ -16,6 +16,7 @@ public class HomeSpawnConfiguration {
 
     public final HashMap<UUID, YamlConfiguration> HomeConfigs = new HashMap<>();
     public final HashMap<UUID, File> HomeConfigsFiles = new HashMap<>();
+    public final HashMap<String, UUID> PlayertoUUID = new HashMap<>();
     public YamlConfiguration spawn;
     public File spawnFile;
     public YamlConfiguration messages;
@@ -119,13 +120,13 @@ public class HomeSpawnConfiguration {
     }
 
     public void loadName() {
-        plugin.PlayertoUUID.clear();
+        PlayertoUUID.clear();
         File file = new File(plugin.getDataFolder().getAbsolutePath() + File.separator
                 + "PlayerData" + File.separator + "PlayerNames");
         File[] playerNamesArray = file.listFiles();
         for (File f : playerNamesArray) {
             YamlConfiguration Yaml = YamlConfiguration.loadConfiguration(f);
-            plugin.PlayertoUUID.put(Yaml.getString("Name"), UUID.fromString(Yaml.getString("UUID")));
+            PlayertoUUID.put(Yaml.getString("Name"), UUID.fromString(Yaml.getString("UUID")));
         }
     }
 
@@ -157,7 +158,7 @@ public class HomeSpawnConfiguration {
             YamlConfiguration yaml = YamlConfiguration.loadConfiguration(f);
             yaml.set("Title", "&6How To HomeSpawn!");
             yaml.set("Book.NumbOfPages", 1);
-            yaml.set("Book.1", " &6How To Use HomeSpawn! \n &4/home:&6 Sends You To Your Home \n &4/sethome:&6 Sets Your Home At Your Current Location \n &4/delhome:&6 Removes Your Home \n &4/spawn:&6 Sends You To Spawn \n &4/homepassword help:\n &6 Displays The Home Transfer Commands \n &2 For More Detailed Help Use /homespawn help");
+            yaml.set("Book.1", " &6How To Use HomeSpawn! \n &4/home:&6 Sends You To Your HomeSpawnHome \n &4/sethome:&6 Sets Your HomeSpawnHome At Your Current Location \n &4/delhome:&6 Removes Your HomeSpawnHome \n &4/spawn:&6 Sends You To HomeSpawnSpawn \n &4/homepassword help:\n &6 Displays The HomeSpawnHome Transfer Commands \n &2 For More Detailed Help Use /homespawn help");
             yaml.set("Book.2", "This will only be on page 2 if the page number is 2");
             yaml.save(f);
         } catch (IOException e) {
@@ -196,7 +197,7 @@ public class HomeSpawnConfiguration {
                 + File.separator + "PlayerData" + File.separator
                 + "PlayerNames");
         if (!theDir.exists()) {
-            plugin.logger.info("Creating PlayerData Directory!");
+            plugin.logger.info("Creating HomeSpawnPlayerData Directory!");
             theDir.mkdir();
         }
         if (!theDir1.exists()) {

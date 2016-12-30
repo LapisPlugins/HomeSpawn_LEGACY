@@ -11,11 +11,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-public class SetHome {
+public class HomeSpawnSetHome {
 
     HomeSpawn plugin = null;
 
-    public SetHome(HomeSpawn p) {
+    public HomeSpawnSetHome(HomeSpawn p) {
         this.plugin = p;
     }
 
@@ -27,7 +27,7 @@ public class SetHome {
             perms = plugin.HSPermissions.Permissions.get(plugin.HSPermissions.PlayerPermission.
                     get(player.getUniqueId()));
         }
-        UUID uuid = this.plugin.PlayertoUUID.get(player.getName());
+        UUID uuid = this.plugin.HSConfig.PlayertoUUID.get(player.getName());
         YamlConfiguration getHomes = this.plugin.HSConfig.HomeConfigs.get(uuid);
         if (!getHomes.contains(player.getUniqueId()
                 + ".list")) {
@@ -41,7 +41,7 @@ public class SetHome {
                 + ".Numb") >= perms.get("homes")) {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                     plugin.HSConfig.messages
-                            .getString("Home.LimitReached")));
+                            .getString("HomeSpawnHome.LimitReached")));
             return;
         }
 
@@ -56,7 +56,7 @@ public class SetHome {
             if (!getHomes.contains("HasHome")) {
                 getHomes.createSection("HasHome");
             }
-            HomeSetEvent HCE = new HomeSetEvent(player, player.getWorld(), "Home");
+            HomeSetEvent HCE = new HomeSetEvent(player, player.getWorld(), "HomeSpawnHome");
             Bukkit.getPluginManager().callEvent(HCE);
             if (HCE.isCancelled()) {
                 return;
@@ -68,8 +68,8 @@ public class SetHome {
                 getHomes.set(player.getUniqueId()
                         + ".Numb", HomesNumb + 1);
             }
-            if (!list.contains("Home")) {
-                list.add("Home");
+            if (!list.contains("HomeSpawnHome")) {
+                list.add("HomeSpawnHome");
                 getHomes.set(player.getUniqueId()
                         + ".list", list);
             }
@@ -90,13 +90,13 @@ public class SetHome {
                     + ".Pitch", player.getLocation().getPitch());
             getHomes.set("HasHome", "Yes");
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.HSConfig.messages.getString("Home.HomeSet")));
+                    plugin.HSConfig.messages.getString("HomeSpawnHome.HomeSet")));
         } else if (args.length == 1) {
             if (perms.get("cHomes") == 1) {
                 String home = args[0];
-                if (home.equalsIgnoreCase("Home")) {
+                if (home.equalsIgnoreCase("HomeSpawnHome")) {
                     player.sendMessage(ChatColor.RED
-                            + "You Cannot Use The Home Name \"Home\", Please Choose Another!");
+                            + "You Cannot Use The HomeSpawnHome Name \"HomeSpawnHome\", Please Choose Another!");
                     return;
                 }
                 HomeSetEvent HCE = new HomeSetEvent(player, player.getWorld(), home);
@@ -137,7 +137,7 @@ public class SetHome {
                         .getLocation().getPitch());
                 getHomes.set(home + ".HasHome", "Yes");
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        plugin.HSConfig.messages.getString("Home.HomeSet")));
+                        plugin.HSConfig.messages.getString("HomeSpawnHome.HomeSet")));
             } else {
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                         plugin.HSConfig.messages.getString("NoPerms")));

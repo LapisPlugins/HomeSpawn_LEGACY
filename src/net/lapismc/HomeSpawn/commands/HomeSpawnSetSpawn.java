@@ -7,11 +7,11 @@ import org.bukkit.entity.Player;
 import java.io.IOException;
 import java.util.HashMap;
 
-public class SetSpawn {
+public class HomeSpawnSetSpawn {
 
     private HomeSpawn plugin;
 
-    public SetSpawn(HomeSpawn p) {
+    public HomeSpawnSetSpawn(HomeSpawn p) {
         this.plugin = p;
     }
 
@@ -37,7 +37,7 @@ public class SetSpawn {
                 plugin.HSConfig.spawn.set("spawn.Pitch", player.getLocation()
                         .getPitch());
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        plugin.HSConfig.messages.getString("Spawn.SpawnSet")));
+                        plugin.HSConfig.messages.getString("HomeSpawnSpawn.SpawnSet")));
             } else if (args[0].equalsIgnoreCase("new")) {
                 plugin.HSConfig.spawn.set("spawnnew.SpawnSet", "Yes");
                 plugin.HSConfig.spawn.set("spawnnew.X", player.getLocation()
@@ -53,7 +53,7 @@ public class SetSpawn {
                 plugin.HSConfig.spawn.set("spawnnew.Pitch", player.getLocation()
                         .getPitch());
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        plugin.HSConfig.messages.getString("Spawn.SpawnNewSet")));
+                        plugin.HSConfig.messages.getString("HomeSpawnSpawn.SpawnNewSet")));
             } else {
                 this.plugin.help(player);
             }

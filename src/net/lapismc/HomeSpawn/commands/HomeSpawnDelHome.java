@@ -8,16 +8,16 @@ import org.bukkit.entity.Player;
 import java.util.List;
 import java.util.UUID;
 
-public class DelHome {
+public class HomeSpawnDelHome {
 
     private HomeSpawn plugin;
 
-    public DelHome(HomeSpawn p) {
+    public HomeSpawnDelHome(HomeSpawn p) {
         this.plugin = p;
     }
 
     public void delHome(String[] args, Player player) {
-        UUID uuid = plugin.PlayertoUUID.get(player.getName());
+        UUID uuid = plugin.HSConfig.PlayertoUUID.get(player.getName());
         YamlConfiguration getHomes = plugin.HSConfig.HomeConfigs.get(uuid);
         if (!getHomes.contains(player.getUniqueId()
                 + ".list")) {
@@ -33,41 +33,41 @@ public class DelHome {
                     .equalsIgnoreCase("no")
                     || !getHomes.contains("HasHome")) {
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        plugin.HSConfig.messages.getString("Home.NoHomeSet")));
+                        plugin.HSConfig.messages.getString("HomeSpawnHome.NoHomeSet")));
             } else if (getHomes.getString("HasHome")
                     .equalsIgnoreCase("yes")) {
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        plugin.HSConfig.messages.getString("Home.HomeRemoved")));
+                        plugin.HSConfig.messages.getString("HomeSpawnHome.HomeRemoved")));
                 getHomes.set("HasHome", "No");
                 getHomes.set(player.getUniqueId()
                         + ".Numb", HomeNumb - 1);
-                if (list.contains("Home")) {
-                    list.remove("Home");
+                if (list.contains("HomeSpawnHome")) {
+                    list.remove("HomeSpawnHome");
                     getHomes.set(player.getUniqueId()
                             + ".list", list);
                 }
                 this.plugin.HSConfig.savePlayerData(uuid);
             } else {
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        plugin.HSConfig.messages.getString("Home.NoHomeSet")));
+                        plugin.HSConfig.messages.getString("HomeSpawnHome.NoHomeSet")));
                 if (getHomes.getInt(player.getUniqueId()
                         + ".Numb") > 0) {
                     if (!list.isEmpty()) {
                         String list2 = list.toString();
                         String list3 = list2.replace("[", " ");
                         String StringList = list3.replace("]", " ");
-                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.HSConfig.messages.getString("Home.CurrentHomes")));
+                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.HSConfig.messages.getString("HomeSpawnHome.CurrentHomes")));
                         player.sendMessage(ChatColor.RED
                                 + StringList);
                     } else {
                         player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                                 plugin.HSConfig.messages
-                                        .getString("Home.NoHomeSet")));
+                                        .getString("HomeSpawnHome.NoHomeSet")));
                     }
                 } else {
                     player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                             plugin.HSConfig.messages
-                                    .getString("Home.NoHomeSet")));
+                                    .getString("HomeSpawnHome.NoHomeSet")));
                 }
             }
         } else if (args.length == 1) {
@@ -77,30 +77,30 @@ public class DelHome {
                     || getHomes.getString(home + ".HasHome")
                     .equalsIgnoreCase("no")) {
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        plugin.HSConfig.messages.getString("Home.NoHomeName")));
+                        plugin.HSConfig.messages.getString("HomeSpawnHome.NoHomeName")));
                 if (getHomes.getInt(player.getUniqueId()
                         + ".Numb") > 0) {
                     if (!list.isEmpty()) {
                         String list2 = list.toString();
                         String list3 = list2.replace("[", " ");
                         String StringList = list3.replace("]", " ");
-                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.HSConfig.messages.getString("Home.CurrentHomes")));
+                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.HSConfig.messages.getString("HomeSpawnHome.CurrentHomes")));
                         player.sendMessage(ChatColor.RED
                                 + StringList);
                     } else {
                         player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                                 plugin.HSConfig.messages
-                                        .getString("Home.NoHomeSet")));
+                                        .getString("HomeSpawnHome.NoHomeSet")));
                     }
                 } else {
                     player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                             plugin.HSConfig.messages
-                                    .getString("Home.NoHomeSet")));
+                                    .getString("HomeSpawnHome.NoHomeSet")));
                 }
             } else if (getHomes.getString(home + ".HasHome")
                     .equalsIgnoreCase("yes")) {
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        plugin.HSConfig.messages.getString("Home.HomeRemoved")));
+                        plugin.HSConfig.messages.getString("HomeSpawnHome.HomeRemoved")));
                 getHomes.set(home + ".HasHome", "No");
                 getHomes.set(player.getUniqueId()
                         + ".Numb", HomeNumb - 1);
@@ -112,25 +112,25 @@ public class DelHome {
                 this.plugin.HSConfig.savePlayerData(uuid);
             } else {
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        plugin.HSConfig.messages.getString("Home.NoHomeName")));
+                        plugin.HSConfig.messages.getString("HomeSpawnHome.NoHomeName")));
                 if (getHomes.getInt(player.getUniqueId()
                         + ".Numb") > 0) {
                     if (!list.isEmpty()) {
                         String list2 = list.toString();
                         String list3 = list2.replace("[", " ");
                         String StringList = list3.replace("]", " ");
-                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.HSConfig.messages.getString("Home.CurrentHomes")));
+                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.HSConfig.messages.getString("HomeSpawnHome.CurrentHomes")));
                         player.sendMessage(ChatColor.RED
                                 + StringList);
                     } else {
                         player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                                 plugin.HSConfig.messages
-                                        .getString("Home.NoHomeSet")));
+                                        .getString("HomeSpawnHome.NoHomeSet")));
                     }
                 } else {
                     player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                             plugin.HSConfig.messages
-                                    .getString("Home.NoHomeSet")));
+                                    .getString("HomeSpawnHome.NoHomeSet")));
                 }
             }
         } else {

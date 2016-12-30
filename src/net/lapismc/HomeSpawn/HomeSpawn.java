@@ -10,25 +10,25 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class HomeSpawn extends JavaPlugin {
 
     public final Logger logger = getLogger();
-    public final HashMap<String, UUID> PlayertoUUID = new HashMap<>();
     final HashMap<Player, Location> HomeSpawnLocations = new HashMap<>();
     final HashMap<Player, Integer> HomeSpawnTimeLeft = new HashMap<>();
-    final HashMap<Player, Inventory> HomesListInvs = new HashMap<>();
-    public HomeSpawn plugin;
-    public LapisUpdater updater;
+    public LapisUpdater lapisUpdater;
+    public HomeSpawnCommand HSCommand;
     public HomeSpawnPermissions HSPermissions;
     public HomeSpawnListener HSListener;
     public HomeSpawnConfiguration HSConfig;
@@ -81,15 +81,15 @@ public class HomeSpawn extends JavaPlugin {
         Bukkit.getScheduler().runTaskAsynchronously(this, new Runnable() {
             @Override
             public void run() {
-                updater = new LapisUpdater(p, "Homespawn.jar", "Dart2112", "HomeSpawn", "master");
+                lapisUpdater = new LapisUpdater(p, "Homespawn.jar", "Dart2112", "HomeSpawn", "master");
                 String ID = getConfig().getBoolean("BetaVersions") == true ? "beta" : "stable";
-                if (updater.checkUpdate(ID)) {
+                if (lapisUpdater.checkUpdate(ID)) {
                     if (getConfig().getBoolean("UpdateNotification") && !getConfig()
                             .getBoolean("DownloadUpdates")) {
                         logger.info("An update for HomeSpawn is available and can be" +
                                 " downloaded and installed by running /homespawn update");
                     } else if (getConfig().getBoolean("DownloadUpdates")) {
-                        updater.downloadUpdate(ID);
+                        lapisUpdater.downloadUpdate(ID);
                         logger.info("Downloading Homespawn update, it will be installed " +
                                 "on next restart!");
                     }
@@ -135,9 +135,9 @@ public class HomeSpawn extends JavaPlugin {
             spawnnew.add(0.5, 0, 0.5);
             player.teleport(spawnnew);
             logger.info("Player " + player.getName()
-                    + " Was Sent To New Spawn");
+                    + " Was Sent To New HomeSpawnSpawn");
         } else {
-            logger.info("There Is No New Spawn Set And Therefore The Player Wasn't Sent To The New Spawn");
+            logger.info("There Is No New HomeSpawnSpawn Set And Therefore The Player Wasn't Sent To The New HomeSpawnSpawn");
         }
     }
 
@@ -150,46 +150,46 @@ public class HomeSpawn extends JavaPlugin {
             if (HSPermissions.Permissions.get(HSPermissions.PlayerPermission.get(player.getUniqueId())).get("cHomes") == 1 &&
                     HSPermissions.Permissions.get(HSPermissions.PlayerPermission.get(player.getUniqueId())).get("homes") > 0) {
                 player.sendMessage(ChatColor.RED + "/home [name]:" + ChatColor.GOLD
-                        + " Sends You To The Home Specified");
+                        + " Sends You To The HomeSpawnHome Specified");
                 player.sendMessage(ChatColor.RED + "/sethome [name]:"
                         + ChatColor.GOLD
-                        + " Sets Your Home At Your Current Location");
+                        + " Sets Your HomeSpawnHome At Your Current Location");
                 player.sendMessage(ChatColor.RED + "/delhome [name]:"
-                        + ChatColor.GOLD + " Removes The Specified Home");
+                        + ChatColor.GOLD + " Removes The Specified HomeSpawnHome");
             } else if (HSPermissions.Permissions.get(HSPermissions.PlayerPermission.get
                     (player.getUniqueId())).get("homes") > 0) {
                 player.sendMessage(ChatColor.RED + "/home:" + ChatColor.GOLD
-                        + " Sends You To Your Home");
+                        + " Sends You To Your HomeSpawnHome");
                 player.sendMessage(ChatColor.RED + "/sethome:"
                         + ChatColor.GOLD
-                        + " Sets Your Home At Your Current Location");
+                        + " Sets Your HomeSpawnHome At Your Current Location");
                 player.sendMessage(ChatColor.RED + "/delhome:"
-                        + ChatColor.GOLD + " Removes Your Home");
+                        + ChatColor.GOLD + " Removes Your HomeSpawnHome");
             }
             if (HSPermissions.Permissions.get(HSPermissions.PlayerPermission.get
                     (player.getUniqueId())).get("spawn") == 1) {
                 player.sendMessage(ChatColor.RED + "/spawn:" + ChatColor.GOLD
-                        + " Sends You To Spawn");
+                        + " Sends You To HomeSpawnSpawn");
             }
             if (!getServer().getOnlineMode()) {
                 player.sendMessage(ChatColor.RED + "/homepassword help:"
                         + ChatColor.GOLD
-                        + " Displays The Home Transfer Commands");
+                        + " Displays The HomeSpawnHome Transfer Commands");
             }
             if (HSPermissions.Permissions.get(HSPermissions.PlayerPermission.get(player.getUniqueId())).get("sSpawn").equals(1)) {
                 player.sendMessage(ChatColor.RED + "/setspawn:"
-                        + ChatColor.GOLD + " Sets The Server Spawn");
+                        + ChatColor.GOLD + " Sets The Server HomeSpawnSpawn");
                 player.sendMessage(ChatColor.RED + "/setspawn new:"
                         + ChatColor.GOLD
-                        + " All New Players Will Be Sent To This Spawn");
+                        + " All New Players Will Be Sent To This HomeSpawnSpawn");
                 player.sendMessage(ChatColor.RED + "/delspawn:"
-                        + ChatColor.GOLD + " Removes The Server Spawn");
+                        + ChatColor.GOLD + " Removes The Server HomeSpawnSpawn");
             }
             player.sendMessage(ChatColor.RED + "/homespawn:"
                     + ChatColor.GOLD + " Displays Plugin Information");
             if (HSPermissions.Permissions.get(HSPermissions.PlayerPermission.get(player.getUniqueId())).get("reload").equals(1)) {
                 player.sendMessage(ChatColor.RED + "/homespawn reload:"
-                        + ChatColor.GOLD + " Reloads The Plugin Configs");
+                        + ChatColor.GOLD + " Reloads The Plugin HomeSpawnConfigs");
             }
             if (HSPermissions.Permissions.get(HSPermissions.PlayerPermission.get(player.getUniqueId())).get("updateNotify").equals(1)) {
                 player.sendMessage(ChatColor.RED + "/homespawn update (beta/stable):"

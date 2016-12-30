@@ -65,7 +65,7 @@ public class HomeSpawnListener implements Listener {
                 plugin.spawnNew(player);
                 if (plugin.getConfig().getBoolean("CommandBook")) {
                     PlayerInventory pi = player.getInventory();
-                    InstructionBook book = new InstructionBook(plugin);
+                    HomeSpawnBook book = new HomeSpawnBook(plugin);
                     ItemStack commandBook = book.getBook();
                     pi.addItem(commandBook);
                 }
@@ -120,7 +120,7 @@ public class HomeSpawnListener implements Listener {
             Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
                 @Override
                 public void run() {
-                    if (!plugin.getConfig().getBoolean("DownloadUpdates") && plugin.updater.checkUpdate("main")) {
+                    if (!plugin.getConfig().getBoolean("DownloadUpdates") && plugin.lapisUpdater.checkUpdate("main")) {
                         player.sendMessage(ChatColor.DARK_GRAY
                                 + "[" + ChatColor.AQUA + "HomeSpawn" + ChatColor.DARK_GRAY
                                 + "]" + ChatColor.GOLD + " An update is available! run \"/homespawn update\"" +
@@ -217,7 +217,7 @@ public class HomeSpawnListener implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void invInteract(InventoryClickEvent e) {
         Player p = (Player) e.getWhoClicked();
-        if (e.getInventory().equals(plugin.HomesListInvs.get(p))) {
+        if (e.getInventory().equals(plugin.HSCommand.homesList.HomesListInvs.get(p))) {
             String name = e.getCurrentItem().getItemMeta().getDisplayName();
             String name1 = ChatColor.stripColor(name);
             File file2 = new File(plugin.getDataFolder().getAbsolutePath()
@@ -230,7 +230,7 @@ public class HomeSpawnListener implements Listener {
                     + getName.getString("UUID") + ".yml");
             YamlConfiguration getHomes = YamlConfiguration
                     .loadConfiguration(Homes);
-            if (name1.equalsIgnoreCase("Home")) {
+            if (name1.equalsIgnoreCase("HomeSpawnHome")) {
                 if (getHomes.getString("HasHome").equalsIgnoreCase("yes")) {
                     int x = getHomes.getInt(p.getUniqueId() + ".x");
                     int y = getHomes.getInt(p.getUniqueId() + ".y");
@@ -261,9 +261,9 @@ public class HomeSpawnListener implements Listener {
                 }
             }
             e.getWhoClicked().closeInventory();
-            Inventory inv = plugin.HomesListInvs.get(p);
+            Inventory inv = plugin.HSCommand.homesList.HomesListInvs.get(p);
             inv.clear();
-            plugin.HomesListInvs.put(p, inv);
+            plugin.HSCommand.homesList.HomesListInvs.put(p, inv);
         } else {
             return;
         }
@@ -274,11 +274,11 @@ public class HomeSpawnListener implements Listener {
     public void onInvExit(InventoryCloseEvent e) {
         if (!(e.getPlayer() == null && e.getInventory() == null)) {
             Player p = (Player) e.getPlayer();
-            if (plugin.HomesListInvs.containsKey(p) && Objects.equals(e.getInventory().getName(),
-                    plugin.HomesListInvs.get(p).getName())) {
-                Inventory inv = plugin.HomesListInvs.get(p);
+            if (plugin.HSCommand.homesList.HomesListInvs.containsKey(p) && Objects.equals(e.getInventory().getName(),
+                    plugin.HSCommand.homesList.HomesListInvs.get(p).getName())) {
+                Inventory inv = plugin.HSCommand.homesList.HomesListInvs.get(p);
                 inv.clear();
-                plugin.HomesListInvs.put(p, inv);
+                plugin.HSCommand.homesList.HomesListInvs.put(p, inv);
             }
         }
     }
@@ -288,7 +288,7 @@ public class HomeSpawnListener implements Listener {
                 PlayerPermission.get(p.getUniqueId()));
         if (perms.get("TPD") == 0) {
             p.teleport(l);
-            p.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.HSConfig.messages.getString("Home.SentHome")));
+            p.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.HSConfig.messages.getString("HomeSpawnHome.SentHome")));
         } else {
             String waitraw = ChatColor.translateAlternateColorCodes('&', plugin.HSConfig.messages.getString("Wait"));
             String Wait = waitraw.replace("{time}", perms.get("TPD").toString());

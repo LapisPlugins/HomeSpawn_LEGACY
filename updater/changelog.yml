@@ -12,12 +12,12 @@ ChangeLog:
         - "Added This Change Log and the Code To Download it During Update"
         - "Made Updating All Async"
         - "Added Updating of DataFile"
-        - "Moved Spawn New to PlayerData Name File Creation"
+        - "Moved HomeSpawnSpawn New to HomeSpawnPlayerData Name File Creation"
         - "Fixed the Homespawn Book"
     Beta 0.1.9:
         - "Update to Push Changes Above!"
     Beta 0.2.0:
-        - "New API Events to Listen for Home Setting and Home Teleporting"
+        - "New API Events to Listen for HomeSpawnHome Setting and HomeSpawnHome Teleporting"
         - "Added Console Printout of Changes After Downloading Updates(Read From This Changelog File)"
         - "Moved Permissions to Their Own Class Ready For Permission Syncing With WarpPoint"
         - "Fixed Permission Defaults"

@@ -9,12 +9,12 @@ import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 
-public class Spawn {
+public class HomeSpawnSpawn {
 
     private HomeSpawn plugin;
     private HomeSpawnCommand hsc;
 
-    public Spawn(HomeSpawn p, HomeSpawnCommand hsc) {
+    public HomeSpawnSpawn(HomeSpawn p, HomeSpawnCommand hsc) {
         this.plugin = p;
         this.hsc = hsc;
     }
@@ -30,7 +30,7 @@ public class Spawn {
         if (perms.get("spawn") == 1) {
             if (!plugin.HSConfig.spawn.contains("spawn.SpawnSet")) {
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        plugin.HSConfig.messages.getString("Spawn.NotSet")));
+                        plugin.HSConfig.messages.getString("HomeSpawnSpawn.NotSet")));
                 return;
             }
             if (plugin.HSConfig.spawn.getString("spawn.SpawnSet").equalsIgnoreCase(
@@ -45,10 +45,10 @@ public class Spawn {
                 Location Spawn = new Location(world, x, y, z, yaw,
                         pitch);
                 Spawn.add(0.5, 0, 0.5);
-                hsc.TeleportPlayer(player, Spawn, "Spawn", null);
+                hsc.TeleportPlayer(player, Spawn, "HomeSpawnSpawn", null);
             } else {
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        plugin.HSConfig.messages.getString("Spawn.NotSet")));
+                        plugin.HSConfig.messages.getString("HomeSpawnSpawn.NotSet")));
             }
         } else {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',

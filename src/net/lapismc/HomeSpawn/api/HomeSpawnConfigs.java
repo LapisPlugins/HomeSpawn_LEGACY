@@ -16,12 +16,12 @@ import java.util.ArrayList;
  *
  * @author Dart2112
  */
-public class Configs {
+public class HomeSpawnConfigs {
 
     private HomeSpawn plugin;
     private ArrayList<Plugin> blocked = new ArrayList<>();
 
-    public Configs(Plugin plugin) {
+    public HomeSpawnConfigs(Plugin plugin) {
         if (plugin.getName().equalsIgnoreCase("HomeSpawn")) {
             return;
         }
@@ -54,7 +54,7 @@ public class Configs {
     }
 
     /**
-     * Returns the currently loaded Spawn.yml
+     * Returns the currently loaded HomeSpawnSpawn.yml
      */
     public YamlConfiguration getSpawnConfig(Plugin p) {
         if (blocked.contains(p)) {
@@ -64,7 +64,7 @@ public class Configs {
     }
 
     /**
-     * Saves the given YamlConfiguration as the Spawn.yml file
+     * Saves the given YamlConfiguration as the HomeSpawnSpawn.yml file
      *
      * @throws IOException
      */

@@ -5,16 +5,19 @@ import net.lapismc.HomeSpawn.HomeSpawnCommand;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-public class HomesList {
+public class HomeSpawnHomesList {
 
+    final public HashMap<Player, Inventory> HomesListInvs = new HashMap<>();
     private HomeSpawn plugin;
     private HomeSpawnCommand hsc;
 
-    public HomesList(HomeSpawn p, HomeSpawnCommand hsc) {
+    public HomeSpawnHomesList(HomeSpawn p, HomeSpawnCommand hsc) {
         this.plugin = p;
         this.hsc = hsc;
     }
@@ -24,7 +27,7 @@ public class HomesList {
             hsc.showMenu(player);
             return;
         } else {
-            UUID uuid = this.plugin.PlayertoUUID.get(player.getName());
+            UUID uuid = this.plugin.HSConfig.PlayertoUUID.get(player.getName());
             YamlConfiguration getHomes = this.plugin.HSConfig.HomeConfigs.get(uuid);
             if (!getHomes.contains(player.getUniqueId()
                     + ".list")) {
@@ -39,16 +42,16 @@ public class HomesList {
                     String list2 = list.toString();
                     String list3 = list2.replace("[", " ");
                     String StringList = list3.replace("]", " ");
-                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.HSConfig.messages.getString("Home.CurrentHomes")));
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.HSConfig.messages.getString("HomeSpawnHome.CurrentHomes")));
                     player.sendMessage(ChatColor.RED + StringList);
 
                 } else {
                     player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                            plugin.HSConfig.messages.getString("Home.NoHomeSet")));
+                            plugin.HSConfig.messages.getString("HomeSpawnHome.NoHomeSet")));
                 }
             } else {
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        plugin.HSConfig.messages.getString("Home.NoHomeSet")));
+                        plugin.HSConfig.messages.getString("HomeSpawnHome.NoHomeSet")));
             }
         }
     }

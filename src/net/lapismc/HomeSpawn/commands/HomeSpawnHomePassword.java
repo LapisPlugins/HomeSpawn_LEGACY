@@ -13,12 +13,12 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 
-public class HomePassword {
+public class HomeSpawnHomePassword {
 
     private HomeSpawn plugin;
     private HomeSpawnCommand hsc;
 
-    public HomePassword(HomeSpawn p, HomeSpawnCommand hsc) {
+    public HomeSpawnHomePassword(HomeSpawn p, HomeSpawnCommand hsc) {
         this.plugin = p;
         this.hsc = hsc;
     }

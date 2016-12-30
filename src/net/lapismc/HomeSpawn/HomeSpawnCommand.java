@@ -22,34 +22,34 @@ public class HomeSpawnCommand implements CommandExecutor {
 
     private final HomeSpawn plugin;
     public HomeSpawnCommand cmd;
-    private DelHome delHome;
-    private DelSpawn delSpawn;
-    private Home home;
-    private HomePassword homePassword;
-    private HomesList homesList;
-    private net.lapismc.HomeSpawn.commands.HomeSpawn homeSpawn;
-    private SetHome setHome;
-    private SetSpawn setSpawn;
-    private Spawn spawn;
+    public HomeSpawnDelHome delHome;
+    public HomeSpawnDelSpawn delSpawn;
+    public HomeSpawnHome home;
+    public HomeSpawnHomePassword homePassword;
+    public HomeSpawnHomesList homesList;
+    public net.lapismc.HomeSpawn.commands.HomeSpawn homeSpawn;
+    public HomeSpawnSetHome setHome;
+    public HomeSpawnSetSpawn setSpawn;
+    public HomeSpawnSpawn spawn;
 
     public HomeSpawnCommand(HomeSpawn plugin) {
         this.plugin = plugin;
     }
 
     protected void registerCommands() {
-        this.delHome = new DelHome(plugin);
-        this.delSpawn = new DelSpawn(plugin);
-        this.home = new Home(plugin, this);
-        this.homesList = new HomesList(plugin, this);
-        this.setHome = new SetHome(plugin);
-        this.setSpawn = new SetSpawn(plugin);
-        this.spawn = new Spawn(plugin, this);
-        this.homePassword = new HomePassword(plugin, this);
+        this.delHome = new HomeSpawnDelHome(plugin);
+        this.delSpawn = new HomeSpawnDelSpawn(plugin);
+        this.home = new HomeSpawnHome(plugin, this);
+        this.homesList = new HomeSpawnHomesList(plugin, this);
+        this.setHome = new HomeSpawnSetHome(plugin);
+        this.setSpawn = new HomeSpawnSetSpawn(plugin);
+        this.spawn = new HomeSpawnSpawn(plugin, this);
+        this.homePassword = new HomeSpawnHomePassword(plugin, this);
         this.homeSpawn = new net.lapismc.HomeSpawn.commands.HomeSpawn(plugin);
     }
 
     public void showMenu(Player p) {
-        UUID uuid = this.plugin.PlayertoUUID.get(p.getName());
+        UUID uuid = this.plugin.HSConfig.PlayertoUUID.get(p.getName());
         YamlConfiguration getHomes = this.plugin.HSConfig.HomeConfigs.get(uuid);
         if (getHomes == null) {
             p.sendMessage(ChatColor.translateAlternateColorCodes('&',
@@ -60,7 +60,7 @@ public class HomeSpawnCommand implements CommandExecutor {
         List<String> homes = getHomes.getStringList(p.getUniqueId() + ".list");
         if (homes.isEmpty()) {
             p.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.HSConfig.messages.getString("Home.NoHomeSet")));
+                    plugin.HSConfig.messages.getString("HomeSpawnHome.NoHomeSet")));
             return;
         }
         ArrayList<DyeColor> dc = new ArrayList<>();
@@ -72,14 +72,14 @@ public class HomeSpawnCommand implements CommandExecutor {
         dc.add(DyeColor.ORANGE);
         Random r = new Random(25);
         int slots = homes.size() % 9 == 0 ? homes.size() / 9 : homes.size() / 9 + 1;
-        if (this.plugin.HomesListInvs.containsKey(p)) {
-            if (!(this.plugin.HomesListInvs.get(p).getSize() == slots * 9)) {
-                Inventory inv = Bukkit.createInventory(p, 9 * slots, ChatColor.GOLD + p.getName() + "'s HomesList");
-                this.plugin.HomesListInvs.put(p, inv);
+        if (this.homesList.HomesListInvs.containsKey(p)) {
+            if (!(this.homesList.HomesListInvs.get(p).getSize() == slots * 9)) {
+                Inventory inv = Bukkit.createInventory(p, 9 * slots, ChatColor.GOLD + p.getName() + "'s HomeSpawnHomesList");
+                this.homesList.HomesListInvs.put(p, inv);
             }
         } else {
-            Inventory inv = Bukkit.createInventory(p, 9 * slots, ChatColor.GOLD + p.getName() + "'s HomesList");
-            this.plugin.HomesListInvs.put(p, inv);
+            Inventory inv = Bukkit.createInventory(p, 9 * slots, ChatColor.GOLD + p.getName() + "'s HomeSpawnHomesList");
+            this.homesList.HomesListInvs.put(p, inv);
         }
         for (String home : homes) {
             ItemStack i = new Wool(dc.get(r.nextInt(5))).toItemStack(1);
@@ -88,13 +88,13 @@ public class HomeSpawnCommand implements CommandExecutor {
             im.setLore(Arrays.asList(ChatColor.GOLD + "Click To Teleport To",
                     ChatColor.RED + home));
             i.setItemMeta(im);
-            this.plugin.HomesListInvs.get(p).addItem(i);
+            this.homesList.HomesListInvs.get(p).addItem(i);
         }
-        p.openInventory(this.plugin.HomesListInvs.get(p));
+        p.openInventory(this.homesList.HomesListInvs.get(p));
     }
 
     private YamlConfiguration GetHome(String p) {
-        UUID uuid = this.plugin.PlayertoUUID.get(p);
+        UUID uuid = plugin.HSConfig.PlayertoUUID.get(p);
         YamlConfiguration getHomes = this.plugin.HSConfig.HomeConfigs.get(uuid);
         return getHomes;
     }
@@ -105,7 +105,7 @@ public class HomeSpawnCommand implements CommandExecutor {
             if (!l.getChunk().isLoaded()) {
                 l.getChunk().load();
             }
-            if (r.equalsIgnoreCase("Home") && name != null) {
+            if (r.equalsIgnoreCase("HomeSpawnHome") && name != null) {
                 HomeTeleportEvent hte = new HomeTeleportEvent(p, l, name);
                 Bukkit.getPluginManager().callEvent(hte);
                 if (!hte.isCancelled()) {
@@ -120,10 +120,10 @@ public class HomeSpawnCommand implements CommandExecutor {
             } else {
                 p.teleport(l);
             }
-            if (r.equalsIgnoreCase("Spawn")) {
-                p.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.HSConfig.messages.getString("Spawn.SentToSpawn")));
-            } else if (r.equalsIgnoreCase("Home")) {
-                p.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.HSConfig.messages.getString("Home.SentHome")));
+            if (r.equalsIgnoreCase("HomeSpawnSpawn")) {
+                p.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.HSConfig.messages.getString("HomeSpawnSpawn.SentToSpawn")));
+            } else if (r.equalsIgnoreCase("HomeSpawnHome")) {
+                p.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.HSConfig.messages.getString("HomeSpawnHome.SentHome")));
             }
         } else {
             String waitraw = ChatColor.translateAlternateColorCodes('&', plugin.HSConfig.messages.getString("Wait"));
@@ -186,7 +186,7 @@ public class HomeSpawnCommand implements CommandExecutor {
                     this.plugin.HSConfig.reload(p);
                 } else if (args[0].equalsIgnoreCase("update")) {
                     String ID = plugin.getConfig().getBoolean("BetaVersions") ? "beta" : "stable";
-                    if (plugin.updater.downloadUpdate(ID)) {
+                    if (plugin.lapisUpdater.downloadUpdate(ID)) {
                         sender.sendMessage(ChatColor.GOLD + "Downloading Update...");
                         sender.sendMessage(ChatColor.GOLD + "The update will be installed" +
                                 " when the server next starts!");

@@ -8,13 +8,13 @@ import org.bukkit.inventory.meta.BookMeta;
 
 import java.io.File;
 
-public class InstructionBook {
+public class HomeSpawnBook {
 
     private HomeSpawn plugin;
     private File f;
     private YamlConfiguration yaml;
 
-    public InstructionBook(HomeSpawn plugin) {
+    public HomeSpawnBook(HomeSpawn plugin) {
         this.plugin = plugin;
         f = new File(plugin.getDataFolder() + File.separator + "HomeSpawnBook.yml");
         yaml = YamlConfiguration.loadConfiguration(f);

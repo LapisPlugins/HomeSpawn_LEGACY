@@ -16,12 +16,12 @@ import java.util.UUID;
  *
  * @author Dart2112
  */
-public class PlayerData {
+public class HomeSpawnPlayerData {
 
     private HomeSpawn plugin;
     private ArrayList<Plugin> blocked = new ArrayList<>();
 
-    public PlayerData(Plugin plugin) {
+    public HomeSpawnPlayerData(Plugin plugin) {
         if (plugin.getName().equalsIgnoreCase("HomeSpawn")) {
             return;
         }
@@ -48,7 +48,7 @@ public class PlayerData {
         if (blocked.contains(p)) {
             return null;
         }
-        UUID uuid = plugin.PlayertoUUID.get(PlayerName);
+        UUID uuid = plugin.HSConfig.PlayertoUUID.get(PlayerName);
         YamlConfiguration getHome = plugin.HSConfig.HomeConfigs.get(uuid);
         return getHome;
     }
@@ -75,7 +75,7 @@ public class PlayerData {
         if (blocked.contains(p)) {
             return null;
         }
-        return plugin.PlayertoUUID;
+        return plugin.HSConfig.PlayertoUUID;
     }
 
 }

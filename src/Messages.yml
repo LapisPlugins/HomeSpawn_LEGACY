@@ -1,16 +1,16 @@
 Home:
   HomeSet: "&6Home Set, You Can Now Use &4/home"
-  SentHome: "&6Welcome Home"
-  NoHomeSet: "&4You First Need To Set a Home With &6/sethome"
-  NoHomeName: "&4A Home With This Name Does not Exist!"
+  SentHome: "&6Welcome HomeSpawnHome"
+  NoHomeSet: "&4You First Need To Set a HomeSpawnHome With &6/sethome"
+  NoHomeName: "&4A HomeSpawnHome With This Name Does not Exist!"
   CurrentHomes: "&6Your Current Homes Are:"
   HomeRemoved: "&6Home Removed"
-  LimitReached: "&4Sorry But You have Reached The Max Limit Of Homes, Please Use &6/delhome &4To Remove A Home"
+  LimitReached: "&4Sorry But You have Reached The Max Limit Of Homes, Please Use &6/delhome &4To Remove A HomeSpawnHome"
 Spawn:
-  NotSet: "&4You First Need To Set a Spawn With &6/setspawn"
+  NotSet: "&4You First Need To Set a HomeSpawnSpawn With &6/setspawn"
   SpawnSet: "&6Spawn Set, You Can Now Use &4/spawn"
   SpawnNewSet: "&6Spawn New Set, All New Players Will Be Sent To This Location"
-  SentToSpawn: "&6Welcome To Spawn"
+  SentToSpawn: "&6Welcome To HomeSpawnSpawn"
   Removed: "&6Spawn Removed!"
 Password:
   SaveFailed: "&4Failed To Save Password!"

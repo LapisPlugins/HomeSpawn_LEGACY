@@ -42,7 +42,7 @@ public class HomeSpawnPlayer {
             String name = args[1];
             UUID uuid;
             YamlConfiguration homes;
-            uuid = plugin.PlayertoUUID.get(name);
+            uuid = plugin.HSConfig.PlayertoUUID.get(name);
             if (uuid == null) {
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.HSConfig.messages.getString("NoPlayerData")));
                 return;
@@ -87,7 +87,7 @@ public class HomeSpawnPlayer {
             String name = args[1];
             UUID uuid;
             YamlConfiguration homes;
-            uuid = plugin.PlayertoUUID.get(name);
+            uuid = plugin.HSConfig.PlayertoUUID.get(name);
             if (uuid == null) {
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.HSConfig.messages.getString("NoPlayerData")));
                 return;
@@ -126,7 +126,7 @@ public class HomeSpawnPlayer {
             Location home2 = new Location(world, x, y, z,
                     yaw, pitch);
             home2.add(0.5, 0, 0.5);
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.HSConfig.messages.getString("Home.SentHome")));
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.HSConfig.messages.getString("HomeSpawnHome.SentHome")));
             player.teleport(home2);
             return;
         }
@@ -144,10 +144,10 @@ public class HomeSpawnPlayer {
             Location home2 = new Location(world, x, y, z,
                     yaw, pitch);
             home2.add(0.5, 0, 0.5);
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.HSConfig.messages.getString("Home.SentHome")));
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.HSConfig.messages.getString("HomeSpawnHome.SentHome")));
             player.teleport(home2);
         } else {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.HSConfig.messages.getString("Home.NoHomeName")));
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.HSConfig.messages.getString("HomeSpawnHome.NoHomeName")));
         }
     }
 }
