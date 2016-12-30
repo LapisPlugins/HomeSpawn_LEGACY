@@ -44,3 +44,9 @@ ChangeLog:
         - "Made adjustments to config handling"
     Stable 2.0.9:
         - "Fixed critical error with config handling"
+    Stable 2.1.0:
+        - "Added logging, set logging to true in components to enable"
+        - "Altered API to allow setting of a cancelled reason and sending this reason to the player"
+        - "Added home delete event and spawn teleport event to API"
+    Beta 0.3.0:
+        - "Bringing beta up to date on fixes and features"

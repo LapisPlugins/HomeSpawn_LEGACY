@@ -2,6 +2,8 @@ package net.lapismc.HomeSpawn.commands;
 
 import net.lapismc.HomeSpawn.HomeSpawn;
 import net.lapismc.HomeSpawn.HomeSpawnCommand;
+import net.lapismc.HomeSpawn.api.events.SpawnTeleportEvent;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -45,6 +47,12 @@ public class HomeSpawnSpawn {
                 Location Spawn = new Location(world, x, y, z, yaw,
                         pitch);
                 Spawn.add(0.5, 0, 0.5);
+                SpawnTeleportEvent STE = new SpawnTeleportEvent(plugin, player, Spawn);
+                Bukkit.getPluginManager().callEvent(STE);
+                if (STE.isCancelled()) {
+                    player.sendMessage("Your teleport was cancelled because " + STE.getCancelReason());
+                    return;
+                }
                 hsc.TeleportPlayer(player, Spawn, "HomeSpawnSpawn", null);
             } else {
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',

@@ -8,22 +8,22 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class HomeTeleportEvent extends Event implements Cancellable {
+public class HomeDelEvent extends Event implements Cancellable {
 
     private final HandlerList handlers = new HandlerList();
     private String homeName;
-    private String cancelReason;
-    private Location location;
+    private Location loc;
     private Player p;
+    private String reason;
     private boolean cancelled;
 
-    public HomeTeleportEvent(HomeSpawn plugin, Player p, Location l, String name) {
+    public HomeDelEvent(HomeSpawn plugin, Player p, Location loc, String name) {
         homeName = name;
-        this.location = l;
+        this.loc = loc;
         this.p = p;
         this.cancelled = false;
         if (plugin.HSComponents.logging()) {
-            plugin.HSConfig.log(HomeSpawnConfiguration.logType.TeleportHome, p, name);
+            plugin.HSConfig.log(HomeSpawnConfiguration.logType.Delete, p, name);
         }
     }
 
@@ -31,12 +31,16 @@ public class HomeTeleportEvent extends Event implements Cancellable {
         return homeName;
     }
 
-    public Location getLocation() {
-        return location;
+    public Location getLoc() {
+        return loc;
     }
 
     public Player getPlayer() {
         return p;
+    }
+
+    public String getReason() {
+        return reason;
     }
 
     public boolean isCancelled() {
@@ -50,15 +54,7 @@ public class HomeTeleportEvent extends Event implements Cancellable {
 
     public void setCancelled(boolean cancel, String reason) {
         cancelled = cancel;
-        cancelReason = reason;
-    }
-
-    public String getCancelReason() {
-        if (cancelled) {
-            return cancelReason;
-        } else {
-            return null;
-        }
+        this.reason = reason;
     }
 
     public HandlerList getHandlers() {

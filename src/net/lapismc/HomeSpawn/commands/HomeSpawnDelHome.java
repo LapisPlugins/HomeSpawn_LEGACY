@@ -1,6 +1,8 @@
 package net.lapismc.HomeSpawn.commands;
 
 import net.lapismc.HomeSpawn.HomeSpawn;
+import net.lapismc.HomeSpawn.api.events.HomeDelEvent;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -32,6 +34,12 @@ public class HomeSpawnDelHome {
             if (getHomes.getString("HasHome")
                     .equalsIgnoreCase("no")
                     || !getHomes.contains("HasHome")) {
+                HomeDelEvent HDE = new HomeDelEvent(plugin, player, player.getLocation(), "Home");
+                Bukkit.getPluginManager().callEvent(HDE);
+                if (HDE.isCancelled()) {
+                    player.sendMessage("Your home has not been deleted because " + HDE.getReason());
+                    return;
+                }
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                         plugin.HSConfig.messages.getString("HomeSpawnHome.NoHomeSet")));
             } else if (getHomes.getString("HasHome")
@@ -99,6 +107,12 @@ public class HomeSpawnDelHome {
                 }
             } else if (getHomes.getString(home + ".HasHome")
                     .equalsIgnoreCase("yes")) {
+                HomeDelEvent HDE = new HomeDelEvent(plugin, player, player.getLocation(), home);
+                Bukkit.getPluginManager().callEvent(HDE);
+                if (HDE.isCancelled()) {
+                    player.sendMessage("Your home has not been deleted because " + HDE.getReason());
+                    return;
+                }
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                         plugin.HSConfig.messages.getString("HomeSpawnHome.HomeRemoved")));
                 getHomes.set(home + ".HasHome", "No");

@@ -56,9 +56,10 @@ public class HomeSpawnSetHome {
             if (!getHomes.contains("HasHome")) {
                 getHomes.createSection("HasHome");
             }
-            HomeSetEvent HCE = new HomeSetEvent(player, player.getWorld(), "HomeSpawnHome");
+            HomeSetEvent HCE = new HomeSetEvent(plugin, player, player.getLocation(), "Home");
             Bukkit.getPluginManager().callEvent(HCE);
             if (HCE.isCancelled()) {
+                player.sendMessage("Your home has not been set because " + HCE.getReason());
                 return;
             }
             int HomesNumb = getHomes.getInt(player
@@ -99,9 +100,10 @@ public class HomeSpawnSetHome {
                             + "You Cannot Use The HomeSpawnHome Name \"HomeSpawnHome\", Please Choose Another!");
                     return;
                 }
-                HomeSetEvent HCE = new HomeSetEvent(player, player.getWorld(), home);
+                HomeSetEvent HCE = new HomeSetEvent(plugin, player, player.getLocation(), home);
                 Bukkit.getPluginManager().callEvent(HCE);
                 if (HCE.isCancelled()) {
+                    player.sendMessage("Your home has not been set because " + HCE.getReason());
                     return;
                 }
                 if (!getHomes.contains(home + ".HasHome")) {

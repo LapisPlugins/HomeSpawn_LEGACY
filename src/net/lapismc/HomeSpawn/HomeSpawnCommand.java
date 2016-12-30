@@ -1,6 +1,5 @@
 package net.lapismc.HomeSpawn;
 
-import net.lapismc.HomeSpawn.api.events.HomeTeleportEvent;
 import net.lapismc.HomeSpawn.commands.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -105,24 +104,10 @@ public class HomeSpawnCommand implements CommandExecutor {
             if (!l.getChunk().isLoaded()) {
                 l.getChunk().load();
             }
-            if (r.equalsIgnoreCase("HomeSpawnHome") && name != null) {
-                HomeTeleportEvent hte = new HomeTeleportEvent(p, l, name);
-                Bukkit.getPluginManager().callEvent(hte);
-                if (!hte.isCancelled()) {
-                    p.teleport(l);
-                } else {
-                    if (hte.getCancelReason() != null) {
-                        p.sendMessage(hte.getCancelReason());
-                    } else {
-                        p.sendMessage(ChatColor.RED + "An external plugin has canceled your teleport for an unknown reason");
-                    }
-                }
-            } else {
-                p.teleport(l);
-            }
-            if (r.equalsIgnoreCase("HomeSpawnSpawn")) {
+            p.teleport(l);
+            if (r.equalsIgnoreCase("Spawn")) {
                 p.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.HSConfig.messages.getString("HomeSpawnSpawn.SentToSpawn")));
-            } else if (r.equalsIgnoreCase("HomeSpawnHome")) {
+            } else if (r.equalsIgnoreCase("Home")) {
                 p.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.HSConfig.messages.getString("HomeSpawnHome.SentHome")));
             }
         } else {

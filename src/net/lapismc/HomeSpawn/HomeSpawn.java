@@ -117,6 +117,7 @@ public class HomeSpawn extends JavaPlugin {
     }
 
     private void Disable() {
+        HSConfig.saveLogs();
         logger.info("Plugin Has Been Disabled!");
         HandlerList.unregisterAll();
     }
@@ -141,7 +142,6 @@ public class HomeSpawn extends JavaPlugin {
             logger.info("There Is No New HomeSpawnSpawn Set And Therefore The Player Wasn't Sent To The New HomeSpawnSpawn");
         }
     }
-
 
     public void help(Player player) {
         if (player != null) {

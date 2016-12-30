@@ -8,7 +8,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 
@@ -23,11 +25,71 @@ public class HomeSpawnConfiguration {
     public File messagesFile;
     public YamlConfiguration passwords;
     public File passwordsFile;
+    public File teleLogFile;
+    public YamlConfiguration teleLog;
+    public File setsAndDelsFile;
+    public YamlConfiguration setsAndDels;
     private HomeSpawn plugin;
 
     protected HomeSpawnConfiguration(HomeSpawn p) {
         plugin = p;
         Configs();
+    }
+
+    public void log(logType type, Player p, String name) {
+        switch (type) {
+            case Set:
+                List<String> sets;
+                if (setsAndDels.contains("Sets")) {
+                    sets = setsAndDels.getStringList("Sets");
+                } else {
+                    sets = new ArrayList<>();
+                }
+                sets.add("Player " + p.getName() + " has set a home named " + name);
+                setsAndDels.set("Sets", sets);
+                break;
+            case Delete:
+                List<String> dels;
+                if (setsAndDels.contains("Dels")) {
+                    dels = setsAndDels.getStringList("Dels");
+                } else {
+                    dels = new ArrayList<>();
+                }
+                dels.add("Player " + p.getName() + " has deleted a home named " + name);
+                setsAndDels.set("Dels", dels);
+                break;
+            case TeleportHome:
+                List<String> homeTeleports;
+                if (teleLog.contains("HomeTeleports")) {
+                    homeTeleports = teleLog.getStringList("HomeTeleports");
+                } else {
+                    homeTeleports = new ArrayList<>();
+                }
+                homeTeleports.add("Player " + p.getName() + " has teleported to their home named" + name);
+                teleLog.set("HomeTeleports", homeTeleports);
+                break;
+            case TeleportSpawn:
+                List<String> spawnTeleports;
+                if (teleLog.contains("SpawnTeleports")) {
+                    spawnTeleports = teleLog.getStringList("SpawnTeleports");
+                } else {
+                    spawnTeleports = new ArrayList<>();
+                }
+                spawnTeleports.add("Player " + p.getName() + " has teleported to spawn");
+                teleLog.set("SpawnTeleports", spawnTeleports);
+                break;
+        }
+    }
+
+    public void saveLogs() {
+        if (plugin.HSComponents.logging()) {
+            try {
+                teleLog.save(teleLogFile);
+                setsAndDels.save(setsAndDelsFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void Configs() {
@@ -197,7 +259,7 @@ public class HomeSpawnConfiguration {
                 + File.separator + "PlayerData" + File.separator
                 + "PlayerNames");
         if (!theDir.exists()) {
-            plugin.logger.info("Creating HomeSpawnPlayerData Directory!");
+            plugin.logger.info("Creating HomeSpawn PlayerData Directory!");
             theDir.mkdir();
         }
         if (!theDir1.exists()) {
@@ -235,7 +297,6 @@ public class HomeSpawnConfiguration {
         spawnFile = file;
     }
 
-
     private void configVersion() {
         if (plugin.getConfig().getInt("ConfigVersion") != 7) {
             File oldConfig = new File(plugin.getDataFolder() + File.separator + "config.yml");
@@ -245,6 +306,15 @@ public class HomeSpawnConfiguration {
             plugin.saveDefaultConfig();
             plugin.logger.info("New config generated!");
             plugin.logger.info("Please transfer values!");
+        }
+    }
+
+    public enum logType {
+        Set, Delete, TeleportHome, TeleportSpawn;
+
+        @Override
+        public String toString() {
+            return super.toString().toLowerCase();
         }
     }
 
