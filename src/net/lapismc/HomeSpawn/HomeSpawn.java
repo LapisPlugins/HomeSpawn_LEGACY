@@ -29,6 +29,7 @@ public class HomeSpawn extends JavaPlugin {
     final HashMap<Player, Integer> HomeSpawnTimeLeft = new HashMap<>();
     public LapisUpdater lapisUpdater;
     public HomeSpawnCommand HSCommand;
+    public HomeSpawnComponents HSComponents;
     public HomeSpawnPermissions HSPermissions;
     public HomeSpawnListener HSListener;
     public HomeSpawnConfiguration HSConfig;
@@ -267,7 +268,7 @@ public class HomeSpawn extends JavaPlugin {
     }
 
     private void Commands() {
-        HomeSpawnComponents hsc = new HomeSpawnComponents();
-        hsc.init(this);
+        HSComponents = new HomeSpawnComponents();
+        HSComponents.init(this);
     }
 }

@@ -1,6 +1,7 @@
 package net.lapismc.HomeSpawn.api.events;
 
-import org.bukkit.World;
+import net.lapismc.HomeSpawn.HomeSpawn;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
@@ -10,23 +11,26 @@ public class HomeSetEvent extends Event implements Cancellable {
 
     private final HandlerList handlers = new HandlerList();
     private String homeName;
-    private World world;
+    private Location loc;
     private Player p;
     private boolean cancelled;
 
-    public HomeSetEvent(Player p, World w, String name) {
+    public HomeSetEvent(HomeSpawn plugin, Player p, Location loc, String name) {
         homeName = name;
-        this.world = w;
+        this.loc = loc;
         this.p = p;
         this.cancelled = false;
+        if (plugin.HSComponents.logging()) {
+            //TODO: setup logging methods
+        }
     }
 
     public String getHomeName() {
         return homeName;
     }
 
-    public World getWorld() {
-        return world;
+    public Location getLoc() {
+        return loc;
     }
 
     public Player getPlayer() {

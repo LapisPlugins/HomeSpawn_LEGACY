@@ -24,9 +24,10 @@ public class HomeSpawnComponents {
                 f.createNewFile();
                 comp = YamlConfiguration.loadConfiguration(f);
                 comp.set("Homes", true);
-                comp.set("HomeSpawnSpawn", true);
-                comp.set("HomeSpawnPassword", true);
-                comp.set("API", true);
+                comp.set("Spawn", true);
+                comp.set("HomeSpawnPassword", false);
+                comp.set("Logging", false);
+                comp.set("API", false);
                 comp.save(f);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -62,11 +63,15 @@ public class HomeSpawnComponents {
     }
 
     public boolean spawn() {
-        return comp.getBoolean("HomeSpawnSpawn");
+        return comp.getBoolean("Spawn");
     }
 
     public boolean password() {
         return comp.getBoolean("HomeSpawnPassword");
+    }
+
+    public boolean logging() {
+        return comp.getBoolean("Logging");
     }
 
     public boolean api() {
