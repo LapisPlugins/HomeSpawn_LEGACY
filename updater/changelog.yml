@@ -50,3 +50,5 @@ ChangeLog:
         - "Added home delete event and spawn teleport event to API"
     Beta 0.3.0:
         - "Bringing beta up to date on fixes and features"
+    Stable 2.1.1:
+        - "Added safeguard against nulls in files being loaded"

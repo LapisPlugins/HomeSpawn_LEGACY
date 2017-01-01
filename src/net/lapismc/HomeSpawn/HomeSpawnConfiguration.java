@@ -175,8 +175,13 @@ public class HomeSpawnConfiguration {
         for (File f : playerdataArray) {
             if (f.isFile() && !f.getName().contains("Passwords")) {
                 YamlConfiguration Yaml = YamlConfiguration.loadConfiguration(f);
-                HomeConfigs.put(UUID.fromString(Yaml.getString("name")), Yaml);
-                HomeConfigsFiles.put(UUID.fromString(Yaml.getString("name")), f);
+                if (Yaml.getString("name") == null) {
+                    plugin.logger.severe(f.getName() + " in player data is invalid, please resolve this or delete the file!");
+                    return;
+                }
+                UUID uuid = UUID.fromString(Yaml.getString("name"));
+                HomeConfigs.put(uuid, Yaml);
+                HomeConfigsFiles.put(uuid, f);
             }
         }
     }
