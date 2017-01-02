@@ -224,7 +224,8 @@ public class HomeSpawn extends JavaPlugin {
             @Override
             public void run() {
                 if (!HomeSpawnTimeLeft.isEmpty()) {
-                    for (Player p : HomeSpawnTimeLeft.keySet()) {
+                    HashMap<Player, Integer> timeLeft = (HashMap<Player, Integer>) HomeSpawnTimeLeft.clone();
+                    for (Player p : timeLeft.keySet()) {
                         if (HomeSpawnLocations.get(p) == null) {
                             HomeSpawnTimeLeft.remove(p);
                             HomeSpawnLocations.remove(p);
@@ -232,7 +233,7 @@ public class HomeSpawn extends JavaPlugin {
                         if (HomeSpawnTimeLeft.isEmpty()) {
                             return;
                         }
-                        Collection<Integer> values = HomeSpawnTimeLeft.values();
+                        Collection<Integer> values = timeLeft.values();
                         for (int Time : values) {
                             int NewTime = Time - 1;
                             if (NewTime > 0) {

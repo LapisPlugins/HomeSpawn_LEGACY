@@ -52,3 +52,6 @@ ChangeLog:
         - "Bringing beta up to date on fixes and features"
     Stable 2.1.1:
         - "Added safeguard against nulls in files being loaded"
+    Stable 2.1.2:
+        - "Update System Overhaul"
+        - "All 3 errors reported have been fixed"

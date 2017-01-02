@@ -69,7 +69,7 @@ public class HomeSpawnCommand implements CommandExecutor {
         dc.add(DyeColor.GREEN);
         dc.add(DyeColor.MAGENTA);
         dc.add(DyeColor.ORANGE);
-        Random r = new Random(25);
+        Random r = new Random(System.currentTimeMillis());
         int slots = homes.size() % 9 == 0 ? homes.size() / 9 : homes.size() / 9 + 1;
         if (this.homesList.HomesListInvs.containsKey(p)) {
             if (!(this.homesList.HomesListInvs.get(p).getSize() == slots * 9)) {

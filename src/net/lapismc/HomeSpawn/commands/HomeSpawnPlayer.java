@@ -7,6 +7,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.Permission;
 import org.ocpsoft.prettytime.PrettyTime;
 
 import java.util.Date;
@@ -24,12 +25,17 @@ public class HomeSpawnPlayer {
     }
 
     public void HomeSpawnPlayer(String[] args, Player player) {
-        HashMap<String, Integer> perms = plugin.HSPermissions.Permissions.get(plugin.HSPermissions.PlayerPermission.
-                get(player.getUniqueId()));
+        Permission playerPerm = plugin.HSPermissions.PlayerPermission.get(player.getUniqueId());
+        if (playerPerm == null) {
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.HSConfig.messages.getString("NoPerms")));
+            return;
+        }
+        HashMap<String, Integer> perms = plugin.HSPermissions.Permissions.get(playerPerm);
         if (perms == null) {
-            plugin.HSPermissions.init();
-            perms = plugin.HSPermissions.Permissions.get(plugin.HSPermissions.PlayerPermission.
-                    get(player.getUniqueId()));
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.HSConfig.messages.getString("NoPerms")));
+            return;
         }
         if (perms.get("stats") == 0) {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',

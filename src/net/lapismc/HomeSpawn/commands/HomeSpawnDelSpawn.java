@@ -3,6 +3,7 @@ package net.lapismc.HomeSpawn.commands;
 import net.lapismc.HomeSpawn.HomeSpawn;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.Permission;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -17,12 +18,17 @@ public class HomeSpawnDelSpawn {
     }
 
     public void delSpawn(String[] args, Player player) {
-        HashMap<String, Integer> perms = plugin.HSPermissions.Permissions.get(plugin.HSPermissions.PlayerPermission
-                .get(player.getUniqueId()));
+        Permission playerPerm = plugin.HSPermissions.PlayerPermission.get(player.getUniqueId());
+        if (playerPerm == null) {
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.HSConfig.messages.getString("NoPerms")));
+            return;
+        }
+        HashMap<String, Integer> perms = plugin.HSPermissions.Permissions.get(playerPerm);
         if (perms == null) {
-            plugin.HSPermissions.init();
-            perms = plugin.HSPermissions.Permissions.get(plugin.HSPermissions.PlayerPermission.
-                    get(player.getUniqueId()));
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.HSConfig.messages.getString("NoPerms")));
+            return;
         }
         if (perms.get("sSpawn") == 1) {
             if (Objects.equals(plugin.HSConfig.spawn.getString("spawn.SpawnSet"), "No")

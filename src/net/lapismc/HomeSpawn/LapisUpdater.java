@@ -1,6 +1,7 @@
 package net.lapismc.HomeSpawn;
 
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
@@ -19,6 +20,7 @@ public class LapisUpdater {
     private String username;
     private String repoName;
     private String branch;
+    private String rawVersionString;
     private HomeSpawn plugin;
     private Boolean force;
 
@@ -55,12 +57,11 @@ public class LapisUpdater {
                         "https://raw.githubusercontent.com/" + username + "/" + repoName + "/" + branch + "/updater/"
                                 + ID + "/" + jarName + ".jar");
                 ReadableByteChannel jarByteChannel = Channels.newChannel(jarURL.openStream());
-                File update = new File(plugin.getDataFolder().getParent() + File.separator +
-                        "update");
+                File update = new File(Bukkit.getUpdateFolder());
                 if (!update.exists()) {
                     update.mkdir();
                 }
-                File jar = new File(update.getAbsolutePath() + File.separator + "Homespawn.jar");
+                File jar = new File(update.getAbsolutePath() + File.separator + jarName + ".jar");
                 if (!jar.exists()) {
                     jar.createNewFile();
                 }
@@ -77,7 +78,7 @@ public class LapisUpdater {
                 changeLogOutputStream.close();
                 YamlConfiguration changeLog = YamlConfiguration.loadConfiguration(changeLogFile);
                 plugin.logger.info("Changes in newest Version \n" +
-                        changeLog.getStringList("ChangeLog." + ID + " " + plugin.getDescription().getVersion()));
+                        changeLog.getStringList("ChangeLog." + ID + " " + rawVersionString));
                 return true;
             } catch (IOException e) {
                 plugin.logger.severe("HomeSpawn updater failed to download updates!");
@@ -126,6 +127,7 @@ public class LapisUpdater {
             }
             String oldVersionString = plugin.getDescription().getVersion()
                     .replace(".", "").replace("Beta ", "");
+            rawVersionString = yaml.getString(ID);
             String newVersionString = yaml.getString(ID).replace(".", "")
                     .replace("Beta ", "");
             oldVersion = Integer.parseInt(oldVersionString);

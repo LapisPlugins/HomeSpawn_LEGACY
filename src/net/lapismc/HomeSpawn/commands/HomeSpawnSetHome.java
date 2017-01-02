@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.Permission;
 
 import java.util.HashMap;
 import java.util.List;
@@ -20,12 +21,17 @@ public class HomeSpawnSetHome {
     }
 
     public void setHome(String[] args, Player player) {
-        HashMap<String, Integer> perms = plugin.HSPermissions.Permissions.get(plugin.HSPermissions.PlayerPermission.
-                get(player.getUniqueId()));
+        Permission playerPerm = plugin.HSPermissions.PlayerPermission.get(player.getUniqueId());
+        if (playerPerm == null) {
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.HSConfig.messages.getString("NoPerms")));
+            return;
+        }
+        HashMap<String, Integer> perms = plugin.HSPermissions.Permissions.get(playerPerm);
         if (perms == null) {
-            plugin.HSPermissions.init();
-            perms = plugin.HSPermissions.Permissions.get(plugin.HSPermissions.PlayerPermission.
-                    get(player.getUniqueId()));
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.HSConfig.messages.getString("NoPerms")));
+            return;
         }
         UUID uuid = this.plugin.HSConfig.PlayertoUUID.get(player.getName());
         YamlConfiguration getHomes = this.plugin.HSConfig.HomeConfigs.get(uuid);
