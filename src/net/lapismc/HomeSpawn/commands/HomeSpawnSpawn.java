@@ -2,13 +2,12 @@ package net.lapismc.HomeSpawn.commands;
 
 import net.lapismc.HomeSpawn.HomeSpawn;
 import net.lapismc.HomeSpawn.HomeSpawnCommand;
+import net.lapismc.HomeSpawn.HomeSpawnPermissions;
 import net.lapismc.HomeSpawn.api.events.SpawnTeleportEvent;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-import org.bukkit.permissions.Permission;
 
 import java.util.HashMap;
 
@@ -23,22 +22,10 @@ public class HomeSpawnSpawn {
     }
 
     public void spawn(String[] args, Player player) {
-        Permission playerPerm = plugin.HSPermissions.PlayerPermission.get(player.getUniqueId());
-        if (playerPerm == null) {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.HSConfig.messages.getString("NoPerms")));
-            return;
-        }
-        HashMap<String, Integer> perms = plugin.HSPermissions.Permissions.get(playerPerm);
-        if (perms == null) {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.HSConfig.messages.getString("NoPerms")));
-            return;
-        }
-        if (perms.get("spawn") == 1) {
+        HashMap<HomeSpawnPermissions.perm, Integer> perms = plugin.HSPermissions.getPlayerPermissions(player.getUniqueId());
+        if (perms.get(HomeSpawnPermissions.perm.spawn) == 1) {
             if (!plugin.HSConfig.spawn.contains("spawn.SpawnSet")) {
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        plugin.HSConfig.messages.getString("HomeSpawnSpawn.NotSet")));
+                player.sendMessage(plugin.HSConfig.getColoredMessage("Spawn.NotSet"));
                 return;
             }
             if (plugin.HSConfig.spawn.getString("spawn.SpawnSet").equalsIgnoreCase(
@@ -59,14 +46,12 @@ public class HomeSpawnSpawn {
                     player.sendMessage("Your teleport was cancelled because " + STE.getCancelReason());
                     return;
                 }
-                hsc.TeleportPlayer(player, Spawn, "HomeSpawnSpawn", null);
+                hsc.TeleportPlayer(player, Spawn, "Spawn", null);
             } else {
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        plugin.HSConfig.messages.getString("HomeSpawnSpawn.NotSet")));
+                player.sendMessage(plugin.HSConfig.getColoredMessage("Spawn.NotSet"));
             }
         } else {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.HSConfig.messages.getString("NoPerms")));
+            player.sendMessage(plugin.HSConfig.getColoredMessage("NoPerms"));
         }
     }
 

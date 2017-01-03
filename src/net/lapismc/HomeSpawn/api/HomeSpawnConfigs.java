@@ -2,13 +2,10 @@ package net.lapismc.HomeSpawn.api;
 
 import net.lapismc.HomeSpawn.HomeSpawn;
 import net.lapismc.HomeSpawn.HomeSpawnComponents;
-import net.lapismc.HomeSpawn.PasswordHash;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 
 /**
@@ -77,80 +74,5 @@ public class HomeSpawnConfigs {
         plugin.HSConfig.reload("Silent");
     }
 
-    /**
-     * Returns the currently loaded Messages.yml
-     */
-    public YamlConfiguration getMessagesConfig(Plugin p) {
-        if (blocked.contains(p)) {
-            return null;
-        }
-        return plugin.HSConfig.messages;
-    }
-
-    /**
-     * Saves the given YamlConfiguration as the Messages.yml file
-     *
-     * @throws IOException
-     */
-    public void saveMessagesConfig(Plugin p, YamlConfiguration MessagesConfig) throws IOException {
-        if (blocked.contains(p)) {
-            return;
-        }
-        plugin.HSConfig.messages = MessagesConfig;
-        plugin.HSConfig.messages.save(plugin.HSConfig.messagesFile);
-        plugin.HSConfig.reload("Silent");
-    }
-
-    /**
-     * Returns the currently loaded Passwords.yml
-     */
-    public YamlConfiguration getPasswords(Plugin p) {
-        if (blocked.contains(p)) {
-            return null;
-        }
-        return plugin.HSConfig.passwords;
-    }
-
-    /**
-     * Saves the given YamlConfiguration as the Passwords.yml file
-     *
-     * @throws IOException
-     */
-    public void savePasswords(Plugin p, YamlConfiguration Passwords) throws IOException {
-        if (blocked.contains(p)) {
-            return;
-        }
-        plugin.HSConfig.passwords = Passwords;
-        plugin.HSConfig.passwords.save(plugin.HSConfig.passwordsFile);
-        plugin.HSConfig.reload("Silent");
-    }
-
-    /**
-     * Checks if the given string matches the password on file
-     *
-     * @throws NoSuchAlgorithmException and InvalidKeySpecException
-     */
-    public boolean checkPassword(Plugin p, String playerName, String Password) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        if (blocked.contains(p)) {
-            return false;
-        }
-        String hash = getPasswords(p).getString(playerName);
-        return PasswordHash.validatePassword(Password, hash);
-    }
-
-    /**
-     * Hashes the password and saves it to as given username then saves the passwords config
-     *
-     * @throws IOException, NoSuchAlgorithmException and InvalidKeySpecException
-     */
-    public void setPassword(Plugin p, String playerName, String rawPassword) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
-        if (blocked.contains(p)) {
-            return;
-        }
-        String hash = PasswordHash.createHash(rawPassword);
-        YamlConfiguration passwords = getPasswords(p);
-        passwords.set(playerName, hash);
-        savePasswords(p, passwords);
-    }
 
 }

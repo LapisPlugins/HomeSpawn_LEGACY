@@ -5,7 +5,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.permissions.Permission;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -16,24 +15,58 @@ import java.util.logging.Level;
 
 public class HomeSpawnConfiguration {
 
-    public final HashMap<UUID, YamlConfiguration> HomeConfigs = new HashMap<>();
-    public final HashMap<UUID, File> HomeConfigsFiles = new HashMap<>();
-    public final HashMap<String, UUID> PlayertoUUID = new HashMap<>();
     public YamlConfiguration spawn;
     public File spawnFile;
-    public YamlConfiguration messages;
-    public File messagesFile;
-    public YamlConfiguration passwords;
-    public File passwordsFile;
-    public File teleLogFile;
-    public YamlConfiguration teleLog;
-    public File setsAndDelsFile;
-    public YamlConfiguration setsAndDels;
+    protected File teleLogFile;
+    protected YamlConfiguration teleLog;
+    protected File setsAndDelsFile;
+    protected YamlConfiguration setsAndDels;
+    private HashMap<UUID, YamlConfiguration> HomeConfigs = new HashMap<>();
+    private YamlConfiguration messages;
+    private File messagesFile;
+    private YamlConfiguration passwords;
+    private File passwordsFile;
     private HomeSpawn plugin;
 
     protected HomeSpawnConfiguration(HomeSpawn p) {
         plugin = p;
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
+            @Override
+            public void run() {
+                HomeConfigs = new HashMap<>();
+            }
+        }, 20 * 60 * 5, 20 * 60 * 5);
         Configs();
+    }
+
+    public YamlConfiguration getPlayerData(UUID uuid) {
+        YamlConfiguration yaml;
+        if (!HomeConfigs.containsKey(uuid) || HomeConfigs.get(uuid) == null) {
+            File f = new File(plugin.getDataFolder().getAbsolutePath() + File.separator + "PlayerData" + File.separator + uuid.toString() + ".yml");
+            yaml = YamlConfiguration.loadConfiguration(f);
+            HomeConfigs.put(uuid, yaml);
+        } else {
+            yaml = HomeConfigs.get(uuid);
+        }
+        return yaml;
+    }
+
+    public void unloadPlayerData(UUID uuid) {
+        YamlConfiguration getHomes = getPlayerData(uuid);
+        try {
+            getHomes.save(new File(plugin.getDataFolder().getAbsolutePath() + File.separator + "PlayerData" + File.separator + uuid.toString() + ".yml"));
+            HomeConfigs.remove(uuid);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String getColoredMessage(String path) {
+        return ChatColor.translateAlternateColorCodes('&', messages.getString(path));
+    }
+
+    public String getMessage(String path) {
+        return ChatColor.stripColor(getColoredMessage(path));
     }
 
     public void log(logType type, Player p, String name) {
@@ -104,8 +137,6 @@ public class HomeSpawnConfiguration {
         createPlayerData();
         createMessages();
         createPasswords();
-        loadPlayerData();
-        loadName();
         configVersion();
     }
 
@@ -119,81 +150,31 @@ public class HomeSpawnConfiguration {
                 spawn = YamlConfiguration.loadConfiguration(spawnFile);
                 messages = YamlConfiguration.loadConfiguration(messagesFile);
                 passwords = YamlConfiguration.loadConfiguration(passwordsFile);
-                loadPlayerData();
-                loadName();
             }
         } else if (obj == null) {
             spawn = YamlConfiguration.loadConfiguration(spawnFile);
             messages = YamlConfiguration.loadConfiguration(messagesFile);
             passwords = YamlConfiguration.loadConfiguration(passwordsFile);
-            loadPlayerData();
-            loadName();
-            plugin.HSPermissions.init();
-            for (Permission p : plugin.HSPermissions.Permissions.keySet()) {
-                if (plugin.HSPermissions.Permissions.get(p).get("reload").equals(1)) {
-                    Bukkit.broadcast(ChatColor.RED + "Console" + ChatColor.GOLD + " Has Reloaded Homespawn!", p.getName());
-                }
-            }
             plugin.logger.info("You Have Reloaded Homespawn!");
         }
         if (player != null) {
             spawn = YamlConfiguration.loadConfiguration(spawnFile);
             messages = YamlConfiguration.loadConfiguration(messagesFile);
             passwords = YamlConfiguration.loadConfiguration(passwordsFile);
-            loadPlayerData();
-            loadName();
-            plugin.HSPermissions.init();
-            player.sendMessage(ChatColor.GOLD
-                    + "You have reloaded the configs for Homespawn!");
-            for (Permission p : plugin.HSPermissions.Permissions.keySet()) {
-                if (plugin.HSPermissions.Permissions.get(p).get("reload").equals(1)) {
-                    Bukkit.broadcast(ChatColor.GOLD + "Player " + ChatColor.RED + player.getName() + ChatColor.GOLD
-                            + " Has Reloaded Homespawn!", p.getName());
-                }
-            }
-            plugin.logger.info("Player " + player.getName()
-                    + " Has Reloaded Homespawn!");
+            player.sendMessage(ChatColor.GOLD + "You have reloaded the configs for Homespawn!");
+            plugin.logger.info("Player " + player.getName() + " Has Reloaded Homespawn!");
         }
     }
 
-    public void savePlayerData(UUID uuid) {
+    public void savePlayerData(UUID uuid, YamlConfiguration yaml) {
         try {
-            HomeConfigs.get(uuid).save(HomeConfigsFiles.get(uuid));
+            File file = new File(plugin.getDataFolder() + File.separator + "PlayerData" + File.separator + uuid.toString() + ".yml");
+            yaml.save(file);
         } catch (IOException e) {
             plugin.logger.log(Level.SEVERE, "An error has occurred while trying to save" +
                     " HomeSpawn player data");
             plugin.logger.log(Level.SEVERE, "The error follows, Please report it to dart2112");
             e.printStackTrace();
-        }
-    }
-
-    public void loadPlayerData() {
-        HomeConfigs.clear();
-        HomeConfigsFiles.clear();
-        File file = new File(plugin.getDataFolder().getAbsolutePath() + File.separator + "PlayerData");
-        File[] playerdataArray = file.listFiles();
-        for (File f : playerdataArray) {
-            if (f.isFile() && !f.getName().contains("Passwords")) {
-                YamlConfiguration Yaml = YamlConfiguration.loadConfiguration(f);
-                if (Yaml.getString("name") == null) {
-                    plugin.logger.severe(f.getName() + " in player data is invalid, please resolve this or delete the file!");
-                    return;
-                }
-                UUID uuid = UUID.fromString(Yaml.getString("name"));
-                HomeConfigs.put(uuid, Yaml);
-                HomeConfigsFiles.put(uuid, f);
-            }
-        }
-    }
-
-    public void loadName() {
-        PlayertoUUID.clear();
-        File file = new File(plugin.getDataFolder().getAbsolutePath() + File.separator
-                + "PlayerData" + File.separator + "PlayerNames");
-        File[] playerNamesArray = file.listFiles();
-        for (File f : playerNamesArray) {
-            YamlConfiguration Yaml = YamlConfiguration.loadConfiguration(f);
-            PlayertoUUID.put(Yaml.getString("Name"), UUID.fromString(Yaml.getString("UUID")));
         }
     }
 

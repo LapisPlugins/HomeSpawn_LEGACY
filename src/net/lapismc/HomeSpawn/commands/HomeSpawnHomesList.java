@@ -9,7 +9,6 @@ import org.bukkit.inventory.Inventory;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
 
 public class HomeSpawnHomesList {
 
@@ -27,8 +26,7 @@ public class HomeSpawnHomesList {
             hsc.showMenu(player);
             return;
         } else {
-            UUID uuid = this.plugin.HSConfig.PlayertoUUID.get(player.getName());
-            YamlConfiguration getHomes = this.plugin.HSConfig.HomeConfigs.get(uuid);
+            YamlConfiguration getHomes = this.plugin.HSConfig.getPlayerData(player.getUniqueId());
             if (!getHomes.contains(player.getUniqueId()
                     + ".list")) {
                 getHomes.createSection(player.getUniqueId()
@@ -42,16 +40,14 @@ public class HomeSpawnHomesList {
                     String list2 = list.toString();
                     String list3 = list2.replace("[", " ");
                     String StringList = list3.replace("]", " ");
-                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.HSConfig.messages.getString("HomeSpawnHome.CurrentHomes")));
+                    player.sendMessage(plugin.HSConfig.getColoredMessage("Home.CurrentHomes"));
                     player.sendMessage(ChatColor.RED + StringList);
 
                 } else {
-                    player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                            plugin.HSConfig.messages.getString("HomeSpawnHome.NoHomeSet")));
+                    player.sendMessage(plugin.HSConfig.getColoredMessage("Home.NoHomeSet"));
                 }
             } else {
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        plugin.HSConfig.messages.getString("HomeSpawnHome.NoHomeSet")));
+                player.sendMessage(plugin.HSConfig.getColoredMessage("Home.NoHomeSet"));
             }
         }
     }

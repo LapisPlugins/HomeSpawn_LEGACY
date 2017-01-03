@@ -2,6 +2,7 @@ package net.lapismc.HomeSpawn;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 
@@ -11,26 +12,65 @@ import java.util.UUID;
 
 public class HomeSpawnPermissions {
 
-    public final HashMap<Permission, HashMap<String, Integer>> Permissions = new HashMap<>();
-    public final HashMap<UUID, Permission> PlayerPermission = new HashMap<>();
+    private HashMap<Permission, HashMap<perm, Integer>> Permissions = new HashMap<>();
+    private HashMap<UUID, Permission> PlayerPermission = new HashMap<>();
     private HomeSpawn plugin;
 
     protected HomeSpawnPermissions(HomeSpawn p) {
         plugin = p;
+        loadPermissionMaps();
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
+            @Override
+            public void run() {
+                PlayerPermission = new HashMap<>();
+            }
+        }, 20 * 60 * 5, 20 * 60 * 5);
     }
 
-    public void init() {
-        Permissions.clear();
-        HashMap<String, Integer> nullPermMap = new HashMap<>();
-        nullPermMap.put("priority", 0);
-        nullPermMap.put("homes", 0);
-        nullPermMap.put("spawn", 1);
-        nullPermMap.put("cHomes", 0);
-        nullPermMap.put("TPD", 0);
-        nullPermMap.put("sSpawn", 0);
-        nullPermMap.put("updateNotify", 0);
-        nullPermMap.put("reload", 0);
-        nullPermMap.put("stats", 0);
+    public HashMap<perm, Integer> getPlayerPermissions(UUID uuid) {
+        Permission p = getPlayerPermission(uuid);
+        if (!Permissions.containsKey(p) || Permissions.get(p).equals(null)) {
+            loadPermissionMaps();
+            return Permissions.get(p);
+        } else {
+            return Permissions.get(p);
+        }
+    }
+
+    public Permission getPlayerPermission(UUID uuid) {
+        Permission p = null;
+        Player player = Bukkit.getPlayer(uuid);
+        if (!PlayerPermission.containsKey(uuid) || PlayerPermission.get(uuid).equals(null)) {
+            Integer priority = 0;
+            for (Permission perm : Permissions.keySet()) {
+                if (player.hasPermission(perm) &&
+                        (Permissions.get(perm).get(HomeSpawnPermissions.perm.priority) > priority)) {
+                    p = perm;
+                }
+            }
+            if (p == null) {
+                return null;
+            } else {
+                PlayerPermission.put(uuid, p);
+            }
+        } else {
+            p = PlayerPermission.get(uuid);
+        }
+        return p;
+    }
+
+    private void loadPermissionMaps() {
+        Permissions = new HashMap<>();
+        HashMap<perm, Integer> nullPermMap = new HashMap<>();
+        nullPermMap.put(perm.priority, 0);
+        nullPermMap.put(perm.homes, 0);
+        nullPermMap.put(perm.spawn, 1);
+        nullPermMap.put(perm.customHomes, 0);
+        nullPermMap.put(perm.TeleportDelay, 0);
+        nullPermMap.put(perm.setSpawn, 0);
+        nullPermMap.put(perm.updateNotify, 0);
+        nullPermMap.put(perm.reload, 0);
+        nullPermMap.put(perm.playerStats, 0);
         Permission np;
         if (Bukkit.getServer().getPluginManager().getPermission("homespawn.null") == null) {
             np = new Permission("homespawn.null", PermissionDefault.FALSE);
@@ -53,28 +93,28 @@ public class HomeSpawnPermissions {
             int updateNotify = plugin.getConfig().getInt("Permissions." + perm + ".updateNotify");
             int reload = plugin.getConfig().getInt("Permissions." + perm + ".reload");
             int stats = plugin.getConfig().getInt("Permissions." + perm + ".player stats");
-            HashMap<String, Integer> permMap = new HashMap<>();
-            permMap.put("priority", priority);
-            permMap.put("homes", homes);
-            permMap.put("spawn", spawn);
-            permMap.put("cHomes", cHomes);
-            permMap.put("TPD", TPD);
-            permMap.put("sSpawn", sSpawn);
-            permMap.put("updateNotify", updateNotify);
-            permMap.put("reload", reload);
-            permMap.put("stats", stats);
-            for (String s : permMap.keySet()) {
-                if (permMap.get(s) == null) {
-                    permMap.put(s, 0);
-                    plugin.logger.severe("Permission " + permName + " is missing the " + s
+            HashMap<perm, Integer> permMap = new HashMap<>();
+            permMap.put(HomeSpawnPermissions.perm.priority, priority);
+            permMap.put(HomeSpawnPermissions.perm.homes, homes);
+            permMap.put(HomeSpawnPermissions.perm.spawn, spawn);
+            permMap.put(HomeSpawnPermissions.perm.customHomes, cHomes);
+            permMap.put(HomeSpawnPermissions.perm.TeleportDelay, TPD);
+            permMap.put(HomeSpawnPermissions.perm.setSpawn, sSpawn);
+            permMap.put(HomeSpawnPermissions.perm.updateNotify, updateNotify);
+            permMap.put(HomeSpawnPermissions.perm.reload, reload);
+            permMap.put(HomeSpawnPermissions.perm.playerStats, stats);
+            for (perm p : permMap.keySet()) {
+                if (permMap.get(p) == null) {
+                    permMap.put(p, 0);
+                    plugin.logger.severe("Permission " + permName + " is missing the " + p.toString()
                             + " value! It has been set to 0 by defult, please fix this" +
                             " in the config!");
                 }
             }
-            for (String s : nullPermMap.keySet()) {
-                if (!permMap.containsKey(s)) {
-                    permMap.put(s, 0);
-                    plugin.logger.severe("Permission " + permName + " is missing the " + s
+            for (perm p : nullPermMap.keySet()) {
+                if (!permMap.containsKey(p)) {
+                    permMap.put(p, 0);
+                    plugin.logger.severe("Permission " + permName + " is missing the " + p.toString()
                             + " value! It has been set to 0 by defult, please fix this" +
                             " in the config!");
                 }
@@ -101,7 +141,15 @@ public class HomeSpawnPermissions {
             Permissions.put(p, permMap);
             plugin.debug("Loaded permission " + p.getName());
         }
-        plugin.logger.info("Permissions Loaded!");
+    }
+
+    public enum perm {
+        defult, priority, homes, spawn, customHomes, TeleportDelay, setSpawn, updateNotify, reload, playerStats;
+
+        @Override
+        public String toString() {
+            return super.toString();
+        }
     }
 
 }

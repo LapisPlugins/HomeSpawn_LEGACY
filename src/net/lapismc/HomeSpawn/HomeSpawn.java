@@ -14,6 +14,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -40,7 +41,6 @@ public class HomeSpawn extends JavaPlugin {
         Enable();
         Update();
         HSPermissions = new HomeSpawnPermissions(this);
-        HSPermissions.init();
         Commands();
         CommandDelay();
         Metrics();
@@ -51,9 +51,13 @@ public class HomeSpawn extends JavaPlugin {
             Metrics metrics = new Metrics(this);
             Graph averageHomesGraph = metrics.createGraph("Average Number Of Homes");
             int homes = 0;
-            int files = HSConfig.HomeConfigs.size();
-            for (YamlConfiguration yaml : HSConfig.HomeConfigs.values()) {
-                homes = homes + yaml.getInt(yaml.getString("name") + ".Numb");
+            File playerData = new File(this.getDataFolder() + File.separator + "PlayerData");
+            int files = playerData.listFiles().length - 1;
+            for (File f : playerData.listFiles()) {
+                if (f.getName() != "Passwords.yml" && !f.isDirectory()) {
+                    YamlConfiguration yaml = YamlConfiguration.loadConfiguration(f);
+                    homes = homes + yaml.getInt(yaml.getString("name") + ".Numb");
+                }
             }
             int average;
             if (files != 0) {
@@ -137,19 +141,20 @@ public class HomeSpawn extends JavaPlugin {
             spawnnew.add(0.5, 0, 0.5);
             player.teleport(spawnnew);
             logger.info("Player " + player.getName()
-                    + " Was Sent To New HomeSpawnSpawn");
+                    + " was sent To the new spawn");
         } else {
-            logger.info("There Is No New HomeSpawnSpawn Set And Therefore The Player Wasn't Sent To The New HomeSpawnSpawn");
+            logger.info(HSConfig.getMessage("Spawn.NewPlayerNoNewSpawn"));
         }
     }
 
     public void help(Player player) {
         if (player != null) {
+            HashMap<HomeSpawnPermissions.perm, Integer> perms = HSPermissions.getPlayerPermissions(player.getUniqueId());
             player.sendMessage(ChatColor.GOLD + "---------------"
                     + ChatColor.RED + "Homespawn" + ChatColor.GOLD
                     + "---------------");
-            if (HSPermissions.Permissions.get(HSPermissions.PlayerPermission.get(player.getUniqueId())).get("cHomes") == 1 &&
-                    HSPermissions.Permissions.get(HSPermissions.PlayerPermission.get(player.getUniqueId())).get("homes") > 0) {
+            if (perms.get(HomeSpawnPermissions.perm.customHomes) == 1 &&
+                    perms.get(HomeSpawnPermissions.perm.homes) > 0) {
                 player.sendMessage(ChatColor.RED + "/home [name]:" + ChatColor.GOLD
                         + " Sends You To The HomeSpawnHome Specified");
                 player.sendMessage(ChatColor.RED + "/sethome [name]:"
@@ -157,8 +162,7 @@ public class HomeSpawn extends JavaPlugin {
                         + " Sets Your HomeSpawnHome At Your Current Location");
                 player.sendMessage(ChatColor.RED + "/delhome [name]:"
                         + ChatColor.GOLD + " Removes The Specified HomeSpawnHome");
-            } else if (HSPermissions.Permissions.get(HSPermissions.PlayerPermission.get
-                    (player.getUniqueId())).get("homes") > 0) {
+            } else if (perms.get(HomeSpawnPermissions.perm.homes) > 0) {
                 player.sendMessage(ChatColor.RED + "/home:" + ChatColor.GOLD
                         + " Sends You To Your HomeSpawnHome");
                 player.sendMessage(ChatColor.RED + "/sethome:"
@@ -167,8 +171,7 @@ public class HomeSpawn extends JavaPlugin {
                 player.sendMessage(ChatColor.RED + "/delhome:"
                         + ChatColor.GOLD + " Removes Your HomeSpawnHome");
             }
-            if (HSPermissions.Permissions.get(HSPermissions.PlayerPermission.get
-                    (player.getUniqueId())).get("spawn") == 1) {
+            if (perms.get(HomeSpawnPermissions.perm.spawn) == 1) {
                 player.sendMessage(ChatColor.RED + "/spawn:" + ChatColor.GOLD
                         + " Sends You To HomeSpawnSpawn");
             }
@@ -177,7 +180,7 @@ public class HomeSpawn extends JavaPlugin {
                         + ChatColor.GOLD
                         + " Displays The HomeSpawnHome Transfer Commands");
             }
-            if (HSPermissions.Permissions.get(HSPermissions.PlayerPermission.get(player.getUniqueId())).get("sSpawn").equals(1)) {
+            if (perms.get(HomeSpawnPermissions.perm.setSpawn) == 1) {
                 player.sendMessage(ChatColor.RED + "/setspawn:"
                         + ChatColor.GOLD + " Sets The Server HomeSpawnSpawn");
                 player.sendMessage(ChatColor.RED + "/setspawn new:"
@@ -188,11 +191,11 @@ public class HomeSpawn extends JavaPlugin {
             }
             player.sendMessage(ChatColor.RED + "/homespawn:"
                     + ChatColor.GOLD + " Displays Plugin Information");
-            if (HSPermissions.Permissions.get(HSPermissions.PlayerPermission.get(player.getUniqueId())).get("reload").equals(1)) {
+            if (perms.get(HomeSpawnPermissions.perm.reload).equals(1)) {
                 player.sendMessage(ChatColor.RED + "/homespawn reload:"
                         + ChatColor.GOLD + " Reloads The Plugin HomeSpawnConfigs");
             }
-            if (HSPermissions.Permissions.get(HSPermissions.PlayerPermission.get(player.getUniqueId())).get("updateNotify").equals(1)) {
+            if (perms.get(HomeSpawnPermissions.perm.updateNotify).equals(1)) {
                 player.sendMessage(ChatColor.RED + "/homespawn update (beta/stable):"
                         + ChatColor.GOLD + " Installs updates if available, you can also choose beta or stable.");
             }
@@ -209,8 +212,8 @@ public class HomeSpawn extends JavaPlugin {
             List<String> l = new ArrayList<>();
             if (args.length == 1) {
                 Player p = (Player) sender;
-                YamlConfiguration pd = HSConfig.HomeConfigs.get(p.getUniqueId());
-                l.addAll(pd.getStringList(p.getUniqueId() + ".list"));
+                YamlConfiguration playerData = HSConfig.getPlayerData(p.getUniqueId());
+                l.addAll(playerData.getStringList(p.getUniqueId() + ".list"));
             }
             debug("Tab Completed for " + sender.getName());
             return l;

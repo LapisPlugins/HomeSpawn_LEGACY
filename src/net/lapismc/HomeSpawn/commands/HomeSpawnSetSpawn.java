@@ -1,9 +1,8 @@
 package net.lapismc.HomeSpawn.commands;
 
 import net.lapismc.HomeSpawn.HomeSpawn;
-import org.bukkit.ChatColor;
+import net.lapismc.HomeSpawn.HomeSpawnPermissions;
 import org.bukkit.entity.Player;
-import org.bukkit.permissions.Permission;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -17,19 +16,8 @@ public class HomeSpawnSetSpawn {
     }
 
     public void setSpawn(String[] args, Player player) {
-        Permission playerPerm = plugin.HSPermissions.PlayerPermission.get(player.getUniqueId());
-        if (playerPerm == null) {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.HSConfig.messages.getString("NoPerms")));
-            return;
-        }
-        HashMap<String, Integer> perms = plugin.HSPermissions.Permissions.get(playerPerm);
-        if (perms == null) {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.HSConfig.messages.getString("NoPerms")));
-            return;
-        }
-        if (perms.get("sSpawn") == 1) {
+        HashMap<HomeSpawnPermissions.perm, Integer> perms = plugin.HSPermissions.getPlayerPermissions(player.getUniqueId());
+        if (perms.get(HomeSpawnPermissions.perm.setSpawn) == 1) {
             if (args.length == 0) {
                 plugin.HSConfig.spawn.set("spawn.SpawnSet", "Yes");
                 plugin.HSConfig.spawn.set("spawn.X", player.getLocation()
@@ -42,8 +30,7 @@ public class HomeSpawnSetSpawn {
                 plugin.HSConfig.spawn.set("spawn.Yaw", player.getLocation().getYaw());
                 plugin.HSConfig.spawn.set("spawn.Pitch", player.getLocation()
                         .getPitch());
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        plugin.HSConfig.messages.getString("HomeSpawnSpawn.SpawnSet")));
+                player.sendMessage(plugin.HSConfig.getColoredMessage("Spawn.SpawnSet"));
             } else if (args[0].equalsIgnoreCase("new")) {
                 plugin.HSConfig.spawn.set("spawnnew.SpawnSet", "Yes");
                 plugin.HSConfig.spawn.set("spawnnew.X", player.getLocation()
@@ -58,8 +45,7 @@ public class HomeSpawnSetSpawn {
                         .getYaw());
                 plugin.HSConfig.spawn.set("spawnnew.Pitch", player.getLocation()
                         .getPitch());
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        plugin.HSConfig.messages.getString("HomeSpawnSpawn.SpawnNewSet")));
+                player.sendMessage(plugin.HSConfig.getColoredMessage("Spawn.SpawnNewSet"));
             } else {
                 this.plugin.help(player);
             }
@@ -71,8 +57,7 @@ public class HomeSpawnSetSpawn {
             }
 
         } else {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.HSConfig.messages.getString("NoPerms")));
+            player.sendMessage(plugin.HSConfig.getColoredMessage("NoPerms"));
 
         }
     }

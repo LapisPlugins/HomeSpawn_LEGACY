@@ -1,8 +1,8 @@
 package net.lapismc.HomeSpawn.commands;
 
+import net.lapismc.HomeSpawn.HomeSpawnPermissions;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.permissions.Permission;
 
 import java.util.HashMap;
 
@@ -17,18 +17,7 @@ public class HomeSpawn {
     }
 
     public void homeSpawn(String[] args, Player player) {
-        Permission playerPerm = plugin.HSPermissions.PlayerPermission.get(player.getUniqueId());
-        if (playerPerm == null) {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.HSConfig.messages.getString("NoPerms")));
-            return;
-        }
-        HashMap<String, Integer> perms = plugin.HSPermissions.Permissions.get(playerPerm);
-        if (perms == null) {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.HSConfig.messages.getString("NoPerms")));
-            return;
-        }
+        HashMap<HomeSpawnPermissions.perm, Integer> perms = plugin.HSPermissions.getPlayerPermissions(player.getUniqueId());
         if (args.length == 0) {
             player.sendMessage(ChatColor.GOLD + "---------------"
                     + ChatColor.RED + "Homespawn" + ChatColor.GOLD
@@ -52,7 +41,7 @@ public class HomeSpawn {
                     + "-----------------------------------------");
         } else if (args.length == 1 && !args[0].equalsIgnoreCase("player")) {
             if (args[0].equalsIgnoreCase("reload")) {
-                if (perms.get("reload") == 1) {
+                if (perms.get(HomeSpawnPermissions.perm.reload) == 1) {
                     this.plugin.HSConfig.reload(player);
                 } else {
                     player.sendMessage(ChatColor.RED
@@ -63,7 +52,7 @@ public class HomeSpawn {
             }
         } else if (args.length > 0) {
             if (args[0].equalsIgnoreCase("update")) {
-                if (perms.get("updateNotify") == 1) {
+                if (perms.get(HomeSpawnPermissions.perm.updateNotify) == 1) {
                     if (args.length == 1) {
                         String ID = plugin.getConfig().getBoolean("BetaVersions")
                                 ? "beta" : "stable";
@@ -84,12 +73,10 @@ public class HomeSpawn {
                             player.sendMessage(ChatColor.GOLD + "Updating failed!");
                         }
                     } else {
-                        player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                                plugin.HSConfig.messages.getString("Error.Args")));
+                        player.sendMessage(plugin.HSConfig.getColoredMessage("Error.Args"));
                     }
                 } else {
-                    player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                            plugin.HSConfig.messages.getString("NoPerms")));
+                    player.sendMessage(plugin.HSConfig.getColoredMessage("NoPerms"));
                 }
             } else if (args[0].equalsIgnoreCase("player")) {
                 homeSpawnPlayer.HomeSpawnPlayer(args, player);

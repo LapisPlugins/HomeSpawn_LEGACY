@@ -1,16 +1,15 @@
 package net.lapismc.HomeSpawn.commands;
 
 import net.lapismc.HomeSpawn.HomeSpawn;
+import net.lapismc.HomeSpawn.HomeSpawnPermissions;
 import net.lapismc.HomeSpawn.api.events.HomeSetEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.permissions.Permission;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
 
 public class HomeSpawnSetHome {
 
@@ -21,33 +20,19 @@ public class HomeSpawnSetHome {
     }
 
     public void setHome(String[] args, Player player) {
-        Permission playerPerm = plugin.HSPermissions.PlayerPermission.get(player.getUniqueId());
-        if (playerPerm == null) {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.HSConfig.messages.getString("NoPerms")));
-            return;
-        }
-        HashMap<String, Integer> perms = plugin.HSPermissions.Permissions.get(playerPerm);
-        if (perms == null) {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.HSConfig.messages.getString("NoPerms")));
-            return;
-        }
-        UUID uuid = this.plugin.HSConfig.PlayertoUUID.get(player.getName());
-        YamlConfiguration getHomes = this.plugin.HSConfig.HomeConfigs.get(uuid);
+        HashMap<HomeSpawnPermissions.perm, Integer> perms = plugin.HSPermissions.getPlayerPermissions(player.getUniqueId());
+        YamlConfiguration getHomes = this.plugin.HSConfig.getPlayerData(player.getUniqueId());
         if (!getHomes.contains(player.getUniqueId()
                 + ".list")) {
             getHomes.createSection(player.getUniqueId()
                     + ".list");
-            this.plugin.HSConfig.savePlayerData(uuid);
+            this.plugin.HSConfig.savePlayerData(player.getUniqueId(), getHomes);
         }
         List<String> list = getHomes.getStringList(player
                 .getUniqueId() + ".list");
         if (getHomes.getInt(player.getUniqueId()
-                + ".Numb") >= perms.get("homes")) {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.HSConfig.messages
-                            .getString("HomeSpawnHome.LimitReached")));
+                + ".Numb") >= perms.get(HomeSpawnPermissions.perm.homes)) {
+            player.sendMessage(plugin.HSConfig.getColoredMessage("Home.LimitReached"));
             return;
         }
 
@@ -75,8 +60,8 @@ public class HomeSpawnSetHome {
                 getHomes.set(player.getUniqueId()
                         + ".Numb", HomesNumb + 1);
             }
-            if (!list.contains("HomeSpawnHome")) {
-                list.add("HomeSpawnHome");
+            if (!list.contains("Home")) {
+                list.add("Home");
                 getHomes.set(player.getUniqueId()
                         + ".list", list);
             }
@@ -96,14 +81,13 @@ public class HomeSpawnSetHome {
             getHomes.set(player.getUniqueId()
                     + ".Pitch", player.getLocation().getPitch());
             getHomes.set("HasHome", "Yes");
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.HSConfig.messages.getString("HomeSpawnHome.HomeSet")));
+            player.sendMessage(plugin.HSConfig.getColoredMessage("Home.HomeSet"));
         } else if (args.length == 1) {
-            if (perms.get("cHomes") == 1) {
+            if (perms.get(HomeSpawnPermissions.perm.customHomes) == 1) {
                 String home = args[0];
-                if (home.equalsIgnoreCase("HomeSpawnHome")) {
+                if (home.equalsIgnoreCase("Home")) {
                     player.sendMessage(ChatColor.RED
-                            + "You Cannot Use The HomeSpawnHome Name \"HomeSpawnHome\", Please Choose Another!");
+                            + "You Cannot Use The HomeSpawnHome Name \"Home\", Please Choose Another!");
                     return;
                 }
                 HomeSetEvent HCE = new HomeSetEvent(plugin, player, player.getLocation(), home);
@@ -144,17 +128,14 @@ public class HomeSpawnSetHome {
                 getHomes.set(home + ".Pitch", player
                         .getLocation().getPitch());
                 getHomes.set(home + ".HasHome", "Yes");
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        plugin.HSConfig.messages.getString("HomeSpawnHome.HomeSet")));
+                player.sendMessage(plugin.HSConfig.getColoredMessage("Home.HomeSet"));
             } else {
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        plugin.HSConfig.messages.getString("NoPerms")));
+                player.sendMessage(plugin.HSConfig.getColoredMessage("NoPerms"));
             }
         } else {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.HSConfig.messages.getString("Error.Args+")));
+            player.sendMessage(plugin.HSConfig.getColoredMessage("Error.Args+"));
         }
-        this.plugin.HSConfig.savePlayerData(uuid);
+        this.plugin.HSConfig.savePlayerData(player.getUniqueId(), getHomes);
     }
 
 }

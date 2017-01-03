@@ -1,19 +1,15 @@
 package net.lapismc.HomeSpawn.commands;
 
 import net.lapismc.HomeSpawn.HomeSpawn;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.World;
+import net.lapismc.HomeSpawn.HomeSpawnPermissions;
+import org.bukkit.*;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.permissions.Permission;
 import org.ocpsoft.prettytime.PrettyTime;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
 
 public class HomeSpawnPlayer {
 
@@ -25,49 +21,29 @@ public class HomeSpawnPlayer {
     }
 
     public void HomeSpawnPlayer(String[] args, Player player) {
-        Permission playerPerm = plugin.HSPermissions.PlayerPermission.get(player.getUniqueId());
-        if (playerPerm == null) {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.HSConfig.messages.getString("NoPerms")));
-            return;
-        }
-        HashMap<String, Integer> perms = plugin.HSPermissions.Permissions.get(playerPerm);
-        if (perms == null) {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.HSConfig.messages.getString("NoPerms")));
-            return;
-        }
-        if (perms.get("stats") == 0) {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.HSConfig.messages.getString("NoPerms")));
+        HashMap<HomeSpawnPermissions.perm, Integer> perms = plugin.HSPermissions.getPlayerPermissions(player.getUniqueId());
+        if (perms.get(HomeSpawnPermissions.perm.playerStats) == 0) {
+            player.sendMessage(plugin.HSConfig.getColoredMessage("NoPerms"));
             return;
         }
         if (args.length != 2 && args.length != 3) {
             help(player);
         } else if (args.length == 2) {
             String name = args[1];
-            UUID uuid;
-            YamlConfiguration homes;
-            uuid = plugin.HSConfig.PlayertoUUID.get(name);
-            if (uuid == null) {
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.HSConfig.messages.getString("NoPlayerData")));
-                return;
-            }
-            homes = plugin.HSConfig.HomeConfigs.get(uuid);
+            OfflinePlayer op = Bukkit.getOfflinePlayer(name);
+            YamlConfiguration homes = plugin.HSConfig.getPlayerData(op.getUniqueId());
             if (homes == null) {
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.HSConfig.messages.getString("NoPlayerData")));
+                player.sendMessage(plugin.HSConfig.getColoredMessage("NoPlayerData"));
                 return;
             }
-            HashMap<String, Integer> uuidperms = plugin.HSPermissions.Permissions.get(plugin.HSPermissions.PlayerPermission.
-                    get(uuid));
             player.sendMessage(ChatColor.RED + "----- " + ChatColor.GOLD + "Stats for " + ChatColor.BLUE + name + ChatColor.RED + " -----");
-            player.sendMessage(ChatColor.RED + "Players Permission: " + ChatColor.GOLD + plugin.HSPermissions.PlayerPermission.get(uuid).getName());
+            player.sendMessage(ChatColor.RED + "Players Permission: " + ChatColor.GOLD + plugin.HSPermissions.getPlayerPermission(op.getUniqueId()).getName());
             String time;
             if (homes.get("login") == null) {
                 time = "Before Player Stats Were Introduced";
             }
             if (homes.get("login") instanceof String && homes.getString("login") == "-") {
-                if (Bukkit.getOfflinePlayer(uuid).isOnline()) {
+                if (op.isOnline()) {
                     time = "Now!";
                 } else {
                     time = "Error!";
@@ -77,10 +53,10 @@ public class HomeSpawnPlayer {
             }
             player.sendMessage(ChatColor.RED + "Player " + ChatColor.BLUE + name + ChatColor.RED + " was last online: "
                     + ChatColor.GOLD + time);
-            String usedHomes = String.valueOf(homes.getInt(uuid.toString() + ".Numb"));
-            player.sendMessage(ChatColor.GOLD + usedHomes + ChatColor.RED + " out of " + ChatColor.GOLD + perms.get("homes")
+            String usedHomes = String.valueOf(homes.getInt(op.getUniqueId().toString() + ".Numb"));
+            player.sendMessage(ChatColor.GOLD + usedHomes + ChatColor.RED + " out of " + ChatColor.GOLD + perms.get(HomeSpawnPermissions.perm.homes)
                     + " homes used");
-            if (homes.getInt(uuid.toString() + ".Numb") > 0) {
+            if (homes.getInt(op.getUniqueId().toString() + ".Numb") > 0) {
                 player.sendMessage(ChatColor.RED + "The players home(s) are:");
                 List<String> list = homes.getStringList(player
                         .getUniqueId() + ".list");
@@ -91,16 +67,10 @@ public class HomeSpawnPlayer {
             }
         } else if (args.length == 3) {
             String name = args[1];
-            UUID uuid;
-            YamlConfiguration homes;
-            uuid = plugin.HSConfig.PlayertoUUID.get(name);
-            if (uuid == null) {
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.HSConfig.messages.getString("NoPlayerData")));
-                return;
-            }
-            homes = plugin.HSConfig.HomeConfigs.get(uuid);
+            OfflinePlayer op = Bukkit.getOfflinePlayer(name);
+            YamlConfiguration homes = plugin.HSConfig.getPlayerData(op.getUniqueId());
             if (homes == null) {
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.HSConfig.messages.getString("NoPlayerData")));
+                player.sendMessage(plugin.HSConfig.getColoredMessage("NoPlayerData"));
                 return;
             }
             teleportPlayer(player, args[2], homes);
@@ -132,7 +102,7 @@ public class HomeSpawnPlayer {
             Location home2 = new Location(world, x, y, z,
                     yaw, pitch);
             home2.add(0.5, 0, 0.5);
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.HSConfig.messages.getString("HomeSpawnHome.SentHome")));
+            player.sendMessage(plugin.HSConfig.getColoredMessage("Home.SentHome"));
             player.teleport(home2);
             return;
         }
@@ -150,10 +120,10 @@ public class HomeSpawnPlayer {
             Location home2 = new Location(world, x, y, z,
                     yaw, pitch);
             home2.add(0.5, 0, 0.5);
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.HSConfig.messages.getString("HomeSpawnHome.SentHome")));
+            player.sendMessage(plugin.HSConfig.getColoredMessage("Home.SentHome"));
             player.teleport(home2);
         } else {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.HSConfig.messages.getString("HomeSpawnHome.NoHomeName")));
+            player.sendMessage(plugin.HSConfig.getColoredMessage("Home.NoHomeName"));
         }
     }
 }

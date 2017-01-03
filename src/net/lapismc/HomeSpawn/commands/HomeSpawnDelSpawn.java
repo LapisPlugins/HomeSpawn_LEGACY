@@ -1,9 +1,8 @@
 package net.lapismc.HomeSpawn.commands;
 
 import net.lapismc.HomeSpawn.HomeSpawn;
-import org.bukkit.ChatColor;
+import net.lapismc.HomeSpawn.HomeSpawnPermissions;
 import org.bukkit.entity.Player;
-import org.bukkit.permissions.Permission;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -18,28 +17,15 @@ public class HomeSpawnDelSpawn {
     }
 
     public void delSpawn(String[] args, Player player) {
-        Permission playerPerm = plugin.HSPermissions.PlayerPermission.get(player.getUniqueId());
-        if (playerPerm == null) {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.HSConfig.messages.getString("NoPerms")));
-            return;
-        }
-        HashMap<String, Integer> perms = plugin.HSPermissions.Permissions.get(playerPerm);
-        if (perms == null) {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.HSConfig.messages.getString("NoPerms")));
-            return;
-        }
-        if (perms.get("sSpawn") == 1) {
-            if (Objects.equals(plugin.HSConfig.spawn.getString("spawn.SpawnSet"), "No")
-                    || !plugin.HSConfig.spawn.contains("spawn.SpawnSet")) {
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        plugin.HSConfig.messages.getString("HomeSpawnSpawn.NotSet")));
-            } else if (plugin.HSConfig.spawn.getString("spawn.SpawnSet")
+        HashMap<HomeSpawnPermissions.perm, Integer> perms = plugin.HSPermissions.getPlayerPermissions(player.getUniqueId());
+        if (perms.get(HomeSpawnPermissions.perm.setSpawn) == 1) {
+            if (Objects.equals(plugin.HSConfig.spawn.getString("Spawn.SpawnSet"), "No")
+                    || !plugin.HSConfig.spawn.contains("Spawn.SpawnSet")) {
+                player.sendMessage(plugin.HSConfig.getColoredMessage("Spawn.NotSet"));
+            } else if (plugin.HSConfig.spawn.getString("Spawn.SpawnSet")
                     .equalsIgnoreCase("Yes")) {
-                plugin.HSConfig.spawn.set("spawn.SpawnSet", "No");
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        plugin.HSConfig.messages.getString("HomeSpawnSpawn.Removed")));
+                plugin.HSConfig.spawn.set("Spawn.SpawnSet", "No");
+                player.sendMessage(plugin.HSConfig.getColoredMessage("Spawn.Removed"));
                 try {
                     plugin.HSConfig.spawn.save(this.plugin.HSConfig.spawnFile);
                     this.plugin.HSConfig.reload("silent");
@@ -49,8 +35,7 @@ public class HomeSpawnDelSpawn {
             }
 
         } else {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.HSConfig.messages.getString("NoPerms")));
+            player.sendMessage(plugin.HSConfig.getColoredMessage("NoPerms"));
         }
     }
 

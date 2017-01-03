@@ -48,18 +48,17 @@ public class HomeSpawnCommand implements CommandExecutor {
     }
 
     public void showMenu(Player p) {
-        UUID uuid = this.plugin.HSConfig.PlayertoUUID.get(p.getName());
-        YamlConfiguration getHomes = this.plugin.HSConfig.HomeConfigs.get(uuid);
+        YamlConfiguration getHomes = this.plugin.HSConfig.getPlayerData(p.getUniqueId());
         if (getHomes == null) {
             p.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.HSConfig.messages.getString("Error.Config")));
+                    plugin.HSConfig.getColoredMessage("Error.Config")));
             plugin.HSConfig.reload("Silent");
             return;
         }
         List<String> homes = getHomes.getStringList(p.getUniqueId() + ".list");
         if (homes.isEmpty()) {
             p.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.HSConfig.messages.getString("HomeSpawnHome.NoHomeSet")));
+                    plugin.HSConfig.getColoredMessage("Home.NoHomeSet")));
             return;
         }
         ArrayList<DyeColor> dc = new ArrayList<>();
@@ -73,11 +72,11 @@ public class HomeSpawnCommand implements CommandExecutor {
         int slots = homes.size() % 9 == 0 ? homes.size() / 9 : homes.size() / 9 + 1;
         if (this.homesList.HomesListInvs.containsKey(p)) {
             if (!(this.homesList.HomesListInvs.get(p).getSize() == slots * 9)) {
-                Inventory inv = Bukkit.createInventory(p, 9 * slots, ChatColor.GOLD + p.getName() + "'s HomeSpawnHomesList");
+                Inventory inv = Bukkit.createInventory(p, 9 * slots, ChatColor.GOLD + p.getName() + "'s Homes List");
                 this.homesList.HomesListInvs.put(p, inv);
             }
         } else {
-            Inventory inv = Bukkit.createInventory(p, 9 * slots, ChatColor.GOLD + p.getName() + "'s HomeSpawnHomesList");
+            Inventory inv = Bukkit.createInventory(p, 9 * slots, ChatColor.GOLD + p.getName() + "'s Homes List");
             this.homesList.HomesListInvs.put(p, inv);
         }
         for (String home : homes) {
@@ -92,30 +91,24 @@ public class HomeSpawnCommand implements CommandExecutor {
         p.openInventory(this.homesList.HomesListInvs.get(p));
     }
 
-    private YamlConfiguration GetHome(String p) {
-        UUID uuid = plugin.HSConfig.PlayertoUUID.get(p);
-        YamlConfiguration getHomes = this.plugin.HSConfig.HomeConfigs.get(uuid);
-        return getHomes;
-    }
-
     public void TeleportPlayer(Player p, Location l, String r, String name) {
-        HashMap<String, Integer> perms = plugin.HSPermissions.Permissions.get(plugin.HSPermissions.PlayerPermission.get(p.getUniqueId()));
-        if (perms.get("TPD") == 0) {
+        HashMap<HomeSpawnPermissions.perm, Integer> perms = plugin.HSPermissions.getPlayerPermissions(p.getUniqueId());
+        if (perms.get(HomeSpawnPermissions.perm.TeleportDelay) == 0) {
             if (!l.getChunk().isLoaded()) {
                 l.getChunk().load();
             }
             p.teleport(l);
             if (r.equalsIgnoreCase("Spawn")) {
-                p.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.HSConfig.messages.getString("HomeSpawnSpawn.SentToSpawn")));
+                p.sendMessage(plugin.HSConfig.getColoredMessage("Spawn.SentToSpawn"));
             } else if (r.equalsIgnoreCase("Home")) {
-                p.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.HSConfig.messages.getString("HomeSpawnHome.SentHome")));
+                p.sendMessage(plugin.HSConfig.getColoredMessage("Home.SentHome"));
             }
         } else {
-            String waitraw = ChatColor.translateAlternateColorCodes('&', plugin.HSConfig.messages.getString("Wait"));
-            String Wait = waitraw.replace("{time}", perms.get("TPD").toString());
+            String waitraw = plugin.HSConfig.getColoredMessage("Wait");
+            String Wait = waitraw.replace("{time}", perms.get(HomeSpawnPermissions.perm.TeleportDelay).toString());
             p.sendMessage(Wait);
             this.plugin.HomeSpawnLocations.put(p, l);
-            this.plugin.HomeSpawnTimeLeft.put(p, perms.get("TPD"));
+            this.plugin.HomeSpawnTimeLeft.put(p, perms.get(HomeSpawnPermissions.perm.TeleportDelay));
         }
     }
 
@@ -142,9 +135,6 @@ public class HomeSpawnCommand implements CommandExecutor {
                              String commandLabel, String[] args) {
         if (sender instanceof Player) {
             Player player = (Player) sender;
-            if (plugin.HSPermissions.Permissions.get(plugin.HSPermissions.PlayerPermission.get(player.getUniqueId())) == null) {
-                plugin.HSPermissions.init();
-            }
             if (cmd.getName().equalsIgnoreCase("sethome")) {
                 setHome.setHome(args, player);
             } else if (cmd.getName().equalsIgnoreCase("home")) {

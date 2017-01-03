@@ -45,11 +45,11 @@ public class HomeSpawnHomePassword {
                         } catch (NoSuchAlgorithmException
                                 | InvalidKeySpecException e1) {
                             e1.printStackTrace();
-                            player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.HSConfig.messages.getString("Password.SaveFailed")));
+                            player.sendMessage(plugin.HSConfig.getColoredMessage("Password.SaveFailed"));
                             return;
                         }
                         getPasswords.set(player.getName(), passHash);
-                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.HSConfig.messages.getString("Password.SetTo")));
+                        player.sendMessage(plugin.HSConfig.getColoredMessage("Password.SetTo"));
                         player.sendMessage(ChatColor.RED + pass);
                         try {
                             getPasswords.save(file3);
@@ -57,7 +57,7 @@ public class HomeSpawnHomePassword {
                             e.printStackTrace();
                         }
                     } else {
-                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.HSConfig.messages.getString("Password.NoMatch")));
+                        player.sendMessage(plugin.HSConfig.getColoredMessage("Password.NoMatch"));
                     }
                 }
             } else if (args.length <= 1) {
@@ -85,7 +85,7 @@ public class HomeSpawnHomePassword {
                     } catch (NoSuchAlgorithmException
                             | InvalidKeySpecException e2) {
                         e2.printStackTrace();
-                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.HSConfig.messages.getString("Password.CheckError")));
+                        player.sendMessage(plugin.HSConfig.getColoredMessage("Password.CheckError"));
                     }
                     if (namefile.exists() && Password) {
                         String uuid = getOldName.getString("UUID");
@@ -109,7 +109,7 @@ public class HomeSpawnHomePassword {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-                        player.sendMessage("Data Transfered!");
+                        player.sendMessage("Data Transferred!");
                         getPasswords.set(player.getName(),
                                 getPasswords.getString(name));
                         getPasswords.set(name, null);
