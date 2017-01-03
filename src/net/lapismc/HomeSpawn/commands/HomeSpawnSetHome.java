@@ -37,15 +37,8 @@ public class HomeSpawnSetHome {
         }
 
         if (args.length == 0) {
-            getHomes.createSection(player.getUniqueId()
-                    .toString());
-            if (!getHomes.contains(player.getUniqueId() + ".Numb")) {
-                getHomes.createSection(player.getUniqueId() + ".Numb");
-                getHomes.set(player.getUniqueId()
-                        + ".Numb", "0");
-            }
-            if (!getHomes.contains("HasHome")) {
-                getHomes.createSection("HasHome");
+            if (!getHomes.contains(player.getUniqueId().toString() + ".Numb")) {
+                getHomes.set(player.getUniqueId().toString() + ".Numb", 0);
             }
             HomeSetEvent HCE = new HomeSetEvent(plugin, player, player.getLocation(), "Home");
             Bukkit.getPluginManager().callEvent(HCE);
@@ -53,26 +46,18 @@ public class HomeSpawnSetHome {
                 player.sendMessage("Your home has not been set because " + HCE.getReason());
                 return;
             }
-            int HomesNumb = getHomes.getInt(player
-                    .getUniqueId() + ".Numb");
-            if (!getHomes.contains("HasHome")
-                    || !getHomes.getString("HasHome").equals("Yes")) {
-                getHomes.set(player.getUniqueId()
-                        + ".Numb", HomesNumb + 1);
-            }
+            int HomesNumb = getHomes.getInt(player.getUniqueId() + ".Numb");
             if (!list.contains("Home")) {
+                getHomes.set(player.getUniqueId() + ".Numb", HomesNumb + 1);
                 list.add("Home");
                 getHomes.set(player.getUniqueId()
                         + ".list", list);
             }
-            getHomes.set(
-                    player.getUniqueId() + ".x",
+            getHomes.set(player.getUniqueId() + ".x",
                     player.getLocation().getBlockX());
-            getHomes.set(
-                    player.getUniqueId() + ".y",
+            getHomes.set(player.getUniqueId() + ".y",
                     player.getLocation().getBlockY());
-            getHomes.set(
-                    player.getUniqueId() + ".z",
+            getHomes.set(player.getUniqueId() + ".z",
                     player.getLocation().getBlockZ());
             getHomes.set(player.getUniqueId()
                     + ".world", player.getWorld().getName());
@@ -96,23 +81,13 @@ public class HomeSpawnSetHome {
                     player.sendMessage("Your home has not been set because " + HCE.getReason());
                     return;
                 }
-                if (!getHomes.contains(home + ".HasHome")) {
-                    getHomes.createSection(home + ".HasHome");
-                }
                 if (!getHomes.contains(player.getUniqueId() + ".Numb")) {
-                    getHomes.createSection(player.getUniqueId() + ".Numb");
-                    getHomes.set(player.getUniqueId() + ".Numb", "0");
+                    getHomes.set(player.getUniqueId() + ".Numb", 0);
                 }
-                int HomesNumb = getHomes.getInt(player
-                        .getUniqueId() + ".Numb");
-                if (!getHomes.contains(home + ".HasHome")
-                        || !getHomes.get(home + ".HasHome")
-                        .equals("Yes")) {
-                    getHomes.set(player.getUniqueId() + ".Numb",
-                            HomesNumb + 1);
-                }
+                int HomesNumb = getHomes.getInt(player.getUniqueId() + ".Numb");
                 if (!list.contains(home)) {
                     list.add(home);
+                    getHomes.set(player.getUniqueId() + ".Numb", HomesNumb + 1);
                     getHomes.set(player.getUniqueId() + ".list", list);
                 }
                 getHomes.set(home + ".x", player.getLocation()

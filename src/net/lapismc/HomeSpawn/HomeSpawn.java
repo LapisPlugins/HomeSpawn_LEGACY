@@ -87,14 +87,13 @@ public class HomeSpawn extends JavaPlugin {
             @Override
             public void run() {
                 lapisUpdater = new LapisUpdater(p, "Homespawn.jar", "Dart2112", "HomeSpawn", "master");
-                String ID = getConfig().getBoolean("BetaVersions") == true ? "beta" : "stable";
-                if (lapisUpdater.checkUpdate(ID)) {
+                if (lapisUpdater.checkUpdate("HomeSpawn")) {
                     if (getConfig().getBoolean("UpdateNotification") && !getConfig()
                             .getBoolean("DownloadUpdates")) {
                         logger.info("An update for HomeSpawn is available and can be" +
                                 " downloaded and installed by running /homespawn update");
                     } else if (getConfig().getBoolean("DownloadUpdates")) {
-                        lapisUpdater.downloadUpdate(ID);
+                        lapisUpdater.downloadUpdate("HomeSpawn");
                         logger.info("Downloading Homespawn update, it will be installed " +
                                 "on next restart!");
                     }
@@ -122,8 +121,11 @@ public class HomeSpawn extends JavaPlugin {
 
     private void Disable() {
         HSConfig.saveLogs();
+        for (Player p : Bukkit.getOnlinePlayers()) {
+            HSConfig.unloadPlayerData(p.getUniqueId());
+        }
+        HandlerList.unregisterAll(this);
         logger.info("Plugin Has Been Disabled!");
-        HandlerList.unregisterAll();
     }
 
     public void spawnNew(Player player) {

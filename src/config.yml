@@ -1,10 +1,7 @@
 ##Dont Change This, It Will Reset The Config If You Do!
-ConfigVersion: 7
+ConfigVersion: 8
 ## If Set To True Console Will Be Notified If The Plugin Has Updates Available
 UpdateNotification: true
-## If set to true the plugin will check if there is a beta version (Can be downloaded by enabling DownloadUpdates or
-## using /homespawn update)
-BetaVersions: false
 ## If set to true the plugin will automaticly download and install updates (updates can be force installed with /homespawn update)
 DownloadUpdates: false
 ## If set to true the plugin will print messages telling you what it is currently doing, helpfull while trying to find errors

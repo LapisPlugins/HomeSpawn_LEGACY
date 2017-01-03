@@ -42,7 +42,7 @@ public class HomeSpawnPlayer {
             if (homes.get("login") == null) {
                 time = "Before Player Stats Were Introduced";
             }
-            if (homes.get("login") instanceof String && homes.getString("login") == "-") {
+            if (!(homes.get("login") instanceof Integer)) {
                 if (op.isOnline()) {
                     time = "Now!";
                 } else {

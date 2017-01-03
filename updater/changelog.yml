@@ -57,3 +57,6 @@ ChangeLog:
         - "All 3 errors reported have been fixed"
     Stable 2.1.3:
         - "Complete overhaul of permissions and player data"
+    Stable 2.1.4:
+        - "Small changes to config files and how they are loaded/unloaded"
+        - "Removed beta channel from updating, Stable only(Now called HomeSpawn)"

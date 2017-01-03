@@ -32,19 +32,21 @@ public class HomeSpawnDelHome {
             if (getHomes.getString("HasHome")
                     .equalsIgnoreCase("no")
                     || !getHomes.contains("HasHome")) {
+                player.sendMessage(plugin.HSConfig.getColoredMessage("Home.NoHomeSet"));
+            } else if (getHomes.getString("HasHome")
+                    .equalsIgnoreCase("yes")) {
                 HomeDelEvent HDE = new HomeDelEvent(plugin, player, player.getLocation(), "Home");
                 Bukkit.getPluginManager().callEvent(HDE);
                 if (HDE.isCancelled()) {
                     player.sendMessage("Your home has not been deleted because " + HDE.getReason());
                     return;
                 }
-                player.sendMessage(plugin.HSConfig.getColoredMessage("Home.NoHomeSet"));
-            } else if (getHomes.getString("HasHome")
-                    .equalsIgnoreCase("yes")) {
                 player.sendMessage(plugin.HSConfig.getColoredMessage("Home.HomeRemoved"));
                 getHomes.set("HasHome", "No");
-                getHomes.set(player.getUniqueId()
-                        + ".Numb", HomeNumb - 1);
+                if (HomeNumb > 0) {
+                    getHomes.set(player.getUniqueId()
+                            + ".Numb", HomeNumb - 1);
+                }
                 if (list.contains("Home")) {
                     list.remove("Home");
                     getHomes.set(player.getUniqueId()
@@ -100,7 +102,7 @@ public class HomeSpawnDelHome {
                     return;
                 }
                 player.sendMessage(plugin.HSConfig.getColoredMessage("Home.HomeRemoved"));
-                getHomes.set(home + ".HasHome", "No");
+                getHomes.set(home, null);
                 getHomes.set(player.getUniqueId()
                         + ".Numb", HomeNumb - 1);
                 if (list.contains(home)) {

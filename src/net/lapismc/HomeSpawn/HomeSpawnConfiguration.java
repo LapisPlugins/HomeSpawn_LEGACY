@@ -284,7 +284,7 @@ public class HomeSpawnConfiguration {
     }
 
     private void configVersion() {
-        if (plugin.getConfig().getInt("ConfigVersion") != 7) {
+        if (plugin.getConfig().getInt("ConfigVersion") != 8) {
             File oldConfig = new File(plugin.getDataFolder() + File.separator + "config.yml");
             File backupConfig = new File(plugin.getDataFolder() + File.separator +
                     "Backup_config.yml");

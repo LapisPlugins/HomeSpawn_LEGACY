@@ -80,7 +80,7 @@ public class HomeSpawnListener implements Listener {
             Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
                 @Override
                 public void run() {
-                    if (!plugin.getConfig().getBoolean("DownloadUpdates") && plugin.lapisUpdater.checkUpdate("main")) {
+                    if (!plugin.getConfig().getBoolean("DownloadUpdates") && plugin.lapisUpdater.checkUpdate("HomeSpawn")) {
                         player.sendMessage(ChatColor.DARK_GRAY
                                 + "[" + ChatColor.AQUA + "HomeSpawn" + ChatColor.DARK_GRAY
                                 + "]" + ChatColor.GOLD + " An update is available! run \"/homespawn update\"" +
