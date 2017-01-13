@@ -57,11 +57,12 @@ public class HomeSpawnPermissions {
         Permission p = null;
         Player player = Bukkit.getPlayer(uuid);
         if (!PlayerPermission.containsKey(uuid) || PlayerPermission.get(uuid).equals(null)) {
-            Integer priority = 0;
+            Integer priority = -1;
             for (Permission perm : Permissions.keySet()) {
                 if (player.hasPermission(perm) &&
                         (Permissions.get(perm).get(HomeSpawnPermissions.perm.priority) > priority)) {
                     p = perm;
+                    priority = Permissions.get(perm).get(HomeSpawnPermissions.perm.priority);
                 }
             }
             if (p == null) {
@@ -79,7 +80,7 @@ public class HomeSpawnPermissions {
     private void loadPermissionMaps() {
         Permissions = new HashMap<>();
         HashMap<perm, Integer> nullPermMap = new HashMap<>();
-        nullPermMap.put(perm.priority, 0);
+        nullPermMap.put(perm.priority, -1);
         nullPermMap.put(perm.homes, 0);
         nullPermMap.put(perm.spawn, 1);
         nullPermMap.put(perm.customHomes, 0);
