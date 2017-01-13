@@ -68,6 +68,7 @@ public class HomeSpawnPermissions {
                 return null;
             } else {
                 PlayerPermission.put(uuid, p);
+                plugin.debug("Player " + player.getName() + " has been assigned permission " + p.getName());
             }
         } else {
             p = PlayerPermission.get(uuid);

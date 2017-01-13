@@ -53,7 +53,9 @@ public class HomeSpawnPlayer {
                 return;
             }
             player.sendMessage(ChatColor.RED + "----- " + ChatColor.GOLD + "Stats for " + ChatColor.BLUE + name + ChatColor.RED + " -----");
-            player.sendMessage(ChatColor.RED + "Players Permission: " + ChatColor.GOLD + plugin.HSPermissions.getPlayerPermission(op.getUniqueId()).getName());
+            if (op.isOnline()) {
+                player.sendMessage(ChatColor.RED + "Players Permission: " + ChatColor.GOLD + plugin.HSPermissions.getPlayerPermission(op.getUniqueId()).getName());
+            }
             String time;
             if (homes.get("login") == null) {
                 time = "Before Player Stats Were Introduced";

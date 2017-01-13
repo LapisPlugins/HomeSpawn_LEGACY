@@ -44,7 +44,7 @@ import java.util.Objects;
 
 public class HomeSpawnListener implements Listener {
 
-    private final List<Player> Players = new ArrayList<>();
+    private List<Player> Players = new ArrayList<>();
     private HomeSpawn plugin;
 
     public HomeSpawnListener(HomeSpawn plugin) {
@@ -120,6 +120,9 @@ public class HomeSpawnListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void OnPlayerMove(PlayerMoveEvent e) {
+        if (Players == null) {
+            Players = new ArrayList<>();
+        }
         Player p = e.getPlayer();
         if (plugin.HomeSpawnLocations.containsKey(p)) {
             if (plugin.HomeSpawnTimeLeft.containsKey(p)) {
