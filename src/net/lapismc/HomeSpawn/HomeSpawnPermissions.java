@@ -128,14 +128,6 @@ public class HomeSpawnPermissions {
                             " in the config!");
                 }
             }
-            for (perm p : nullPermMap.keySet()) {
-                if (!permMap.containsKey(p)) {
-                    permMap.put(p, 0);
-                    plugin.logger.severe("Permission " + permName + " is missing the " + p.toString()
-                            + " value! It has been set to 0 by defult, please fix this" +
-                            " in the config!");
-                }
-            }
             PermissionDefault PD = null;
             switch (Default) {
                 case 1:

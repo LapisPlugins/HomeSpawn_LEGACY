@@ -37,8 +37,9 @@ public class HomeSpawnPlayer {
     }
 
     public void HomeSpawnPlayer(String[] args, Player player) {
-        HashMap<HomeSpawnPermissions.perm, Integer> perms = plugin.HSPermissions.getPlayerPermissions(player.getUniqueId());
-        if (perms.get(HomeSpawnPermissions.perm.playerStats) == 0) {
+        HashMap<HomeSpawnPermissions.perm, Integer> perms = plugin.HSPermissions
+                .getPlayerPermissions(player.getUniqueId());
+        if (perms.get(HomeSpawnPermissions.perm.playerStats) != 1) {
             player.sendMessage(plugin.HSConfig.getColoredMessage("NoPerms"));
             return;
         }
