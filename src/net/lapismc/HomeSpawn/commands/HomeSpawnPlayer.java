@@ -48,6 +48,11 @@ public class HomeSpawnPlayer {
         } else if (args.length == 2) {
             String name = args[1];
             OfflinePlayer op = Bukkit.getOfflinePlayer(name);
+            perms = plugin.HSPermissions.getPlayerPermissions(op.getUniqueId());
+            if (perms == null) {
+                player.sendMessage(plugin.HSConfig.getColoredMessage("NoPlayerData"));
+                return;
+            }
             YamlConfiguration homes = plugin.HSConfig.getPlayerData(op.getUniqueId());
             if (homes == null) {
                 player.sendMessage(plugin.HSConfig.getColoredMessage("NoPlayerData"));

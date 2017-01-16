@@ -63,3 +63,5 @@ ChangeLog:
     Stable 2.1.5:
         - "Fixed permission priority system"
         - "Other small bug fixes"
+    Stable 2.1.6:
+        - "Improved offline player stats"

@@ -17,7 +17,9 @@
 package net.lapismc.HomeSpawn;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
@@ -55,26 +57,39 @@ public class HomeSpawnPermissions {
 
     public Permission getPlayerPermission(UUID uuid) {
         Permission p = null;
-        Player player = Bukkit.getPlayer(uuid);
-        if (!PlayerPermission.containsKey(uuid) || PlayerPermission.get(uuid).equals(null)) {
-            Integer priority = -1;
-            for (Permission perm : Permissions.keySet()) {
-                if (player.hasPermission(perm) &&
-                        (Permissions.get(perm).get(HomeSpawnPermissions.perm.priority) > priority)) {
-                    p = perm;
-                    priority = Permissions.get(perm).get(HomeSpawnPermissions.perm.priority);
+        YamlConfiguration homes = plugin.HSConfig.getPlayerData(uuid);
+        OfflinePlayer op = Bukkit.getOfflinePlayer(uuid);
+        if (op.isOnline()) {
+            Player player = op.getPlayer();
+            if (!PlayerPermission.containsKey(uuid) || PlayerPermission.get(uuid).equals(null)) {
+                Integer priority = -1;
+                for (Permission perm : Permissions.keySet()) {
+                    if (player.hasPermission(perm) &&
+                            (Permissions.get(perm).get(HomeSpawnPermissions.perm.priority) > priority)) {
+                        p = perm;
+                        priority = Permissions.get(perm).get(HomeSpawnPermissions.perm.priority);
+                    }
                 }
+                if (p == null) {
+                    return null;
+                } else {
+                    PlayerPermission.put(uuid, p);
+                    homes.set("Permission", p.getName());
+                    plugin.HSConfig.savePlayerData(uuid, homes);
+                    plugin.debug("Player " + player.getName() + " has been assigned permission " + p.getName());
+                }
+            } else {
+                p = PlayerPermission.get(uuid);
             }
-            if (p == null) {
+            return p;
+        } else {
+            String permName = homes.getString("Permission");
+            if (permName == null || Bukkit.getPluginManager().getPermission(permName) == null) {
                 return null;
             } else {
-                PlayerPermission.put(uuid, p);
-                plugin.debug("Player " + player.getName() + " has been assigned permission " + p.getName());
+                return Bukkit.getPluginManager().getPermission(permName);
             }
-        } else {
-            p = PlayerPermission.get(uuid);
         }
-        return p;
     }
 
     private void loadPermissionMaps() {
