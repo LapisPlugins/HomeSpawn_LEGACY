@@ -44,6 +44,7 @@ public class HomeSpawnCommand implements CommandExecutor {
     public HomeSpawnHomesList homesList;
     public net.lapismc.HomeSpawn.commands.HomeSpawn homeSpawn;
     public HomeSpawnSetHome setHome;
+    public HomeSpawnRenameHome renameHome;
     public HomeSpawnSetSpawn setSpawn;
     public HomeSpawnSpawn spawn;
 
@@ -57,6 +58,7 @@ public class HomeSpawnCommand implements CommandExecutor {
         this.home = new HomeSpawnHome(plugin, this);
         this.homesList = new HomeSpawnHomesList(plugin, this);
         this.setHome = new HomeSpawnSetHome(plugin);
+        this.renameHome = new HomeSpawnRenameHome(plugin);
         this.setSpawn = new HomeSpawnSetSpawn(plugin);
         this.spawn = new HomeSpawnSpawn(plugin, this);
         this.homePassword = new HomeSpawnHomePassword(plugin, this);

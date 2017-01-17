@@ -9,6 +9,8 @@ commands:
     description: Sends the player to the home they set with /sethome
   sethome:
     description: Sets your home so you can use /home to get back there
+  renamehome:
+    description: Renames one of your current homes
   delhome:
     description: Removes your home, this means you cant use /home untill you reset your home with /sethome
   spawn:
