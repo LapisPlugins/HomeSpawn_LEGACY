@@ -67,13 +67,7 @@ public class HomeSpawnCommand implements CommandExecutor {
 
     public void showMenu(Player p) {
         YamlConfiguration getHomes = this.plugin.HSConfig.getPlayerData(p.getUniqueId());
-        if (getHomes == null) {
-            p.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.HSConfig.getColoredMessage("Error.Config")));
-            plugin.HSConfig.reload("Silent");
-            return;
-        }
-        List<String> homes = getHomes.getStringList(p.getUniqueId() + ".list");
+        List<String> homes = getHomes.getStringList("Homes.list");
         if (homes.isEmpty()) {
             p.sendMessage(ChatColor.translateAlternateColorCodes('&',
                     plugin.HSConfig.getColoredMessage("Home.NoHomeSet")));
@@ -155,6 +149,8 @@ public class HomeSpawnCommand implements CommandExecutor {
             Player player = (Player) sender;
             if (cmd.getName().equalsIgnoreCase("sethome")) {
                 setHome.setHome(args, player);
+            } else if (cmd.getName().equalsIgnoreCase("renamehome")) {
+                renameHome.renameHome(args, player);
             } else if (cmd.getName().equalsIgnoreCase("home")) {
                 home.home(args, player);
             } else if (cmd.getName().equalsIgnoreCase("delhome")) {

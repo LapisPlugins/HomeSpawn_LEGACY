@@ -22,7 +22,6 @@ import org.bukkit.entity.Player;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Objects;
 
 public class HomeSpawnDelSpawn {
 
@@ -35,21 +34,33 @@ public class HomeSpawnDelSpawn {
     public void delSpawn(String[] args, Player player) {
         HashMap<HomeSpawnPermissions.perm, Integer> perms = plugin.HSPermissions.getPlayerPermissions(player.getUniqueId());
         if (perms.get(HomeSpawnPermissions.perm.setSpawn) == 1) {
-            if (Objects.equals(plugin.HSConfig.spawn.getString("Spawn.SpawnSet"), "No")
-                    || !plugin.HSConfig.spawn.contains("Spawn.SpawnSet")) {
-                player.sendMessage(plugin.HSConfig.getColoredMessage("Spawn.NotSet"));
-            } else if (plugin.HSConfig.spawn.getString("Spawn.SpawnSet")
-                    .equalsIgnoreCase("Yes")) {
-                plugin.HSConfig.spawn.set("Spawn.SpawnSet", "No");
-                player.sendMessage(plugin.HSConfig.getColoredMessage("Spawn.Removed"));
-                try {
-                    plugin.HSConfig.spawn.save(this.plugin.HSConfig.spawnFile);
-                    this.plugin.HSConfig.reload("silent");
-                } catch (IOException e) {
-                    e.printStackTrace();
+            if (args.length == 0) {
+                if (!plugin.HSConfig.spawn.contains("spawn")) {
+                    player.sendMessage(plugin.HSConfig.getColoredMessage("Spawn.NotSet"));
+                } else {
+                    plugin.HSConfig.spawn.set("spawn", null);
+                    player.sendMessage(plugin.HSConfig.getColoredMessage("Spawn.Removed"));
+                    try {
+                        plugin.HSConfig.spawn.save(plugin.HSConfig.spawnFile);
+                        plugin.HSConfig.reload("silent");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            } else if (args[0].equalsIgnoreCase("new")) {
+                if (!plugin.HSConfig.spawn.contains("spawnnew")) {
+                    player.sendMessage(plugin.HSConfig.getColoredMessage("Spawn.NotSet"));
+                } else {
+                    plugin.HSConfig.spawn.set("spawnnew", null);
+                    player.sendMessage(plugin.HSConfig.getColoredMessage("Spawn.Removed"));
+                    try {
+                        plugin.HSConfig.spawn.save(plugin.HSConfig.spawnFile);
+                        plugin.HSConfig.reload("silent");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
-
         } else {
             player.sendMessage(plugin.HSConfig.getColoredMessage("NoPerms"));
         }

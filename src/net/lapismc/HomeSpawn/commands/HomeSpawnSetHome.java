@@ -38,50 +38,24 @@ public class HomeSpawnSetHome {
     public void setHome(String[] args, Player player) {
         HashMap<HomeSpawnPermissions.perm, Integer> perms = plugin.HSPermissions.getPlayerPermissions(player.getUniqueId());
         YamlConfiguration getHomes = this.plugin.HSConfig.getPlayerData(player.getUniqueId());
-        if (!getHomes.contains(player.getUniqueId()
-                + ".list")) {
-            getHomes.createSection(player.getUniqueId()
-                    + ".list");
-            this.plugin.HSConfig.savePlayerData(player.getUniqueId(), getHomes);
-        }
-        List<String> list = getHomes.getStringList(player
-                .getUniqueId() + ".list");
-        if (getHomes.getInt(player.getUniqueId()
-                + ".Numb") >= perms.get(HomeSpawnPermissions.perm.homes)) {
+        List<String> list = getHomes.getStringList("Homes.list");
+        if (list.size() >= perms.get(HomeSpawnPermissions.perm.homes)) {
             player.sendMessage(plugin.HSConfig.getColoredMessage("Home.LimitReached"));
             return;
         }
 
         if (args.length == 0) {
-            if (!getHomes.contains(player.getUniqueId().toString() + ".Numb")) {
-                getHomes.set(player.getUniqueId().toString() + ".Numb", 0);
-            }
             HomeSetEvent HCE = new HomeSetEvent(plugin, player, player.getLocation(), "Home");
             Bukkit.getPluginManager().callEvent(HCE);
             if (HCE.isCancelled()) {
                 player.sendMessage("Your home has not been set because " + HCE.getReason());
                 return;
             }
-            int HomesNumb = getHomes.getInt(player.getUniqueId() + ".Numb");
             if (!list.contains("Home")) {
-                getHomes.set(player.getUniqueId() + ".Numb", HomesNumb + 1);
                 list.add("Home");
-                getHomes.set(player.getUniqueId()
-                        + ".list", list);
+                getHomes.set("Homes.list", list);
             }
-            getHomes.set(player.getUniqueId() + ".x",
-                    player.getLocation().getBlockX());
-            getHomes.set(player.getUniqueId() + ".y",
-                    player.getLocation().getBlockY());
-            getHomes.set(player.getUniqueId() + ".z",
-                    player.getLocation().getBlockZ());
-            getHomes.set(player.getUniqueId()
-                    + ".world", player.getWorld().getName());
-            getHomes.set(player.getUniqueId()
-                    + ".Yaw", player.getLocation().getYaw());
-            getHomes.set(player.getUniqueId()
-                    + ".Pitch", player.getLocation().getPitch());
-            getHomes.set("HasHome", "Yes");
+            getHomes.set("Homes.Home", player.getLocation());
             player.sendMessage(plugin.HSConfig.getColoredMessage("Home.HomeSet"));
         } else if (args.length == 1) {
             if (perms.get(HomeSpawnPermissions.perm.customHomes) == 1) {
@@ -97,28 +71,11 @@ public class HomeSpawnSetHome {
                     player.sendMessage("Your home has not been set because " + HCE.getReason());
                     return;
                 }
-                if (!getHomes.contains(player.getUniqueId() + ".Numb")) {
-                    getHomes.set(player.getUniqueId() + ".Numb", 0);
-                }
-                int HomesNumb = getHomes.getInt(player.getUniqueId() + ".Numb");
                 if (!list.contains(home)) {
                     list.add(home);
-                    getHomes.set(player.getUniqueId() + ".Numb", HomesNumb + 1);
-                    getHomes.set(player.getUniqueId() + ".list", list);
+                    getHomes.set("Homes.list", list);
                 }
-                getHomes.set(home + ".x", player.getLocation()
-                        .getBlockX());
-                getHomes.set(home + ".y", player.getLocation()
-                        .getBlockY());
-                getHomes.set(home + ".z", player.getLocation()
-                        .getBlockZ());
-                getHomes.set(home + ".world", player.getWorld()
-                        .getName());
-                getHomes.set(home + ".Yaw", player
-                        .getLocation().getYaw());
-                getHomes.set(home + ".Pitch", player
-                        .getLocation().getPitch());
-                getHomes.set(home + ".HasHome", "Yes");
+                getHomes.set("Homes." + home, player.getLocation());
                 player.sendMessage(plugin.HSConfig.getColoredMessage("Home.HomeSet"));
             } else {
                 player.sendMessage(plugin.HSConfig.getColoredMessage("NoPerms"));

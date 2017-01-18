@@ -20,7 +20,6 @@ import net.lapismc.HomeSpawn.Metrics.Graph;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -72,7 +71,7 @@ public class HomeSpawn extends JavaPlugin {
             for (File f : playerData.listFiles()) {
                 if (f.getName() != "Passwords.yml" && !f.isDirectory()) {
                     YamlConfiguration yaml = YamlConfiguration.loadConfiguration(f);
-                    homes = homes + yaml.getInt(yaml.getString("name") + ".Numb");
+                    homes = homes + yaml.getStringList("Homes.List").size();
                 }
             }
             int average;
@@ -145,18 +144,8 @@ public class HomeSpawn extends JavaPlugin {
     }
 
     public void spawnNew(Player player) {
-        if (HSConfig.spawn.get("spawnnew.SpawnSet") != null
-                && HSConfig.spawn.getString("spawnnew.SpawnSet").equalsIgnoreCase(
-                "yes")) {
-            int x = HSConfig.spawn.getInt("spawnnew.X");
-            int y = HSConfig.spawn.getInt("spawnnew.Y");
-            int z = HSConfig.spawn.getInt("spawnnew.Z");
-            float yaw = HSConfig.spawn.getInt("spawnnew.Yaw");
-            float pitch = HSConfig.spawn.getInt("spawnnew.Pitch");
-            String cworld = HSConfig.spawn.getString("spawnnew.World");
-            World world = getServer().getWorld(cworld);
-            Location spawnnew = new Location(world, x, y, z, yaw, pitch);
-            spawnnew.add(0.5, 0, 0.5);
+        if (HSConfig.spawn.contains("spawnnew")) {
+            Location spawnnew = (Location) HSConfig.spawn.get("spawnnew");
             player.teleport(spawnnew);
             logger.info("Player " + player.getName()
                     + " was sent To the new spawn");
@@ -214,8 +203,8 @@ public class HomeSpawn extends JavaPlugin {
                         + ChatColor.GOLD + " Reloads The Plugin HomeSpawnConfigs");
             }
             if (perms.get(HomeSpawnPermissions.perm.updateNotify).equals(1)) {
-                player.sendMessage(ChatColor.RED + "/homespawn update (beta/stable):"
-                        + ChatColor.GOLD + " Installs updates if available, you can also choose beta or stable.");
+                player.sendMessage(ChatColor.RED + "/homespawn update:"
+                        + ChatColor.GOLD + " Installs updates if available");
             }
             player.sendMessage(ChatColor.GOLD
                     + "-----------------------------------------");
@@ -228,11 +217,9 @@ public class HomeSpawn extends JavaPlugin {
                                       String[] args) {
         if (command.getName().equalsIgnoreCase("home") || command.getName().equalsIgnoreCase("delhome")) {
             List<String> l = new ArrayList<>();
-            if (args.length == 1) {
-                Player p = (Player) sender;
-                YamlConfiguration playerData = HSConfig.getPlayerData(p.getUniqueId());
-                l.addAll(playerData.getStringList(p.getUniqueId() + ".list"));
-            }
+            Player p = (Player) sender;
+            YamlConfiguration playerData = HSConfig.getPlayerData(p.getUniqueId());
+            l.addAll(playerData.getStringList("Homes.list"));
             debug("Tab Completed for " + sender.getName());
             return l;
         }

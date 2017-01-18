@@ -43,25 +43,13 @@ public class HomeSpawnHomesList {
             return;
         } else {
             YamlConfiguration getHomes = this.plugin.HSConfig.getPlayerData(player.getUniqueId());
-            if (!getHomes.contains(player.getUniqueId()
-                    + ".list")) {
-                getHomes.createSection(player.getUniqueId()
-                        + ".list");
-            }
-            List<String> list = getHomes.getStringList(player
-                    .getUniqueId() + ".list");
-            if (getHomes.getInt(player.getUniqueId()
-                    + ".Numb") > 0) {
-                if (!list.isEmpty()) {
-                    String list2 = list.toString();
-                    String list3 = list2.replace("[", " ");
-                    String StringList = list3.replace("]", " ");
-                    player.sendMessage(plugin.HSConfig.getColoredMessage("Home.CurrentHomes"));
-                    player.sendMessage(ChatColor.RED + StringList);
-
-                } else {
-                    player.sendMessage(plugin.HSConfig.getColoredMessage("Home.NoHomeSet"));
-                }
+            List<String> list = getHomes.getStringList("Homes.list");
+            if (!list.isEmpty()) {
+                String list2 = list.toString();
+                String list3 = list2.replace("[", " ");
+                String StringList = list3.replace("]", " ");
+                player.sendMessage(plugin.HSConfig.getColoredMessage("Home.CurrentHomes"));
+                player.sendMessage(ChatColor.RED + StringList);
             } else {
                 player.sendMessage(plugin.HSConfig.getColoredMessage("Home.NoHomeSet"));
             }

@@ -16,7 +16,12 @@
 
 package net.lapismc.HomeSpawn.commands;
 
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+
+import java.util.List;
 
 public class HomeSpawnRenameHome {
 
@@ -30,9 +35,26 @@ public class HomeSpawnRenameHome {
         if (args.length == 2) {
             String oldHome = args[0];
             String newHome = args[1];
-
+            YamlConfiguration homes = plugin.HSConfig.getPlayerData(p.getUniqueId());
+            List<String> list = homes.getStringList("Homes.list");
+            if (list.contains(oldHome)) {
+                if (!list.contains(newHome)) {
+                    Location loc = (Location) homes.get("Homes." + oldHome);
+                    homes.set("Homes." + newHome, loc);
+                    homes.set("Homes." + oldHome, null);
+                    list.remove(oldHome);
+                    list.add(newHome);
+                    homes.set("Homes.list", list);
+                    plugin.HSConfig.savePlayerData(p.getUniqueId(), homes);
+                    p.sendMessage(plugin.HSConfig.getColoredMessage("Home.HomeRenamed"));
+                } else {
+                    p.sendMessage(plugin.HSConfig.getColoredMessage("Home.HomeAlreadyExists"));
+                }
+            } else {
+                p.sendMessage(plugin.HSConfig.getColoredMessage("Home.NoHomeName"));
+            }
         } else {
-            //wrong amount of args
+            p.sendMessage(ChatColor.RED + "Usage: /renamehome (current name) (new name)");
         }
     }
 

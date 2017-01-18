@@ -28,46 +28,24 @@ public class HomeSpawnSetSpawn {
     private HomeSpawn plugin;
 
     public HomeSpawnSetSpawn(HomeSpawn p) {
-        this.plugin = p;
+        plugin = p;
     }
 
     public void setSpawn(String[] args, Player player) {
         HashMap<HomeSpawnPermissions.perm, Integer> perms = plugin.HSPermissions.getPlayerPermissions(player.getUniqueId());
         if (perms.get(HomeSpawnPermissions.perm.setSpawn) == 1) {
             if (args.length == 0) {
-                plugin.HSConfig.spawn.set("spawn.SpawnSet", "Yes");
-                plugin.HSConfig.spawn.set("spawn.X", player.getLocation()
-                        .getBlockX());
-                plugin.HSConfig.spawn.set("spawn.Y", player.getLocation()
-                        .getBlockY());
-                plugin.HSConfig.spawn.set("spawn.Z", player.getLocation()
-                        .getBlockZ());
-                plugin.HSConfig.spawn.set("spawn.World", player.getWorld().getName());
-                plugin.HSConfig.spawn.set("spawn.Yaw", player.getLocation().getYaw());
-                plugin.HSConfig.spawn.set("spawn.Pitch", player.getLocation()
-                        .getPitch());
+                plugin.HSConfig.spawn.set("spawn", player.getLocation());
                 player.sendMessage(plugin.HSConfig.getColoredMessage("Spawn.SpawnSet"));
             } else if (args[0].equalsIgnoreCase("new")) {
-                plugin.HSConfig.spawn.set("spawnnew.SpawnSet", "Yes");
-                plugin.HSConfig.spawn.set("spawnnew.X", player.getLocation()
-                        .getBlockX());
-                plugin.HSConfig.spawn.set("spawnnew.Y", player.getLocation()
-                        .getBlockY());
-                plugin.HSConfig.spawn.set("spawnnew.Z", player.getLocation()
-                        .getBlockZ());
-                plugin.HSConfig.spawn.set("spawnnew.World", player.getWorld()
-                        .getName());
-                plugin.HSConfig.spawn.set("spawnnew.Yaw", player.getLocation()
-                        .getYaw());
-                plugin.HSConfig.spawn.set("spawnnew.Pitch", player.getLocation()
-                        .getPitch());
+                plugin.HSConfig.spawn.set("spawnnew", player.getLocation());
                 player.sendMessage(plugin.HSConfig.getColoredMessage("Spawn.SpawnNewSet"));
             } else {
-                this.plugin.help(player);
+                plugin.help(player);
             }
             try {
-                plugin.HSConfig.spawn.save(this.plugin.HSConfig.spawnFile);
-                this.plugin.HSConfig.reload("Silent");
+                plugin.HSConfig.spawn.save(plugin.HSConfig.spawnFile);
+                plugin.HSConfig.reload("Silent");
             } catch (IOException e) {
                 e.printStackTrace();
             }

@@ -18,7 +18,10 @@ package net.lapismc.HomeSpawn.commands;
 
 import net.lapismc.HomeSpawn.HomeSpawn;
 import net.lapismc.HomeSpawn.HomeSpawnPermissions;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.ocpsoft.prettytime.PrettyTime;
@@ -61,29 +64,32 @@ public class HomeSpawnPlayer {
             player.sendMessage(ChatColor.RED + "----- " + ChatColor.GOLD + "Stats for " + ChatColor.BLUE + name + ChatColor.RED + " -----");
             if (op.isOnline()) {
                 player.sendMessage(ChatColor.RED + "Players Permission: " + ChatColor.GOLD + plugin.HSPermissions.getPlayerPermission(op.getUniqueId()).getName());
-            }
-            String time;
-            if (homes.get("login") == null) {
-                time = "Before Player Stats Were Introduced";
-            }
-            if (!(homes.get("login") instanceof Integer)) {
-                if (op.isOnline()) {
-                    time = "Now!";
-                } else {
+                String time = null;
+                if (!(homes.get("login") instanceof Long)) {
                     time = "Error!";
+                } else {
+                    Date date = new Date(homes.getLong("login"));
+                    time = p.format(date);
                 }
+                player.sendMessage(ChatColor.RED + "Player " + ChatColor.BLUE + name + ChatColor.RED + " has been online since "
+                        + ChatColor.GOLD + time);
             } else {
-                time = p.format(new Date(homes.getLong("login")));
+                String time = null;
+                if (!(homes.get("logout") instanceof Long)) {
+                    time = "Error!";
+                } else {
+                    Date date = new Date(homes.getLong("logout"));
+                    time = p.format(date);
+                }
+                player.sendMessage(ChatColor.RED + "Player " + ChatColor.BLUE + name + ChatColor.RED + " has been offline since "
+                        + ChatColor.GOLD + time);
             }
-            player.sendMessage(ChatColor.RED + "Player " + ChatColor.BLUE + name + ChatColor.RED + " was last online: "
-                    + ChatColor.GOLD + time);
-            String usedHomes = String.valueOf(homes.getInt(op.getUniqueId().toString() + ".Numb"));
+            List<String> list = homes.getStringList("Homes.list");
+            String usedHomes = String.valueOf(homes.getStringList("Homes.list").size());
             player.sendMessage(ChatColor.GOLD + usedHomes + ChatColor.RED + " out of " + ChatColor.GOLD + perms.get(HomeSpawnPermissions.perm.homes)
                     + " homes used");
-            if (homes.getInt(op.getUniqueId().toString() + ".Numb") > 0) {
+            if (!list.isEmpty()) {
                 player.sendMessage(ChatColor.RED + "The players home(s) are:");
-                List<String> list = homes.getStringList(player
-                        .getUniqueId() + ".list");
                 String list2 = list.toString();
                 String list3 = list2.replace("[", " ");
                 String StringList = list3.replace("]", " ");
@@ -112,38 +118,14 @@ public class HomeSpawnPlayer {
     }
 
     private void teleportPlayer(Player player, String home, YamlConfiguration getHomes) {
-        if (home.equalsIgnoreCase("home") && getHomes.getString("HasHome").equalsIgnoreCase("yes")) {
-            String uuid = getHomes.getString("name");
-            int x = getHomes.getInt(uuid + ".x");
-            int y = getHomes.getInt(uuid + ".y");
-            int z = getHomes.getInt(uuid + ".z");
-            float yaw = getHomes.getInt(uuid + ".Yaw");
-            float pitch = getHomes.getInt(uuid + ".Pitch");
-            String cworld = getHomes.getString(uuid
-                    + ".world");
-            World world = plugin.getServer().getWorld(
-                    cworld);
-            Location home2 = new Location(world, x, y, z,
-                    yaw, pitch);
-            home2.add(0.5, 0, 0.5);
+        if (home.equalsIgnoreCase("home") && getHomes.contains("Homes.Home")) {
+            Location home2 = (Location) getHomes.get("Homes.Home");
             player.sendMessage(plugin.HSConfig.getColoredMessage("Home.SentHome"));
             player.teleport(home2);
             return;
         }
-        if (getHomes.contains(home) && getHomes.getString(home + ".HasHome")
-                .equalsIgnoreCase("yes")) {
-            int x = getHomes.getInt(home + ".x");
-            int y = getHomes.getInt(home + ".y");
-            int z = getHomes.getInt(home + ".z");
-            float yaw = getHomes.getInt(home + ".Yaw");
-            float pitch = getHomes.getInt(home + ".Pitch");
-            String cworld = getHomes.getString(home
-                    + ".world");
-            World world = plugin.getServer().getWorld(
-                    cworld);
-            Location home2 = new Location(world, x, y, z,
-                    yaw, pitch);
-            home2.add(0.5, 0, 0.5);
+        if (getHomes.contains("Homes." + home)) {
+            Location home2 = (Location) getHomes.get("Homes." + home);
             player.sendMessage(plugin.HSConfig.getColoredMessage("Home.SentHome"));
             player.teleport(home2);
         } else {

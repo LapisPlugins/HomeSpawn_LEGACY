@@ -58,6 +58,7 @@ public class HomeSpawnComponents {
         if (home()) {
             plugin.getCommand("home").setExecutor(plugin.HSCommand);
             plugin.getCommand("sethome").setExecutor(plugin.HSCommand);
+            plugin.getCommand("renamehome").setExecutor(plugin.HSCommand);
             plugin.getCommand("delhome").setExecutor(plugin.HSCommand);
             plugin.getCommand("homeslist").setExecutor(plugin.HSCommand);
         }

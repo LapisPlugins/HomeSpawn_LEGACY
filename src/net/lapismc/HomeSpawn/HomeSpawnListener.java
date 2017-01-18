@@ -19,7 +19,6 @@ package net.lapismc.HomeSpawn;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
@@ -38,9 +37,9 @@ import org.bukkit.inventory.PlayerInventory;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 
 public class HomeSpawnListener implements Listener {
 
@@ -66,15 +65,12 @@ public class HomeSpawnListener implements Listener {
         if (!file.exists()) {
             try {
                 file.createNewFile();
-                getHomes.createSection("name");
-                getHomes.createSection("Permission");
-                getHomes.createSection("login");
-                getHomes.createSection("HasHome");
-                getHomes.createSection(player.getUniqueId() + ".Numb");
-                getHomes.save(file);
-                getHomes.set("name", player.getUniqueId().toString());
-                getHomes.set("HasHome", "No");
-                getHomes.set(player.getUniqueId() + ".Numb", 0);
+                getHomes.set("UUID", player.getUniqueId().toString());
+                getHomes.set("UserName", player.getName());
+                getHomes.set("Permission", "-");
+                getHomes.set("login", System.currentTimeMillis());
+                getHomes.set("logout", "-");
+                getHomes.set("Homes.list", new ArrayList<String>());
                 getHomes.save(file);
                 plugin.spawnNew(player);
                 if (plugin.getConfig().getBoolean("CommandBook")) {
@@ -89,10 +85,13 @@ public class HomeSpawnListener implements Listener {
                         .severe("[HomeSpawn] Player Data File Creation Failed!");
                 return;
             }
-            plugin.HSConfig.reload("Silent");
         }
         getHomes = plugin.HSConfig.getPlayerData(player.getUniqueId());
         HashMap<HomeSpawnPermissions.perm, Integer> perms = plugin.HSPermissions.getPlayerPermissions(player.getUniqueId());
+        if (!player.getName().equals(getHomes.getString("UserName"))) {
+            plugin.logger.info("Player " + getHomes.getString("UserName") + " has changed their name to " + player.getName());
+            getHomes.set("UserName", player.getName());
+        }
         if (perms.get(HomeSpawnPermissions.perm.updateNotify) == 1) {
             Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
                 @Override
@@ -106,15 +105,17 @@ public class HomeSpawnListener implements Listener {
                 }
             });
         }
-        plugin.HSConfig.getPlayerData(player.getUniqueId()).set("login", "-");
+        Date date = new Date();
+        getHomes.set("login", date.getTime());
+        plugin.HSConfig.savePlayerData(player.getUniqueId(), getHomes);
     }
-
 
     @EventHandler(priority = EventPriority.LOW)
     public void PlayerQuit(PlayerQuitEvent e) {
         Player p = e.getPlayer();
         YamlConfiguration homes = plugin.HSConfig.getPlayerData(p.getUniqueId());
-        homes.set("login", System.currentTimeMillis());
+        Date date = new Date();
+        homes.set("logout", date.getTime());
         plugin.HSConfig.savePlayerData(p.getUniqueId(), homes);
         plugin.HSConfig.unloadPlayerData(p.getUniqueId());
     }
@@ -200,31 +201,14 @@ public class HomeSpawnListener implements Listener {
             String name1 = ChatColor.stripColor(name);
             YamlConfiguration getHomes = plugin.HSConfig.getPlayerData(p.getUniqueId());
             if (name1.equalsIgnoreCase("Home")) {
-                if (getHomes.getString("HasHome").equalsIgnoreCase("yes")) {
-                    int x = getHomes.getInt(p.getUniqueId() + ".x");
-                    int y = getHomes.getInt(p.getUniqueId() + ".y");
-                    int z = getHomes.getInt(p.getUniqueId() + ".z");
-                    float yaw = getHomes.getInt(p.getUniqueId()
-                            + ".Yaw");
-                    float pitch = getHomes.getInt(p.getUniqueId()
-                            + ".Pitch");
-                    String cworld = getHomes.getString(p.getUniqueId() + ".world");
-                    World world = plugin.getServer().getWorld(cworld);
-                    Location home = new Location(world, x, y, z, yaw, pitch);
+                if (getHomes.getStringList("Homes.list").contains(name1)) {
+                    Location home = (Location) getHomes.get("Homes." + name1);
                     home.add(0.5, 0, 0.5);
                     TeleportPlayer(p, home);
                 }
             } else {
-                if (getHomes.getString(name1 + ".HasHome").equalsIgnoreCase(
-                        "yes")) {
-                    int x = getHomes.getInt(name1 + ".x");
-                    int y = getHomes.getInt(name1 + ".y");
-                    int z = getHomes.getInt(name1 + ".z");
-                    float yaw = getHomes.getInt(name1 + ".Yaw");
-                    float pitch = getHomes.getInt(name1 + ".Pitch");
-                    String cworld = getHomes.getString(name1 + ".world");
-                    World world = plugin.getServer().getWorld(cworld);
-                    Location home2 = new Location(world, x, y, z, yaw, pitch);
+                if (getHomes.getStringList("Homes.list").contains(name1)) {
+                    Location home2 = (Location) getHomes.get("Homes." + name1);
                     home2.add(0.5, 0, 0.5);
                     TeleportPlayer(p, home2);
                 }
@@ -243,8 +227,8 @@ public class HomeSpawnListener implements Listener {
     public void onInvExit(InventoryCloseEvent e) {
         if (!(e.getPlayer() == null && e.getInventory() == null)) {
             Player p = (Player) e.getPlayer();
-            if (plugin.HSCommand.homesList.HomesListInvs.containsKey(p) && Objects.equals(e.getInventory().getName(),
-                    plugin.HSCommand.homesList.HomesListInvs.get(p).getName())) {
+            if (plugin.HSCommand.homesList.HomesListInvs.containsKey(p) && e.getInventory().getName() ==
+                    plugin.HSCommand.homesList.HomesListInvs.get(p).getName()) {
                 Inventory inv = plugin.HSCommand.homesList.HomesListInvs.get(p);
                 inv.clear();
                 plugin.HSCommand.homesList.HomesListInvs.put(p, inv);

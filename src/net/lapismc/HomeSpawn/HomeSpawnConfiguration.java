@@ -16,8 +16,7 @@
 
 package net.lapismc.HomeSpawn;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
+import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -44,17 +43,90 @@ public class HomeSpawnConfiguration {
     private File passwordsFile;
     private HomeSpawn plugin;
 
-    //TODO: update all playerdata veriables and add a convert method to run on start
-
     protected HomeSpawnConfiguration(HomeSpawn p) {
         plugin = p;
         Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
             @Override
             public void run() {
-                HomeConfigs = new HashMap<>();
+                HomeConfigs.clear();
             }
         }, 20 * 60 * 5, 20 * 60 * 5);
         Configs();
+        updatePlayerData();
+    }
+
+    protected void updatePlayerData() {
+        if (plugin.getConfig().getInt("ConfigVersion") >= 8) {
+            File f = new File(plugin.getDataFolder().getAbsolutePath() + File.separator + "PlayerData");
+            File[] fa = f.listFiles();
+            int i = 0;
+            for (File f0 : fa) {
+                if (f0.isDirectory()) {
+                    return;
+                } else {
+                    YamlConfiguration Homes = YamlConfiguration.loadConfiguration(f0);
+                    if (Homes.contains("name")) {
+                        i++;
+                        UUID uuid = UUID.fromString(Homes.getString("name"));
+                        Long logout = Homes.getLong("login");
+                        List<String> homesList = Homes.getStringList(uuid.toString() + ".list");
+                        HashMap<String, Location> homesLocList = new HashMap<>();
+                        for (String homeName : homesList) {
+                            if (homeName.equals("Home")) {
+                                World world = Bukkit.getWorld(Homes.getString(uuid.toString() + ".world"));
+                                Location loc = new Location(world, Homes.getInt(uuid.toString() + ".x"),
+                                        Homes.getInt(uuid.toString() + ".y"), Homes.getInt(uuid.toString() + ".z"),
+                                        Float.parseFloat(Homes.getString(uuid.toString() + ".Yaw")),
+                                        Float.parseFloat(Homes.getString(uuid.toString() + ".Pitch")));
+                                homesLocList.put(homeName, loc);
+                            } else {
+                                World world = Bukkit.getWorld(Homes.getString(homeName + ".world"));
+                                Location loc = new Location(world, Homes.getInt(homeName + ".x"),
+                                        Homes.getInt(uuid.toString() + ".y"), Homes.getInt(homeName + ".z"),
+                                        Float.parseFloat(Homes.getString(homeName + ".Yaw")),
+                                        Float.parseFloat(Homes.getString(homeName + ".Pitch")));
+                                homesLocList.put(homeName, loc);
+                            }
+                        }
+                        YamlConfiguration newHomes = new YamlConfiguration();
+                        OfflinePlayer op = Bukkit.getOfflinePlayer(uuid);
+                        newHomes.set("UUID", uuid.toString());
+                        newHomes.set("UserName", op.getName());
+                        newHomes.set("Permission", "-");
+                        newHomes.set("login", "-");
+                        newHomes.set("logout", logout);
+                        newHomes.set("Homes.list", homesList);
+                        for (String homeName : homesLocList.keySet()) {
+                            Location loc = homesLocList.get(homeName);
+                            newHomes.set("Homes." + homeName, loc);
+                        }
+                        savePlayerData(uuid, newHomes);
+                    }
+                }
+            }
+            plugin.logger.info(i + " Player Data files updated to the new layout");
+        }
+        if (spawn.contains("spawn.SpawnSet")) {
+            try {
+                Location loc = new Location(Bukkit.getWorld(spawn.getString("spawn.World")), spawn.getInt("spawn.X"), spawn.getInt("spawn.Y"), spawn.getInt("spawn.Z"),
+                        Float.parseFloat(spawn.getString("spawn.Yaw")), Float.parseFloat(spawn.getString("spawn.Pitch")));
+                spawn.set("spawn", loc);
+                spawn.save(spawnFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        if (spawn.contains("spawnnew.SpawnSet")) {
+            try {
+                Location loc = new Location(Bukkit.getWorld(spawn.getString("spawnnew.World")), spawn.getInt("spawnnew.X"),
+                        spawn.getInt("spawnnew.Y"), spawn.getInt("spawnnew.Z"),
+                        Float.parseFloat(spawn.getString("spawnnew.Yaw")), Float.parseFloat(spawn.getString("spawnnew.Pitch")));
+                spawn.set("spawnnew", loc);
+                spawn.save(spawnFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public YamlConfiguration getPlayerData(UUID uuid) {
@@ -144,8 +216,7 @@ public class HomeSpawnConfiguration {
     }
 
     private void Configs() {
-        File f = new File(Bukkit.getWorldContainer() + File.separator
-                + "plugins" + File.separator + "Homespawn");
+        File f = new File(plugin.getDataFolder().getParent() + File.separator + "Homespawn");
         if (f.exists()) {
             f.renameTo(new File(f.getParent() + File.separator + "HomeSpawn"));
         }
@@ -259,15 +330,9 @@ public class HomeSpawnConfiguration {
     private void createPlayerData() {
         File theDir = new File(plugin.getDataFolder().getAbsolutePath()
                 + File.separator + "PlayerData");
-        File theDir1 = new File(plugin.getDataFolder().getAbsolutePath()
-                + File.separator + "PlayerData" + File.separator
-                + "PlayerNames");
         if (!theDir.exists()) {
             plugin.logger.info("Creating HomeSpawn PlayerData Directory!");
             theDir.mkdir();
-        }
-        if (!theDir1.exists()) {
-            theDir1.mkdir();
         }
     }
 
@@ -278,21 +343,8 @@ public class HomeSpawnConfiguration {
         if (!file.exists()) {
             try {
                 file.createNewFile();
-                getSpawn.createSection("spawn.X");
-                getSpawn.createSection("spawn.Y");
-                getSpawn.createSection("spawn.Z");
-                getSpawn.createSection("spawn.World");
-                getSpawn.createSection("spawn.Yaw");
-                getSpawn.createSection("spawn.Pitch");
-                getSpawn.createSection("spawnnew.X");
-                getSpawn.createSection("spawnnew.Y");
-                getSpawn.createSection("spawnnew.Z");
-                getSpawn.createSection("spawnnew.World");
-                getSpawn.createSection("spawnnew.Yaw");
-                getSpawn.createSection("spawnnew.Pitch");
-                getSpawn.save(file);
             } catch (IOException e) {
-                plugin.logger.log(Level.SEVERE, "An error has occurred while trying to save HomeSpawn spawn data");
+                plugin.logger.log(Level.SEVERE, "An error has occurred while trying to load HomeSpawn spawn data");
                 plugin.logger.log(Level.SEVERE, "The error follows, Please report it to dart2112");
                 e.printStackTrace();
             }

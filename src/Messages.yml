@@ -1,7 +1,9 @@
 Home:
   HomeSet: "&6Home Set, You Can Now Use &4/home"
+  HomeRenamed: "&6Your Home Has Been Renamed"
   SentHome: "&6Welcome Home"
   NoHomeSet: "&4You First Need To Set a Home With &6/sethome"
+  HomeAlreadyExists: "&4A Home With That Name Already Exists"
   NoHomeName: "&4A Home With This Name Does not Exist!"
   CurrentHomes: "&6Your Current Homes Are:"
   HomeRemoved: "&6Home Removed"
