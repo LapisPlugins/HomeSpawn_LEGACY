@@ -16,12 +16,24 @@
 
 package net.lapismc.HomeSpawn.commands;
 
+import org.bukkit.entity.Player;
+
 public class HomeSpawnRenameHome {
 
     private net.lapismc.HomeSpawn.HomeSpawn plugin;
 
     public HomeSpawnRenameHome(net.lapismc.HomeSpawn.HomeSpawn p) {
         plugin = p;
+    }
+
+    public void renameHome(String[] args, Player p) {
+        if (args.length == 2) {
+            String oldHome = args[0];
+            String newHome = args[1];
+
+        } else {
+            //wrong amount of args
+        }
     }
 
 }

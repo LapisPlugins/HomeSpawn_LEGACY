@@ -44,6 +44,8 @@ public class HomeSpawnConfiguration {
     private File passwordsFile;
     private HomeSpawn plugin;
 
+    //TODO: update all playerdata veriables and add a convert method to run on start
+
     protected HomeSpawnConfiguration(HomeSpawn p) {
         plugin = p;
         Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
