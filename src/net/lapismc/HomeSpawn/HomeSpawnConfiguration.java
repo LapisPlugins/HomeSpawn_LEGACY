@@ -65,27 +65,33 @@ public class HomeSpawnConfiguration {
                     return;
                 } else {
                     YamlConfiguration Homes = YamlConfiguration.loadConfiguration(f0);
-                    if (Homes.contains("name")) {
+                    if (Homes.contains("HasHome")) {
                         i++;
                         UUID uuid = UUID.fromString(Homes.getString("name"));
                         Long logout = Homes.getLong("login");
                         List<String> homesList = Homes.getStringList(uuid.toString() + ".list");
                         HashMap<String, Location> homesLocList = new HashMap<>();
                         for (String homeName : homesList) {
-                            if (homeName.equals("Home")) {
-                                World world = Bukkit.getWorld(Homes.getString(uuid.toString() + ".world"));
-                                Location loc = new Location(world, Homes.getInt(uuid.toString() + ".x"),
-                                        Homes.getInt(uuid.toString() + ".y"), Homes.getInt(uuid.toString() + ".z"),
-                                        Float.parseFloat(Homes.getString(uuid.toString() + ".Yaw")),
-                                        Float.parseFloat(Homes.getString(uuid.toString() + ".Pitch")));
-                                homesLocList.put(homeName, loc);
-                            } else {
-                                World world = Bukkit.getWorld(Homes.getString(homeName + ".world"));
-                                Location loc = new Location(world, Homes.getInt(homeName + ".x"),
-                                        Homes.getInt(uuid.toString() + ".y"), Homes.getInt(homeName + ".z"),
-                                        Float.parseFloat(Homes.getString(homeName + ".Yaw")),
-                                        Float.parseFloat(Homes.getString(homeName + ".Pitch")));
-                                homesLocList.put(homeName, loc);
+                            try {
+                                if (homeName.equals("Home")) {
+                                    World world = Bukkit.getWorld(Homes.getString(uuid.toString() + ".world"));
+                                    Location loc = new Location(world, Homes.getInt(uuid.toString() + ".x"),
+                                            Homes.getInt(uuid.toString() + ".y"), Homes.getInt(uuid.toString() + ".z"),
+                                            Float.parseFloat(Homes.getString(uuid.toString() + ".Yaw")),
+                                            Float.parseFloat(Homes.getString(uuid.toString() + ".Pitch")));
+                                    homesLocList.put(homeName, loc);
+                                } else {
+                                    World world = Bukkit.getWorld(Homes.getString(homeName + ".world"));
+                                    Location loc = new Location(world, Homes.getInt(homeName + ".x"),
+                                            Homes.getInt(uuid.toString() + ".y"), Homes.getInt(homeName + ".z"),
+                                            Float.parseFloat(Homes.getString(homeName + ".Yaw")),
+                                            Float.parseFloat(Homes.getString(homeName + ".Pitch")));
+                                    homesLocList.put(homeName, loc);
+                                }
+                            } catch (IllegalArgumentException e) {
+                                e.printStackTrace();
+                                plugin.logger.severe("Failed to update to new " +
+                                        "PlayerData format for file " + f0.getName());
                             }
                         }
                         YamlConfiguration newHomes = new YamlConfiguration();
@@ -354,7 +360,7 @@ public class HomeSpawnConfiguration {
     }
 
     private void configVersion() {
-        if (plugin.getConfig().getInt("ConfigVersion") != 8) {
+        if (plugin.getConfig().getInt("ConfigVersion") != 9) {
             File oldConfig = new File(plugin.getDataFolder() + File.separator + "config.yml");
             File backupConfig = new File(plugin.getDataFolder() + File.separator +
                     "Backup_config.yml");

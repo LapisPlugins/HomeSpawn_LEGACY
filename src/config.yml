@@ -1,5 +1,5 @@
 ##Dont Change This, It Will Reset The Config If You Do!
-ConfigVersion: 8
+ConfigVersion: 9
 ## If Set To True Console Will Be Notified If The Plugin Has Updates Available
 UpdateNotification: true
 ## If set to true the plugin will automaticly download and install updates (updates can be force installed with /homespawn update)

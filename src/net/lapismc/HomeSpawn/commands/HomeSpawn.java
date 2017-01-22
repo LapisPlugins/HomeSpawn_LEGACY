@@ -70,18 +70,7 @@ public class HomeSpawn {
             if (args[0].equalsIgnoreCase("update")) {
                 if (perms.get(HomeSpawnPermissions.perm.updateNotify) == 1) {
                     if (args.length == 1) {
-                        String ID = plugin.getConfig().getBoolean("BetaVersions")
-                                ? "beta" : "stable";
-                        if (plugin.lapisUpdater.downloadUpdate(ID)) {
-                            player.sendMessage(ChatColor.GOLD + "Downloading Update...");
-                            player.sendMessage(ChatColor.GOLD + "The update will be installed"
-                                    + " when the server next starts!");
-                        } else {
-                            player.sendMessage(ChatColor.GOLD + "Updating failed!");
-                        }
-                    } else if (args.length == 2) {
-                        String ID = args[1];
-                        if (plugin.lapisUpdater.downloadUpdate(ID)) {
+                        if (plugin.lapisUpdater.downloadUpdate("HomeSpawm")) {
                             player.sendMessage(ChatColor.GOLD + "Downloading Update...");
                             player.sendMessage(ChatColor.GOLD + "The update will be installed"
                                     + " when the server next starts!");

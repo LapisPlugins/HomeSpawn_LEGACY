@@ -55,7 +55,7 @@ public class LapisUpdater {
     }
 
     public boolean downloadUpdate(String ID) {
-        this.ID = ID.substring(0, 1).toUpperCase() + ID.substring(1);
+        this.ID = ID;
         this.force = true;
         return downloadUpdateJar();
     }

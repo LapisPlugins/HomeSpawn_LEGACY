@@ -174,8 +174,7 @@ public class HomeSpawnCommand implements CommandExecutor {
                     Player p = null;
                     this.plugin.HSConfig.reload(p);
                 } else if (args[0].equalsIgnoreCase("update")) {
-                    String ID = plugin.getConfig().getBoolean("BetaVersions") ? "beta" : "stable";
-                    if (plugin.lapisUpdater.downloadUpdate(ID)) {
+                    if (plugin.lapisUpdater.downloadUpdate("HomeSpawn")) {
                         sender.sendMessage(ChatColor.GOLD + "Downloading Update...");
                         sender.sendMessage(ChatColor.GOLD + "The update will be installed" +
                                 " when the server next starts!");
