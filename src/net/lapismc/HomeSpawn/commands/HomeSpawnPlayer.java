@@ -25,18 +25,24 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.ocpsoft.prettytime.PrettyTime;
+import org.ocpsoft.prettytime.units.JustNow;
+import org.ocpsoft.prettytime.units.Millisecond;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 public class HomeSpawnPlayer {
 
     private HomeSpawn plugin;
     private PrettyTime p = new PrettyTime();
 
-    public HomeSpawnPlayer(HomeSpawn plugin) {
-        this.plugin = plugin;
+    public HomeSpawnPlayer(HomeSpawn pl) {
+        plugin = pl;
+        p.setLocale(Locale.ENGLISH);
+        p.removeUnit(JustNow.class);
+        p.removeUnit(Millisecond.class);
     }
 
     public void HomeSpawnPlayer(String[] args, Player player) {

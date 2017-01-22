@@ -94,7 +94,7 @@ public class LapisUpdater {
                 changeLogOutputStream.close();
                 YamlConfiguration changeLog = YamlConfiguration.loadConfiguration(changeLogFile);
                 plugin.logger.info("Changes in newest Version \n" +
-                        changeLog.getStringList("ChangeLog." + ID + " " + rawVersionString));
+                        changeLog.getStringList("ChangeLog." + rawVersionString));
                 return true;
             } catch (IOException e) {
                 plugin.logger.severe("HomeSpawn updater failed to download updates!");

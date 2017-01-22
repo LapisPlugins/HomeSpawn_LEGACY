@@ -65,8 +65,10 @@ ChangeLog:
         - "Other small bug fixes"
     Stable 2.1.6:
         - "Improved offline player stats"
-    Stable 2.1.6:
+    Stable 2.1.7:
         - "New Player Data and spawn format, will auto convert on startup"
         - "New Command: /renamehome (old name) (new name)"
         - "/homespawn player (name) will now show time since login if the player is currently online"
         - "assorted bug fixes"
+    2.1.8:
+        - "Misc changes"
