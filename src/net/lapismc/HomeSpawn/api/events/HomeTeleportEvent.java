@@ -26,7 +26,7 @@ import org.bukkit.event.HandlerList;
 
 public class HomeTeleportEvent extends Event implements Cancellable {
 
-    private final HandlerList handlers = new HandlerList();
+    private static final HandlerList handlers = new HandlerList();
     private String homeName;
     private String cancelReason;
     private Location location;
@@ -41,6 +41,15 @@ public class HomeTeleportEvent extends Event implements Cancellable {
         if (plugin.HSComponents.logging()) {
             plugin.HSConfig.log(HomeSpawnConfiguration.logType.TeleportHome, p, name);
         }
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
+    @Override
+    public HandlerList getHandlers() {
+        return handlers;
     }
 
     public String getHomeName() {
@@ -75,9 +84,5 @@ public class HomeTeleportEvent extends Event implements Cancellable {
         } else {
             return null;
         }
-    }
-
-    public HandlerList getHandlers() {
-        return handlers;
     }
 }

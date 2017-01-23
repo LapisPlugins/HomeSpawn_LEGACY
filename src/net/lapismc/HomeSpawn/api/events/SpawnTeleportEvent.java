@@ -26,7 +26,7 @@ import org.bukkit.event.HandlerList;
 
 public class SpawnTeleportEvent extends Event implements Cancellable {
 
-    private final HandlerList handlers = new HandlerList();
+    private static final HandlerList handlers = new HandlerList();
     private String cancelReason;
     private Location location;
     private Player p;
@@ -39,6 +39,15 @@ public class SpawnTeleportEvent extends Event implements Cancellable {
         if (plugin.HSComponents.logging()) {
             plugin.HSConfig.log(HomeSpawnConfiguration.logType.TeleportSpawn, p, "Spawn");
         }
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
+    @Override
+    public HandlerList getHandlers() {
+        return handlers;
     }
 
     public Location getLocation() {
@@ -69,9 +78,5 @@ public class SpawnTeleportEvent extends Event implements Cancellable {
         } else {
             return null;
         }
-    }
-
-    public HandlerList getHandlers() {
-        return handlers;
     }
 }

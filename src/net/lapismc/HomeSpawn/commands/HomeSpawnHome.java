@@ -46,7 +46,7 @@ public class HomeSpawnHome {
                 HomeTeleportEvent HTE = new HomeTeleportEvent(plugin, player, home, "Home");
                 Bukkit.getPluginManager().callEvent(HTE);
                 if (HTE.isCancelled()) {
-                    player.sendMessage("Your teleport was cancelled because " + HTE.getCancelReason());
+                    player.sendMessage(ChatColor.GOLD + "Your teleport was cancelled because " + HTE.getCancelReason());
                     return;
                 }
                 hsc.TeleportPlayer(player, home, "Home", "Home");
@@ -72,7 +72,7 @@ public class HomeSpawnHome {
                 HomeTeleportEvent HTE = new HomeTeleportEvent(plugin, player, home2, home);
                 Bukkit.getPluginManager().callEvent(HTE);
                 if (HTE.isCancelled()) {
-                    player.sendMessage("Your teleport was cancelled because " + HTE.getCancelReason());
+                    player.sendMessage(ChatColor.GOLD + "Your teleport was cancelled because " + HTE.getCancelReason());
                     return;
                 }
                 hsc.TeleportPlayer(player, home2, "Home", home);
