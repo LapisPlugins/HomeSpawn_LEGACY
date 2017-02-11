@@ -129,6 +129,7 @@ public class HomeSpawn extends JavaPlugin {
     private void Enable() {
         logger.info("V." + getDescription().getVersion()
                 + " Has Been Enabled!");
+        new HomeSpawnFileWatcher(this);
         PluginManager pm = getServer().getPluginManager();
         HSListener = new HomeSpawnListener(this);
         pm.registerEvents(HSListener, this);

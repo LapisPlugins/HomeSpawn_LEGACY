@@ -31,11 +31,8 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -63,28 +60,7 @@ public class HomeSpawnListener implements Listener {
             return;
         }
         if (!file.exists()) {
-            try {
-                file.createNewFile();
-                getHomes.set("UUID", player.getUniqueId().toString());
-                getHomes.set("UserName", player.getName());
-                getHomes.set("Permission", "-");
-                getHomes.set("login", System.currentTimeMillis());
-                getHomes.set("logout", "-");
-                getHomes.set("Homes.list", new ArrayList<String>());
-                getHomes.save(file);
-                plugin.spawnNew(player);
-                if (plugin.getConfig().getBoolean("CommandBook")) {
-                    PlayerInventory pi = player.getInventory();
-                    HomeSpawnBook book = new HomeSpawnBook(plugin);
-                    ItemStack commandBook = book.getBook();
-                    pi.addItem(commandBook);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-                plugin.logger
-                        .severe("[HomeSpawn] Player Data File Creation Failed!");
-                return;
-            }
+            plugin.HSConfig.generateNewPlayerData(file, player);
         }
         getHomes = plugin.HSConfig.getPlayerData(player.getUniqueId());
         HashMap<HomeSpawnPermissions.perm, Integer> perms = plugin.HSPermissions.getPlayerPermissions(player.getUniqueId());

@@ -33,10 +33,10 @@ public class HomeSpawnBook {
     public HomeSpawnBook(HomeSpawn plugin) {
         this.plugin = plugin;
         f = new File(plugin.getDataFolder() + File.separator + "HomeSpawnBook.yml");
-        yaml = YamlConfiguration.loadConfiguration(f);
     }
 
     public ItemStack getBook() {
+        yaml = YamlConfiguration.loadConfiguration(f);
         ItemStack book = new ItemStack(Material.WRITTEN_BOOK, 1);
         BookMeta meta = (BookMeta) book.getItemMeta();
         meta.setTitle(ChatColor.translateAlternateColorCodes

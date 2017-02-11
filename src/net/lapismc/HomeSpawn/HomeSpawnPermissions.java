@@ -92,7 +92,7 @@ public class HomeSpawnPermissions {
         }
     }
 
-    private void loadPermissionMaps() {
+    protected void loadPermissionMaps() {
         Permissions = new HashMap<>();
         HashMap<perm, Integer> nullPermMap = new HashMap<>();
         nullPermMap.put(perm.priority, -1);

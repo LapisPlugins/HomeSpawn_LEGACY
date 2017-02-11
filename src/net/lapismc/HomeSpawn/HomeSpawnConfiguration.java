@@ -20,6 +20,8 @@ import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -154,6 +156,32 @@ public class HomeSpawnConfiguration {
             HomeConfigs.remove(uuid);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    protected void generateNewPlayerData(File f, Player player) {
+        try {
+            f.createNewFile();
+            YamlConfiguration getHomes = YamlConfiguration.loadConfiguration(f);
+            getHomes.set("UUID", player.getUniqueId().toString());
+            getHomes.set("UserName", player.getName());
+            getHomes.set("Permission", "-");
+            getHomes.set("login", System.currentTimeMillis());
+            getHomes.set("logout", "-");
+            getHomes.set("Homes.list", new ArrayList<String>());
+            getHomes.save(f);
+            plugin.spawnNew(player);
+            if (plugin.getConfig().getBoolean("CommandBook")) {
+                PlayerInventory pi = player.getInventory();
+                HomeSpawnBook book = new HomeSpawnBook(plugin);
+                ItemStack commandBook = book.getBook();
+                pi.addItem(commandBook);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            plugin.logger
+                    .severe("[HomeSpawn] Player Data File Creation Failed!");
+            return;
         }
     }
 
@@ -310,7 +338,7 @@ public class HomeSpawnConfiguration {
         }
     }
 
-    private void createMessages() {
+    protected void createMessages() {
         messagesFile = new File(plugin.getDataFolder().getAbsolutePath() + File.separator + "Messages.yml");
         if (!messagesFile.exists()) {
             InputStream is = null;
@@ -333,6 +361,10 @@ public class HomeSpawnConfiguration {
         messages = YamlConfiguration.loadConfiguration(messagesFile);
     }
 
+    protected void reloadMessages() {
+        messages = YamlConfiguration.loadConfiguration(messagesFile);
+    }
+
     private void createPlayerData() {
         File theDir = new File(plugin.getDataFolder().getAbsolutePath()
                 + File.separator + "PlayerData");
@@ -342,7 +374,7 @@ public class HomeSpawnConfiguration {
         }
     }
 
-    private void createSpawn() {
+    protected void createSpawn() {
         File file = new File(plugin.getDataFolder().getAbsolutePath()
                 + File.separator + "Spawn.yml");
         FileConfiguration getSpawn = YamlConfiguration.loadConfiguration(file);
@@ -357,6 +389,10 @@ public class HomeSpawnConfiguration {
         }
         spawn = YamlConfiguration.loadConfiguration(file);
         spawnFile = file;
+    }
+
+    protected void reloadSpawn() {
+        spawn = YamlConfiguration.loadConfiguration(spawnFile);
     }
 
     private void configVersion() {
