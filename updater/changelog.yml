@@ -72,3 +72,5 @@ ChangeLog:
         - "assorted bug fixes"
     2.1.8:
         - "Misc changes"
+    2.1.9:
+        - "Added auto reloading to config and player data files"
