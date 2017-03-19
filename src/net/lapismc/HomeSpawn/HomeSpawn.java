@@ -16,7 +16,6 @@
 
 package net.lapismc.HomeSpawn;
 
-import net.lapismc.HomeSpawn.Metrics.Graph;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -30,12 +29,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class HomeSpawn extends JavaPlugin {
@@ -62,38 +59,29 @@ public class HomeSpawn extends JavaPlugin {
     }
 
     private void Metrics() {
-        try {
-            Metrics metrics = new Metrics(this);
-            Graph averageHomesGraph = metrics.createGraph("Average Number Of Homes");
-            int homes = 0;
-            File playerData = new File(this.getDataFolder() + File.separator + "PlayerData");
-            int files = playerData.listFiles().length - 1;
-            for (File f : playerData.listFiles()) {
-                if (f.getName() != "Passwords.yml" && !f.isDirectory()) {
-                    YamlConfiguration yaml = YamlConfiguration.loadConfiguration(f);
-                    homes = homes + yaml.getStringList("Homes.List").size();
-                }
+        Metrics metrics = new Metrics(this);
+        int homes = 0;
+        File playerData = new File(this.getDataFolder() + File.separator + "PlayerData");
+        int files = playerData.listFiles().length - 1;
+        for (File f : playerData.listFiles()) {
+            if (f.getName() != "Passwords.yml" && !f.isDirectory()) {
+                YamlConfiguration yaml = YamlConfiguration.loadConfiguration(f);
+                homes = homes + yaml.getStringList("Homes.List").size();
             }
-            int average;
-            if (files != 0) {
-                average = homes % files == 0 ? homes / files : homes / files + 1;
-            } else {
-                average = 0;
-            }
-            averageHomesGraph.addPlotter(new Metrics.Plotter(average + "") {
-                @Override
-                public int getValue() {
-                    return 1;
-                }
-            });
-            metrics.start();
-            debug("Send stats to metrics");
-        } catch (IOException e) {
-            this.logger.log(Level.SEVERE, "An error has occurred while trying to" +
-                    " start HomeSpawn metrics");
-            this.logger.log(Level.SEVERE, "The error follows, Please report it to dart2112");
-            e.printStackTrace();
         }
+        Integer average;
+        if (files != 0) {
+            average = homes % files == 0 ? homes / files : homes / files + 1;
+        } else {
+            average = 0;
+        }
+        metrics.addCustomChart(new Metrics.SimplePie("average_number_of_homes") {
+            @Override
+            public String getValue() {
+                return average.toString();
+            }
+        });
+        debug("Send stats to metrics");
     }
 
     private void Update() {
