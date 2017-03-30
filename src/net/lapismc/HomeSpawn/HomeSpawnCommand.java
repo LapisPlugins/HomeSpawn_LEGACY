@@ -36,23 +36,22 @@ import java.util.*;
 public class HomeSpawnCommand implements CommandExecutor {
 
     private final HomeSpawn plugin;
-    public HomeSpawnCommand cmd;
-    public HomeSpawnDelHome delHome;
-    public HomeSpawnDelSpawn delSpawn;
     public HomeSpawnHome home;
-    public HomeSpawnHomePassword homePassword;
-    public HomeSpawnHomesList homesList;
-    public net.lapismc.HomeSpawn.commands.HomeSpawn homeSpawn;
-    public HomeSpawnSetHome setHome;
-    public HomeSpawnRenameHome renameHome;
-    public HomeSpawnSetSpawn setSpawn;
     public HomeSpawnSpawn spawn;
+    HomeSpawnHomesList homesList;
+    private HomeSpawnDelHome delHome;
+    private HomeSpawnDelSpawn delSpawn;
+    private HomeSpawnHomePassword homePassword;
+    private net.lapismc.HomeSpawn.commands.HomeSpawn homeSpawn;
+    private HomeSpawnSetHome setHome;
+    private HomeSpawnRenameHome renameHome;
+    private HomeSpawnSetSpawn setSpawn;
 
-    public HomeSpawnCommand(HomeSpawn plugin) {
+    HomeSpawnCommand(HomeSpawn plugin) {
         this.plugin = plugin;
     }
 
-    protected void registerCommands() {
+    void registerCommands() {
         this.delHome = new HomeSpawnDelHome(plugin);
         this.delSpawn = new HomeSpawnDelSpawn(plugin);
         this.home = new HomeSpawnHome(plugin, this);
@@ -103,7 +102,7 @@ public class HomeSpawnCommand implements CommandExecutor {
         p.openInventory(this.homesList.HomesListInvs.get(p));
     }
 
-    public void TeleportPlayer(Player p, Location l, String r, String name) {
+    public void TeleportPlayer(Player p, Location l, String r) {
         HashMap<HomeSpawnPermissions.perm, Integer> perms = plugin.HSPermissions.getPlayerPermissions(p.getUniqueId());
         if (perms.get(HomeSpawnPermissions.perm.TeleportDelay) == 0) {
             if (!l.getChunk().isLoaded()) {
@@ -139,7 +138,6 @@ public class HomeSpawnCommand implements CommandExecutor {
                 + " Transfers Playerdata From Old Username To Current Username");
         player.sendMessage(ChatColor.GOLD
                 + "-----------------------------------------------------");
-        return;
     }
 
     @Override
@@ -171,8 +169,7 @@ public class HomeSpawnCommand implements CommandExecutor {
         } else if (cmd.getName().equalsIgnoreCase("homespawn")) {
             if (args.length == 1) {
                 if (args[0].equalsIgnoreCase("reload")) {
-                    Player p = null;
-                    this.plugin.HSConfig.reload(p);
+                    this.plugin.HSConfig.reload(null);
                 } else if (args[0].equalsIgnoreCase("update")) {
                     if (plugin.lapisUpdater.downloadUpdate("HomeSpawn")) {
                         sender.sendMessage(ChatColor.GOLD + "Downloading Update...");

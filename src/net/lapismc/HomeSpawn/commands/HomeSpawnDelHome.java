@@ -38,7 +38,7 @@ public class HomeSpawnDelHome {
         List<String> list = getHomes.getStringList("Homes.list");
         if (args.length == 0) {
             if (list.contains("Home")) {
-                HomeDelEvent HDE = new HomeDelEvent(plugin, player, player.getLocation(), "Home");
+                HomeDelEvent HDE = new HomeDelEvent(player, player.getLocation(), "Home");
                 Bukkit.getPluginManager().callEvent(HDE);
                 if (HDE.isCancelled()) {
                     player.sendMessage("Your home has not been deleted because " + HDE.getReason());
@@ -79,7 +79,7 @@ public class HomeSpawnDelHome {
                         player.sendMessage(plugin.HSConfig.getColoredMessage("Home.NoHomeSet"));
                     }
             } else {
-                HomeDelEvent HDE = new HomeDelEvent(plugin, player, player.getLocation(), home);
+                HomeDelEvent HDE = new HomeDelEvent(player, player.getLocation(), home);
                 Bukkit.getPluginManager().callEvent(HDE);
                 if (HDE.isCancelled()) {
                     player.sendMessage("Your home has not been deleted because " + HDE.getReason());

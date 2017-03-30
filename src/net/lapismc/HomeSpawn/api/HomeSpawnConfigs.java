@@ -56,10 +56,8 @@ public class HomeSpawnConfigs {
 
     /**
      * Reloads all configs from disk
-     *
-     * @throws IOException
      */
-    public void reloadConfigs(Plugin p) throws IOException {
+    public void reloadConfigs(Plugin p) {
         if (blocked.contains(p)) {
             return;
         }
@@ -79,7 +77,7 @@ public class HomeSpawnConfigs {
     /**
      * Saves the given YamlConfiguration as the HomeSpawnSpawn.yml file
      *
-     * @throws IOException
+     * @throws IOException Caused by saving the config
      */
     public void saveSpawnConfig(Plugin p, YamlConfiguration SpawnConfig) throws IOException {
         if (blocked.contains(p)) {

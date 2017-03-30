@@ -17,9 +17,10 @@
 package net.lapismc.HomeSpawn;
 
 import org.bukkit.*;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -32,34 +33,25 @@ public class HomeSpawnConfiguration {
 
     public YamlConfiguration spawn;
     public File spawnFile;
-    protected File teleLogFile;
-    protected YamlConfiguration teleLog;
-    protected File setsAndDelsFile;
-    protected YamlConfiguration setsAndDels;
     private HashMap<UUID, YamlConfiguration> HomeConfigs = new HashMap<>();
     private YamlConfiguration messages;
     private File messagesFile;
-    private YamlConfiguration passwords;
     private File passwordsFile;
     private HomeSpawn plugin;
 
-    protected HomeSpawnConfiguration(HomeSpawn p) {
+    HomeSpawnConfiguration(HomeSpawn p) {
         plugin = p;
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
-            @Override
-            public void run() {
-                HomeConfigs.clear();
-            }
-        }, 20 * 60 * 5, 20 * 60 * 5);
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () -> HomeConfigs.clear(), 20 * 60 * 5, 20 * 60 * 5);
         Configs();
         updatePlayerData();
     }
 
-    protected void updatePlayerData() {
+    private void updatePlayerData() {
         if (plugin.getConfig().getInt("ConfigVersion") >= 8) {
             File f = new File(plugin.getDataFolder().getAbsolutePath() + File.separator + "PlayerData");
             File[] fa = f.listFiles();
             int i = 0;
+            assert fa != null;
             for (File f0 : fa) {
                 if (f0.isDirectory()) {
                     return;
@@ -147,7 +139,7 @@ public class HomeSpawnConfiguration {
         return yaml;
     }
 
-    public void unloadPlayerData(UUID uuid) {
+    void unloadPlayerData(UUID uuid) {
         YamlConfiguration getHomes = getPlayerData(uuid);
         try {
             getHomes.save(new File(plugin.getDataFolder().getAbsolutePath() + File.separator + "PlayerData" + File.separator + uuid.toString() + ".yml"));
@@ -157,74 +149,48 @@ public class HomeSpawnConfiguration {
         }
     }
 
+    void generateNewPlayerData(File f, Player player) {
+        try {
+            if (!f.createNewFile()) {
+                plugin.logger.severe("Failed to generate player data file for " + player.getName());
+                return;
+            }
+            YamlConfiguration getHomes = YamlConfiguration.loadConfiguration(f);
+            getHomes.set("UUID", player.getUniqueId().toString());
+            getHomes.set("UserName", player.getName());
+            getHomes.set("Permission", "-");
+            getHomes.set("login", System.currentTimeMillis());
+            getHomes.set("logout", "-");
+            getHomes.set("Homes.list", new ArrayList<String>());
+            getHomes.save(f);
+            plugin.spawnNew(player);
+            if (plugin.getConfig().getBoolean("CommandBook")) {
+                PlayerInventory pi = player.getInventory();
+                HomeSpawnBook book = new HomeSpawnBook(plugin);
+                ItemStack commandBook = book.getBook();
+                pi.addItem(commandBook);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            plugin.logger
+                    .severe("[HomeSpawn] Player Data File Creation Failed!");
+        }
+    }
+
     public String getColoredMessage(String path) {
         return ChatColor.translateAlternateColorCodes('&', messages.getString(path));
     }
 
-    public String getMessage(String path) {
+    String getMessage(String path) {
         return ChatColor.stripColor(getColoredMessage(path));
-    }
-
-    public void log(logType type, Player p, String name) {
-        switch (type) {
-            case Set:
-                List<String> sets;
-                if (setsAndDels.contains("Sets")) {
-                    sets = setsAndDels.getStringList("Sets");
-                } else {
-                    sets = new ArrayList<>();
-                }
-                sets.add("Player " + p.getName() + " has set a home named " + name);
-                setsAndDels.set("Sets", sets);
-                break;
-            case Delete:
-                List<String> dels;
-                if (setsAndDels.contains("Dels")) {
-                    dels = setsAndDels.getStringList("Dels");
-                } else {
-                    dels = new ArrayList<>();
-                }
-                dels.add("Player " + p.getName() + " has deleted a home named " + name);
-                setsAndDels.set("Dels", dels);
-                break;
-            case TeleportHome:
-                List<String> homeTeleports;
-                if (teleLog.contains("HomeTeleports")) {
-                    homeTeleports = teleLog.getStringList("HomeTeleports");
-                } else {
-                    homeTeleports = new ArrayList<>();
-                }
-                homeTeleports.add("Player " + p.getName() + " has teleported to their home named" + name);
-                teleLog.set("HomeTeleports", homeTeleports);
-                break;
-            case TeleportSpawn:
-                List<String> spawnTeleports;
-                if (teleLog.contains("SpawnTeleports")) {
-                    spawnTeleports = teleLog.getStringList("SpawnTeleports");
-                } else {
-                    spawnTeleports = new ArrayList<>();
-                }
-                spawnTeleports.add("Player " + p.getName() + " has teleported to spawn");
-                teleLog.set("SpawnTeleports", spawnTeleports);
-                break;
-        }
-    }
-
-    public void saveLogs() {
-        if (plugin.HSComponents.logging()) {
-            try {
-                teleLog.save(teleLogFile);
-                setsAndDels.save(setsAndDelsFile);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     private void Configs() {
         File f = new File(plugin.getDataFolder().getParent() + File.separator + "Homespawn");
         if (f.exists()) {
-            f.renameTo(new File(f.getParent() + File.separator + "HomeSpawn"));
+            if (!f.renameTo(new File(f.getParent() + File.separator + "HomeSpawn"))) {
+                plugin.logger.info("Failed to generate new config.yml");
+            }
         }
         plugin.saveDefaultConfig();
         createSpawn();
@@ -244,18 +210,18 @@ public class HomeSpawnConfiguration {
             if (s.equalsIgnoreCase("Silent")) {
                 spawn = YamlConfiguration.loadConfiguration(spawnFile);
                 messages = YamlConfiguration.loadConfiguration(messagesFile);
-                passwords = YamlConfiguration.loadConfiguration(passwordsFile);
+                YamlConfiguration.loadConfiguration(passwordsFile);
             }
         } else if (obj == null) {
             spawn = YamlConfiguration.loadConfiguration(spawnFile);
             messages = YamlConfiguration.loadConfiguration(messagesFile);
-            passwords = YamlConfiguration.loadConfiguration(passwordsFile);
+            YamlConfiguration.loadConfiguration(passwordsFile);
             plugin.logger.info("You Have Reloaded Homespawn!");
         }
         if (player != null) {
             spawn = YamlConfiguration.loadConfiguration(spawnFile);
             messages = YamlConfiguration.loadConfiguration(messagesFile);
-            passwords = YamlConfiguration.loadConfiguration(passwordsFile);
+            YamlConfiguration.loadConfiguration(passwordsFile);
             player.sendMessage(ChatColor.GOLD + "You have reloaded the configs for Homespawn!");
             plugin.logger.info("Player " + player.getName() + " Has Reloaded Homespawn!");
         }
@@ -279,7 +245,9 @@ public class HomeSpawnConfiguration {
                 + "Passwords.yml");
         if (!file.exists()) {
             try {
-                file.createNewFile();
+                if (!file.createNewFile()) {
+                    plugin.logger.info("Faile to generate " + file.getName());
+                }
             } catch (IOException e) {
                 plugin.logger.log(Level.SEVERE, "An error has occurred while trying to" +
                         " save HomeSpawn player password data");
@@ -287,7 +255,7 @@ public class HomeSpawnConfiguration {
                 e.printStackTrace();
             }
         }
-        passwords = YamlConfiguration.loadConfiguration(file);
+        YamlConfiguration.loadConfiguration(file);
         passwordsFile = file;
     }
 
@@ -297,7 +265,9 @@ public class HomeSpawnConfiguration {
             return;
         }
         try {
-            f.createNewFile();
+            if (!f.createNewFile()) {
+                plugin.logger.info("Failed to generate " + f.getName());
+            }
             YamlConfiguration yaml = YamlConfiguration.loadConfiguration(f);
             yaml.set("Title", "&6How To HomeSpawn!");
             yaml.set("Book.NumbOfPages", 1);
@@ -310,13 +280,15 @@ public class HomeSpawnConfiguration {
         }
     }
 
-    private void createMessages() {
+    void createMessages() {
         messagesFile = new File(plugin.getDataFolder().getAbsolutePath() + File.separator + "Messages.yml");
         if (!messagesFile.exists()) {
-            InputStream is = null;
-            OutputStream os = null;
+            InputStream is;
+            OutputStream os;
             try {
-                messagesFile.createNewFile();
+                if (!messagesFile.createNewFile()) {
+                    plugin.logger.info("Failed to generate " + messagesFile.getName());
+                }
                 is = plugin.getResource("Messages.yml");
                 int readBytes;
                 byte[] buffer = new byte[4096];
@@ -333,22 +305,29 @@ public class HomeSpawnConfiguration {
         messages = YamlConfiguration.loadConfiguration(messagesFile);
     }
 
+    void reloadMessages() {
+        messages = YamlConfiguration.loadConfiguration(messagesFile);
+    }
+
     private void createPlayerData() {
         File theDir = new File(plugin.getDataFolder().getAbsolutePath()
                 + File.separator + "PlayerData");
         if (!theDir.exists()) {
             plugin.logger.info("Creating HomeSpawn PlayerData Directory!");
-            theDir.mkdir();
+            if (!theDir.mkdir()) {
+                plugin.logger.info("Failed to generate " + theDir.getName());
+            }
         }
     }
 
-    private void createSpawn() {
+    void createSpawn() {
         File file = new File(plugin.getDataFolder().getAbsolutePath()
                 + File.separator + "Spawn.yml");
-        FileConfiguration getSpawn = YamlConfiguration.loadConfiguration(file);
         if (!file.exists()) {
             try {
-                file.createNewFile();
+                if (!file.createNewFile()) {
+                    plugin.logger.info("Failed to generate " + file.getName());
+                }
             } catch (IOException e) {
                 plugin.logger.log(Level.SEVERE, "An error has occurred while trying to load HomeSpawn spawn data");
                 plugin.logger.log(Level.SEVERE, "The error follows, Please report it to dart2112");
@@ -359,12 +338,19 @@ public class HomeSpawnConfiguration {
         spawnFile = file;
     }
 
+
+    void reloadSpawn() {
+        spawn = YamlConfiguration.loadConfiguration(spawnFile);
+    }
+
     private void configVersion() {
         if (plugin.getConfig().getInt("ConfigVersion") != 9) {
             File oldConfig = new File(plugin.getDataFolder() + File.separator + "config.yml");
             File backupConfig = new File(plugin.getDataFolder() + File.separator +
                     "Backup_config.yml");
-            oldConfig.renameTo(backupConfig);
+            if (!oldConfig.renameTo(backupConfig)) {
+                plugin.logger.info("Failed to generate new config.yml");
+            }
             plugin.saveDefaultConfig();
             plugin.logger.info("New config generated!");
             plugin.logger.info("Please transfer values!");

@@ -27,17 +27,18 @@ import java.io.IOException;
 public class HomeSpawnComponents {
 
     HomeSpawn plugin;
-    File f;
-    YamlConfiguration comp;
+    private YamlConfiguration comp;
 
 
-    public void init(HomeSpawn plugin) {
+    void init(HomeSpawn plugin) {
         this.plugin = plugin;
-        f = new File(plugin.getDataFolder().getAbsolutePath()
+        File f = new File(plugin.getDataFolder().getAbsolutePath()
                 + File.separator + "Components.yml");
         if (!f.exists()) {
             try {
-                f.createNewFile();
+                if (!f.createNewFile()) {
+                    plugin.logger.info("Failed to generate " + f.getName());
+                }
                 comp = YamlConfiguration.loadConfiguration(f);
                 comp.set("Homes", true);
                 comp.set("Spawn", true);
@@ -70,30 +71,6 @@ public class HomeSpawnComponents {
         if (password()) {
             plugin.getCommand("homepassword").setExecutor(plugin.HSCommand);
         }
-        if (logging()) {
-            File logsFolder = new File(plugin.getDataFolder().getAbsolutePath() + File.separator + "Logs");
-            if (!logsFolder.exists()) {
-                logsFolder.mkdir();
-            }
-            File teleports = new File(logsFolder.getAbsolutePath() + File.separator + "Teleports.log");
-            File setDels = new File(logsFolder.getAbsolutePath() + File.separator + "SetsAndDels.log");
-            try {
-                if (!teleports.exists()) {
-                    teleports.createNewFile();
-                }
-                if (!setDels.exists()) {
-                    setDels.createNewFile();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            YamlConfiguration teleportsYAML = YamlConfiguration.loadConfiguration(teleports);
-            YamlConfiguration setDelsYAML = YamlConfiguration.loadConfiguration(setDels);
-            plugin.HSConfig.teleLogFile = teleports;
-            plugin.HSConfig.teleLog = teleportsYAML;
-            plugin.HSConfig.setsAndDelsFile = setDels;
-            plugin.HSConfig.setsAndDels = setDelsYAML;
-        }
         plugin.getCommand("homespawn").setExecutor(plugin.HSCommand);
         plugin.HSCommand.registerCommands();
         plugin.logger.info("Commands Registered!");
@@ -107,12 +84,8 @@ public class HomeSpawnComponents {
         return comp.getBoolean("Spawn");
     }
 
-    public boolean password() {
+    private boolean password() {
         return comp.getBoolean("HomeSpawnPassword");
-    }
-
-    public boolean logging() {
-        return comp.getBoolean("Logging");
     }
 
     public boolean api() {

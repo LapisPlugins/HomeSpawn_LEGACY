@@ -48,7 +48,7 @@ public class HomeSpawnSpawn {
                     player.sendMessage(ChatColor.GOLD + "Your teleport was cancelled because " + STE.getCancelReason());
                     return;
                 }
-                hsc.TeleportPlayer(player, Spawn, "Spawn", null);
+                hsc.TeleportPlayer(player, Spawn, "Spawn");
             } else {
                 player.sendMessage(plugin.HSConfig.getColoredMessage("Spawn.NotSet"));
             }

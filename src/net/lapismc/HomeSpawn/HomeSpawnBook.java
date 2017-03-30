@@ -24,19 +24,16 @@ import org.bukkit.inventory.meta.BookMeta;
 
 import java.io.File;
 
-public class HomeSpawnBook {
+class HomeSpawnBook {
 
-    private HomeSpawn plugin;
-    private File f;
     private YamlConfiguration yaml;
 
-    public HomeSpawnBook(HomeSpawn plugin) {
-        this.plugin = plugin;
-        f = new File(plugin.getDataFolder() + File.separator + "HomeSpawnBook.yml");
+    HomeSpawnBook(HomeSpawn plugin) {
+        File f = new File(plugin.getDataFolder() + File.separator + "HomeSpawnBook.yml");
         yaml = YamlConfiguration.loadConfiguration(f);
     }
 
-    public ItemStack getBook() {
+    ItemStack getBook() {
         ItemStack book = new ItemStack(Material.WRITTEN_BOOK, 1);
         BookMeta meta = (BookMeta) book.getItemMeta();
         meta.setTitle(ChatColor.translateAlternateColorCodes

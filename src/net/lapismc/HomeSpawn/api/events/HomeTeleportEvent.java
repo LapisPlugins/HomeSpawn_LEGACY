@@ -16,8 +16,6 @@
 
 package net.lapismc.HomeSpawn.api.events;
 
-import net.lapismc.HomeSpawn.HomeSpawn;
-import net.lapismc.HomeSpawn.HomeSpawnConfiguration;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
@@ -33,14 +31,11 @@ public class HomeTeleportEvent extends Event implements Cancellable {
     private Player p;
     private boolean cancelled;
 
-    public HomeTeleportEvent(HomeSpawn plugin, Player p, Location l, String name) {
+    public HomeTeleportEvent(Player p, Location l, String name) {
         homeName = name;
         this.location = l;
         this.p = p;
         this.cancelled = false;
-        if (plugin.HSComponents.logging()) {
-            plugin.HSConfig.log(HomeSpawnConfiguration.logType.TeleportHome, p, name);
-        }
     }
 
     public static HandlerList getHandlerList() {

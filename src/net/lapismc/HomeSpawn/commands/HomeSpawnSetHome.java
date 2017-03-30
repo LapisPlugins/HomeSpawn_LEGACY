@@ -45,7 +45,7 @@ public class HomeSpawnSetHome {
         }
 
         if (args.length == 0) {
-            HomeSetEvent HCE = new HomeSetEvent(plugin, player, player.getLocation(), "Home");
+            HomeSetEvent HCE = new HomeSetEvent(player, player.getLocation(), "Home");
             Bukkit.getPluginManager().callEvent(HCE);
             if (HCE.isCancelled()) {
                 player.sendMessage("Your home has not been set because " + HCE.getReason());
@@ -65,7 +65,7 @@ public class HomeSpawnSetHome {
                             + "You Cannot Use The HomeSpawnHome Name \"Home\", Please Choose Another!");
                     return;
                 }
-                HomeSetEvent HCE = new HomeSetEvent(plugin, player, player.getLocation(), home);
+                HomeSetEvent HCE = new HomeSetEvent(player, player.getLocation(), home);
                 Bukkit.getPluginManager().callEvent(HCE);
                 if (HCE.isCancelled()) {
                     player.sendMessage("Your home has not been set because " + HCE.getReason());

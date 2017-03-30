@@ -24,6 +24,7 @@ import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.ocpsoft.prettytime.Duration;
 import org.ocpsoft.prettytime.PrettyTime;
 import org.ocpsoft.prettytime.units.JustNow;
 import org.ocpsoft.prettytime.units.Millisecond;
@@ -75,7 +76,8 @@ public class HomeSpawnPlayer {
                     time = "Error!";
                 } else {
                     Date date = new Date(homes.getLong("login"));
-                    time = p.format(date);
+                    List<Duration> durationList = p.calculatePreciseDuration(date);
+                    time = p.format(durationList);
                 }
                 player.sendMessage(ChatColor.RED + "Player " + ChatColor.BLUE + name + ChatColor.RED + " has been online since "
                         + ChatColor.GOLD + time);
@@ -85,7 +87,8 @@ public class HomeSpawnPlayer {
                     time = "Error!";
                 } else {
                     Date date = new Date(homes.getLong("logout"));
-                    time = p.format(date);
+                    List<Duration> durationList = p.calculatePreciseDuration(date);
+                    time = p.format(durationList);
                 }
                 player.sendMessage(ChatColor.RED + "Player " + ChatColor.BLUE + name + ChatColor.RED + " has been offline since "
                         + ChatColor.GOLD + time);

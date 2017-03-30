@@ -37,17 +37,12 @@ public class HomeSpawnPermissions {
     protected HomeSpawnPermissions(HomeSpawn p) {
         plugin = p;
         loadPermissionMaps();
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
-            @Override
-            public void run() {
-                PlayerPermission = new HashMap<>();
-            }
-        }, 20 * 60 * 5, 20 * 60 * 5);
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () -> PlayerPermission = new HashMap<>(), 20 * 60 * 5, 20 * 60 * 5);
     }
 
     public HashMap<perm, Integer> getPlayerPermissions(UUID uuid) {
         Permission p = getPlayerPermission(uuid);
-        if (!Permissions.containsKey(p) || Permissions.get(p).equals(null)) {
+        if (!Permissions.containsKey(p) || Permissions.get(p) == null) {
             loadPermissionMaps();
             return Permissions.get(p);
         } else {
@@ -61,7 +56,7 @@ public class HomeSpawnPermissions {
         OfflinePlayer op = Bukkit.getOfflinePlayer(uuid);
         if (op.isOnline()) {
             Player player = op.getPlayer();
-            if (!PlayerPermission.containsKey(uuid) || PlayerPermission.get(uuid).equals(null)) {
+            if (!PlayerPermission.containsKey(uuid) || PlayerPermission.get(uuid) == null) {
                 Integer priority = -1;
                 for (Permission perm : Permissions.keySet()) {
                     if (player.hasPermission(perm) &&
@@ -92,7 +87,7 @@ public class HomeSpawnPermissions {
         }
     }
 
-    private void loadPermissionMaps() {
+    void loadPermissionMaps() {
         Permissions = new HashMap<>();
         HashMap<perm, Integer> nullPermMap = new HashMap<>();
         nullPermMap.put(perm.priority, -1);
@@ -144,7 +139,7 @@ public class HomeSpawnPermissions {
                             " in the config!");
                 }
             }
-            PermissionDefault PD = null;
+            PermissionDefault PD = PermissionDefault.FALSE;
             switch (Default) {
                 case 1:
                     PD = PermissionDefault.TRUE;
@@ -153,8 +148,8 @@ public class HomeSpawnPermissions {
                     PD = PermissionDefault.OP;
                     break;
                 case 0:
-                default:
                     PD = PermissionDefault.FALSE;
+                    break;
             }
             Permission p;
             if (Bukkit.getServer().getPluginManager().getPermission(permName) == null) {
@@ -169,7 +164,7 @@ public class HomeSpawnPermissions {
     }
 
     public enum perm {
-        defult, priority, homes, spawn, customHomes, TeleportDelay, setSpawn, updateNotify, reload, playerStats;
+        priority, homes, spawn, customHomes, TeleportDelay, setSpawn, updateNotify, reload, playerStats;
 
         @Override
         public String toString() {

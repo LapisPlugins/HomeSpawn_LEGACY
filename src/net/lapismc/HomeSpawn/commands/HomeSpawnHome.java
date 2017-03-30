@@ -43,13 +43,13 @@ public class HomeSpawnHome {
         if (args.length == 0) {
             if (list.contains("Home")) {
                 Location home = (Location) getHomes.get("Homes.Home");
-                HomeTeleportEvent HTE = new HomeTeleportEvent(plugin, player, home, "Home");
+                HomeTeleportEvent HTE = new HomeTeleportEvent(player, home, "Home");
                 Bukkit.getPluginManager().callEvent(HTE);
                 if (HTE.isCancelled()) {
                     player.sendMessage(ChatColor.GOLD + "Your teleport was cancelled because " + HTE.getCancelReason());
                     return;
                 }
-                hsc.TeleportPlayer(player, home, "Home", "Home");
+                hsc.TeleportPlayer(player, home, "Home");
             } else {
                 player.sendMessage(plugin.HSConfig.getColoredMessage("Home.NoHomeSet"));
             }
@@ -69,13 +69,13 @@ public class HomeSpawnHome {
                 }
             } else {
                 Location home2 = (Location) getHomes.get("Homes." + home);
-                HomeTeleportEvent HTE = new HomeTeleportEvent(plugin, player, home2, home);
+                HomeTeleportEvent HTE = new HomeTeleportEvent(player, home2, home);
                 Bukkit.getPluginManager().callEvent(HTE);
                 if (HTE.isCancelled()) {
                     player.sendMessage(ChatColor.GOLD + "Your teleport was cancelled because " + HTE.getCancelReason());
                     return;
                 }
-                hsc.TeleportPlayer(player, home2, "Home", home);
+                hsc.TeleportPlayer(player, home2, "Home");
             }
         }
     }

@@ -31,7 +31,6 @@ import java.util.Date;
 public class LapisUpdater {
 
     private String ID;
-    private String result;
     private String jarName;
     private String username;
     private String repoName;
@@ -40,7 +39,7 @@ public class LapisUpdater {
     private HomeSpawn plugin;
     private Boolean force;
 
-    public LapisUpdater(HomeSpawn plugin, String jarName, String username, String repoName, String branch) {
+    LapisUpdater(HomeSpawn plugin, String jarName, String username, String repoName, String branch) {
         this.plugin = plugin;
         this.jarName = jarName;
         this.username = username;
@@ -48,8 +47,8 @@ public class LapisUpdater {
         this.branch = branch;
     }
 
-    public boolean checkUpdate(String ID) {
-        this.ID = ID.substring(0, 1).toUpperCase() + ID.substring(1);
+    boolean checkUpdate() {
+        this.ID = "HomeSpawn";
         this.force = false;
         return updateCheck();
     }
@@ -108,10 +107,10 @@ public class LapisUpdater {
     }
 
     private boolean updateCheck() {
-        Integer oldVersion = null;
-        Integer newVersion = null;
-        File f = null;
-        YamlConfiguration yaml = null;
+        Integer oldVersion;
+        Integer newVersion;
+        File f;
+        YamlConfiguration yaml;
         try {
             URL website = new URL(
                     "https://raw.githubusercontent.com/Dart2112/HomeSpawn/master/updater" +

@@ -31,22 +31,16 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class HomeSpawnListener implements Listener {
 
     private List<Player> Players = new ArrayList<>();
     private HomeSpawn plugin;
 
-    public HomeSpawnListener(HomeSpawn plugin) {
+    HomeSpawnListener(HomeSpawn plugin) {
         this.plugin = plugin;
     }
 
@@ -56,35 +50,10 @@ public class HomeSpawnListener implements Listener {
         File file = new File(plugin.getDataFolder() + File.separator
                 + "PlayerData" + File.separator
                 + player.getUniqueId() + ".yml");
-        YamlConfiguration getHomes = plugin.HSConfig.getPlayerData(player.getUniqueId());
-        if (file == null) {
-            plugin.logger.severe("Player " + player.getName()
-                    + "'s Data File Is Null!");
-            return;
-        }
+        plugin.HSConfig.getPlayerData(player.getUniqueId());
+        YamlConfiguration getHomes;
         if (!file.exists()) {
-            try {
-                file.createNewFile();
-                getHomes.set("UUID", player.getUniqueId().toString());
-                getHomes.set("UserName", player.getName());
-                getHomes.set("Permission", "-");
-                getHomes.set("login", System.currentTimeMillis());
-                getHomes.set("logout", "-");
-                getHomes.set("Homes.list", new ArrayList<String>());
-                getHomes.save(file);
-                plugin.spawnNew(player);
-                if (plugin.getConfig().getBoolean("CommandBook")) {
-                    PlayerInventory pi = player.getInventory();
-                    HomeSpawnBook book = new HomeSpawnBook(plugin);
-                    ItemStack commandBook = book.getBook();
-                    pi.addItem(commandBook);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-                plugin.logger
-                        .severe("[HomeSpawn] Player Data File Creation Failed!");
-                return;
-            }
+            plugin.HSConfig.generateNewPlayerData(file, player);
         }
         getHomes = plugin.HSConfig.getPlayerData(player.getUniqueId());
         HashMap<HomeSpawnPermissions.perm, Integer> perms = plugin.HSPermissions.getPlayerPermissions(player.getUniqueId());
@@ -93,15 +62,12 @@ public class HomeSpawnListener implements Listener {
             getHomes.set("UserName", player.getName());
         }
         if (perms.get(HomeSpawnPermissions.perm.updateNotify) == 1) {
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
-                @Override
-                public void run() {
-                    if (!plugin.getConfig().getBoolean("DownloadUpdates") && plugin.lapisUpdater.checkUpdate("HomeSpawn")) {
-                        player.sendMessage(ChatColor.DARK_GRAY
-                                + "[" + ChatColor.AQUA + "HomeSpawn" + ChatColor.DARK_GRAY
-                                + "]" + ChatColor.GOLD + " An update is available! run \"/homespawn update\"" +
-                                " to install it!");
-                    }
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+                if (!plugin.getConfig().getBoolean("DownloadUpdates") && plugin.lapisUpdater.checkUpdate()) {
+                    player.sendMessage(ChatColor.DARK_GRAY
+                            + "[" + ChatColor.AQUA + "HomeSpawn" + ChatColor.DARK_GRAY
+                            + "]" + ChatColor.GOLD + " An update is available! run \"/homespawn update\"" +
+                            " to install it!");
                 }
             });
         }
@@ -138,9 +104,7 @@ public class HomeSpawnListener implements Listener {
                 From1.add(From.getBlockX());
                 From1.add(From.getBlockY());
                 From1.add(From.getBlockZ());
-                if (From1.equals(To1)) {
-                    return;
-                } else {
+                if (!From1.equals(To1)) {
                     if (!Players.contains(p)) {
                         plugin.HomeSpawnLocations.put(p, null);
                         plugin.HomeSpawnTimeLeft.remove(p);
@@ -217,8 +181,6 @@ public class HomeSpawnListener implements Listener {
             Inventory inv = plugin.HSCommand.homesList.HomesListInvs.get(p);
             inv.clear();
             plugin.HSCommand.homesList.HomesListInvs.put(p, inv);
-        } else {
-            return;
         }
 
     }
@@ -227,8 +189,8 @@ public class HomeSpawnListener implements Listener {
     public void onInvExit(InventoryCloseEvent e) {
         if (!(e.getPlayer() == null && e.getInventory() == null)) {
             Player p = (Player) e.getPlayer();
-            if (plugin.HSCommand.homesList.HomesListInvs.containsKey(p) && e.getInventory().getName() ==
-                    plugin.HSCommand.homesList.HomesListInvs.get(p).getName()) {
+            if (plugin.HSCommand.homesList.HomesListInvs.containsKey(p) && Objects
+                    .equals(e.getInventory().getName(), plugin.HSCommand.homesList.HomesListInvs.get(p).getName())) {
                 Inventory inv = plugin.HSCommand.homesList.HomesListInvs.get(p);
                 inv.clear();
                 plugin.HSCommand.homesList.HomesListInvs.put(p, inv);
