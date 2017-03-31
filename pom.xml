@@ -32,6 +32,14 @@
                     <include>*.yml</include>
                 </includes>
             </resource>
+            <resource>
+                <targetPath>.</targetPath>
+                <directory>.</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>LICENSE</include>
+                </includes>
+            </resource>
         </resources>
         <plugins>
             <plugin>
@@ -81,7 +89,7 @@
         <dependency>
             <groupId>org.ocpsoft.prettytime</groupId>
             <artifactId>prettytime</artifactId>
-            <version>3.2.7.Final</version>
+            <version>4.0.0.Final</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
