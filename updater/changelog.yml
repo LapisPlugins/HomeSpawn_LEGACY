@@ -74,3 +74,8 @@ ChangeLog:
         - "Misc changes"
     2.1.9:
         - "Added auto reloading to config and player data files"
+    2.2.0:
+      - "Moved to the bStats metrics system"
+      - "Updated to a newer version of PrettyTime"
+      - "code has been reworked to be more efficient using Java 8 features"
+      - "Fixed some minor possible bugs"
