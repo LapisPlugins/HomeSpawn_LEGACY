@@ -25,6 +25,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -108,7 +109,17 @@ public class HomeSpawnCommand implements CommandExecutor {
             if (!l.getChunk().isLoaded()) {
                 l.getChunk().load();
             }
-            p.teleport(l);
+            if (p.isInsideVehicle()) {
+                if (p.getVehicle() instanceof Horse) {
+                    Horse horse = (Horse) p.getVehicle();
+                    horse.eject();
+                    horse.teleport(l);
+                    p.teleport(l);
+                    horse.setPassenger(p);
+                }
+            } else {
+                p.teleport(l);
+            }
             if (r.equalsIgnoreCase("Spawn")) {
                 p.sendMessage(plugin.HSConfig.getColoredMessage("Spawn.SentToSpawn"));
             } else if (r.equalsIgnoreCase("Home")) {

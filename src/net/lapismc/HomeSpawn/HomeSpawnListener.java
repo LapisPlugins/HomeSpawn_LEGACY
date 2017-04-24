@@ -167,14 +167,12 @@ public class HomeSpawnListener implements Listener {
             if (name1.equalsIgnoreCase("Home")) {
                 if (getHomes.getStringList("Homes.list").contains(name1)) {
                     Location home = (Location) getHomes.get("Homes." + name1);
-                    home.add(0.5, 0, 0.5);
-                    TeleportPlayer(p, home);
+                    plugin.HSCommand.TeleportPlayer(p, home, "Home");
                 }
             } else {
                 if (getHomes.getStringList("Homes.list").contains(name1)) {
                     Location home2 = (Location) getHomes.get("Homes." + name1);
-                    home2.add(0.5, 0, 0.5);
-                    TeleportPlayer(p, home2);
+                    plugin.HSCommand.TeleportPlayer(p, home2, "Home");
                 }
             }
             e.getWhoClicked().closeInventory();

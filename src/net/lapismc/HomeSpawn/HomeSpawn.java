@@ -22,6 +22,7 @@ import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.PluginManager;
@@ -233,7 +234,19 @@ public class HomeSpawn extends JavaPlugin {
                                 if (!Tele.getChunk().isLoaded()) {
                                     Tele.getChunk().load();
                                 }
-                                p.teleport(Tele);
+                                if (p.isInsideVehicle()) {
+                                    if (p.getVehicle() instanceof Horse) {
+                                        Horse horse = (Horse) p.getVehicle();
+                                        horse.eject();
+                                        horse.teleport(Tele);
+                                        p.teleport(Tele);
+                                        horse.setPassenger(p);
+                                    }
+                                } else {
+                                    p.teleport(Tele);
+                                }
+                                p.sendMessage(HSConfig.getColoredMessage("Home.SentHome"));
+
                                 debug("Teleported " + p.getName());
                                 p.sendMessage(ChatColor.GOLD
                                         + "Teleporting...");
