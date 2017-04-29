@@ -63,8 +63,7 @@ public class HomeSpawnPlayerData {
         if (blocked.contains(p)) {
             return null;
         }
-        YamlConfiguration getHome = plugin.HSConfig.getPlayerData(player.getUniqueId());
-        return getHome;
+        return plugin.HSConfig.getPlayerData(player.getUniqueId());
     }
 
     /**

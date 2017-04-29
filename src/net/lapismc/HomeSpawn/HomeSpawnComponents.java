@@ -26,12 +26,11 @@ import java.io.IOException;
 
 public class HomeSpawnComponents {
 
-    HomeSpawn plugin;
     private YamlConfiguration comp;
 
 
     void init(HomeSpawn plugin) {
-        this.plugin = plugin;
+        HomeSpawn plugin1 = plugin;
         File f = new File(plugin.getDataFolder().getAbsolutePath()
                 + File.separator + "Components.yml");
         if (!f.exists()) {
@@ -76,11 +75,11 @@ public class HomeSpawnComponents {
         plugin.logger.info("Commands Registered!");
     }
 
-    public boolean home() {
+    private boolean home() {
         return comp.getBoolean("Homes");
     }
 
-    public boolean spawn() {
+    private boolean spawn() {
         return comp.getBoolean("Spawn");
     }
 

@@ -34,7 +34,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-public class HomeSpawnPlayer {
+class HomeSpawnPlayer {
 
     private HomeSpawn plugin;
     private PrettyTime p = new PrettyTime();
@@ -46,17 +46,16 @@ public class HomeSpawnPlayer {
         p.removeUnit(Millisecond.class);
     }
 
-    public void HomeSpawnPlayer(String[] args, Player player) {
+    public void homeSpawnPlayer(String[] args, Player player) {
         HashMap<HomeSpawnPermissions.perm, Integer> perms = plugin.HSPermissions
                 .getPlayerPermissions(player.getUniqueId());
         if (perms.get(HomeSpawnPermissions.perm.playerStats) != 1) {
             player.sendMessage(plugin.HSConfig.getColoredMessage("NoPerms"));
             return;
         }
-        if (args.length != 2 && args.length != 3) {
-            help(player);
-        } else if (args.length == 2) {
+        if (args.length == 2) {
             String name = args[1];
+            //noinspection deprecation
             OfflinePlayer op = Bukkit.getOfflinePlayer(name);
             perms = plugin.HSPermissions.getPlayerPermissions(op.getUniqueId());
             if (perms == null) {
@@ -71,7 +70,7 @@ public class HomeSpawnPlayer {
             player.sendMessage(ChatColor.RED + "----- " + ChatColor.GOLD + "Stats for " + ChatColor.BLUE + name + ChatColor.RED + " -----");
             if (op.isOnline()) {
                 player.sendMessage(ChatColor.RED + "Players Permission: " + ChatColor.GOLD + plugin.HSPermissions.getPlayerPermission(op.getUniqueId()).getName());
-                String time = null;
+                String time;
                 if (!(homes.get("login") instanceof Long)) {
                     time = "Error!";
                 } else {
@@ -82,7 +81,7 @@ public class HomeSpawnPlayer {
                 player.sendMessage(ChatColor.RED + "Player " + ChatColor.BLUE + name + ChatColor.RED + " has been online since "
                         + ChatColor.GOLD + time);
             } else {
-                String time = null;
+                String time;
                 if (!(homes.get("logout") instanceof Long)) {
                     time = "Error!";
                 } else {
@@ -106,6 +105,7 @@ public class HomeSpawnPlayer {
             }
         } else if (args.length == 3) {
             String name = args[1];
+            //noinspection deprecation
             OfflinePlayer op = Bukkit.getOfflinePlayer(name);
             YamlConfiguration homes = plugin.HSConfig.getPlayerData(op.getUniqueId());
             if (homes == null) {

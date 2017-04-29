@@ -40,7 +40,7 @@ public class HomeSpawnSpawn {
     public void spawn(String[] args, Player player) {
         HashMap<HomeSpawnPermissions.perm, Integer> perms = plugin.HSPermissions.getPlayerPermissions(player.getUniqueId());
         if (perms.get(HomeSpawnPermissions.perm.spawn) == 1) {
-            if (true) {
+            if (plugin.HSConfig.spawn.get("spawn") != null) {
                 Location Spawn = (Location) plugin.HSConfig.spawn.get("spawn");
                 SpawnTeleportEvent STE = new SpawnTeleportEvent(plugin, player, Spawn);
                 Bukkit.getPluginManager().callEvent(STE);

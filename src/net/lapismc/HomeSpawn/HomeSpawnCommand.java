@@ -37,9 +37,9 @@ import java.util.*;
 public class HomeSpawnCommand implements CommandExecutor {
 
     private final HomeSpawn plugin;
-    public HomeSpawnHome home;
-    public HomeSpawnSpawn spawn;
     HomeSpawnHomesList homesList;
+    private HomeSpawnHome home;
+    private HomeSpawnSpawn spawn;
     private HomeSpawnDelHome delHome;
     private HomeSpawnDelSpawn delSpawn;
     private HomeSpawnHomePassword homePassword;
@@ -182,12 +182,11 @@ public class HomeSpawnCommand implements CommandExecutor {
                 if (args[0].equalsIgnoreCase("reload")) {
                     this.plugin.HSConfig.reload(null);
                 } else if (args[0].equalsIgnoreCase("update")) {
-                    if (plugin.lapisUpdater.downloadUpdate("HomeSpawn")) {
-                        sender.sendMessage(ChatColor.GOLD + "Downloading Update...");
-                        sender.sendMessage(ChatColor.GOLD + "The update will be installed" +
-                                " when the server next starts!");
+                    if (plugin.lapisUpdater.checkUpdate()) {
+                        sender.sendMessage("Update found, Downloading it now\n it will be installed on next server restart");
+                        plugin.lapisUpdater.downloadUpdate();
                     } else {
-                        sender.sendMessage(ChatColor.GOLD + "Updating failed or there is no update!");
+                        sender.sendMessage("No updates found");
                     }
                 } else {
                     sender.sendMessage(ChatColor.GOLD + "---------------"

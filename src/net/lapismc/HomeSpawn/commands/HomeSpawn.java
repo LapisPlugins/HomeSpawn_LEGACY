@@ -69,22 +69,17 @@ public class HomeSpawn {
         } else if (args.length > 0) {
             if (args[0].equalsIgnoreCase("update")) {
                 if (perms.get(HomeSpawnPermissions.perm.updateNotify) == 1) {
-                    if (args.length == 1) {
-                        if (plugin.lapisUpdater.downloadUpdate("HomeSpawm")) {
-                            player.sendMessage(ChatColor.GOLD + "Downloading Update...");
-                            player.sendMessage(ChatColor.GOLD + "The update will be installed"
-                                    + " when the server next starts!");
-                        } else {
-                            player.sendMessage(ChatColor.GOLD + "Updating failed!");
-                        }
+                    if (plugin.lapisUpdater.checkUpdate()) {
+                        player.sendMessage(ChatColor.GOLD + "Update found, Downloading it now\n it will be installed on next server restart");
+                        plugin.lapisUpdater.downloadUpdate();
                     } else {
-                        player.sendMessage(plugin.HSConfig.getColoredMessage("Error.Args"));
+                        player.sendMessage(ChatColor.GOLD + "No updates found");
                     }
                 } else {
                     player.sendMessage(plugin.HSConfig.getColoredMessage("NoPerms"));
                 }
             } else if (args[0].equalsIgnoreCase("player")) {
-                homeSpawnPlayer.HomeSpawnPlayer(args, player);
+                homeSpawnPlayer.homeSpawnPlayer(args, player);
             }
         } else {
             player.sendMessage("That Is Not A Recognised Command, Use /homespawn help For " +

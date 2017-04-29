@@ -50,12 +50,14 @@ public class HomeSpawnHomePassword {
         FileConfiguration getPasswords = YamlConfiguration
                 .loadConfiguration(file3);
         if (!this.plugin.getServer().getOnlineMode()) {
-            if (args.length == 3) {
+            if (args.length <= 1) {
+                hsc.PassHelp(player);
+            } else if (args.length == 3) {
                 String string = args[0];
                 if (string.equalsIgnoreCase("set")) {
                     if (args[1].equals(args[2])) {
                         String pass = args[1];
-                        String passHash = null;
+                        String passHash;
                         try {
                             passHash = PasswordHash.createHash(pass);
                         } catch (NoSuchAlgorithmException
@@ -75,12 +77,7 @@ public class HomeSpawnHomePassword {
                     } else {
                         player.sendMessage(plugin.HSConfig.getColoredMessage("Password.NoMatch"));
                     }
-                }
-            } else if (args.length <= 1) {
-                hsc.PassHelp(player);
-            } else if (args.length == 3) {
-                String string = args[0];
-                if (string.equalsIgnoreCase("transfer")) {
+                } else if (string.equalsIgnoreCase("transfer")) {
                     String pass = args[2];
                     String name = args[1];
                     File namefile = new File(this.plugin.getDataFolder()

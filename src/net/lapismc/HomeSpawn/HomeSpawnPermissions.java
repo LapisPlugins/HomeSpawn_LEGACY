@@ -34,7 +34,7 @@ public class HomeSpawnPermissions {
     private HashMap<UUID, Permission> PlayerPermission = new HashMap<>();
     private HomeSpawn plugin;
 
-    protected HomeSpawnPermissions(HomeSpawn p) {
+    HomeSpawnPermissions(HomeSpawn p) {
         plugin = p;
         loadPermissionMaps();
         Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () -> PlayerPermission = new HashMap<>(), 20 * 60 * 5, 20 * 60 * 5);
@@ -164,12 +164,7 @@ public class HomeSpawnPermissions {
     }
 
     public enum perm {
-        priority, homes, spawn, customHomes, TeleportDelay, setSpawn, updateNotify, reload, playerStats;
-
-        @Override
-        public String toString() {
-            return super.toString();
-        }
+        priority, homes, spawn, customHomes, TeleportDelay, setSpawn, updateNotify, reload, playerStats
     }
 
 }

@@ -35,7 +35,7 @@ import org.bukkit.inventory.Inventory;
 import java.io.File;
 import java.util.*;
 
-public class HomeSpawnListener implements Listener {
+class HomeSpawnListener implements Listener {
 
     private List<Player> Players = new ArrayList<>();
     private HomeSpawn plugin;

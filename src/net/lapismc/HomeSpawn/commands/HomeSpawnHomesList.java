@@ -40,7 +40,6 @@ public class HomeSpawnHomesList {
     public void homesList(String[] args, Player player) {
         if (this.plugin.getConfig().getBoolean("InventoryMenu")) {
             hsc.showMenu(player);
-            return;
         } else {
             YamlConfiguration getHomes = this.plugin.HSConfig.getPlayerData(player.getUniqueId());
             List<String> list = getHomes.getStringList("Homes.list");

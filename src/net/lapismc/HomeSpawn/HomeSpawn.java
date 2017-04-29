@@ -42,7 +42,6 @@ public class HomeSpawn extends JavaPlugin {
     final HashMap<Player, Location> HomeSpawnLocations = new HashMap<>();
     final HashMap<Player, Integer> HomeSpawnTimeLeft = new HashMap<>();
     public LapisUpdater lapisUpdater;
-    public HomeSpawnComponents HSComponents;
     public HomeSpawnPermissions HSPermissions;
     public HomeSpawnConfiguration HSConfig;
     HomeSpawnCommand HSCommand;
@@ -95,7 +94,7 @@ public class HomeSpawn extends JavaPlugin {
                     logger.info("An update for HomeSpawn is available and can be" +
                             " downloaded and installed by running /homespawn update");
                 } else if (getConfig().getBoolean("DownloadUpdates")) {
-                    lapisUpdater.downloadUpdate("HomeSpawn");
+                    lapisUpdater.downloadUpdate();
                     logger.info("Downloading Homespawn update, it will be installed " +
                             "on next restart!");
                 }
@@ -270,7 +269,7 @@ public class HomeSpawn extends JavaPlugin {
     }
 
     private void Commands() {
-        HSComponents = new HomeSpawnComponents();
+        HomeSpawnComponents HSComponents = new HomeSpawnComponents();
         HSComponents.init(this);
     }
 }
