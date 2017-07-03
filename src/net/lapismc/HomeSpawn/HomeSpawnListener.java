@@ -57,7 +57,7 @@ class HomeSpawnListener implements Listener {
         }
         getHomes = plugin.HSConfig.getPlayerData(player.getUniqueId());
         HashMap<HomeSpawnPermissions.perm, Integer> perms = plugin.HSPermissions.getPlayerPermissions(player.getUniqueId());
-        if (!player.getName().equals(getHomes.getString("UserName"))) {
+        if (!player.getName().equals(getHomes.getString("UserName")) && getHomes.getString("UserName") != null) {
             plugin.logger.info("Player " + getHomes.getString("UserName") + " has changed their name to " + player.getName());
             getHomes.set("UserName", player.getName());
         }
