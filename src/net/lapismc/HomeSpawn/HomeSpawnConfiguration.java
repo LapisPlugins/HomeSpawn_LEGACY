@@ -38,6 +38,8 @@ public class HomeSpawnConfiguration {
     private File messagesFile;
     private File passwordsFile;
     private HomeSpawn plugin;
+    private String PrimaryColor;
+    private String SecondaryColor;
 
     HomeSpawnConfiguration(HomeSpawn p) {
         plugin = p;
@@ -178,7 +180,7 @@ public class HomeSpawnConfiguration {
     }
 
     public String getColoredMessage(String path) {
-        return ChatColor.translateAlternateColorCodes('&', messages.getString(path));
+        return ChatColor.translateAlternateColorCodes('&', messages.getString(path).replace("&p", PrimaryColor).replace("&s", SecondaryColor));
     }
 
     String getMessage(String path) {
@@ -199,6 +201,8 @@ public class HomeSpawnConfiguration {
         createMessages();
         createPasswords();
         configVersion();
+        PrimaryColor = getMessage("PrimaryColor");
+        SecondaryColor = getMessage("SecondaryColor");
     }
 
     public void reload(Object obj) {
@@ -354,15 +358,6 @@ public class HomeSpawnConfiguration {
             plugin.saveDefaultConfig();
             plugin.logger.info("New config generated!");
             plugin.logger.info("Please transfer values!");
-        }
-    }
-
-    public enum logType {
-        Set, Delete, TeleportHome, TeleportSpawn;
-
-        @Override
-        public String toString() {
-            return super.toString().toLowerCase();
         }
     }
 
