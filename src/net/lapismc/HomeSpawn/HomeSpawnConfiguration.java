@@ -38,8 +38,6 @@ public class HomeSpawnConfiguration {
     private File messagesFile;
     private File passwordsFile;
     private HomeSpawn plugin;
-    private String PrimaryColor;
-    private String SecondaryColor;
 
     HomeSpawnConfiguration(HomeSpawn p) {
         plugin = p;
@@ -180,7 +178,7 @@ public class HomeSpawnConfiguration {
     }
 
     public String getColoredMessage(String path) {
-        return ChatColor.translateAlternateColorCodes('&', messages.getString(path).replace("&p", PrimaryColor).replace("&s", SecondaryColor));
+        return ChatColor.translateAlternateColorCodes('&', messages.getString(path).replace("&p", plugin.PrimaryColor).replace("&s", plugin.SecondaryColor));
     }
 
     String getMessage(String path) {
@@ -201,8 +199,8 @@ public class HomeSpawnConfiguration {
         createMessages();
         createPasswords();
         configVersion();
-        PrimaryColor = getMessage("PrimaryColor");
-        SecondaryColor = getMessage("SecondaryColor");
+        plugin.PrimaryColor = ChatColor.translateAlternateColorCodes('&', messages.getString("PrimaryColor"));
+        plugin.SecondaryColor = ChatColor.translateAlternateColorCodes('&', messages.getString("SecondaryColor"));
     }
 
     public void reload(Object obj) {

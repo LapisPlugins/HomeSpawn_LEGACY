@@ -19,7 +19,6 @@ package net.lapismc.HomeSpawn.commands;
 import net.lapismc.HomeSpawn.HomeSpawn;
 import net.lapismc.HomeSpawn.HomeSpawnCommand;
 import net.lapismc.HomeSpawn.PasswordHash;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -68,7 +67,7 @@ public class HomeSpawnHomePassword {
                         }
                         getPasswords.set(player.getName(), passHash);
                         player.sendMessage(plugin.HSConfig.getColoredMessage("Password.SetTo"));
-                        player.sendMessage(ChatColor.RED + pass);
+                        player.sendMessage(plugin.SecondaryColor + pass);
                         try {
                             getPasswords.save(file3);
                         } catch (IOException e) {

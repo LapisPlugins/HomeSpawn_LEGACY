@@ -19,7 +19,6 @@ package net.lapismc.HomeSpawn.commands;
 import net.lapismc.HomeSpawn.HomeSpawn;
 import net.lapismc.HomeSpawn.api.events.HomeDelEvent;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
@@ -58,8 +57,7 @@ public class HomeSpawnDelHome {
                     String list3 = list2.replace("[", " ");
                     String StringList = list3.replace("]", " ");
                     player.sendMessage(plugin.HSConfig.getColoredMessage("Home.CurrentHomes"));
-                    player.sendMessage(ChatColor.RED
-                            + StringList);
+                    player.sendMessage(plugin.SecondaryColor + StringList);
                 } else {
                     player.sendMessage(plugin.HSConfig.getColoredMessage("Home.NoHomeSet"));
                 }
@@ -68,16 +66,15 @@ public class HomeSpawnDelHome {
             String home = args[0];
             if (!list.contains(home)) {
                 player.sendMessage(plugin.HSConfig.getColoredMessage("Home.NoHomeName"));
-                    if (!list.isEmpty()) {
-                        String list2 = list.toString();
-                        String list3 = list2.replace("[", " ");
-                        String StringList = list3.replace("]", " ");
-                        player.sendMessage(plugin.HSConfig.getColoredMessage("Home.CurrentHomes"));
-                        player.sendMessage(ChatColor.RED
-                                + StringList);
-                    } else {
-                        player.sendMessage(plugin.HSConfig.getColoredMessage("Home.NoHomeSet"));
-                    }
+                if (!list.isEmpty()) {
+                    String list2 = list.toString();
+                    String list3 = list2.replace("[", " ");
+                    String StringList = list3.replace("]", " ");
+                    player.sendMessage(plugin.HSConfig.getColoredMessage("Home.CurrentHomes"));
+                    player.sendMessage(plugin.SecondaryColor + StringList);
+                } else {
+                    player.sendMessage(plugin.HSConfig.getColoredMessage("Home.NoHomeSet"));
+                }
             } else {
                 HomeDelEvent HDE = new HomeDelEvent(player, player.getLocation(), home);
                 Bukkit.getPluginManager().callEvent(HDE);

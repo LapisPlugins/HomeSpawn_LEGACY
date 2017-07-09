@@ -16,7 +16,6 @@
 
 package net.lapismc.HomeSpawn.commands;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -54,7 +53,7 @@ public class HomeSpawnRenameHome {
                 p.sendMessage(plugin.HSConfig.getColoredMessage("Home.NoHomeName"));
             }
         } else {
-            p.sendMessage(ChatColor.RED + "Usage: /renamehome (current name) (new name)");
+            p.sendMessage(plugin.SecondaryColor + "Usage: /renamehome (current name) (new name)");
         }
     }
 

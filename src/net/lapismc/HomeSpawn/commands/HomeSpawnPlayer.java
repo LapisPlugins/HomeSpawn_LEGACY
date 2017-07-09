@@ -39,14 +39,14 @@ class HomeSpawnPlayer {
     private HomeSpawn plugin;
     private PrettyTime p = new PrettyTime();
 
-    public HomeSpawnPlayer(HomeSpawn pl) {
+    HomeSpawnPlayer(HomeSpawn pl) {
         plugin = pl;
         p.setLocale(Locale.ENGLISH);
         p.removeUnit(JustNow.class);
         p.removeUnit(Millisecond.class);
     }
 
-    public void homeSpawnPlayer(String[] args, Player player) {
+    void homeSpawnPlayer(String[] args, Player player) {
         HashMap<HomeSpawnPermissions.perm, Integer> perms = plugin.HSPermissions
                 .getPlayerPermissions(player.getUniqueId());
         if (perms.get(HomeSpawnPermissions.perm.playerStats) != 1) {

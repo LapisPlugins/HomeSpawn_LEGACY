@@ -20,7 +20,6 @@ import net.lapismc.HomeSpawn.HomeSpawn;
 import net.lapismc.HomeSpawn.HomeSpawnPermissions;
 import net.lapismc.HomeSpawn.api.events.HomeSetEvent;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
@@ -61,8 +60,7 @@ public class HomeSpawnSetHome {
             if (perms.get(HomeSpawnPermissions.perm.customHomes) == 1) {
                 String home = args[0];
                 if (home.equalsIgnoreCase("Home")) {
-                    player.sendMessage(ChatColor.RED
-                            + "You Cannot Use The HomeSpawnHome Name \"Home\", Please Choose Another!");
+                    player.sendMessage(plugin.SecondaryColor + "You Cannot Use The HomeSpawnHome Name \"Home\", Please Choose Another!");
                     return;
                 }
                 HomeSetEvent HCE = new HomeSetEvent(player, player.getLocation(), home);

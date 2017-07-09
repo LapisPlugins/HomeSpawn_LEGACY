@@ -18,7 +18,6 @@ package net.lapismc.HomeSpawn.commands;
 
 import net.lapismc.HomeSpawn.HomeSpawn;
 import net.lapismc.HomeSpawn.HomeSpawnCommand;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -48,7 +47,7 @@ public class HomeSpawnHomesList {
                 String list3 = list2.replace("[", " ");
                 String StringList = list3.replace("]", " ");
                 player.sendMessage(plugin.HSConfig.getColoredMessage("Home.CurrentHomes"));
-                player.sendMessage(ChatColor.RED + StringList);
+                player.sendMessage(plugin.SecondaryColor + StringList);
             } else {
                 player.sendMessage(plugin.HSConfig.getColoredMessage("Home.NoHomeSet"));
             }

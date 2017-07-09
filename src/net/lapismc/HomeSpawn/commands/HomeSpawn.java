@@ -17,7 +17,6 @@
 package net.lapismc.HomeSpawn.commands;
 
 import net.lapismc.HomeSpawn.HomeSpawnPermissions;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -35,32 +34,26 @@ public class HomeSpawn {
     public void homeSpawn(String[] args, Player player) {
         HashMap<HomeSpawnPermissions.perm, Integer> perms = plugin.HSPermissions.getPlayerPermissions(player.getUniqueId());
         if (args.length == 0) {
-            player.sendMessage(ChatColor.GOLD + "---------------"
-                    + ChatColor.RED + "Homespawn" + ChatColor.GOLD
+            player.sendMessage(plugin.SecondaryColor + "---------------"
+                    + plugin.PrimaryColor + "Homespawn" + plugin.SecondaryColor
                     + "---------------");
-            player.sendMessage(ChatColor.RED + "Author:"
-                    + ChatColor.GOLD + " Dart2112");
-            player.sendMessage(ChatColor.RED + "Version: "
-                    + ChatColor.GOLD
-                    + this.plugin.getDescription().getVersion());
-            String version = System.getProperty("java.version");
-            int pos = version.indexOf('.');
-            pos = version.indexOf('.', pos + 1);
-            Double versionDouble = Double.parseDouble(version.substring(0, pos));
-            player.sendMessage(ChatColor.RED + "Java Version: " + ChatColor.GOLD
-                    + versionDouble);
-            player.sendMessage(ChatColor.RED + "Spigot:"
-                    + ChatColor.GOLD + " https://goo.gl/aWby6W");
-            player.sendMessage(ChatColor.RED
+            player.sendMessage(plugin.PrimaryColor + "Author:"
+                    + plugin.SecondaryColor + " Dart2112");
+            player.sendMessage(plugin.PrimaryColor + "Version: "
+                    + plugin.SecondaryColor
+                    + plugin.getDescription().getVersion());
+            player.sendMessage(plugin.PrimaryColor + "Spigot:"
+                    + plugin.SecondaryColor + " https://goo.gl/aWby6W");
+            player.sendMessage(plugin.PrimaryColor
                     + "Use /homespawn Help For Commands!");
-            player.sendMessage(ChatColor.GOLD
+            player.sendMessage(plugin.SecondaryColor
                     + "-----------------------------------------");
         } else if (args.length == 1 && !args[0].equalsIgnoreCase("player")) {
             if (args[0].equalsIgnoreCase("reload")) {
                 if (perms.get(HomeSpawnPermissions.perm.reload) == 1) {
                     this.plugin.HSConfig.reload(player);
                 } else {
-                    player.sendMessage(ChatColor.RED
+                    player.sendMessage(plugin.SecondaryColor
                             + "You Don't Have Permission To Do That");
                 }
             } else if (args[0].equalsIgnoreCase("help")) {
@@ -70,10 +63,10 @@ public class HomeSpawn {
             if (args[0].equalsIgnoreCase("update")) {
                 if (perms.get(HomeSpawnPermissions.perm.updateNotify) == 1) {
                     if (plugin.lapisUpdater.checkUpdate()) {
-                        player.sendMessage(ChatColor.GOLD + "Update found, Downloading it now\n it will be installed on next server restart");
+                        player.sendMessage(plugin.PrimaryColor + "Update found, Downloading it now\n it will be installed on next server restart");
                         plugin.lapisUpdater.downloadUpdate();
                     } else {
-                        player.sendMessage(ChatColor.GOLD + "No updates found");
+                        player.sendMessage(plugin.PrimaryColor + "No updates found");
                     }
                 } else {
                     player.sendMessage(plugin.HSConfig.getColoredMessage("NoPerms"));

@@ -20,7 +20,6 @@ import net.lapismc.HomeSpawn.HomeSpawn;
 import net.lapismc.HomeSpawn.HomeSpawnCommand;
 import net.lapismc.HomeSpawn.api.events.HomeTeleportEvent;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -46,7 +45,7 @@ public class HomeSpawnHome {
                 HomeTeleportEvent HTE = new HomeTeleportEvent(player, home, "Home");
                 Bukkit.getPluginManager().callEvent(HTE);
                 if (HTE.isCancelled()) {
-                    player.sendMessage(ChatColor.GOLD + "Your teleport was cancelled because " + HTE.getCancelReason());
+                    player.sendMessage(plugin.PrimaryColor + "Your teleport was cancelled because " + HTE.getCancelReason());
                     return;
                 }
                 hsc.TeleportPlayer(player, home, "Home");
@@ -63,7 +62,7 @@ public class HomeSpawnHome {
                     String StringList = list3.replace("]",
                             " ");
                     player.sendMessage(plugin.HSConfig.getColoredMessage("Home.CurrentHomes"));
-                    player.sendMessage(ChatColor.RED + StringList);
+                    player.sendMessage(plugin.SecondaryColor + StringList);
                 } else {
                     player.sendMessage(plugin.HSConfig.getColoredMessage("Home.NoHomeSet"));
                 }
@@ -72,7 +71,7 @@ public class HomeSpawnHome {
                 HomeTeleportEvent HTE = new HomeTeleportEvent(player, home2, home);
                 Bukkit.getPluginManager().callEvent(HTE);
                 if (HTE.isCancelled()) {
-                    player.sendMessage(ChatColor.GOLD + "Your teleport was cancelled because " + HTE.getCancelReason());
+                    player.sendMessage(plugin.PrimaryColor + "Your teleport was cancelled because " + HTE.getCancelReason());
                     return;
                 }
                 hsc.TeleportPlayer(player, home2, "Home");
