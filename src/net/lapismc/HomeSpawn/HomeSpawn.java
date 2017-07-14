@@ -30,10 +30,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Logger;
 
 public class HomeSpawn extends JavaPlugin {
@@ -216,9 +213,11 @@ public class HomeSpawn extends JavaPlugin {
         scheduler.scheduleSyncRepeatingTask(this, () -> {
             if (!HomeSpawnTimeLeft.isEmpty()) {
                 HashMap<Player, Integer> timeLeft = HomeSpawnTimeLeft;
-                for (Player p : timeLeft.keySet()) {
+                Iterator<Player> it = timeLeft.keySet().iterator();
+                while (it.hasNext()) {
+                    Player p = it.next();
                     if (HomeSpawnLocations.get(p) == null) {
-                        HomeSpawnTimeLeft.remove(p);
+                        it.remove();
                         HomeSpawnLocations.remove(p);
                     }
                     if (HomeSpawnTimeLeft.isEmpty()) {
