@@ -86,7 +86,7 @@ public class HomeSpawn extends JavaPlugin {
     private void Update() {
         final HomeSpawn p = this;
         Bukkit.getScheduler().runTaskAsynchronously(this, () -> {
-            lapisUpdater = new LapisUpdater(p, "Homespawn.jar", "Dart2112", "HomeSpawn", "master");
+            lapisUpdater = new LapisUpdater(p, "Homespawn", "Dart2112", "HomeSpawn", "master");
             if (lapisUpdater.checkUpdate()) {
                 if (getConfig().getBoolean("UpdateNotification") && !getConfig()
                         .getBoolean("DownloadUpdates")) {

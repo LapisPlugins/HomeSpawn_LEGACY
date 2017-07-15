@@ -76,7 +76,7 @@ public class LapisUpdater {
                 ReadableByteChannel jarByteChannel = Channels.newChannel(jarURL.openStream());
                 File update = plugin.getServer().getUpdateFolderFile();
                 if (!update.exists()) {
-                    if (!update.mkdir()) {
+                    if (!update.mkdirs()) {
                         logger.info(plugin.getName() + " failed to make update folder");
                     }
                 }
@@ -100,8 +100,9 @@ public class LapisUpdater {
                 changeLogOutputStream.close();
                 YamlConfiguration changeLog = YamlConfiguration.loadConfiguration(changeLogFile);
                 logger.info("Changes in newest Version \n" +
-                        changeLog.getStringList(newVersionRawString).toString().replace("[", "").replace("]", ""));
+                        changeLog.getStringList("ChangeLog." + newVersionRawString).toString().replace("[", "").replace("]", ""));
             } catch (IOException e) {
+                e.printStackTrace();
                 logger.severe(plugin.getName() + " updater failed to download updates!");
                 logger.severe("Please check your internet connection and" +
                         " firewall settings and try again later");
@@ -116,8 +117,7 @@ public class LapisUpdater {
         YamlConfiguration yaml;
         try {
             URL website = new URL(
-                    "https://raw.githubusercontent.com/" + username + "/" + repoName + "/" + branch + "/updater" +
-                            "/update.yml");
+                    "https://raw.githubusercontent.com/" + username + "/" + repoName + "/" + branch + "/updater/update.yml");
             ReadableByteChannel rbc = Channels.newChannel(website.openStream());
             f = new File(plugin.getDataFolder().getAbsolutePath() + File.separator +
                     "update.yml");
@@ -146,10 +146,9 @@ public class LapisUpdater {
                 return false;
             }
             String oldVersionString = plugin.getDescription().getVersion()
-                    .replace(".", "").replace("Beta ", "");
+                    .replace(".", "");
             newVersionRawString = yaml.getString(ID);
-            String newVersionString = yaml.getString(ID).replace(".", "")
-                    .replace("Beta ", "");
+            String newVersionString = yaml.getString(ID).replace(".", "");
             oldVersion = Integer.parseInt(oldVersionString);
             newVersion = Integer.parseInt(newVersionString);
         } catch (Exception e) {

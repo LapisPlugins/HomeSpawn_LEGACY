@@ -81,3 +81,7 @@ ChangeLog:
       - "Fixed some minor possible bugs"
     2.2.1:
       - "Horses now teleport with you if you are riding them"
+    2.2.2:
+      - "Fixed the auto updater"
+      - "Added Primary and Secondary colors"
+      - "Fixed error in command delay"
