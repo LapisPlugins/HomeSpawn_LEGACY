@@ -65,7 +65,7 @@ public class HomeSpawn extends JavaPlugin {
         for (File f : playerData.listFiles()) {
             if (!f.getName().equals("Passwords.yml") && !f.isDirectory()) {
                 YamlConfiguration yaml = YamlConfiguration.loadConfiguration(f);
-                homes = homes + yaml.getStringList("Homes.List").size();
+                homes += yaml.getStringList("Homes.List").size();
             }
         }
         Integer average;
@@ -214,50 +214,55 @@ public class HomeSpawn extends JavaPlugin {
             if (!HomeSpawnTimeLeft.isEmpty()) {
                 HashMap<Player, Integer> timeLeft = HomeSpawnTimeLeft;
                 Iterator<Player> it = timeLeft.keySet().iterator();
-                while (it.hasNext()) {
-                    Player p = it.next();
-                    if (HomeSpawnLocations.get(p) == null) {
-                        it.remove();
-                        HomeSpawnLocations.remove(p);
-                    }
-                    if (HomeSpawnTimeLeft.isEmpty()) {
-                        return;
-                    }
-                    Collection<Integer> values = timeLeft.values();
-                    for (int Time : values) {
-                        int NewTime = Time - 1;
-                        if (NewTime > 0) {
-                            HomeSpawnTimeLeft.put(p, NewTime);
-                        } else if (NewTime <= 0) {
-                            Location Tele = HomeSpawnLocations.get(p);
-                            if (!(Tele == null)) {
-                                if (!Tele.getChunk().isLoaded()) {
-                                    Tele.getChunk().load();
-                                }
-                                if (p.isInsideVehicle()) {
-                                    if (p.getVehicle() instanceof Horse) {
-                                        Horse horse = (Horse) p.getVehicle();
-                                        horse.eject();
-                                        horse.teleport(Tele);
-                                        p.teleport(Tele);
-                                        horse.setPassenger(p);
-                                    }
-                                } else {
-                                    p.teleport(Tele);
-                                }
-                                p.sendMessage(HSConfig.getColoredMessage("Home.SentHome"));
-
-                                debug("Teleported " + p.getName());
-                                p.sendMessage(ChatColor.GOLD
-                                        + "Teleporting...");
-                                HomeSpawnTimeLeft.remove(p);
-                                HomeSpawnLocations.remove(p);
+                try {
+                    while (it.hasNext()) {
+                        Player p = it.next();
+                        if (HomeSpawnLocations.get(p) == null) {
+                            it.remove();
+                            HomeSpawnLocations.remove(p);
+                        }
+                        if (HomeSpawnTimeLeft.isEmpty()) {
+                            return;
+                        }
+                        Iterator<Integer> iterator = timeLeft.values().iterator();
+                        //noinspection WhileLoopReplaceableByForEach
+                        while (iterator.hasNext()) {
+                            Integer time = iterator.next();
+                            int NewTime = time - 1;
+                            if (NewTime > 0) {
+                                HomeSpawnTimeLeft.put(p, NewTime);
                             } else {
-                                HomeSpawnTimeLeft.remove(p);
-                                HomeSpawnLocations.remove(p);
+                                Location Tele = HomeSpawnLocations.get(p);
+                                if (!(Tele == null)) {
+                                    if (!Tele.getChunk().isLoaded()) {
+                                        Tele.getChunk().load();
+                                    }
+                                    if (p.isInsideVehicle()) {
+                                        if (p.getVehicle() instanceof Horse) {
+                                            Horse horse = (Horse) p.getVehicle();
+                                            horse.eject();
+                                            horse.teleport(Tele);
+                                            p.teleport(Tele);
+                                            horse.setPassenger(p);
+                                        }
+                                    } else {
+                                        p.teleport(Tele);
+                                    }
+                                    p.sendMessage(HSConfig.getColoredMessage("Home.SentHome"));
+
+                                    debug("Teleported " + p.getName());
+                                    p.sendMessage(ChatColor.GOLD
+                                            + "Teleporting...");
+                                    it.remove();
+                                    HomeSpawnLocations.remove(p);
+                                } else {
+                                    it.remove();
+                                    HomeSpawnLocations.remove(p);
+                                }
                             }
                         }
                     }
+                } catch (ConcurrentModificationException ignored) {
                 }
             }
         }, 0, 20);
