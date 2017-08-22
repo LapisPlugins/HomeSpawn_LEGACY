@@ -272,6 +272,7 @@ public class HomeSpawnConfiguration {
             }
             YamlConfiguration yaml = YamlConfiguration.loadConfiguration(f);
             yaml.set("Title", "&6How To HomeSpawn!");
+            yaml.set("Author", "&bDart2112");
             yaml.set("Book.NumbOfPages", 1);
             yaml.set("Book.1", " &6How To Use HomeSpawn! \n &4/home:&6 Sends You To Your HomeSpawnHome \n &4/sethome:&6 Sets Your HomeSpawnHome At Your Current Location \n &4/delhome:&6 Removes Your HomeSpawnHome \n &4/spawn:&6 Sends You To HomeSpawnSpawn \n &4/homepassword help:\n &6 Displays The HomeSpawnHome Transfer Commands \n &2 For More Detailed Help Use /homespawn help");
             yaml.set("Book.2", "This will only be on page 2 if the page number is 2");
