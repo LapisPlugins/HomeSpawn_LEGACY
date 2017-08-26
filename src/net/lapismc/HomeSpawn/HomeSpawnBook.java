@@ -38,7 +38,8 @@ class HomeSpawnBook {
         BookMeta meta = (BookMeta) book.getItemMeta();
         meta.setTitle(ChatColor.translateAlternateColorCodes
                 ('&', yaml.getString("Title")));
-        meta.setAuthor(ChatColor.AQUA + "Dart2112");
+        meta.setAuthor(ChatColor.translateAlternateColorCodes
+                ('&', yaml.getString("Author", "&bDart2112")));
         int zero = 0;
         int pages = yaml.getInt("Book.NumbOfPages");
         while (pages > zero) {
