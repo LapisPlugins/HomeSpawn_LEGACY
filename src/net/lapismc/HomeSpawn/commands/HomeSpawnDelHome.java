@@ -19,6 +19,7 @@ package net.lapismc.HomeSpawn.commands;
 import net.lapismc.HomeSpawn.HomeSpawn;
 import net.lapismc.HomeSpawn.api.events.HomeDelEvent;
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
@@ -32,66 +33,71 @@ public class HomeSpawnDelHome {
         this.plugin = p;
     }
 
-    public void delHome(String[] args, Player player) {
-        YamlConfiguration getHomes = plugin.HSConfig.getPlayerData(player.getUniqueId());
+    public void delHome(String[] args, CommandSender sender) {
+        if (!(sender instanceof Player)) {
+            sender.sendMessage(plugin.HSConfig.getMessage("Error.MustBePlayer"));
+            return;
+        }
+        Player p = (Player) sender;
+        YamlConfiguration getHomes = plugin.HSConfig.getPlayerData(p.getUniqueId());
         List<String> list = getHomes.getStringList("Homes.list");
         if (args.length == 0) {
             if (list.contains("Home")) {
-                HomeDelEvent HDE = new HomeDelEvent(player, player.getLocation(), "Home");
+                HomeDelEvent HDE = new HomeDelEvent(p, p.getLocation(), "Home");
                 Bukkit.getPluginManager().callEvent(HDE);
                 if (HDE.isCancelled()) {
-                    player.sendMessage("Your home has not been deleted because " + HDE.getReason());
+                    p.sendMessage("Your home has not been deleted because " + HDE.getReason());
                     return;
                 }
-                player.sendMessage(plugin.HSConfig.getColoredMessage("Home.HomeRemoved"));
+                p.sendMessage(plugin.HSConfig.getColoredMessage("Home.HomeRemoved"));
                 getHomes.set("Homes.Home", null);
                 if (list.contains("Home")) {
                     list.remove("Home");
                     getHomes.set("Homes.list", list);
                 }
-                this.plugin.HSConfig.savePlayerData(player.getUniqueId(), getHomes);
+                this.plugin.HSConfig.savePlayerData(p.getUniqueId(), getHomes);
             } else {
-                player.sendMessage(plugin.HSConfig.getColoredMessage("Home.NoHomeSet"));
+                p.sendMessage(plugin.HSConfig.getColoredMessage("Home.NoHomeSet"));
                 if (!list.isEmpty()) {
                     String list2 = list.toString();
                     String list3 = list2.replace("[", " ");
                     String StringList = list3.replace("]", " ");
-                    player.sendMessage(plugin.HSConfig.getColoredMessage("Home.CurrentHomes"));
-                    player.sendMessage(plugin.SecondaryColor + StringList);
+                    p.sendMessage(plugin.HSConfig.getColoredMessage("Home.CurrentHomes"));
+                    p.sendMessage(plugin.SecondaryColor + StringList);
                 } else {
-                    player.sendMessage(plugin.HSConfig.getColoredMessage("Home.NoHomeSet"));
+                    p.sendMessage(plugin.HSConfig.getColoredMessage("Home.NoHomeSet"));
                 }
             }
         } else if (args.length == 1) {
             String home = args[0];
             if (!list.contains(home)) {
-                player.sendMessage(plugin.HSConfig.getColoredMessage("Home.NoHomeName"));
+                p.sendMessage(plugin.HSConfig.getColoredMessage("Home.NoHomeName"));
                 if (!list.isEmpty()) {
                     String list2 = list.toString();
                     String list3 = list2.replace("[", " ");
                     String StringList = list3.replace("]", " ");
-                    player.sendMessage(plugin.HSConfig.getColoredMessage("Home.CurrentHomes"));
-                    player.sendMessage(plugin.SecondaryColor + StringList);
+                    p.sendMessage(plugin.HSConfig.getColoredMessage("Home.CurrentHomes"));
+                    p.sendMessage(plugin.SecondaryColor + StringList);
                 } else {
-                    player.sendMessage(plugin.HSConfig.getColoredMessage("Home.NoHomeSet"));
+                    p.sendMessage(plugin.HSConfig.getColoredMessage("Home.NoHomeSet"));
                 }
             } else {
-                HomeDelEvent HDE = new HomeDelEvent(player, player.getLocation(), home);
+                HomeDelEvent HDE = new HomeDelEvent(p, p.getLocation(), home);
                 Bukkit.getPluginManager().callEvent(HDE);
                 if (HDE.isCancelled()) {
-                    player.sendMessage("Your home has not been deleted because " + HDE.getReason());
+                    p.sendMessage("Your home has not been deleted because " + HDE.getReason());
                     return;
                 }
-                player.sendMessage(plugin.HSConfig.getColoredMessage("Home.HomeRemoved"));
+                p.sendMessage(plugin.HSConfig.getColoredMessage("Home.HomeRemoved"));
                 getHomes.set(home, null);
                 if (list.contains(home)) {
                     list.remove(home);
                     getHomes.set("Homes.list", list);
                 }
-                this.plugin.HSConfig.savePlayerData(player.getUniqueId(), getHomes);
+                this.plugin.HSConfig.savePlayerData(p.getUniqueId(), getHomes);
             }
         } else {
-            player.sendMessage(plugin.HSConfig.getColoredMessage("Error.Args+"));
+            p.sendMessage(plugin.HSConfig.getColoredMessage("Error.Args+"));
         }
     }
 

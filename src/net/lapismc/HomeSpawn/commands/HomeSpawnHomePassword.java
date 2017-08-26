@@ -17,8 +17,9 @@
 package net.lapismc.HomeSpawn.commands;
 
 import net.lapismc.HomeSpawn.HomeSpawn;
-import net.lapismc.HomeSpawn.HomeSpawnCommand;
 import net.lapismc.HomeSpawn.PasswordHash;
+import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -31,17 +32,20 @@ import java.security.spec.InvalidKeySpecException;
 public class HomeSpawnHomePassword {
 
     private HomeSpawn plugin;
-    private HomeSpawnCommand hsc;
 
-    public HomeSpawnHomePassword(HomeSpawn p, HomeSpawnCommand hsc) {
+    public HomeSpawnHomePassword(HomeSpawn p) {
         this.plugin = p;
-        this.hsc = hsc;
     }
 
-    public void homePassword(String[] args, Player player) {
+    public void homePassword(String[] args, CommandSender sender) {
+        if (!(sender instanceof Player)) {
+            sender.sendMessage(plugin.HSConfig.getMessage("Error.MustBePlayer"));
+            return;
+        }
+        Player p = (Player) sender;
         File file = new File(this.plugin.getDataFolder() + File.separator
                 + "PlayerData" + File.separator
-                + player.getUniqueId() + ".yml");
+                + p.getUniqueId() + ".yml");
         FileConfiguration getHomes = YamlConfiguration
                 .loadConfiguration(file);
         File file3 = new File(this.plugin.getDataFolder() + File.separator
@@ -50,7 +54,7 @@ public class HomeSpawnHomePassword {
                 .loadConfiguration(file3);
         if (!this.plugin.getServer().getOnlineMode()) {
             if (args.length <= 1) {
-                hsc.PassHelp(player);
+                PassHelp(p);
             } else if (args.length == 3) {
                 String string = args[0];
                 if (string.equalsIgnoreCase("set")) {
@@ -62,19 +66,19 @@ public class HomeSpawnHomePassword {
                         } catch (NoSuchAlgorithmException
                                 | InvalidKeySpecException e1) {
                             e1.printStackTrace();
-                            player.sendMessage(plugin.HSConfig.getColoredMessage("Password.SaveFailed"));
+                            p.sendMessage(plugin.HSConfig.getColoredMessage("Password.SaveFailed"));
                             return;
                         }
-                        getPasswords.set(player.getName(), passHash);
-                        player.sendMessage(plugin.HSConfig.getColoredMessage("Password.SetTo"));
-                        player.sendMessage(plugin.SecondaryColor + pass);
+                        getPasswords.set(p.getName(), passHash);
+                        p.sendMessage(plugin.HSConfig.getColoredMessage("Password.SetTo"));
+                        p.sendMessage(plugin.SecondaryColor + pass);
                         try {
                             getPasswords.save(file3);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
                     } else {
-                        player.sendMessage(plugin.HSConfig.getColoredMessage("Password.NoMatch"));
+                        p.sendMessage(plugin.HSConfig.getColoredMessage("Password.NoMatch"));
                     }
                 } else if (string.equalsIgnoreCase("transfer")) {
                     String pass = args[2];
@@ -97,7 +101,7 @@ public class HomeSpawnHomePassword {
                     } catch (NoSuchAlgorithmException
                             | InvalidKeySpecException e2) {
                         e2.printStackTrace();
-                        player.sendMessage(plugin.HSConfig.getColoredMessage("Password.CheckError"));
+                        p.sendMessage(plugin.HSConfig.getColoredMessage("Password.CheckError"));
                     }
                     if (namefile.exists() && Password) {
                         String uuid = getOldName.getString("UUID");
@@ -107,7 +111,7 @@ public class HomeSpawnHomePassword {
                                         + uuid + ".yml");
                         file.delete();
                         OldUUIDFile.renameTo(file);
-                        getHomes.set("Name", player.getUniqueId()
+                        getHomes.set("Name", p.getUniqueId()
                                 .toString());
                         try {
                             getHomes.save(file);
@@ -121,19 +125,36 @@ public class HomeSpawnHomePassword {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-                        player.sendMessage("Data Transferred!");
-                        getPasswords.set(player.getName(),
+                        p.sendMessage("Data Transferred!");
+                        getPasswords.set(p.getName(),
                                 getPasswords.getString(name));
                         getPasswords.set(name, null);
                     } else {
-                        player.sendMessage("That Name Or Password Was Incorrect!");
+                        p.sendMessage("That Name Or Password Was Incorrect!");
                     }
                 }
             }
         } else {
-            player.sendMessage("This Command Isnt Used As This Is An Online Mode Server");
+            p.sendMessage("This Command Isnt Used As This Is An Online Mode Server");
         }
 
+    }
+
+    private void PassHelp(Player player) {
+        player.sendMessage(ChatColor.GOLD + "---------------------"
+                + ChatColor.RED + "Homespawn" + ChatColor.GOLD
+                + "---------------------");
+        player.sendMessage(ChatColor.RED + "/homepassword help:"
+                + ChatColor.GOLD + " Shows This Text");
+        player.sendMessage(ChatColor.RED
+                + "/homepassword set [password] [password]:" + ChatColor.GOLD
+                + " Sets Your Transfer Password");
+        player.sendMessage(ChatColor.RED
+                + "/homepassword transfer [old username] [password]:"
+                + ChatColor.GOLD
+                + " Transfers Playerdata From Old Username To Current Username");
+        player.sendMessage(ChatColor.GOLD
+                + "-----------------------------------------------------");
     }
 
 }

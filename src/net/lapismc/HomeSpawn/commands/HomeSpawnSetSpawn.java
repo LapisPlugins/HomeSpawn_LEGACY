@@ -18,6 +18,7 @@ package net.lapismc.HomeSpawn.commands;
 
 import net.lapismc.HomeSpawn.HomeSpawn;
 import net.lapismc.HomeSpawn.HomeSpawnPermissions;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.io.IOException;
@@ -31,17 +32,22 @@ public class HomeSpawnSetSpawn {
         plugin = p;
     }
 
-    public void setSpawn(String[] args, Player player) {
-        HashMap<HomeSpawnPermissions.perm, Integer> perms = plugin.HSPermissions.getPlayerPermissions(player.getUniqueId());
+    public void setSpawn(String[] args, CommandSender sender) {
+        if (!(sender instanceof Player)) {
+            sender.sendMessage(plugin.HSConfig.getMessage("Error.MustBePlayer"));
+            return;
+        }
+        Player p = (Player) sender;
+        HashMap<HomeSpawnPermissions.perm, Integer> perms = plugin.HSPermissions.getPlayerPermissions(p.getUniqueId());
         if (perms.get(HomeSpawnPermissions.perm.setSpawn) == 1) {
             if (args.length == 0) {
-                plugin.HSConfig.spawn.set("spawn", player.getLocation());
-                player.sendMessage(plugin.HSConfig.getColoredMessage("Spawn.SpawnSet"));
+                plugin.HSConfig.spawn.set("spawn", p.getLocation());
+                p.sendMessage(plugin.HSConfig.getColoredMessage("Spawn.SpawnSet"));
             } else if (args[0].equalsIgnoreCase("new")) {
-                plugin.HSConfig.spawn.set("spawnnew", player.getLocation());
-                player.sendMessage(plugin.HSConfig.getColoredMessage("Spawn.SpawnNewSet"));
+                plugin.HSConfig.spawn.set("spawnnew", p.getLocation());
+                p.sendMessage(plugin.HSConfig.getColoredMessage("Spawn.SpawnNewSet"));
             } else {
-                plugin.help(player);
+                plugin.help(p);
             }
             try {
                 plugin.HSConfig.spawn.save(plugin.HSConfig.spawnFile);
@@ -51,7 +57,7 @@ public class HomeSpawnSetSpawn {
             }
 
         } else {
-            player.sendMessage(plugin.HSConfig.getColoredMessage("NoPerms"));
+            p.sendMessage(plugin.HSConfig.getColoredMessage("NoPerms"));
 
         }
     }

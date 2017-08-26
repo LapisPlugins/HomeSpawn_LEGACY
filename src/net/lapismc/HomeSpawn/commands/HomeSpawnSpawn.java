@@ -22,6 +22,7 @@ import net.lapismc.HomeSpawn.HomeSpawnPermissions;
 import net.lapismc.HomeSpawn.api.events.SpawnTeleportEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -36,23 +37,28 @@ public class HomeSpawnSpawn {
         this.hsc = hsc;
     }
 
-    public void spawn(String[] args, Player player) {
-        HashMap<HomeSpawnPermissions.perm, Integer> perms = plugin.HSPermissions.getPlayerPermissions(player.getUniqueId());
+    public void spawn(CommandSender sender) {
+        if (!(sender instanceof Player)) {
+            sender.sendMessage(plugin.HSConfig.getMessage("Error.MustBePlayer"));
+            return;
+        }
+        Player p = (Player) sender;
+        HashMap<HomeSpawnPermissions.perm, Integer> perms = plugin.HSPermissions.getPlayerPermissions(p.getUniqueId());
         if (perms.get(HomeSpawnPermissions.perm.spawn) == 1) {
             if (plugin.HSConfig.spawn.get("spawn") != null) {
                 Location Spawn = (Location) plugin.HSConfig.spawn.get("spawn");
-                SpawnTeleportEvent STE = new SpawnTeleportEvent(plugin, player, Spawn);
+                SpawnTeleportEvent STE = new SpawnTeleportEvent(plugin, p, Spawn);
                 Bukkit.getPluginManager().callEvent(STE);
                 if (STE.isCancelled()) {
-                    player.sendMessage(plugin.PrimaryColor + "Your teleport was cancelled because " + STE.getCancelReason());
+                    p.sendMessage(plugin.PrimaryColor + "Your teleport was cancelled because " + STE.getCancelReason());
                     return;
                 }
-                hsc.TeleportPlayer(player, Spawn, "Spawn");
+                hsc.TeleportPlayer(p, Spawn, "Spawn");
             } else {
-                player.sendMessage(plugin.HSConfig.getColoredMessage("Spawn.NotSet"));
+                p.sendMessage(plugin.HSConfig.getColoredMessage("Spawn.NotSet"));
             }
         } else {
-            player.sendMessage(plugin.HSConfig.getColoredMessage("NoPerms"));
+            p.sendMessage(plugin.HSConfig.getColoredMessage("NoPerms"));
         }
     }
 

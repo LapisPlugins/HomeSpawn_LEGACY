@@ -85,3 +85,7 @@ ChangeLog:
       - "Fixed the auto updater"
       - "Added Primary and Secondary colors"
       - "Fixed error in command delay"
+    2.2.3:
+      - "Code rework to make my job easier"
+      - "Possibly fixed the multiverse error"
+      - "Minor fixes associated with the code rework"

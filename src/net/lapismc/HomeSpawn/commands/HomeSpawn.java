@@ -17,6 +17,7 @@
 package net.lapismc.HomeSpawn.commands;
 
 import net.lapismc.HomeSpawn.HomeSpawnPermissions;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -31,52 +32,64 @@ public class HomeSpawn {
         this.homeSpawnPlayer = new HomeSpawnPlayer(plugin);
     }
 
-    public void homeSpawn(String[] args, Player player) {
-        HashMap<HomeSpawnPermissions.perm, Integer> perms = plugin.HSPermissions.getPlayerPermissions(player.getUniqueId());
+    public void homeSpawn(String[] args, CommandSender sender) {
         if (args.length == 0) {
-            player.sendMessage(plugin.SecondaryColor + "---------------"
+            sender.sendMessage(plugin.SecondaryColor + "---------------"
                     + plugin.PrimaryColor + "Homespawn" + plugin.SecondaryColor
                     + "---------------");
-            player.sendMessage(plugin.PrimaryColor + "Author:"
+            sender.sendMessage(plugin.PrimaryColor + "Author:"
                     + plugin.SecondaryColor + " Dart2112");
-            player.sendMessage(plugin.PrimaryColor + "Version: "
+            sender.sendMessage(plugin.PrimaryColor + "Version: "
                     + plugin.SecondaryColor
                     + plugin.getDescription().getVersion());
-            player.sendMessage(plugin.PrimaryColor + "Spigot:"
+            sender.sendMessage(plugin.PrimaryColor + "Spigot:"
                     + plugin.SecondaryColor + " https://goo.gl/aWby6W");
-            player.sendMessage(plugin.PrimaryColor
+            sender.sendMessage(plugin.PrimaryColor
                     + "Use /homespawn Help For Commands!");
-            player.sendMessage(plugin.SecondaryColor
+            sender.sendMessage(plugin.SecondaryColor
                     + "-----------------------------------------");
         } else if (args.length == 1 && !args[0].equalsIgnoreCase("player")) {
             if (args[0].equalsIgnoreCase("reload")) {
-                if (perms.get(HomeSpawnPermissions.perm.reload) == 1) {
-                    this.plugin.HSConfig.reload(player);
+                boolean isPermitted;
+                if (sender instanceof Player) {
+                    Player p = (Player) sender;
+                    HashMap<HomeSpawnPermissions.perm, Integer> perms = plugin.HSPermissions.getPlayerPermissions(p.getUniqueId());
+                    isPermitted = perms.get(HomeSpawnPermissions.perm.reload) == 1;
                 } else {
-                    player.sendMessage(plugin.SecondaryColor
+                    isPermitted = true;
+                }
+                if (isPermitted) {
+                    this.plugin.HSConfig.reload(sender);
+                } else {
+                    sender.sendMessage(plugin.SecondaryColor
                             + "You Don't Have Permission To Do That");
                 }
             } else if (args[0].equalsIgnoreCase("help")) {
-                this.plugin.help(player);
-            }
-        } else if (args.length > 0) {
-            if (args[0].equalsIgnoreCase("update")) {
-                if (perms.get(HomeSpawnPermissions.perm.updateNotify) == 1) {
-                    if (plugin.lapisUpdater.checkUpdate()) {
-                        player.sendMessage(plugin.PrimaryColor + "Update found, Downloading it now\n it will be installed on next server restart");
-                        plugin.lapisUpdater.downloadUpdate();
-                    } else {
-                        player.sendMessage(plugin.PrimaryColor + "No updates found");
-                    }
-                } else {
-                    player.sendMessage(plugin.HSConfig.getColoredMessage("NoPerms"));
-                }
-            } else if (args[0].equalsIgnoreCase("player")) {
-                homeSpawnPlayer.homeSpawnPlayer(args, player);
+                this.plugin.help(sender);
             }
         } else {
-            player.sendMessage("That Is Not A Recognised Command, Use /homespawn help For " +
-                    "Commands");
+            if (args[0].equalsIgnoreCase("update")) {
+                boolean isPermitted;
+                if (sender instanceof Player) {
+                    Player p = (Player) sender;
+                    HashMap<HomeSpawnPermissions.perm, Integer> perms = plugin.HSPermissions.getPlayerPermissions(p.getUniqueId());
+                    isPermitted = perms.get(HomeSpawnPermissions.perm.updateNotify) == 1;
+                } else {
+                    isPermitted = true;
+                }
+                if (isPermitted) {
+                    if (plugin.lapisUpdater.checkUpdate()) {
+                        sender.sendMessage(plugin.PrimaryColor + "Update found, Downloading it now\n it will be installed on next server restart");
+                        plugin.lapisUpdater.downloadUpdate();
+                    } else {
+                        sender.sendMessage(plugin.PrimaryColor + "No updates found");
+                    }
+                } else {
+                    sender.sendMessage(plugin.HSConfig.getColoredMessage("NoPerms"));
+                }
+            } else if (args[0].equalsIgnoreCase("player")) {
+                homeSpawnPlayer.homeSpawnPlayer(args, sender);
+            }
         }
     }
 

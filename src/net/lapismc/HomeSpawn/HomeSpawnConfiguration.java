@@ -181,8 +181,7 @@ public class HomeSpawnConfiguration {
         return ChatColor.translateAlternateColorCodes('&', messages.getString(path).replace("&p", plugin.PrimaryColor).replace("&s", plugin.SecondaryColor));
     }
 
-    @SuppressWarnings("SameParameterValue")
-    String getMessage(String path) {
+    public String getMessage(String path) {
         return ChatColor.stripColor(getColoredMessage(path));
     }
 

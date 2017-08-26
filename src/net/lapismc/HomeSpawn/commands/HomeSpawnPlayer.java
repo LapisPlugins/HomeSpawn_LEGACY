@@ -22,6 +22,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.ocpsoft.prettytime.Duration;
@@ -46,12 +47,15 @@ class HomeSpawnPlayer {
         p.removeUnit(Millisecond.class);
     }
 
-    void homeSpawnPlayer(String[] args, Player player) {
-        HashMap<HomeSpawnPermissions.perm, Integer> perms = plugin.HSPermissions
-                .getPlayerPermissions(player.getUniqueId());
-        if (perms.get(HomeSpawnPermissions.perm.playerStats) != 1) {
-            player.sendMessage(plugin.HSConfig.getColoredMessage("NoPerms"));
-            return;
+    void homeSpawnPlayer(String[] args, CommandSender sender) {
+        HashMap<HomeSpawnPermissions.perm, Integer> perms;
+        if (sender instanceof Player) {
+            Player p = (Player) sender;
+            perms = plugin.HSPermissions.getPlayerPermissions(p.getUniqueId());
+            if (perms.get(HomeSpawnPermissions.perm.playerStats) != 1) {
+                p.sendMessage(plugin.HSConfig.getColoredMessage("NoPerms"));
+                return;
+            }
         }
         if (args.length == 2) {
             String name = args[1];
@@ -59,17 +63,17 @@ class HomeSpawnPlayer {
             OfflinePlayer op = Bukkit.getOfflinePlayer(name);
             perms = plugin.HSPermissions.getPlayerPermissions(op.getUniqueId());
             if (perms == null) {
-                player.sendMessage(plugin.HSConfig.getColoredMessage("NoPlayerData"));
+                sender.sendMessage(plugin.HSConfig.getColoredMessage("NoPlayerData"));
                 return;
             }
             YamlConfiguration homes = plugin.HSConfig.getPlayerData(op.getUniqueId());
             if (homes == null) {
-                player.sendMessage(plugin.HSConfig.getColoredMessage("NoPlayerData"));
+                sender.sendMessage(plugin.HSConfig.getColoredMessage("NoPlayerData"));
                 return;
             }
-            player.sendMessage(ChatColor.RED + "----- " + ChatColor.GOLD + "Stats for " + ChatColor.BLUE + name + ChatColor.RED + " -----");
+            sender.sendMessage(ChatColor.RED + "----- " + ChatColor.GOLD + "Stats for " + ChatColor.BLUE + name + ChatColor.RED + " -----");
             if (op.isOnline()) {
-                player.sendMessage(ChatColor.RED + "Players Permission: " + ChatColor.GOLD + plugin.HSPermissions.getPlayerPermission(op.getUniqueId()).getName());
+                sender.sendMessage(ChatColor.RED + "Players Permission: " + ChatColor.GOLD + plugin.HSPermissions.getPlayerPermission(op.getUniqueId()).getName());
                 String time;
                 if (!(homes.get("login") instanceof Long)) {
                     time = "Error!";
@@ -78,7 +82,7 @@ class HomeSpawnPlayer {
                     List<Duration> durationList = p.calculatePreciseDuration(date);
                     time = p.format(durationList);
                 }
-                player.sendMessage(ChatColor.RED + "Player " + ChatColor.BLUE + name + ChatColor.RED + " has been online since "
+                sender.sendMessage(ChatColor.RED + "Player " + ChatColor.BLUE + name + ChatColor.RED + " has been online since "
                         + ChatColor.GOLD + time);
             } else {
                 String time;
@@ -89,40 +93,45 @@ class HomeSpawnPlayer {
                     List<Duration> durationList = p.calculatePreciseDuration(date);
                     time = p.format(durationList);
                 }
-                player.sendMessage(ChatColor.RED + "Player " + ChatColor.BLUE + name + ChatColor.RED + " has been offline since "
+                sender.sendMessage(ChatColor.RED + "Player " + ChatColor.BLUE + name + ChatColor.RED + " has been offline since "
                         + ChatColor.GOLD + time);
             }
             List<String> list = homes.getStringList("Homes.list");
             String usedHomes = String.valueOf(homes.getStringList("Homes.list").size());
-            player.sendMessage(ChatColor.GOLD + usedHomes + ChatColor.RED + " out of " + ChatColor.GOLD + perms.get(HomeSpawnPermissions.perm.homes)
+            sender.sendMessage(ChatColor.GOLD + usedHomes + ChatColor.RED + " out of " + ChatColor.GOLD + perms.get(HomeSpawnPermissions.perm.homes)
                     + " homes used");
             if (!list.isEmpty()) {
-                player.sendMessage(ChatColor.RED + "The players home(s) are:");
+                sender.sendMessage(ChatColor.RED + "The players home(s) are:");
                 String list2 = list.toString();
                 String list3 = list2.replace("[", " ");
                 String StringList = list3.replace("]", " ");
-                player.sendMessage(ChatColor.GOLD + StringList);
+                sender.sendMessage(ChatColor.GOLD + StringList);
             }
         } else if (args.length == 3) {
+            if (!(sender instanceof Player)) {
+                sender.sendMessage(plugin.HSConfig.getMessage("Error.MustBePlayer"));
+                return;
+            }
+            Player p = (Player) sender;
             String name = args[1];
             //noinspection deprecation
             OfflinePlayer op = Bukkit.getOfflinePlayer(name);
             YamlConfiguration homes = plugin.HSConfig.getPlayerData(op.getUniqueId());
             if (homes == null) {
-                player.sendMessage(plugin.HSConfig.getColoredMessage("NoPlayerData"));
+                sender.sendMessage(plugin.HSConfig.getColoredMessage("NoPlayerData"));
                 return;
             }
-            teleportPlayer(player, args[2], homes);
+            teleportPlayer(p, args[2], homes);
         } else {
-            help(player);
+            help(sender);
         }
     }
 
-    private void help(Player player) {
-        player.sendMessage(ChatColor.RED + "--------" + ChatColor.GOLD + " Player Stats Help " + ChatColor.RED + "--------");
-        player.sendMessage(ChatColor.RED + "/homespawn player:" + ChatColor.GOLD + " Displays this help");
-        player.sendMessage(ChatColor.RED + "/homespawn player (name):" + ChatColor.GOLD + " Shows the stats of the player given");
-        player.sendMessage(ChatColor.RED + "/homespawn player (name) (home name):" + ChatColor.GOLD + " Teleports you to that players" +
+    private void help(CommandSender sender) {
+        sender.sendMessage(ChatColor.RED + "--------" + ChatColor.GOLD + " Player Stats Help " + ChatColor.RED + "--------");
+        sender.sendMessage(ChatColor.RED + "/homespawn player:" + ChatColor.GOLD + " Displays this help");
+        sender.sendMessage(ChatColor.RED + "/homespawn player (name):" + ChatColor.GOLD + " Shows the stats of the player given");
+        sender.sendMessage(ChatColor.RED + "/homespawn player (name) (home name):" + ChatColor.GOLD + " Teleports you to that players" +
                 " home of that name");
     }
 

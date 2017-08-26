@@ -20,6 +20,7 @@ import net.lapismc.HomeSpawn.HomeSpawn;
 import net.lapismc.HomeSpawn.HomeSpawnPermissions;
 import net.lapismc.HomeSpawn.api.events.HomeSetEvent;
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
@@ -34,54 +35,59 @@ public class HomeSpawnSetHome {
         this.plugin = p;
     }
 
-    public void setHome(String[] args, Player player) {
-        HashMap<HomeSpawnPermissions.perm, Integer> perms = plugin.HSPermissions.getPlayerPermissions(player.getUniqueId());
-        YamlConfiguration getHomes = this.plugin.HSConfig.getPlayerData(player.getUniqueId());
+    public void setHome(String[] args, CommandSender sender) {
+        if (!(sender instanceof Player)) {
+            sender.sendMessage(plugin.HSConfig.getMessage("Error.MustBePlayer"));
+            return;
+        }
+        Player p = (Player) sender;
+        HashMap<HomeSpawnPermissions.perm, Integer> perms = plugin.HSPermissions.getPlayerPermissions(p.getUniqueId());
+        YamlConfiguration getHomes = this.plugin.HSConfig.getPlayerData(p.getUniqueId());
         List<String> list = getHomes.getStringList("Homes.list");
         if (list.size() >= perms.get(HomeSpawnPermissions.perm.homes)) {
-            player.sendMessage(plugin.HSConfig.getColoredMessage("Home.LimitReached"));
+            p.sendMessage(plugin.HSConfig.getColoredMessage("Home.LimitReached"));
             return;
         }
 
         if (args.length == 0) {
-            HomeSetEvent HCE = new HomeSetEvent(player, player.getLocation(), "Home");
+            HomeSetEvent HCE = new HomeSetEvent(p, p.getLocation(), "Home");
             Bukkit.getPluginManager().callEvent(HCE);
             if (HCE.isCancelled()) {
-                player.sendMessage("Your home has not been set because " + HCE.getReason());
+                p.sendMessage("Your home has not been set because " + HCE.getReason());
                 return;
             }
             if (!list.contains("Home")) {
                 list.add("Home");
                 getHomes.set("Homes.list", list);
             }
-            getHomes.set("Homes.Home", player.getLocation());
-            player.sendMessage(plugin.HSConfig.getColoredMessage("Home.HomeSet"));
+            getHomes.set("Homes.Home", p.getLocation());
+            p.sendMessage(plugin.HSConfig.getColoredMessage("Home.HomeSet"));
         } else if (args.length == 1) {
             if (perms.get(HomeSpawnPermissions.perm.customHomes) == 1) {
                 String home = args[0];
                 if (home.equalsIgnoreCase("Home")) {
-                    player.sendMessage(plugin.SecondaryColor + "You Cannot Use The HomeSpawnHome Name \"Home\", Please Choose Another!");
+                    p.sendMessage(plugin.SecondaryColor + "You Cannot Use The HomeSpawnHome Name \"Home\", Please Choose Another!");
                     return;
                 }
-                HomeSetEvent HCE = new HomeSetEvent(player, player.getLocation(), home);
+                HomeSetEvent HCE = new HomeSetEvent(p, p.getLocation(), home);
                 Bukkit.getPluginManager().callEvent(HCE);
                 if (HCE.isCancelled()) {
-                    player.sendMessage("Your home has not been set because " + HCE.getReason());
+                    p.sendMessage("Your home has not been set because " + HCE.getReason());
                     return;
                 }
                 if (!list.contains(home)) {
                     list.add(home);
                     getHomes.set("Homes.list", list);
                 }
-                getHomes.set("Homes." + home, player.getLocation());
-                player.sendMessage(plugin.HSConfig.getColoredMessage("Home.HomeSet"));
+                getHomes.set("Homes." + home, p.getLocation());
+                p.sendMessage(plugin.HSConfig.getColoredMessage("Home.HomeSet"));
             } else {
-                player.sendMessage(plugin.HSConfig.getColoredMessage("NoPerms"));
+                p.sendMessage(plugin.HSConfig.getColoredMessage("NoPerms"));
             }
         } else {
-            player.sendMessage(plugin.HSConfig.getColoredMessage("Error.Args+"));
+            p.sendMessage(plugin.HSConfig.getColoredMessage("Error.Args+"));
         }
-        this.plugin.HSConfig.savePlayerData(player.getUniqueId(), getHomes);
+        this.plugin.HSConfig.savePlayerData(p.getUniqueId(), getHomes);
     }
 
 }

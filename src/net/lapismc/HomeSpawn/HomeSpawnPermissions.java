@@ -66,7 +66,7 @@ public class HomeSpawnPermissions {
                     }
                 }
                 if (p == null) {
-                    return null;
+                    return Bukkit.getPluginManager().getPermission("homespawn.null");
                 } else {
                     PlayerPermission.put(uuid, p);
                     homes.set("Permission", p.getName());
@@ -80,7 +80,7 @@ public class HomeSpawnPermissions {
         } else {
             String permName = homes.getString("Permission");
             if (permName == null || Bukkit.getPluginManager().getPermission(permName) == null) {
-                return null;
+                return Bukkit.getPluginManager().getPermission("homespawn.null");
             } else {
                 return Bukkit.getPluginManager().getPermission(permName);
             }

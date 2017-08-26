@@ -17,40 +17,86 @@
 package net.lapismc.HomeSpawn.commands;
 
 import net.lapismc.HomeSpawn.HomeSpawn;
-import net.lapismc.HomeSpawn.HomeSpawnCommand;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.DyeColor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.material.Wool;
 
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class HomeSpawnHomesList {
 
     final public HashMap<Player, Inventory> HomesListInvs = new HashMap<>();
     private HomeSpawn plugin;
-    private HomeSpawnCommand hsc;
 
-    public HomeSpawnHomesList(HomeSpawn p, HomeSpawnCommand hsc) {
+    public HomeSpawnHomesList(HomeSpawn p) {
         this.plugin = p;
-        this.hsc = hsc;
     }
 
-    public void homesList(String[] args, Player player) {
+    public void homesList(CommandSender sender) {
+        if (!(sender instanceof Player)) {
+            sender.sendMessage(plugin.HSConfig.getMessage("Error.MustBePlayer"));
+            return;
+        }
+        Player p = (Player) sender;
         if (this.plugin.getConfig().getBoolean("InventoryMenu")) {
-            hsc.showMenu(player);
+            showMenu(p);
         } else {
-            YamlConfiguration getHomes = this.plugin.HSConfig.getPlayerData(player.getUniqueId());
+            YamlConfiguration getHomes = this.plugin.HSConfig.getPlayerData(p.getUniqueId());
             List<String> list = getHomes.getStringList("Homes.list");
             if (!list.isEmpty()) {
                 String list2 = list.toString();
                 String list3 = list2.replace("[", " ");
                 String StringList = list3.replace("]", " ");
-                player.sendMessage(plugin.HSConfig.getColoredMessage("Home.CurrentHomes"));
-                player.sendMessage(plugin.SecondaryColor + StringList);
+                p.sendMessage(plugin.HSConfig.getColoredMessage("Home.CurrentHomes"));
+                p.sendMessage(plugin.SecondaryColor + StringList);
             } else {
-                player.sendMessage(plugin.HSConfig.getColoredMessage("Home.NoHomeSet"));
+                p.sendMessage(plugin.HSConfig.getColoredMessage("Home.NoHomeSet"));
             }
         }
+    }
+
+    private void showMenu(Player p) {
+        YamlConfiguration getHomes = this.plugin.HSConfig.getPlayerData(p.getUniqueId());
+        List<String> homes = getHomes.getStringList("Homes.list");
+        if (homes.isEmpty()) {
+            p.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.HSConfig.getColoredMessage("Home.NoHomeSet")));
+            return;
+        }
+        ArrayList<DyeColor> dc = new ArrayList<>();
+        dc.add(DyeColor.BLACK);
+        dc.add(DyeColor.BLUE);
+        dc.add(DyeColor.GRAY);
+        dc.add(DyeColor.GREEN);
+        dc.add(DyeColor.MAGENTA);
+        dc.add(DyeColor.ORANGE);
+        Random r = new Random(System.currentTimeMillis());
+        int slots = homes.size() % 9 == 0 ? homes.size() / 9 : homes.size() / 9 + 1;
+        if (HomesListInvs.containsKey(p)) {
+            if (!(HomesListInvs.get(p).getSize() == slots * 9)) {
+                Inventory inv = Bukkit.createInventory(p, 9 * slots, ChatColor.GOLD + p.getName() + "'s Homes List");
+                HomesListInvs.put(p, inv);
+            }
+        } else {
+            Inventory inv = Bukkit.createInventory(p, 9 * slots, ChatColor.GOLD + p.getName() + "'s Homes List");
+            HomesListInvs.put(p, inv);
+        }
+        for (String home : homes) {
+            ItemStack i = new Wool(dc.get(r.nextInt(5))).toItemStack(1);
+            ItemMeta im = i.getItemMeta();
+            im.setDisplayName(ChatColor.GOLD + home);
+            im.setLore(Arrays.asList(ChatColor.GOLD + "Click To Teleport To",
+                    ChatColor.RED + home));
+            i.setItemMeta(im);
+            HomesListInvs.get(p).addItem(i);
+        }
+        p.openInventory(HomesListInvs.get(p));
     }
 }

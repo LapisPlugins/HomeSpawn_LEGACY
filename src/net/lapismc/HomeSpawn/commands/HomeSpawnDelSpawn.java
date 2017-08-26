@@ -18,6 +18,7 @@ package net.lapismc.HomeSpawn.commands;
 
 import net.lapismc.HomeSpawn.HomeSpawn;
 import net.lapismc.HomeSpawn.HomeSpawnPermissions;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.io.IOException;
@@ -31,15 +32,22 @@ public class HomeSpawnDelSpawn {
         this.plugin = p;
     }
 
-    public void delSpawn(String[] args, Player player) {
-        HashMap<HomeSpawnPermissions.perm, Integer> perms = plugin.HSPermissions.getPlayerPermissions(player.getUniqueId());
-        if (perms.get(HomeSpawnPermissions.perm.setSpawn) == 1) {
+    public void delSpawn(String[] args, CommandSender sender) {
+        boolean permitted;
+        if (sender instanceof Player) {
+            Player p = (Player) sender;
+            HashMap<HomeSpawnPermissions.perm, Integer> perms = plugin.HSPermissions.getPlayerPermissions(p.getUniqueId());
+            permitted = perms.get(HomeSpawnPermissions.perm.setSpawn) == 1;
+        } else {
+            permitted = true;
+        }
+        if (permitted) {
             if (args.length == 0) {
                 if (!plugin.HSConfig.spawn.contains("spawn")) {
-                    player.sendMessage(plugin.HSConfig.getColoredMessage("Spawn.NotSet"));
+                    sender.sendMessage(plugin.HSConfig.getColoredMessage("Spawn.NotSet"));
                 } else {
                     plugin.HSConfig.spawn.set("spawn", null);
-                    player.sendMessage(plugin.HSConfig.getColoredMessage("Spawn.Removed"));
+                    sender.sendMessage(plugin.HSConfig.getColoredMessage("Spawn.Removed"));
                     try {
                         plugin.HSConfig.spawn.save(plugin.HSConfig.spawnFile);
                         plugin.HSConfig.reload("silent");
@@ -49,10 +57,10 @@ public class HomeSpawnDelSpawn {
                 }
             } else if (args[0].equalsIgnoreCase("new")) {
                 if (!plugin.HSConfig.spawn.contains("spawnnew")) {
-                    player.sendMessage(plugin.HSConfig.getColoredMessage("Spawn.NotSet"));
+                    sender.sendMessage(plugin.HSConfig.getColoredMessage("Spawn.NotSet"));
                 } else {
                     plugin.HSConfig.spawn.set("spawnnew", null);
-                    player.sendMessage(plugin.HSConfig.getColoredMessage("Spawn.Removed"));
+                    sender.sendMessage(plugin.HSConfig.getColoredMessage("Spawn.Removed"));
                     try {
                         plugin.HSConfig.spawn.save(plugin.HSConfig.spawnFile);
                         plugin.HSConfig.reload("silent");
@@ -62,7 +70,7 @@ public class HomeSpawnDelSpawn {
                 }
             }
         } else {
-            player.sendMessage(plugin.HSConfig.getColoredMessage("NoPerms"));
+            sender.sendMessage(plugin.HSConfig.getColoredMessage("NoPerms"));
         }
     }
 

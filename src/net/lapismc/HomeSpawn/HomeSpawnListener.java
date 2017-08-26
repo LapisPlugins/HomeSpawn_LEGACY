@@ -196,18 +196,4 @@ class HomeSpawnListener implements Listener {
         }
     }
 
-    private void TeleportPlayer(Player p, Location l) {
-        HashMap<HomeSpawnPermissions.perm, Integer> perms = plugin.HSPermissions.getPlayerPermissions(p.getUniqueId());
-        if (perms.get(HomeSpawnPermissions.perm.TeleportDelay) == 0) {
-            p.teleport(l);
-            p.sendMessage(plugin.HSConfig.getColoredMessage("Home.SentHome"));
-        } else {
-            String waitraw = plugin.HSConfig.getColoredMessage("Wait");
-            String Wait = waitraw.replace("{time}", perms.get(HomeSpawnPermissions.perm.TeleportDelay).toString());
-            p.sendMessage(Wait);
-            plugin.HomeSpawnLocations.put(p, l);
-            plugin.HomeSpawnTimeLeft.put(p, perms.get(HomeSpawnPermissions.perm.TeleportDelay));
-        }
-
-    }
 }

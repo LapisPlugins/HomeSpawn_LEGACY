@@ -17,6 +17,7 @@
 package net.lapismc.HomeSpawn.commands;
 
 import org.bukkit.Location;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
@@ -30,7 +31,12 @@ public class HomeSpawnRenameHome {
         plugin = p;
     }
 
-    public void renameHome(String[] args, Player p) {
+    public void renameHome(String[] args, CommandSender sender) {
+        if (!(sender instanceof Player)) {
+            sender.sendMessage(plugin.HSConfig.getMessage("Error.MustBePlayer"));
+            return;
+        }
+        Player p = (Player) sender;
         if (args.length == 2) {
             String oldHome = args[0];
             String newHome = args[1];

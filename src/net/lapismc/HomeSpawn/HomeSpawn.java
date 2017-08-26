@@ -35,7 +35,7 @@ import java.util.logging.Logger;
 
 public class HomeSpawn extends JavaPlugin {
 
-    public final Logger logger = getLogger();
+    final Logger logger = getLogger();
     final HashMap<Player, Location> HomeSpawnLocations = new HashMap<>();
     final HashMap<Player, Integer> HomeSpawnTimeLeft = new HashMap<>();
     public LapisUpdater lapisUpdater;
@@ -51,7 +51,7 @@ public class HomeSpawn extends JavaPlugin {
         Enable();
         Update();
         HSPermissions = new HomeSpawnPermissions(this);
-        Commands();
+        new HomeSpawnCommand(this);
         CommandDelay();
         Metrics();
     }
@@ -138,59 +138,69 @@ public class HomeSpawn extends JavaPlugin {
         }
     }
 
-    public void help(Player player) {
-        if (player != null) {
-            HashMap<HomeSpawnPermissions.perm, Integer> perms = HSPermissions.getPlayerPermissions(player.getUniqueId());
-            player.sendMessage(ChatColor.GOLD + "---------------"
+    public void help(CommandSender sender) {
+        if (sender != null) {
+            HashMap<HomeSpawnPermissions.perm, Integer> perms = HSPermissions.getPlayerPermissions(UUID.randomUUID());
+            boolean isPlayer = false;
+            if (sender instanceof Player) {
+                Player p = (Player) sender;
+                perms = HSPermissions.getPlayerPermissions(p.getUniqueId());
+                isPlayer = true;
+            }
+            sender.sendMessage(ChatColor.GOLD + "---------------"
                     + ChatColor.RED + "Homespawn" + ChatColor.GOLD
                     + "---------------");
-            if (perms.get(HomeSpawnPermissions.perm.customHomes) == 1 &&
+            if (isPlayer && perms.get(HomeSpawnPermissions.perm.customHomes) == 1 &&
                     perms.get(HomeSpawnPermissions.perm.homes) > 0) {
-                player.sendMessage(ChatColor.RED + "/home [name]:" + ChatColor.GOLD
-                        + " Sends You To The HomeSpawnHome Specified");
-                player.sendMessage(ChatColor.RED + "/sethome [name]:"
+                sender.sendMessage(ChatColor.RED + "/home [name]:" + ChatColor.GOLD
+                        + " Sends You To The Home Specified");
+                sender.sendMessage(ChatColor.RED + "/sethome [name]:"
                         + ChatColor.GOLD
-                        + " Sets Your HomeSpawnHome At Your Current Location");
-                player.sendMessage(ChatColor.RED + "/delhome [name]:"
-                        + ChatColor.GOLD + " Removes The Specified HomeSpawnHome");
-            } else if (perms.get(HomeSpawnPermissions.perm.homes) > 0) {
-                player.sendMessage(ChatColor.RED + "/home:" + ChatColor.GOLD
-                        + " Sends You To Your HomeSpawnHome");
-                player.sendMessage(ChatColor.RED + "/sethome:"
+                        + " Sets Your Home At Your Current Location");
+                sender.sendMessage(ChatColor.RED + "/delhome [name]:"
+                        + ChatColor.GOLD + " Removes The Specified Home");
+            } else if (isPlayer && perms.get(HomeSpawnPermissions.perm.homes) > 0) {
+                sender.sendMessage(ChatColor.RED + "/home:" + ChatColor.GOLD
+                        + " Sends You To Your Home");
+                sender.sendMessage(ChatColor.RED + "/sethome:"
                         + ChatColor.GOLD
-                        + " Sets Your HomeSpawnHome At Your Current Location");
-                player.sendMessage(ChatColor.RED + "/delhome:"
-                        + ChatColor.GOLD + " Removes Your HomeSpawnHome");
+                        + " Sets YourHome At Your Current Location");
+                sender.sendMessage(ChatColor.RED + "/delhome:"
+                        + ChatColor.GOLD + " Removes Your Home");
             }
-            if (perms.get(HomeSpawnPermissions.perm.spawn) == 1) {
-                player.sendMessage(ChatColor.RED + "/spawn:" + ChatColor.GOLD
-                        + " Sends You To HomeSpawnSpawn");
+            if (isPlayer && perms.get(HomeSpawnPermissions.perm.spawn) == 1) {
+                sender.sendMessage(ChatColor.RED + "/spawn:" + ChatColor.GOLD
+                        + " Sends You To Spawn");
             }
             if (!getServer().getOnlineMode()) {
-                player.sendMessage(ChatColor.RED + "/homepassword help:"
+                sender.sendMessage(ChatColor.RED + "/homepassword help:"
                         + ChatColor.GOLD
-                        + " Displays The HomeSpawnHome Transfer Commands");
+                        + " Displays The Home Transfer Commands");
             }
-            if (perms.get(HomeSpawnPermissions.perm.setSpawn) == 1) {
-                player.sendMessage(ChatColor.RED + "/setspawn:"
-                        + ChatColor.GOLD + " Sets The Server HomeSpawnSpawn");
-                player.sendMessage(ChatColor.RED + "/setspawn new:"
+            if (isPlayer && perms.get(HomeSpawnPermissions.perm.setSpawn) == 1) {
+                sender.sendMessage(ChatColor.RED + "/setspawn:"
+                        + ChatColor.GOLD + " Sets The Server Spawn");
+                sender.sendMessage(ChatColor.RED + "/setspawn new:"
                         + ChatColor.GOLD
-                        + " All New Players Will Be Sent To This HomeSpawnSpawn");
-                player.sendMessage(ChatColor.RED + "/delspawn:"
-                        + ChatColor.GOLD + " Removes The Server HomeSpawnSpawn");
+                        + " All New Players Will Be Sent To This Spawn");
+                sender.sendMessage(ChatColor.RED + "/delspawn:"
+                        + ChatColor.GOLD + " Removes The Server Spawn");
             }
-            player.sendMessage(ChatColor.RED + "/homespawn:"
+            if (!isPlayer) {
+                sender.sendMessage(ChatColor.RED + "/delspawn:"
+                        + ChatColor.GOLD + " Removes The Server Spawn");
+            }
+            sender.sendMessage(ChatColor.RED + "/homespawn:"
                     + ChatColor.GOLD + " Displays Plugin Information");
-            if (perms.get(HomeSpawnPermissions.perm.reload).equals(1)) {
-                player.sendMessage(ChatColor.RED + "/homespawn reload:"
-                        + ChatColor.GOLD + " Reloads The Plugin HomeSpawnConfigs");
+            if (!isPlayer || perms.get(HomeSpawnPermissions.perm.reload).equals(1)) {
+                sender.sendMessage(ChatColor.RED + "/homespawn reload:"
+                        + ChatColor.GOLD + " Reloads The Plugin Configs");
             }
-            if (perms.get(HomeSpawnPermissions.perm.updateNotify).equals(1)) {
-                player.sendMessage(ChatColor.RED + "/homespawn update:"
+            if (!isPlayer || perms.get(HomeSpawnPermissions.perm.updateNotify).equals(1)) {
+                sender.sendMessage(ChatColor.RED + "/homespawn update:"
                         + ChatColor.GOLD + " Installs updates if available");
             }
-            player.sendMessage(ChatColor.GOLD
+            sender.sendMessage(ChatColor.GOLD
                     + "-----------------------------------------");
         }
     }
@@ -208,6 +218,7 @@ public class HomeSpawn extends JavaPlugin {
         return null;
     }
 
+    @SuppressWarnings("deprecation")
     private void CommandDelay() {
         BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
         scheduler.scheduleSyncRepeatingTask(this, () -> {
@@ -272,10 +283,5 @@ public class HomeSpawn extends JavaPlugin {
         if (getConfig().getBoolean("Debug")) {
             logger.info("Homespawn Debug: " + s);
         }
-    }
-
-    private void Commands() {
-        HomeSpawnComponents HSComponents = new HomeSpawnComponents();
-        HSComponents.init(this);
     }
 }
