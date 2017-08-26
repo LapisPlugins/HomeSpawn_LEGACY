@@ -181,6 +181,7 @@ public class HomeSpawnConfiguration {
         return ChatColor.translateAlternateColorCodes('&', messages.getString(path).replace("&p", plugin.PrimaryColor).replace("&s", plugin.SecondaryColor));
     }
 
+    @SuppressWarnings("SameParameterValue")
     String getMessage(String path) {
         return ChatColor.stripColor(getColoredMessage(path));
     }
@@ -199,8 +200,8 @@ public class HomeSpawnConfiguration {
         createMessages();
         createPasswords();
         configVersion();
-        plugin.PrimaryColor = ChatColor.translateAlternateColorCodes('&', messages.getString("PrimaryColor"));
-        plugin.SecondaryColor = ChatColor.translateAlternateColorCodes('&', messages.getString("SecondaryColor"));
+        plugin.PrimaryColor = ChatColor.translateAlternateColorCodes('&', messages.getString("PrimaryColor", ChatColor.GOLD.toString()));
+        plugin.SecondaryColor = ChatColor.translateAlternateColorCodes('&', messages.getString("SecondaryColor", ChatColor.RED.toString()));
     }
 
     public void reload(Object obj) {

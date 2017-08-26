@@ -2,6 +2,7 @@ name: HomeSpawn
 main: net.lapismc.HomeSpawn.HomeSpawn
 version: ${version}
 loadbefore: [Essentials]
+softdepend: [Multiverse-Core]
 description: >
              The Basic Home And Spawn Plugin
 commands:
