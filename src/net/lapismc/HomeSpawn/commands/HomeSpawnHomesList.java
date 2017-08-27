@@ -17,6 +17,8 @@
 package net.lapismc.HomeSpawn.commands;
 
 import net.lapismc.HomeSpawn.HomeSpawn;
+import net.lapismc.HomeSpawn.playerdata.Home;
+import net.lapismc.HomeSpawn.playerdata.HomeSpawnPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
@@ -48,14 +50,11 @@ public class HomeSpawnHomesList {
         if (this.plugin.getConfig().getBoolean("InventoryMenu")) {
             showMenu(p);
         } else {
-            YamlConfiguration getHomes = this.plugin.HSConfig.getPlayerData(p.getUniqueId());
-            List<String> list = getHomes.getStringList("Homes.list");
+            HomeSpawnPlayer HSPlayer = new HomeSpawnPlayer(plugin, p.getUniqueId());
+            List<Home> list = HSPlayer.getHomes();
             if (!list.isEmpty()) {
-                String list2 = list.toString();
-                String list3 = list2.replace("[", " ");
-                String StringList = list3.replace("]", " ");
                 p.sendMessage(plugin.HSConfig.getColoredMessage("Home.CurrentHomes"));
-                p.sendMessage(plugin.SecondaryColor + StringList);
+                p.sendMessage(plugin.SecondaryColor + HSPlayer.getHomesList());
             } else {
                 p.sendMessage(plugin.HSConfig.getColoredMessage("Home.NoHomeSet"));
             }

@@ -130,6 +130,7 @@ class HomeSpawnListener implements Listener {
                     if (arrow.getShooter() instanceof Player) {
                         plugin.HomeSpawnLocations.put(p, null);
                         p.sendMessage(plugin.HSConfig.getColoredMessage("TeleportCancelPvP"));
+                        e.setCancelled(true);
                     } else if (arrow.getShooter() instanceof Skeleton) {
                         Players.add(p);
                         e.setCancelled(true);
