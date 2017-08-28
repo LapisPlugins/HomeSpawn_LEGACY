@@ -42,16 +42,16 @@ public class HomeSpawnCommand implements CommandExecutor {
 
     HomeSpawnCommand(HomeSpawn plugin) {
         this.plugin = plugin;
-        plugin.getCommand("home").setExecutor(plugin.HSCommand);
-        plugin.getCommand("sethome").setExecutor(plugin.HSCommand);
-        plugin.getCommand("renamehome").setExecutor(plugin.HSCommand);
-        plugin.getCommand("delhome").setExecutor(plugin.HSCommand);
-        plugin.getCommand("homeslist").setExecutor(plugin.HSCommand);
-        plugin.getCommand("spawn").setExecutor(plugin.HSCommand);
-        plugin.getCommand("setspawn").setExecutor(plugin.HSCommand);
-        plugin.getCommand("delspawn").setExecutor(plugin.HSCommand);
-        plugin.getCommand("homepassword").setExecutor(plugin.HSCommand);
-        plugin.getCommand("homespawn").setExecutor(plugin.HSCommand);
+        plugin.getCommand("home").setExecutor(this);
+        plugin.getCommand("sethome").setExecutor(this);
+        plugin.getCommand("renamehome").setExecutor(this);
+        plugin.getCommand("delhome").setExecutor(this);
+        plugin.getCommand("homeslist").setExecutor(this);
+        plugin.getCommand("spawn").setExecutor(this);
+        plugin.getCommand("setspawn").setExecutor(this);
+        plugin.getCommand("delspawn").setExecutor(this);
+        plugin.getCommand("homepassword").setExecutor(this);
+        plugin.getCommand("homespawn").setExecutor(this);
         this.delHome = new HomeSpawnDelHome(plugin);
         this.delSpawn = new HomeSpawnDelSpawn(plugin);
         this.home = new HomeSpawnHome(plugin);

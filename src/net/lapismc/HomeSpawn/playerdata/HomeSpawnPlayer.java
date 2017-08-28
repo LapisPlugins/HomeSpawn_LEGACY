@@ -62,12 +62,10 @@ public class HomeSpawnPlayer {
         homes.add(home);
     }
 
-    public boolean removeHome(Home home) {
+    public void removeHome(Home home) {
         if (homes.contains(home)) {
             homes.remove(home);
-            return true;
         }
-        return false;
     }
 
     public int getPermissionValue(HomeSpawnPermissions.perm perm) {
@@ -92,17 +90,19 @@ public class HomeSpawnPlayer {
 
     private void loadHomes() {
         getConfig();
-        List<String> homesList = yaml.getStringList("Homes.list");
-        ConfigurationSection cs = yaml.getConfigurationSection("Homes");
-        for (String key : cs.getKeys(false)) {
-            if (!key.endsWith("list")) {
-                String name = key.replace("Homes.", "");
-                if (homesList.contains(name)) {
-                    Location loc = (Location) yaml.get(key);
-                    Home h = new Home(name, loc, op);
-                    addHome(h);
-                } else {
-                    yaml.set(key, null);
+        if (yaml.contains("Homes.list")) {
+            List<String> homesList = yaml.getStringList("Homes.list");
+            ConfigurationSection cs = yaml.getConfigurationSection("Homes");
+            for (String key : cs.getKeys(false)) {
+                if (!key.endsWith("list")) {
+                    String name = key.replace("Homes.", "");
+                    if (homesList.contains(name)) {
+                        Location loc = (Location) yaml.get("Homes." + key);
+                        Home h = new Home(name, loc, op);
+                        addHome(h);
+                    } else {
+                        yaml.set(key, null);
+                    }
                 }
             }
         }

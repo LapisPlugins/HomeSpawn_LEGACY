@@ -41,9 +41,9 @@ public class HomeSpawn extends JavaPlugin {
     public LapisUpdater lapisUpdater;
     public HomeSpawnPermissions HSPermissions;
     public HomeSpawnConfiguration HSConfig;
+    HomeSpawnCommand HSCommand;
     public String PrimaryColor = ChatColor.GOLD.toString();
     public String SecondaryColor = ChatColor.RED.toString();
-    HomeSpawnCommand HSCommand;
 
     @Override
     public void onEnable() {
@@ -51,7 +51,7 @@ public class HomeSpawn extends JavaPlugin {
         Enable();
         Update();
         HSPermissions = new HomeSpawnPermissions(this);
-        new HomeSpawnCommand(this);
+        HSCommand = new HomeSpawnCommand(this);
         CommandDelay();
         Metrics();
     }

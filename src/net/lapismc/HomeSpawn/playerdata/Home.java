@@ -17,14 +17,14 @@ public class Home {
 
     public Home(String name, Location loc, OfflinePlayer owner) {
         this.name = name;
-        location = loc;
+        this.location = loc;
         this.owner = owner;
     }
 
     public Home(String name, Location loc, UUID ownersUuid) {
         this.name = name;
-        location = loc;
-        owner = Bukkit.getOfflinePlayer(ownersUuid);
+        this.location = loc;
+        this.owner = Bukkit.getOfflinePlayer(ownersUuid);
     }
 
     public void teleportPlayer(Player p) {

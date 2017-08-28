@@ -18,13 +18,15 @@ package net.lapismc.HomeSpawn.commands;
 
 import net.lapismc.HomeSpawn.HomeSpawn;
 import net.lapismc.HomeSpawn.HomeSpawnPermissions;
+import net.lapismc.HomeSpawn.api.events.HomeMoveEvent;
 import net.lapismc.HomeSpawn.api.events.HomeSetEvent;
+import net.lapismc.HomeSpawn.playerdata.Home;
+import net.lapismc.HomeSpawn.playerdata.HomeSpawnPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
 import java.util.List;
 
 public class HomeSpawnSetHome {
@@ -41,45 +43,71 @@ public class HomeSpawnSetHome {
             return;
         }
         Player p = (Player) sender;
-        HashMap<HomeSpawnPermissions.perm, Integer> perms = plugin.HSPermissions.getPlayerPermissions(p.getUniqueId());
-        YamlConfiguration getHomes = this.plugin.HSConfig.getPlayerData(p.getUniqueId());
+        HomeSpawnPlayer HSPlayer = new HomeSpawnPlayer(plugin, p.getUniqueId());
+        YamlConfiguration getHomes = HSPlayer.getConfig();
         List<String> list = getHomes.getStringList("Homes.list");
-        if (list.size() >= perms.get(HomeSpawnPermissions.perm.homes)) {
+        if (list.size() >= HSPlayer.getPermissionValue(HomeSpawnPermissions.perm.homes)) {
             p.sendMessage(plugin.HSConfig.getColoredMessage("Home.LimitReached"));
             return;
         }
 
         if (args.length == 0) {
-            HomeSetEvent HCE = new HomeSetEvent(p, p.getLocation(), "Home");
-            Bukkit.getPluginManager().callEvent(HCE);
-            if (HCE.isCancelled()) {
-                p.sendMessage("Your home has not been set because " + HCE.getReason());
-                return;
+            Home home = new Home("Home", p.getLocation(), p.getUniqueId());
+            if (!list.contains("Home")) {
+                HomeSetEvent HCE = new HomeSetEvent(p, home);
+                Bukkit.getPluginManager().callEvent(HCE);
+                if (HCE.isCancelled()) {
+                    p.sendMessage("Your home has not been set because " + HCE.getReason());
+                    return;
+                }
+            } else {
+                Home oldHome = HSPlayer.getHome("Home");
+                HomeMoveEvent HCE = new HomeMoveEvent(p, oldHome, home);
+                Bukkit.getPluginManager().callEvent(HCE);
+                if (HCE.isCancelled()) {
+                    p.sendMessage("Your home has moved been set because " + HCE.getReason());
+                    return;
+                }
+                HSPlayer.removeHome(oldHome);
             }
             if (!list.contains("Home")) {
                 list.add("Home");
                 getHomes.set("Homes.list", list);
             }
             getHomes.set("Homes.Home", p.getLocation());
+            HSPlayer.addHome(home);
             p.sendMessage(plugin.HSConfig.getColoredMessage("Home.HomeSet"));
         } else if (args.length == 1) {
-            if (perms.get(HomeSpawnPermissions.perm.customHomes) == 1) {
-                String home = args[0];
-                if (home.equalsIgnoreCase("Home")) {
+            if (HSPlayer.isPermitted(HomeSpawnPermissions.perm.customHomes)) {
+                String homeName = args[0];
+                if (homeName.equalsIgnoreCase("Home")) {
                     p.sendMessage(plugin.SecondaryColor + "You Cannot Use The HomeSpawnHome Name \"Home\", Please Choose Another!");
                     return;
                 }
-                HomeSetEvent HCE = new HomeSetEvent(p, p.getLocation(), home);
-                Bukkit.getPluginManager().callEvent(HCE);
-                if (HCE.isCancelled()) {
-                    p.sendMessage("Your home has not been set because " + HCE.getReason());
-                    return;
+                Home home = new Home(homeName, p.getLocation(), p.getUniqueId());
+                if (!list.contains(homeName)) {
+                    HomeSetEvent HCE = new HomeSetEvent(p, home);
+                    Bukkit.getPluginManager().callEvent(HCE);
+                    if (HCE.isCancelled()) {
+                        p.sendMessage("Your home has not been set because " + HCE.getReason());
+                        return;
+                    }
+                } else {
+                    Home oldHome = HSPlayer.getHome(homeName);
+                    HomeMoveEvent HCE = new HomeMoveEvent(p, oldHome, home);
+                    Bukkit.getPluginManager().callEvent(HCE);
+                    if (HCE.isCancelled()) {
+                        p.sendMessage("Your home has not been moved been because " + HCE.getReason());
+                        return;
+                    }
+                    HSPlayer.removeHome(oldHome);
                 }
-                if (!list.contains(home)) {
-                    list.add(home);
+                if (!list.contains(homeName)) {
+                    list.add(homeName);
                     getHomes.set("Homes.list", list);
                 }
-                getHomes.set("Homes." + home, p.getLocation());
+                getHomes.set("Homes." + homeName, p.getLocation());
+                HSPlayer.addHome(home);
                 p.sendMessage(plugin.HSConfig.getColoredMessage("Home.HomeSet"));
             } else {
                 p.sendMessage(plugin.HSConfig.getColoredMessage("NoPerms"));
