@@ -17,12 +17,11 @@
 package net.lapismc.HomeSpawn.commands;
 
 import net.lapismc.HomeSpawn.HomeSpawn;
-import net.lapismc.HomeSpawn.HomeSpawnCommand;
 import net.lapismc.HomeSpawn.api.events.HomeTeleportEvent;
+import net.lapismc.HomeSpawn.playerdata.Home;
+import net.lapismc.HomeSpawn.playerdata.HomeSpawnPlayer;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -30,11 +29,9 @@ import java.util.List;
 public class HomeSpawnHome {
 
     private HomeSpawn plugin;
-    private HomeSpawnCommand hsc;
 
-    public HomeSpawnHome(HomeSpawn p, HomeSpawnCommand hsc) {
+    public HomeSpawnHome(HomeSpawn p) {
         this.plugin = p;
-        this.hsc = hsc;
     }
 
     public void home(String[] args, CommandSender sender) {
@@ -43,44 +40,40 @@ public class HomeSpawnHome {
             return;
         }
         Player p = (Player) sender;
-        YamlConfiguration getHomes = this.plugin.HSConfig.getPlayerData(p.getUniqueId());
-        List<String> list = getHomes.getStringList("Homes.list");
+        HomeSpawnPlayer HSPlayer = new HomeSpawnPlayer(plugin, p.getUniqueId());
+        List<String> list = HSPlayer.getHomesStringList();
         if (args.length == 0) {
             if (list.contains("Home")) {
-                Location home = (Location) getHomes.get("Homes.Home");
-                HomeTeleportEvent HTE = new HomeTeleportEvent(p, home, "Home");
+                Home home = HSPlayer.getHome("Home");
+                HomeTeleportEvent HTE = new HomeTeleportEvent(p, home);
                 Bukkit.getPluginManager().callEvent(HTE);
                 if (HTE.isCancelled()) {
                     p.sendMessage(plugin.PrimaryColor + "Your teleport was cancelled because " + HTE.getCancelReason());
                     return;
                 }
-                hsc.TeleportPlayer(p, home, "Home");
+                home.teleportPlayer(p);
             } else {
                 p.sendMessage(plugin.HSConfig.getColoredMessage("Home.NoHomeSet"));
             }
         } else if (args.length == 1) {
-            String home = args[0];
-            if (!list.contains(home)) {
+            String homeName = args[0];
+            Home home = HSPlayer.getHome(homeName);
+            if (!list.contains(homeName)) {
                 if (!list.isEmpty()) {
                     p.sendMessage(plugin.HSConfig.getColoredMessage("Home.NoHomeName"));
-                    String list2 = list.toString();
-                    String list3 = list2.replace("[", " ");
-                    String StringList = list3.replace("]",
-                            " ");
                     p.sendMessage(plugin.HSConfig.getColoredMessage("Home.CurrentHomes"));
-                    p.sendMessage(plugin.SecondaryColor + StringList);
+                    p.sendMessage(plugin.SecondaryColor + HSPlayer.getHomesList());
                 } else {
                     p.sendMessage(plugin.HSConfig.getColoredMessage("Home.NoHomeSet"));
                 }
             } else {
-                Location home2 = (Location) getHomes.get("Homes." + home);
-                HomeTeleportEvent HTE = new HomeTeleportEvent(p, home2, home);
+                HomeTeleportEvent HTE = new HomeTeleportEvent(p, home);
                 Bukkit.getPluginManager().callEvent(HTE);
                 if (HTE.isCancelled()) {
                     p.sendMessage(plugin.PrimaryColor + "Your teleport was cancelled because " + HTE.getCancelReason());
                     return;
                 }
-                hsc.TeleportPlayer(p, home2, "Home");
+                home.teleportPlayer(p);
             }
         }
     }

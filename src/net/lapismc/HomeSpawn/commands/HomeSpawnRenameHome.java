@@ -16,6 +16,10 @@
 
 package net.lapismc.HomeSpawn.commands;
 
+import net.lapismc.HomeSpawn.api.events.HomeRenameEvent;
+import net.lapismc.HomeSpawn.playerdata.Home;
+import net.lapismc.HomeSpawn.playerdata.HomeSpawnPlayer;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -37,20 +41,30 @@ public class HomeSpawnRenameHome {
             return;
         }
         Player p = (Player) sender;
+        HomeSpawnPlayer HSPlayer = new HomeSpawnPlayer(plugin, p.getUniqueId());
         if (args.length == 2) {
             String oldHome = args[0];
-            String newHome = args[1];
-            YamlConfiguration homes = plugin.HSConfig.getPlayerData(p.getUniqueId());
-            List<String> list = homes.getStringList("Homes.list");
+            String newHomeName = args[1];
+            YamlConfiguration homes = HSPlayer.getConfig();
+            List<String> list = HSPlayer.getHomesStringList();
             if (list.contains(oldHome)) {
-                if (!list.contains(newHome)) {
-                    Location loc = (Location) homes.get("Homes." + oldHome);
+                if (!list.contains(newHomeName)) {
+                    Location loc = HSPlayer.getHome(oldHome).getLocation();
+                    Home newHome = new Home(newHomeName, loc, p.getUniqueId());
+                    HomeRenameEvent event = new HomeRenameEvent(p, HSPlayer.getHome(oldHome), newHome);
+                    Bukkit.getPluginManager().callEvent(event);
+                    if (event.isCancelled()) {
+                        p.sendMessage(plugin.HSConfig.getColoredMessage("Error.ActionCancelled") + event.getReason());
+                        return;
+                    }
                     homes.set("Homes." + newHome, loc);
                     homes.set("Homes." + oldHome, null);
+                    HSPlayer.removeHome(HSPlayer.getHome(oldHome));
+                    HSPlayer.addHome(newHome);
                     list.remove(oldHome);
-                    list.add(newHome);
+                    list.add(newHomeName);
                     homes.set("Homes.list", list);
-                    plugin.HSConfig.savePlayerData(p.getUniqueId(), homes);
+                    HSPlayer.saveConfig(homes);
                     p.sendMessage(plugin.HSConfig.getColoredMessage("Home.HomeRenamed"));
                 } else {
                     p.sendMessage(plugin.HSConfig.getColoredMessage("Home.HomeAlreadyExists"));

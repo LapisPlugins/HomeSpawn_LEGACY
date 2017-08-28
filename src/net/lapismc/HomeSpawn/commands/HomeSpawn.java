@@ -17,19 +17,18 @@
 package net.lapismc.HomeSpawn.commands;
 
 import net.lapismc.HomeSpawn.HomeSpawnPermissions;
+import net.lapismc.HomeSpawn.playerdata.HomeSpawnPlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import java.util.HashMap;
 
 public class HomeSpawn {
 
     private net.lapismc.HomeSpawn.HomeSpawn plugin;
-    private HomeSpawnPlayer homeSpawnPlayer;
+    private net.lapismc.HomeSpawn.commands.HomeSpawnPlayer homeSpawnPlayer;
 
     public HomeSpawn(net.lapismc.HomeSpawn.HomeSpawn p) {
         this.plugin = p;
-        this.homeSpawnPlayer = new HomeSpawnPlayer(plugin);
+        this.homeSpawnPlayer = new net.lapismc.HomeSpawn.commands.HomeSpawnPlayer(plugin);
     }
 
     public void homeSpawn(String[] args, CommandSender sender) {
@@ -53,8 +52,8 @@ public class HomeSpawn {
                 boolean isPermitted;
                 if (sender instanceof Player) {
                     Player p = (Player) sender;
-                    HashMap<HomeSpawnPermissions.perm, Integer> perms = plugin.HSPermissions.getPlayerPermissions(p.getUniqueId());
-                    isPermitted = perms.get(HomeSpawnPermissions.perm.reload) == 1;
+                    HomeSpawnPlayer HSPlayer = new HomeSpawnPlayer(plugin, p.getUniqueId());
+                    isPermitted = HSPlayer.isPermitted(HomeSpawnPermissions.perm.reload);
                 } else {
                     isPermitted = true;
                 }
@@ -72,8 +71,8 @@ public class HomeSpawn {
                 boolean isPermitted;
                 if (sender instanceof Player) {
                     Player p = (Player) sender;
-                    HashMap<HomeSpawnPermissions.perm, Integer> perms = plugin.HSPermissions.getPlayerPermissions(p.getUniqueId());
-                    isPermitted = perms.get(HomeSpawnPermissions.perm.updateNotify) == 1;
+                    HomeSpawnPlayer HSPlayer = new HomeSpawnPlayer(plugin, p.getUniqueId());
+                    isPermitted = HSPlayer.isPermitted(HomeSpawnPermissions.perm.updateNotify);
                 } else {
                     isPermitted = true;
                 }

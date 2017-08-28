@@ -25,7 +25,7 @@ import org.bukkit.event.HandlerList;
 
 public class SpawnTeleportEvent extends Event implements Cancellable {
 
-    private static final HandlerList handlers = new HandlerList();
+    public static final HandlerList handlers = new HandlerList();
     private String cancelReason;
     private Location location;
     private Player p;

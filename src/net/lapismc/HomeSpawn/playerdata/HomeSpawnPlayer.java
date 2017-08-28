@@ -1,6 +1,7 @@
 package net.lapismc.HomeSpawn.playerdata;
 
 import net.lapismc.HomeSpawn.HomeSpawn;
+import net.lapismc.HomeSpawn.HomeSpawnPermissions;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
@@ -10,7 +11,9 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
+@SuppressWarnings("unused")
 public class HomeSpawnPlayer {
 
     private HomeSpawn plugin;
@@ -34,10 +37,25 @@ public class HomeSpawnPlayer {
         return homes;
     }
 
+    public Home getHome(String name) {
+        for (Home h : getHomes()) {
+            if (h.getName().equals(name)) {
+                return h;
+            }
+        }
+        return null;
+    }
+
     public String getHomesList() {
-        String list2 = homes.toString();
-        String list3 = list2.replace("[", " ");
-        return list3.replace("]", " ");
+        return homes.stream().map(Object::toString).collect(Collectors.joining(", "));
+    }
+
+    public List<String> getHomesStringList() {
+        List<String> stringList = new ArrayList<>();
+        for (Home h : homes) {
+            stringList.add(h.toString());
+        }
+        return stringList;
     }
 
     public void addHome(Home home) {
@@ -50,6 +68,14 @@ public class HomeSpawnPlayer {
             return true;
         }
         return false;
+    }
+
+    public int getPermissionValue(HomeSpawnPermissions.perm perm) {
+        return plugin.HSPermissions.getPermissionValue(op.getUniqueId(), perm);
+    }
+
+    public boolean isPermitted(HomeSpawnPermissions.perm perm) {
+        return plugin.HSPermissions.isPermitted(op.getUniqueId(), perm);
     }
 
     public YamlConfiguration getConfig() {

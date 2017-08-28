@@ -1,12 +1,14 @@
 package net.lapismc.HomeSpawn.playerdata;
 
-import net.lapismc.HomeSpawn.HomeSpawn;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Horse;
+import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
+@SuppressWarnings("deprecation")
 public class Home {
 
     private Location location;
@@ -19,10 +21,27 @@ public class Home {
         this.owner = owner;
     }
 
-    public Home(HomeSpawn p, String name, Location loc, UUID ownersUuid) {
+    public Home(String name, Location loc, UUID ownersUuid) {
         this.name = name;
         location = loc;
         owner = Bukkit.getOfflinePlayer(ownersUuid);
+    }
+
+    public void teleportPlayer(Player p) {
+        if (!location.getChunk().isLoaded()) {
+            location.getChunk().load();
+        }
+        if (p.isInsideVehicle()) {
+            if (p.getVehicle() instanceof Horse) {
+                Horse horse = (Horse) p.getVehicle();
+                horse.eject();
+                horse.teleport(location);
+                p.teleport(location);
+                horse.setPassenger(p);
+            }
+        } else {
+            p.teleport(location);
+        }
     }
 
     public Location getLocation() {

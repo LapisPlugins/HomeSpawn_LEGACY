@@ -16,34 +16,38 @@
 
 package net.lapismc.HomeSpawn.api.events;
 
-import org.bukkit.Location;
+import net.lapismc.HomeSpawn.playerdata.Home;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class HomeDelEvent extends Event implements Cancellable {
+@SuppressWarnings("unused")
+public class HomeDeleteEvent extends Event implements Cancellable {
 
-    private final HandlerList handlers = new HandlerList();
-    private String homeName;
-    private Location loc;
+    public static final HandlerList handlers = new HandlerList();
+    private Home home;
     private Player p;
     private String reason;
     private boolean cancelled;
 
-    public HomeDelEvent(Player p, Location loc, String name) {
-        homeName = name;
-        this.loc = loc;
+    public HomeDeleteEvent(Player p, Home home) {
+        this.home = home;
         this.p = p;
         this.cancelled = false;
     }
 
-    public String getHomeName() {
-        return homeName;
+    public static HandlerList getHandlerList() {
+        return handlers;
     }
 
-    public Location getLoc() {
-        return loc;
+    @Override
+    public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public Home getHome() {
+        return home;
     }
 
     public Player getPlayer() {
@@ -68,7 +72,4 @@ public class HomeDelEvent extends Event implements Cancellable {
         this.reason = reason;
     }
 
-    public HandlerList getHandlers() {
-        return handlers;
-    }
 }

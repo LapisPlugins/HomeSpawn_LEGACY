@@ -50,6 +50,14 @@ public class HomeSpawnPermissions {
         }
     }
 
+    public int getPermissionValue(UUID uuid, perm perm) {
+        return getPlayerPermissions(uuid).get(perm);
+    }
+
+    public boolean isPermitted(UUID uuid, perm perm) {
+        return perm != HomeSpawnPermissions.perm.homes && perm != HomeSpawnPermissions.perm.TeleportDelay && getPlayerPermissions(uuid).get(perm) == 1;
+    }
+
     public Permission getPlayerPermission(UUID uuid) {
         Permission p = null;
         YamlConfiguration homes = plugin.HSConfig.getPlayerData(uuid);
