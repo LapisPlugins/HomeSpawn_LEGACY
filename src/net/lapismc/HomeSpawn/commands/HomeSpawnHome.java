@@ -17,6 +17,7 @@
 package net.lapismc.HomeSpawn.commands;
 
 import net.lapismc.HomeSpawn.HomeSpawn;
+import net.lapismc.HomeSpawn.HomeSpawnPermissions;
 import net.lapismc.HomeSpawn.api.events.HomeTeleportEvent;
 import net.lapismc.HomeSpawn.playerdata.Home;
 import net.lapismc.HomeSpawn.playerdata.HomeSpawnPlayer;
@@ -42,6 +43,15 @@ public class HomeSpawnHome {
         Player p = (Player) sender;
         HomeSpawnPlayer HSPlayer = new HomeSpawnPlayer(plugin, p.getUniqueId());
         List<String> list = HSPlayer.getHomesStringList();
+        if (HSPlayer.getPermissionValue(HomeSpawnPermissions.perm.homes) == 0) {
+            p.sendMessage(plugin.HSConfig.getColoredMessage("NoPerms"));
+            return;
+        }
+        if (list.size() > HSPlayer.getPermissionValue(HomeSpawnPermissions.perm.homes)) {
+            p.sendMessage(plugin.HSConfig.getColoredMessage("Home.ToManyHomes").replace("%ALLOWED%",
+                    HSPlayer.getPermissionValue(HomeSpawnPermissions.perm.homes) + "").replace("%AMOUNT%", list.size() + ""));
+            return;
+        }
         if (args.length == 0) {
             if (list.contains("Home")) {
                 Home home = HSPlayer.getHome("Home");

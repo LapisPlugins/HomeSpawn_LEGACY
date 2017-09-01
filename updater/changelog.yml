@@ -92,3 +92,6 @@ ChangeLog:
     2.2.4:
       - "Additional code for HomeSpawnCost intergration"
       - "other code rewrites to make everything work like it use to"
+    2.2.5:
+      - "Added /home lockout if you have more homes than your permission allows"
+      - "Players will now receive a no permission message if homes is set to 0 and they use /home"
