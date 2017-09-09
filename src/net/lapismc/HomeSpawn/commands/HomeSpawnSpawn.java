@@ -29,8 +29,8 @@ import java.util.HashMap;
 
 public class HomeSpawnSpawn {
 
-    private HomeSpawn plugin;
-    private HomeSpawnCommand hsc;
+    private final HomeSpawn plugin;
+    private final HomeSpawnCommand hsc;
 
     public HomeSpawnSpawn(HomeSpawn p, HomeSpawnCommand hsc) {
         plugin = p;

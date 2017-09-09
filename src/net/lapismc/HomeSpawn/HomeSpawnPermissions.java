@@ -32,7 +32,7 @@ public class HomeSpawnPermissions {
 
     private HashMap<Permission, HashMap<perm, Integer>> Permissions = new HashMap<>();
     private HashMap<UUID, Permission> PlayerPermission = new HashMap<>();
-    private HomeSpawn plugin;
+    private final HomeSpawn plugin;
 
     HomeSpawnPermissions(HomeSpawn p) {
         plugin = p;

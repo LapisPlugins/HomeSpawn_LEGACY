@@ -29,7 +29,7 @@ import java.io.IOException;
  *
  * @author Dart2112
  */
-public class HomeSpawnPlayerData {
+class HomeSpawnPlayerData {
 
     private static HomeSpawn plugin;
 

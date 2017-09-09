@@ -29,16 +29,16 @@ import java.util.HashMap;
 public class HomeSpawnCommand implements CommandExecutor {
 
     private final HomeSpawn plugin;
-    HomeSpawnHomesList homesList;
-    private HomeSpawnHome home;
-    private HomeSpawnSpawn spawn;
-    private HomeSpawnDelHome delHome;
-    private HomeSpawnDelSpawn delSpawn;
-    private HomeSpawnHomePassword homePassword;
-    private net.lapismc.HomeSpawn.commands.HomeSpawn homeSpawn;
-    private HomeSpawnSetHome setHome;
-    private HomeSpawnRenameHome renameHome;
-    private HomeSpawnSetSpawn setSpawn;
+    final HomeSpawnHomesList homesList;
+    private final HomeSpawnHome home;
+    private final HomeSpawnSpawn spawn;
+    private final HomeSpawnDelHome delHome;
+    private final HomeSpawnDelSpawn delSpawn;
+    private final HomeSpawnHomePassword homePassword;
+    private final net.lapismc.HomeSpawn.commands.HomeSpawn homeSpawn;
+    private final HomeSpawnSetHome setHome;
+    private final HomeSpawnRenameHome renameHome;
+    private final HomeSpawnSetSpawn setSpawn;
 
     HomeSpawnCommand(HomeSpawn plugin) {
         this.plugin = plugin;

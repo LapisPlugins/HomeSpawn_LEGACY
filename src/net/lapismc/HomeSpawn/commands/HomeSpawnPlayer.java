@@ -37,8 +37,8 @@ import java.util.Locale;
 
 class HomeSpawnPlayer {
 
-    private HomeSpawn plugin;
-    private PrettyTime p = new PrettyTime();
+    private final HomeSpawn plugin;
+    private final PrettyTime p = new PrettyTime();
 
     HomeSpawnPlayer(HomeSpawn pl) {
         plugin = pl;

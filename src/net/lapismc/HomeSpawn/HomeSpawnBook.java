@@ -26,7 +26,7 @@ import java.io.File;
 
 class HomeSpawnBook {
 
-    private YamlConfiguration yaml;
+    private final YamlConfiguration yaml;
 
     HomeSpawnBook(HomeSpawn plugin) {
         File f = new File(plugin.getDataFolder() + File.separator + "HomeSpawnBook.yml");

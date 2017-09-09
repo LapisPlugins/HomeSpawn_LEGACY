@@ -22,12 +22,12 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "WeakerAccess"})
 public class HomeDeleteEvent extends Event implements Cancellable {
 
     public static final HandlerList handlers = new HandlerList();
-    private Home home;
-    private Player p;
+    private final Home home;
+    private final Player p;
     private String reason;
     private boolean cancelled;
 

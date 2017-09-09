@@ -189,7 +189,7 @@ public class Metrics {
      *
      * @param chart The chart to add.
      */
-    public void addCustomChart(CustomChart chart) {
+    void addCustomChart(CustomChart chart) {
         if (chart == null) {
             throw new IllegalArgumentException("Chart cannot be null!");
         }
@@ -580,8 +580,8 @@ public class Metrics {
         ZAMBIA("ZM", "Zambia"),
         ZIMBABWE("ZW", "Zimbabwe");
 
-        private String isoTag;
-        private String name;
+        private final String isoTag;
+        private final String name;
 
         Country(String isoTag, String name) {
             this.isoTag = isoTag;
@@ -594,7 +594,7 @@ public class Metrics {
          * @param isoTag The iso tag of the county.
          * @return The country with the given iso tag or <code>null</code> if unknown.
          */
-        public static Country byIsoTag(String isoTag) {
+        static Country byIsoTag(String isoTag) {
             for (Country country : Country.values()) {
                 if (country.getCountryIsoTag().equals(isoTag)) {
                     return country;
@@ -628,7 +628,7 @@ public class Metrics {
          *
          * @return The iso tag of the country.
          */
-        public String getCountryIsoTag() {
+        String getCountryIsoTag() {
             return isoTag;
         }
 
@@ -638,7 +638,7 @@ public class Metrics {
      * Represents a custom chart.
      */
     @SuppressWarnings("unchecked")
-    public static abstract class CustomChart {
+    static abstract class CustomChart {
 
         // The id of the chart
         final String chartId;
@@ -648,7 +648,7 @@ public class Metrics {
          *
          * @param chartId The id of the chart.
          */
-        public CustomChart(String chartId) {
+        CustomChart(String chartId) {
             if (chartId == null || chartId.isEmpty()) {
                 throw new IllegalArgumentException("ChartId cannot be null or empty!");
             }
@@ -689,7 +689,7 @@ public class Metrics {
          *
          * @param chartId The id of the chart.
          */
-        public SimplePie(String chartId) {
+        SimplePie(String chartId) {
             super(chartId);
         }
 
@@ -735,7 +735,7 @@ public class Metrics {
          *                 You don't have to create a map yourself!
          * @return The values of the pie.
          */
-        public abstract HashMap<String, Integer> getValues(HashMap<String, Integer> valueMap);
+        abstract HashMap<String, Integer> getValues(HashMap<String, Integer> valueMap);
 
         @Override
         protected JSONObject getChartData() {
@@ -783,7 +783,7 @@ public class Metrics {
          *
          * @return The value of the chart.
          */
-        public abstract int getValue();
+        abstract int getValue();
 
         @Override
         protected JSONObject getChartData() {
@@ -821,7 +821,7 @@ public class Metrics {
          *                 You don't have to create a map yourself!
          * @return The values of the chart.
          */
-        public abstract HashMap<String, Integer> getValues(HashMap<String, Integer> valueMap);
+        abstract HashMap<String, Integer> getValues(HashMap<String, Integer> valueMap);
 
         @Override
         protected JSONObject getChartData() {
@@ -872,7 +872,7 @@ public class Metrics {
          *                 You don't have to create a map yourself!
          * @return The value of the chart.
          */
-        public abstract HashMap<String, Integer> getValues(HashMap<String, Integer> valueMap);
+        abstract HashMap<String, Integer> getValues(HashMap<String, Integer> valueMap);
 
         @Override
         protected JSONObject getChartData() {
@@ -916,7 +916,7 @@ public class Metrics {
          *                 You don't have to create a map yourself!
          * @return The value of the chart.
          */
-        public abstract HashMap<String, int[]> getValues(HashMap<String, int[]> valueMap);
+        abstract HashMap<String, int[]> getValues(HashMap<String, int[]> valueMap);
 
         @Override
         protected JSONObject getChartData() {
@@ -969,7 +969,7 @@ public class Metrics {
          *
          * @return The value of the chart.
          */
-        public abstract Country getValue();
+        abstract Country getValue();
 
         @Override
         protected JSONObject getChartData() {
@@ -1008,7 +1008,7 @@ public class Metrics {
          *                 You don't have to create a map yourself!
          * @return The value of the chart.
          */
-        public abstract HashMap<Country, Integer> getValues(HashMap<Country, Integer> valueMap);
+        abstract HashMap<Country, Integer> getValues(HashMap<Country, Integer> valueMap);
 
         @Override
         protected JSONObject getChartData() {

@@ -33,15 +33,15 @@ public class HomeSpawnConfiguration {
 
     public YamlConfiguration spawn;
     public File spawnFile;
-    private HashMap<UUID, YamlConfiguration> HomeConfigs = new HashMap<>();
+    private final HashMap<UUID, YamlConfiguration> HomeConfigs = new HashMap<>();
     private YamlConfiguration messages;
     private File messagesFile;
     private File passwordsFile;
-    private HomeSpawn plugin;
+    private final HomeSpawn plugin;
 
     HomeSpawnConfiguration(HomeSpawn p) {
         plugin = p;
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () -> HomeConfigs.clear(), 20 * 60 * 5, 20 * 60 * 5);
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, HomeConfigs::clear, 20 * 60 * 5, 20 * 60 * 5);
         Configs();
         updatePlayerData();
     }

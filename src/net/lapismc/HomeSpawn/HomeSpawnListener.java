@@ -38,7 +38,7 @@ import java.util.*;
 class HomeSpawnListener implements Listener {
 
     private List<Player> Players = new ArrayList<>();
-    private HomeSpawn plugin;
+    private final HomeSpawn plugin;
 
     HomeSpawnListener(HomeSpawn plugin) {
         this.plugin = plugin;

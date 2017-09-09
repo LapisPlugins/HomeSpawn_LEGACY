@@ -52,7 +52,7 @@ public class HomeSpawnSetHome {
         }
 
         if (args.length == 0) {
-            Home home = new Home("Home", p.getLocation(), p.getUniqueId());
+            Home home = new Home(plugin, "Home", p.getLocation(), p.getUniqueId());
             if (!list.contains("Home")) {
                 HomeSetEvent HCE = new HomeSetEvent(p, home);
                 Bukkit.getPluginManager().callEvent(HCE);
@@ -84,7 +84,7 @@ public class HomeSpawnSetHome {
                     p.sendMessage(plugin.SecondaryColor + "You Cannot Use The HomeSpawnHome Name \"Home\", Please Choose Another!");
                     return;
                 }
-                Home home = new Home(homeName, p.getLocation(), p.getUniqueId());
+                Home home = new Home(plugin, homeName, p.getLocation(), p.getUniqueId());
                 if (!list.contains(homeName)) {
                     HomeSetEvent HCE = new HomeSetEvent(p, home);
                     Bukkit.getPluginManager().callEvent(HCE);

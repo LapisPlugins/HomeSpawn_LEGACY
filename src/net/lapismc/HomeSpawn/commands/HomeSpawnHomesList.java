@@ -35,7 +35,7 @@ import java.util.*;
 public class HomeSpawnHomesList {
 
     final public HashMap<Player, Inventory> HomesListInvs = new HashMap<>();
-    private HomeSpawn plugin;
+    private final HomeSpawn plugin;
 
     public HomeSpawnHomesList(HomeSpawn p) {
         this.plugin = p;

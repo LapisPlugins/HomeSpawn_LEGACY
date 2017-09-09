@@ -26,7 +26,7 @@ import java.util.HashMap;
 
 public class HomeSpawnSetSpawn {
 
-    private HomeSpawn plugin;
+    private final HomeSpawn plugin;
 
     public HomeSpawnSetSpawn(HomeSpawn p) {
         plugin = p;

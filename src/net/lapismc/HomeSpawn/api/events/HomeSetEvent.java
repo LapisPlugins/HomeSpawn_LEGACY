@@ -26,8 +26,8 @@ import org.bukkit.event.HandlerList;
 public class HomeSetEvent extends Event implements Cancellable {
 
     public static final HandlerList handlers = new HandlerList();
-    private Home home;
-    private Player p;
+    private final Home home;
+    private final Player p;
     private String reason;
     private boolean cancelled;
 

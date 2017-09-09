@@ -26,7 +26,7 @@ import java.util.HashMap;
 
 public class HomeSpawnDelSpawn {
 
-    private HomeSpawn plugin;
+    private final HomeSpawn plugin;
 
     public HomeSpawnDelSpawn(HomeSpawn p) {
         this.plugin = p;

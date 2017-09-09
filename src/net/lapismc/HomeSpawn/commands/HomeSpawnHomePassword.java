@@ -31,7 +31,7 @@ import java.security.spec.InvalidKeySpecException;
 
 public class HomeSpawnHomePassword {
 
-    private HomeSpawn plugin;
+    private final HomeSpawn plugin;
 
     public HomeSpawnHomePassword(HomeSpawn p) {
         this.plugin = p;

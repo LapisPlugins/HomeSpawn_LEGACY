@@ -27,7 +27,7 @@ import java.io.IOException;
  *
  * @author Dart2112
  */
-public class HomeSpawnConfigs {
+class HomeSpawnConfigs {
 
     private static HomeSpawn plugin;
 

@@ -32,21 +32,21 @@ import java.util.logging.Logger;
 public class LapisUpdater {
 
     private String ID;
-    private String jarName;
-    private String username;
-    private String repoName;
-    private String branch;
-    private JavaPlugin plugin;
-    private Logger logger = Bukkit.getLogger();
+    private final String jarName;
+    private final String username;
+    private final String repoName;
+    private final String branch;
+    private final JavaPlugin plugin;
+    private final Logger logger = Bukkit.getLogger();
     private Boolean force;
     private String newVersionRawString;
 
-    LapisUpdater(JavaPlugin plugin, String jarName, String username, String repoName, String branch) {
+    LapisUpdater(JavaPlugin plugin) {
         this.plugin = plugin;
-        this.jarName = jarName;
-        this.username = username;
-        this.repoName = repoName;
-        this.branch = branch;
+        this.jarName = "Homespawn";
+        this.username = "Dart2112";
+        this.repoName = "HomeSpawn";
+        this.branch = "master";
     }
 
     public boolean checkUpdate() {

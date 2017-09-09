@@ -25,9 +25,9 @@ import org.bukkit.event.HandlerList;
 public class HomeTeleportEvent extends Event implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();
-    private Home home;
+    private final Home home;
     private String cancelReason;
-    private Player p;
+    private final Player p;
     private boolean cancelled;
 
     public HomeTeleportEvent(Player p, Home home) {

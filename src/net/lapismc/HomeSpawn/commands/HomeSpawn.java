@@ -23,8 +23,8 @@ import org.bukkit.entity.Player;
 
 public class HomeSpawn {
 
-    private net.lapismc.HomeSpawn.HomeSpawn plugin;
-    private net.lapismc.HomeSpawn.commands.HomeSpawnPlayer homeSpawnPlayer;
+    private final net.lapismc.HomeSpawn.HomeSpawn plugin;
+    private final net.lapismc.HomeSpawn.commands.HomeSpawnPlayer homeSpawnPlayer;
 
     public HomeSpawn(net.lapismc.HomeSpawn.HomeSpawn p) {
         this.plugin = p;

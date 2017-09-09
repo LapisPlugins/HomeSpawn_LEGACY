@@ -30,7 +30,7 @@ import static java.nio.file.StandardWatchEventKinds.*;
 
 class HomeSpawnFileWatcher {
 
-    private HomeSpawn plugin;
+    private final HomeSpawn plugin;
 
     HomeSpawnFileWatcher(HomeSpawn p) {
         plugin = p;

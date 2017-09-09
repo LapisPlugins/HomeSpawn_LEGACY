@@ -10,9 +10,9 @@ import org.bukkit.event.HandlerList;
 public class HomeMoveEvent extends Event implements Cancellable {
 
     public static final HandlerList handlers = new HandlerList();
-    private Home oldHome;
-    private Home newHome;
-    private Player p;
+    private final Home oldHome;
+    private final Home newHome;
+    private final Player p;
     private String reason;
     private boolean cancelled;
 

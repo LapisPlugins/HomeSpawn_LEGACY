@@ -29,7 +29,7 @@ import java.util.List;
 
 public class HomeSpawnDelHome {
 
-    private HomeSpawn plugin;
+    private final HomeSpawn plugin;
 
     public HomeSpawnDelHome(HomeSpawn p) {
         this.plugin = p;

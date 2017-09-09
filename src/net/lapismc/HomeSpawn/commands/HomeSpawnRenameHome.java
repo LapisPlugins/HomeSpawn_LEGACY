@@ -29,7 +29,7 @@ import java.util.List;
 
 public class HomeSpawnRenameHome {
 
-    private net.lapismc.HomeSpawn.HomeSpawn plugin;
+    private final net.lapismc.HomeSpawn.HomeSpawn plugin;
 
     public HomeSpawnRenameHome(net.lapismc.HomeSpawn.HomeSpawn p) {
         plugin = p;
@@ -50,7 +50,7 @@ public class HomeSpawnRenameHome {
             if (list.contains(oldHome)) {
                 if (!list.contains(newHomeName)) {
                     Location loc = HSPlayer.getHome(oldHome).getLocation();
-                    Home newHome = new Home(newHomeName, loc, p.getUniqueId());
+                    Home newHome = new Home(plugin, newHomeName, loc, p.getUniqueId());
                     HomeRenameEvent event = new HomeRenameEvent(p, HSPlayer.getHome(oldHome), newHome);
                     Bukkit.getPluginManager().callEvent(event);
                     if (event.isCancelled()) {

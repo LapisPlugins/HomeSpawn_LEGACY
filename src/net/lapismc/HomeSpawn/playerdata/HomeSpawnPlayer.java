@@ -16,10 +16,10 @@ import java.util.stream.Collectors;
 @SuppressWarnings("unused")
 public class HomeSpawnPlayer {
 
-    private HomeSpawn plugin;
-    private OfflinePlayer op;
+    private final HomeSpawn plugin;
+    private final OfflinePlayer op;
     private YamlConfiguration yaml;
-    private ArrayList<Home> homes = new ArrayList<>();
+    private final ArrayList<Home> homes = new ArrayList<>();
 
     public HomeSpawnPlayer(HomeSpawn plugin, OfflinePlayer op) {
         this.plugin = plugin;
@@ -98,7 +98,7 @@ public class HomeSpawnPlayer {
                     String name = key.replace("Homes.", "");
                     if (homesList.contains(name)) {
                         Location loc = (Location) yaml.get("Homes." + key);
-                        Home h = new Home(name, loc, op);
+                        Home h = new Home(plugin, name, loc, op);
                         addHome(h);
                     } else {
                         yaml.set(key, null);

@@ -36,8 +36,8 @@ import java.util.logging.Logger;
 public class HomeSpawn extends JavaPlugin {
 
     final Logger logger = getLogger();
-    final HashMap<Player, Location> HomeSpawnLocations = new HashMap<>();
-    final HashMap<Player, Integer> HomeSpawnTimeLeft = new HashMap<>();
+    public final HashMap<Player, Location> HomeSpawnLocations = new HashMap<>();
+    public final HashMap<Player, Integer> HomeSpawnTimeLeft = new HashMap<>();
     public LapisUpdater lapisUpdater;
     public HomeSpawnPermissions HSPermissions;
     public HomeSpawnConfiguration HSConfig;
@@ -86,7 +86,7 @@ public class HomeSpawn extends JavaPlugin {
     private void Update() {
         final HomeSpawn p = this;
         Bukkit.getScheduler().runTaskAsynchronously(this, () -> {
-            lapisUpdater = new LapisUpdater(p, "Homespawn", "Dart2112", "HomeSpawn", "master");
+            lapisUpdater = new LapisUpdater(p);
             if (lapisUpdater.checkUpdate()) {
                 if (getConfig().getBoolean("UpdateNotification") && !getConfig()
                         .getBoolean("DownloadUpdates")) {
