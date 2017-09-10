@@ -95,3 +95,6 @@ ChangeLog:
     2.2.5:
       - "Added /home lockout if you have more homes than your permission allows"
       - "Players will now receive a no permission message if homes is set to 0 and they use /home"
+    2.2.6:
+      - "Fixed home teleport delays and home teleport messages"
+      - "Reworked some code"
