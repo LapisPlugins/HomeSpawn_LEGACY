@@ -98,3 +98,5 @@ ChangeLog:
     2.2.6:
       - "Fixed home teleport delays and home teleport messages"
       - "Reworked some code"
+    2.2.7:
+      - "Updated the auto updater to the change of location for GitHub"

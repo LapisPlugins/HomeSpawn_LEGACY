@@ -44,7 +44,7 @@ public class LapisUpdater {
     LapisUpdater(JavaPlugin plugin) {
         this.plugin = plugin;
         this.jarName = "Homespawn";
-        this.username = "Dart2112";
+        this.username = "LapisPlugins";
         this.repoName = "HomeSpawn";
         this.branch = "master";
     }
