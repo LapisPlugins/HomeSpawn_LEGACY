@@ -47,7 +47,7 @@ public class HomeSpawn {
                     + "Use /homespawn Help For Commands!");
             sender.sendMessage(plugin.SecondaryColor
                     + "-----------------------------------------");
-        } else if (args.length == 1 && !args[0].equalsIgnoreCase("player")) {
+        } else if (args.length == 1) {
             if (args[0].equalsIgnoreCase("reload")) {
                 boolean isPermitted;
                 if (sender instanceof Player) {
@@ -65,9 +65,7 @@ public class HomeSpawn {
                 }
             } else if (args[0].equalsIgnoreCase("help")) {
                 this.plugin.help(sender);
-            }
-        } else {
-            if (args[0].equalsIgnoreCase("update")) {
+            } else if (args[0].equalsIgnoreCase("update")) {
                 boolean isPermitted;
                 if (sender instanceof Player) {
                     Player p = (Player) sender;
