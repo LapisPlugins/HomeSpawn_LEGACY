@@ -84,10 +84,9 @@ public class HomeSpawn {
                 } else {
                     sender.sendMessage(plugin.HSConfig.getColoredMessage("NoPerms"));
                 }
-            } else if (args[0].equalsIgnoreCase("player")) {
-                homeSpawnPlayer.homeSpawnPlayer(args, sender);
             }
+        } else if (args[0].equalsIgnoreCase("player")) {
+            homeSpawnPlayer.homeSpawnPlayer(args, sender);
         }
     }
-
 }

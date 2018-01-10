@@ -35,7 +35,7 @@ import java.util.logging.Logger;
 
 public class HomeSpawn extends JavaPlugin {
 
-    final Logger logger = getLogger();
+    public final Logger logger = getLogger();
     public final HashMap<Player, Location> HomeSpawnLocations = new HashMap<>();
     public final HashMap<Player, Integer> HomeSpawnTimeLeft = new HashMap<>();
     public LapisUpdater lapisUpdater;
@@ -208,10 +208,9 @@ public class HomeSpawn extends JavaPlugin {
     public List<String> onTabComplete(CommandSender sender, Command command, String alias,
                                       String[] args) {
         if (command.getName().equalsIgnoreCase("home") || command.getName().equalsIgnoreCase("delhome")) {
-            List<String> l = new ArrayList<>();
             Player p = (Player) sender;
             YamlConfiguration playerData = HSConfig.getPlayerData(p.getUniqueId());
-            l.addAll(playerData.getStringList("Homes.list"));
+            List<String> l = new ArrayList<>(playerData.getStringList("Homes.list"));
             debug("Tab Completed for " + sender.getName());
             return l;
         }
