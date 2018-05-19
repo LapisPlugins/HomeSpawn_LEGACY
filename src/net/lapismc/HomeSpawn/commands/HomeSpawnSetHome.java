@@ -31,7 +31,7 @@ import java.util.List;
 
 public class HomeSpawnSetHome {
 
-    private HomeSpawn plugin = null;
+    private HomeSpawn plugin;
 
     public HomeSpawnSetHome(HomeSpawn p) {
         this.plugin = p;
@@ -74,7 +74,7 @@ public class HomeSpawnSetHome {
                 list.add("Home");
                 getHomes.set("Homes.list", list);
             }
-            getHomes.set("Homes.Home", p.getLocation());
+            home.setLocation(p.getLocation());
             HSPlayer.addHome(home);
             p.sendMessage(plugin.HSConfig.getColoredMessage("Home.HomeSet"));
         } else if (args.length == 1) {
@@ -106,7 +106,7 @@ public class HomeSpawnSetHome {
                     list.add(homeName);
                     getHomes.set("Homes.list", list);
                 }
-                getHomes.set("Homes." + homeName, p.getLocation());
+                home.setLocation(p.getLocation());
                 HSPlayer.addHome(home);
                 p.sendMessage(plugin.HSConfig.getColoredMessage("Home.HomeSet"));
             } else {

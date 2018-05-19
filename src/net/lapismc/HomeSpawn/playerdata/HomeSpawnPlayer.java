@@ -33,6 +33,10 @@ public class HomeSpawnPlayer {
         loadHomes();
     }
 
+    public UUID getUUID() {
+        return op.getUniqueId();
+    }
+
     public ArrayList<Home> getHomes() {
         return homes;
     }
@@ -63,9 +67,7 @@ public class HomeSpawnPlayer {
     }
 
     public void removeHome(Home home) {
-        if (homes.contains(home)) {
-            homes.remove(home);
-        }
+        homes.remove(home);
     }
 
     public int getPermissionValue(HomeSpawnPermissions.perm perm) {

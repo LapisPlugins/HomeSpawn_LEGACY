@@ -16,13 +16,14 @@
 
 package net.lapismc.HomeSpawn;
 
+import net.lapismc.HomeSpawn.playerdata.Home;
+import net.lapismc.HomeSpawn.playerdata.HomeSpawnPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.PluginManager;
@@ -35,15 +36,16 @@ import java.util.logging.Logger;
 
 public class HomeSpawn extends JavaPlugin {
 
-    public final Logger logger = getLogger();
-    public final HashMap<Player, Location> HomeSpawnLocations = new HashMap<>();
-    public final HashMap<Player, Integer> HomeSpawnTimeLeft = new HashMap<>();
+    final Logger logger = getLogger();
+    public HashMap<Player, Location> HomeSpawnLocations = new HashMap<>();
+    public HashMap<Player, Integer> HomeSpawnTimeLeft = new HashMap<>();
     public LapisUpdater lapisUpdater;
     public HomeSpawnPermissions HSPermissions;
     public HomeSpawnConfiguration HSConfig;
-    HomeSpawnCommand HSCommand;
     public String PrimaryColor = ChatColor.GOLD.toString();
     public String SecondaryColor = ChatColor.RED.toString();
+    HomeSpawnCommand HSCommand;
+    private ArrayList<HomeSpawnPlayer> players = new ArrayList<>();
 
     @Override
     public void onEnable() {
@@ -56,24 +58,26 @@ public class HomeSpawn extends JavaPlugin {
         Metrics();
     }
 
-    @SuppressWarnings("ConstantConditions")
     private void Metrics() {
         Metrics metrics = new Metrics(this);
         int homes = 0;
+        //get the total number of homes set by players
         File playerData = new File(this.getDataFolder() + File.separator + "PlayerData");
-        int files = playerData.listFiles().length - 1;
-        for (File f : playerData.listFiles()) {
+        int files = Objects.requireNonNull(playerData.listFiles()).length - 1;
+        for (File f : Objects.requireNonNull(playerData.listFiles())) {
             if (!f.getName().equals("Passwords.yml") && !f.isDirectory()) {
                 YamlConfiguration yaml = YamlConfiguration.loadConfiguration(f);
                 homes += yaml.getStringList("Homes.List").size();
             }
         }
         Integer average;
+        //average that number, making sure not to divide by 0
         if (files != 0) {
             average = homes % files == 0 ? homes / files : homes / files + 1;
         } else {
             average = 0;
         }
+        //add the average number of homes as a metric chart
         metrics.addCustomChart(new Metrics.SimplePie("average_number_of_homes") {
             @Override
             public String getValue() {
@@ -84,20 +88,23 @@ public class HomeSpawn extends JavaPlugin {
     }
 
     private void Update() {
-        final HomeSpawn p = this;
         Bukkit.getScheduler().runTaskAsynchronously(this, () -> {
-            lapisUpdater = new LapisUpdater(p);
+            lapisUpdater = new LapisUpdater(this);
+            //check for an update
             if (lapisUpdater.checkUpdate()) {
+                //if there in an update but download is disabled and notification is enabled then notify in console
                 if (getConfig().getBoolean("UpdateNotification") && !getConfig()
                         .getBoolean("DownloadUpdates")) {
                     logger.info("An update for HomeSpawn is available and can be" +
                             " downloaded and installed by running /homespawn update");
                 } else if (getConfig().getBoolean("DownloadUpdates")) {
+                    //if downloading updates is enabled then download it and notify console
                     lapisUpdater.downloadUpdate();
                     logger.info("Downloading Homespawn update, it will be installed " +
                             "on next restart!");
                 }
             } else {
+                //if there is no update and notify is enabled then notify console that there was no update
                 if (getConfig().getBoolean("UpdateNotification")) {
                     logger.info("No Update Available");
                 }
@@ -127,10 +134,26 @@ public class HomeSpawn extends JavaPlugin {
         logger.info("Plugin Has Been Disabled!");
     }
 
+    public HomeSpawnPlayer getPlayer(UUID uuid) {
+        //Loop through all players and check if any of them are the one we need
+        for (HomeSpawnPlayer p : players) {
+            if (p.getUUID() == uuid) {
+                return p;
+            }
+        }
+        //if not then we make a new one and save it for later
+        HomeSpawnPlayer p = new HomeSpawnPlayer(this, uuid);
+        players.add(p);
+        return p;
+    }
+
     void spawnNew(Player player) {
+        //is run when a player joins for the first time
+        //if there is a location set for spawn new
         if (HSConfig.spawn.contains("spawnnew")) {
-            Location spawnnew = (Location) HSConfig.spawn.get("spawnnew");
-            player.teleport(spawnnew);
+            //get the location and teleport the player
+            Location spawnNew = (Location) HSConfig.spawn.get("spawnnew");
+            player.teleport(spawnNew);
             logger.info("Player " + player.getName()
                     + " was sent To the new spawn");
         } else {
@@ -139,6 +162,7 @@ public class HomeSpawn extends JavaPlugin {
     }
 
     public void help(CommandSender sender) {
+        //Sends a customized help message based on what commands the player can use
         if (sender != null) {
             HashMap<HomeSpawnPermissions.perm, Integer> perms = HSPermissions.getPlayerPermissions(UUID.randomUUID());
             boolean isPlayer = false;
@@ -207,9 +231,11 @@ public class HomeSpawn extends JavaPlugin {
 
     public List<String> onTabComplete(CommandSender sender, Command command, String alias,
                                       String[] args) {
+        //checks if a player is attempting to tab complete a home name
         if (command.getName().equalsIgnoreCase("home") || command.getName().equalsIgnoreCase("delhome")) {
             Player p = (Player) sender;
-            YamlConfiguration playerData = HSConfig.getPlayerData(p.getUniqueId());
+            YamlConfiguration playerData = getPlayer(p.getUniqueId()).getConfig();
+            //Gets the list of the players homes and returns it for the tab complete to deal with
             List<String> l = new ArrayList<>(playerData.getStringList("Homes.list"));
             debug("Tab Completed for " + sender.getName());
             return l;
@@ -219,14 +245,19 @@ public class HomeSpawn extends JavaPlugin {
 
     @SuppressWarnings("deprecation")
     private void CommandDelay() {
+        //Handles the delay of teleporting
         BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
         scheduler.scheduleSyncRepeatingTask(this, () -> {
+            //Don't run this code if there is no one waiting to teleport
             if (!HomeSpawnTimeLeft.isEmpty()) {
                 HashMap<Player, Integer> timeLeft = HomeSpawnTimeLeft;
                 Iterator<Player> it = timeLeft.keySet().iterator();
                 try {
+                    //Iterate over all of the waiting players using an iterator
                     while (it.hasNext()) {
                         Player p = it.next();
+                        //if the location is null the teleport has probably been canceled
+                        //so we will remove the player from the waiting list
                         if (HomeSpawnLocations.get(p) == null) {
                             it.remove();
                             HomeSpawnLocations.remove(p);
@@ -237,38 +268,19 @@ public class HomeSpawn extends JavaPlugin {
                         Iterator<Integer> iterator = timeLeft.values().iterator();
                         //noinspection WhileLoopReplaceableByForEach
                         while (iterator.hasNext()) {
+                            //iterate over the list of time left for each player and reduce it by 1
                             Integer time = iterator.next();
                             int NewTime = time - 1;
+                            //If the time left > 0 then we save the new time left and wait
+                            //otherwise we teleport the player then remove them from the list
                             if (NewTime > 0) {
                                 HomeSpawnTimeLeft.put(p, NewTime);
                             } else {
-                                Location Tele = HomeSpawnLocations.get(p);
-                                if (!(Tele == null)) {
-                                    if (!Tele.getChunk().isLoaded()) {
-                                        Tele.getChunk().load();
-                                    }
-                                    if (p.isInsideVehicle()) {
-                                        if (p.getVehicle() instanceof Horse) {
-                                            Horse horse = (Horse) p.getVehicle();
-                                            horse.eject();
-                                            horse.teleport(Tele);
-                                            p.teleport(Tele);
-                                            horse.setPassenger(p);
-                                        }
-                                    } else {
-                                        p.teleport(Tele);
-                                    }
-                                    p.sendMessage(HSConfig.getColoredMessage("Home.SentHome"));
-
-                                    debug("Teleported " + p.getName());
-                                    p.sendMessage(ChatColor.GOLD
-                                            + "Teleporting...");
-                                    it.remove();
-                                    HomeSpawnLocations.remove(p);
-                                } else {
-                                    it.remove();
-                                    HomeSpawnLocations.remove(p);
-                                }
+                                //Generates a fake home object to use the home objects advanced teleport code
+                                Home h = new Home(this, "temp", HomeSpawnLocations.get(p), p.getUniqueId());
+                                h.teleportPlayerNow(p);
+                                HomeSpawnLocations.remove(p);
+                                HomeSpawnTimeLeft.remove(p);
                             }
                         }
                     }
@@ -276,9 +288,16 @@ public class HomeSpawn extends JavaPlugin {
                 }
             }
         }, 0, 20);
+        scheduler.scheduleSyncRepeatingTask(this, () -> {
+            for (HomeSpawnPlayer p : players) {
+                if (!Bukkit.getOfflinePlayer(p.getUUID()).isOnline()) {
+                    players.remove(p);
+                }
+            }
+        }, 0, 60 * 20);
     }
 
-    void debug(String s) {
+    public void debug(String s) {
         if (getConfig().getBoolean("Debug")) {
             logger.info("Homespawn Debug: " + s);
         }

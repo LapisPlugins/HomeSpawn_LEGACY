@@ -341,7 +341,6 @@ public class HomeSpawnConfiguration {
         spawnFile = file;
     }
 
-
     void reloadSpawn() {
         spawn = YamlConfiguration.loadConfiguration(spawnFile);
     }
