@@ -18,8 +18,8 @@ public class HomeSpawnPlayer {
 
     private final HomeSpawn plugin;
     private final OfflinePlayer op;
-    private YamlConfiguration yaml;
     private final ArrayList<Home> homes = new ArrayList<>();
+    private YamlConfiguration yaml;
 
     public HomeSpawnPlayer(HomeSpawn plugin, OfflinePlayer op) {
         this.plugin = plugin;
@@ -43,7 +43,7 @@ public class HomeSpawnPlayer {
 
     public Home getHome(String name) {
         for (Home h : getHomes()) {
-            if (h.getName().equals(name)) {
+            if (h.getName().equalsIgnoreCase(name)) {
                 return h;
             }
         }
@@ -60,6 +60,15 @@ public class HomeSpawnPlayer {
             stringList.add(h.toString());
         }
         return stringList;
+    }
+
+    public boolean hasHome(String name) {
+        for (Home home : getHomes()) {
+            if (home.getName().equalsIgnoreCase(name)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void addHome(Home home) {

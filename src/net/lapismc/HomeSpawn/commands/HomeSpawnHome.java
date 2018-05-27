@@ -68,7 +68,7 @@ public class HomeSpawnHome {
         } else if (args.length == 1) {
             String homeName = args[0];
             Home home = HSPlayer.getHome(homeName);
-            if (!list.contains(homeName)) {
+            if (!HSPlayer.hasHome(homeName)) {
                 if (!list.isEmpty()) {
                     p.sendMessage(plugin.HSConfig.getColoredMessage("Home.NoHomeName"));
                     p.sendMessage(plugin.HSConfig.getColoredMessage("Home.CurrentHomes"));
