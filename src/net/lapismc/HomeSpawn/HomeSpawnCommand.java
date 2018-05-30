@@ -21,15 +21,19 @@ import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
-public class HomeSpawnCommand implements CommandExecutor {
+public class HomeSpawnCommand implements CommandExecutor, TabCompleter {
 
-    private final HomeSpawn plugin;
     final HomeSpawnHomesList homesList;
+    private final HomeSpawn plugin;
     private final HomeSpawnHome home;
     private final HomeSpawnSpawn spawn;
     private final HomeSpawnDelHome delHome;
@@ -43,9 +47,11 @@ public class HomeSpawnCommand implements CommandExecutor {
     HomeSpawnCommand(HomeSpawn plugin) {
         this.plugin = plugin;
         plugin.getCommand("home").setExecutor(this);
+        plugin.getCommand("home").setTabCompleter(this);
         plugin.getCommand("sethome").setExecutor(this);
         plugin.getCommand("renamehome").setExecutor(this);
         plugin.getCommand("delhome").setExecutor(this);
+        plugin.getCommand("delhome").setTabCompleter(this);
         plugin.getCommand("homeslist").setExecutor(this);
         plugin.getCommand("spawn").setExecutor(this);
         plugin.getCommand("setspawn").setExecutor(this);
@@ -89,6 +95,29 @@ public class HomeSpawnCommand implements CommandExecutor {
             homePassword.homePassword(args, sender);
         }
         return false;
+    }
+
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias,
+                                      String[] args) {
+        //checks if a player is attempting to tab complete a home name
+        if (command.getName().equalsIgnoreCase("home") || command.getName().equalsIgnoreCase("delhome")) {
+            Player p = (Player) sender;
+            YamlConfiguration playerData = plugin.getPlayer(p.getUniqueId()).getConfig();
+            //Gets the list of the players homes and returns it for the tab complete to deal with
+            List<String> l = new ArrayList<>();
+            for (String home : playerData.getStringList("Homes.list")) {
+                if (args.length > 0) {
+                    if (home.toLowerCase().startsWith(args[0].toLowerCase())) {
+                        l.add(home);
+                    }
+                } else {
+                    l.add(home);
+                }
+            }
+            plugin.debug("Tab Completed for " + sender.getName());
+            return l;
+        }
+        return null;
     }
 
 

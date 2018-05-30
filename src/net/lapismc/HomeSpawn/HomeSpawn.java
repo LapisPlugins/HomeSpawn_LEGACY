@@ -21,7 +21,6 @@ import net.lapismc.HomeSpawn.playerdata.HomeSpawnPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -229,20 +228,6 @@ public class HomeSpawn extends JavaPlugin {
         }
     }
 
-    public List<String> onTabComplete(CommandSender sender, Command command, String alias,
-                                      String[] args) {
-        //checks if a player is attempting to tab complete a home name
-        if (command.getName().equalsIgnoreCase("home") || command.getName().equalsIgnoreCase("delhome")) {
-            Player p = (Player) sender;
-            YamlConfiguration playerData = getPlayer(p.getUniqueId()).getConfig();
-            //Gets the list of the players homes and returns it for the tab complete to deal with
-            List<String> l = new ArrayList<>(playerData.getStringList("Homes.list"));
-            debug("Tab Completed for " + sender.getName());
-            return l;
-        }
-        return null;
-    }
-
     @SuppressWarnings("deprecation")
     private void CommandDelay() {
         //Handles the delay of teleporting
@@ -288,13 +273,7 @@ public class HomeSpawn extends JavaPlugin {
                 }
             }
         }, 0, 20);
-        scheduler.scheduleSyncRepeatingTask(this, () -> {
-            for (HomeSpawnPlayer p : players) {
-                if (!Bukkit.getOfflinePlayer(p.getUUID()).isOnline()) {
-                    players.remove(p);
-                }
-            }
-        }, 0, 60 * 20);
+        scheduler.scheduleSyncRepeatingTask(this, () -> players.removeIf(p -> !Bukkit.getOfflinePlayer(p.getUUID()).isOnline()), 0, 60 * 20);
     }
 
     public void debug(String s) {
