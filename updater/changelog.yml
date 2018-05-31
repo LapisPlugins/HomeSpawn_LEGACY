@@ -102,3 +102,8 @@ ChangeLog:
       - "Updated the auto updater to the change of location for GitHub"
     2.2.8:
       - "Fixed /homespawn player not working with more than one argument"
+    2.2.9:
+      - "Fixed tab completion on /home and /delhome"
+      - "Fixed concurrent modification error on player disconnect"
+      - "Homes are no longer case sensitive"
+      - "Teleporting has been streamlined"
