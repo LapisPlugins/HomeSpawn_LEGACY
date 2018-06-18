@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Benjamin Martin
+ * Copyright 2018 Benjamin Martin
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,22 +22,26 @@ import net.lapismc.HomeSpawn.HomeSpawnPermissions;
 import net.lapismc.HomeSpawn.api.events.SpawnTeleportEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
-public class HomeSpawnSpawn {
+public class HomeSpawnSpawn extends LapisCommand {
 
     private final HomeSpawn plugin;
     private final HomeSpawnCommand hsc;
 
     public HomeSpawnSpawn(HomeSpawn p, HomeSpawnCommand hsc) {
+        super("spawn", "Sends you to the place that spawn was set", new ArrayList<>());
         plugin = p;
         this.hsc = hsc;
     }
 
-    public void spawn(CommandSender sender) {
+    @Override
+    public void onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         if (!(sender instanceof Player)) {
             sender.sendMessage(plugin.HSConfig.getMessage("Error.MustBePlayer"));
             return;

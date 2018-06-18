@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Benjamin Martin
+ * Copyright 2018 Benjamin Martin
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,21 +21,25 @@ import net.lapismc.HomeSpawn.api.events.HomeDeleteEvent;
 import net.lapismc.HomeSpawn.playerdata.Home;
 import net.lapismc.HomeSpawn.playerdata.HomeSpawnPlayer;
 import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class HomeSpawnDelHome {
+public class HomeSpawnDelHome extends LapisCommand {
 
     private final HomeSpawn plugin;
 
     public HomeSpawnDelHome(HomeSpawn p) {
+        super("delhome", "Removes your home, this means you cant use /home until you reset your home with /sethome", new ArrayList<>());
         this.plugin = p;
     }
 
-    public void delHome(String[] args, CommandSender sender) {
+    @Override
+    public void onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         if (!(sender instanceof Player)) {
             sender.sendMessage(plugin.HSConfig.getMessage("Error.MustBePlayer"));
             return;

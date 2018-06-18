@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Benjamin Martin
+ * Copyright 2018 Benjamin Martin
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@ package net.lapismc.HomeSpawn;
 import net.lapismc.HomeSpawn.commands.*;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -30,71 +29,24 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class HomeSpawnCommand implements CommandExecutor, TabCompleter {
+public class HomeSpawnCommand implements TabCompleter {
 
-    final HomeSpawnHomesList homesList;
     private final HomeSpawn plugin;
-    private final HomeSpawnHome home;
-    private final HomeSpawnSpawn spawn;
-    private final HomeSpawnDelHome delHome;
-    private final HomeSpawnDelSpawn delSpawn;
-    private final HomeSpawnHomePassword homePassword;
-    private final net.lapismc.HomeSpawn.commands.HomeSpawn homeSpawn;
-    private final HomeSpawnSetHome setHome;
-    private final HomeSpawnRenameHome renameHome;
-    private final HomeSpawnSetSpawn setSpawn;
+    HomeSpawnHomesList homesList;
 
     HomeSpawnCommand(HomeSpawn plugin) {
         this.plugin = plugin;
-        plugin.getCommand("home").setExecutor(this);
-        plugin.getCommand("home").setTabCompleter(this);
-        plugin.getCommand("sethome").setExecutor(this);
-        plugin.getCommand("renamehome").setExecutor(this);
-        plugin.getCommand("delhome").setExecutor(this);
-        plugin.getCommand("delhome").setTabCompleter(this);
-        plugin.getCommand("homeslist").setExecutor(this);
-        plugin.getCommand("spawn").setExecutor(this);
-        plugin.getCommand("setspawn").setExecutor(this);
-        plugin.getCommand("delspawn").setExecutor(this);
-        plugin.getCommand("homepassword").setExecutor(this);
-        plugin.getCommand("homespawn").setExecutor(this);
-        this.delHome = new HomeSpawnDelHome(plugin);
-        this.delSpawn = new HomeSpawnDelSpawn(plugin);
-        this.home = new HomeSpawnHome(plugin);
-        this.homesList = new HomeSpawnHomesList(plugin);
-        this.setHome = new HomeSpawnSetHome(plugin);
-        this.renameHome = new HomeSpawnRenameHome(plugin);
-        this.setSpawn = new HomeSpawnSetSpawn(plugin);
-        this.spawn = new HomeSpawnSpawn(plugin, this);
-        this.homePassword = new HomeSpawnHomePassword(plugin);
-        this.homeSpawn = new net.lapismc.HomeSpawn.commands.HomeSpawn(plugin);
+        new net.lapismc.HomeSpawn.commands.HomeSpawn(plugin);
+        new HomeSpawnDelHome(plugin);
+        new HomeSpawnDelSpawn(plugin);
+        new HomeSpawnHome(plugin);
+        homesList = new HomeSpawnHomesList(plugin);
+        new HomeSpawnSetHome(plugin);
+        new HomeSpawnRenameHome(plugin);
+        new HomeSpawnSetSpawn(plugin);
+        new HomeSpawnSpawn(plugin, this);
+        new HomeSpawnHomePassword(plugin);
         plugin.logger.info("Commands Registered!");
-    }
-
-    @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-        if (cmd.getName().equalsIgnoreCase("sethome")) {
-            setHome.setHome(args, sender);
-        } else if (cmd.getName().equalsIgnoreCase("renamehome")) {
-            renameHome.renameHome(args, sender);
-        } else if (cmd.getName().equalsIgnoreCase("home")) {
-            home.home(args, sender);
-        } else if (cmd.getName().equalsIgnoreCase("delhome")) {
-            delHome.delHome(args, sender);
-        } else if (cmd.getName().equalsIgnoreCase("setspawn")) {
-            setSpawn.setSpawn(args, sender);
-        } else if (cmd.getName().equals("spawn")) {
-            spawn.spawn(sender);
-        } else if (cmd.getName().equalsIgnoreCase("delspawn")) {
-            delSpawn.delSpawn(args, sender);
-        } else if (cmd.getName().equalsIgnoreCase("homeslist")) {
-            homesList.homesList(sender);
-        } else if (cmd.getName().equalsIgnoreCase("homespawn")) {
-            homeSpawn.homeSpawn(args, sender);
-        } else if (cmd.getName().equalsIgnoreCase("homepassword")) {
-            homePassword.homePassword(args, sender);
-        }
-        return false;
     }
 
     public List<String> onTabComplete(CommandSender sender, Command command, String alias,

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Benjamin Martin
+ * Copyright 2018 Benjamin Martin
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,9 +30,9 @@ import java.util.UUID;
 
 public class HomeSpawnPermissions {
 
+    private final HomeSpawn plugin;
     private HashMap<Permission, HashMap<perm, Integer>> Permissions = new HashMap<>();
     private HashMap<UUID, Permission> PlayerPermission = new HashMap<>();
-    private final HomeSpawn plugin;
 
     HomeSpawnPermissions(HomeSpawn p) {
         plugin = p;

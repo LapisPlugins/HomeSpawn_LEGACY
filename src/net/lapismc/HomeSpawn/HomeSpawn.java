@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Benjamin Martin
+ * Copyright 2018 Benjamin Martin
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,14 +22,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
-import java.io.File;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -54,36 +52,7 @@ public class HomeSpawn extends JavaPlugin {
         HSPermissions = new HomeSpawnPermissions(this);
         HSCommand = new HomeSpawnCommand(this);
         CommandDelay();
-        Metrics();
-    }
-
-    private void Metrics() {
-        Metrics metrics = new Metrics(this);
-        int homes = 0;
-        //get the total number of homes set by players
-        File playerData = new File(this.getDataFolder() + File.separator + "PlayerData");
-        int files = Objects.requireNonNull(playerData.listFiles()).length - 1;
-        for (File f : Objects.requireNonNull(playerData.listFiles())) {
-            if (!f.getName().equals("Passwords.yml") && !f.isDirectory()) {
-                YamlConfiguration yaml = YamlConfiguration.loadConfiguration(f);
-                homes += yaml.getStringList("Homes.List").size();
-            }
-        }
-        Integer average;
-        //average that number, making sure not to divide by 0
-        if (files != 0) {
-            average = homes % files == 0 ? homes / files : homes / files + 1;
-        } else {
-            average = 0;
-        }
-        //add the average number of homes as a metric chart
-        metrics.addCustomChart(new Metrics.SimplePie("average_number_of_homes") {
-            @Override
-            public String getValue() {
-                return average.toString();
-            }
-        });
-        debug("Send stats to metrics");
+        new Metrics(this);
     }
 
     private void Update() {

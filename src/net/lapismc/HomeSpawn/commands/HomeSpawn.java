@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Benjamin Martin
+ * Copyright 2018 Benjamin Martin
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,20 +18,29 @@ package net.lapismc.HomeSpawn.commands;
 
 import net.lapismc.HomeSpawn.HomeSpawnPermissions;
 import net.lapismc.HomeSpawn.playerdata.HomeSpawnPlayer;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class HomeSpawn {
+import java.util.ArrayList;
+
+public class HomeSpawn extends LapisCommand {
 
     private final net.lapismc.HomeSpawn.HomeSpawn plugin;
     private final net.lapismc.HomeSpawn.commands.HomeSpawnPlayer homeSpawnPlayer;
 
     public HomeSpawn(net.lapismc.HomeSpawn.HomeSpawn p) {
+        super("homespawn", "Shows plugin information", new ArrayList<>());
         this.plugin = p;
         this.homeSpawnPlayer = new net.lapismc.HomeSpawn.commands.HomeSpawnPlayer(plugin);
     }
 
-    public void homeSpawn(String[] args, CommandSender sender) {
+    @Override
+    public void onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
+        if (args.length > 0 && args[0].equalsIgnoreCase("player")) {
+            homeSpawnPlayer.homeSpawnPlayer(args, sender);
+            return;
+        }
         if (args.length == 0) {
             sender.sendMessage(plugin.SecondaryColor + "---------------"
                     + plugin.PrimaryColor + "Homespawn" + plugin.SecondaryColor
@@ -85,8 +94,6 @@ public class HomeSpawn {
                     sender.sendMessage(plugin.HSConfig.getColoredMessage("NoPerms"));
                 }
             }
-        } else if (args[0].equalsIgnoreCase("player")) {
-            homeSpawnPlayer.homeSpawnPlayer(args, sender);
         }
     }
 }

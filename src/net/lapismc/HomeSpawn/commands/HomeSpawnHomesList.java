@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Benjamin Martin
+ * Copyright 2018 Benjamin Martin
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import net.lapismc.HomeSpawn.playerdata.HomeSpawnPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -32,16 +33,18 @@ import org.bukkit.material.Wool;
 
 import java.util.*;
 
-public class HomeSpawnHomesList {
+public class HomeSpawnHomesList extends LapisCommand {
 
     final public HashMap<Player, Inventory> HomesListInvs = new HashMap<>();
     private final HomeSpawn plugin;
 
     public HomeSpawnHomesList(HomeSpawn p) {
+        super("homeslist", "Shows the players current homes", new ArrayList<>());
         this.plugin = p;
     }
 
-    public void homesList(CommandSender sender) {
+    @Override
+    public void onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         if (!(sender instanceof Player)) {
             sender.sendMessage(plugin.HSConfig.getMessage("Error.MustBePlayer"));
             return;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Benjamin Martin
+ * Copyright 2018 Benjamin Martin
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,21 +18,25 @@ package net.lapismc.HomeSpawn.commands;
 
 import net.lapismc.HomeSpawn.HomeSpawn;
 import net.lapismc.HomeSpawn.HomeSpawnPermissions;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
-public class HomeSpawnSetSpawn {
+public class HomeSpawnSetSpawn extends LapisCommand {
 
     private final HomeSpawn plugin;
 
     public HomeSpawnSetSpawn(HomeSpawn p) {
+        super("setspawn", "Sets the spawn location for the server so you can use /spawn to get back there", new ArrayList<>());
         plugin = p;
     }
 
-    public void setSpawn(String[] args, CommandSender sender) {
+    @Override
+    public void onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         if (!(sender instanceof Player)) {
             sender.sendMessage(plugin.HSConfig.getMessage("Error.MustBePlayer"));
             return;

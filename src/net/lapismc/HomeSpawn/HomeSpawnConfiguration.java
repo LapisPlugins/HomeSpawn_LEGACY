@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Benjamin Martin
+ * Copyright 2018 Benjamin Martin
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,13 +31,13 @@ import java.util.logging.Level;
 
 public class HomeSpawnConfiguration {
 
+    private final HashMap<UUID, YamlConfiguration> HomeConfigs = new HashMap<>();
+    private final HomeSpawn plugin;
     public YamlConfiguration spawn;
     public File spawnFile;
-    private final HashMap<UUID, YamlConfiguration> HomeConfigs = new HashMap<>();
     private YamlConfiguration messages;
     private File messagesFile;
     private File passwordsFile;
-    private final HomeSpawn plugin;
 
     HomeSpawnConfiguration(HomeSpawn p) {
         plugin = p;

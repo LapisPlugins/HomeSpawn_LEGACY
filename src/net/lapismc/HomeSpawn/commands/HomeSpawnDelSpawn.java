@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Benjamin Martin
+ * Copyright 2018 Benjamin Martin
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,21 +18,25 @@ package net.lapismc.HomeSpawn.commands;
 
 import net.lapismc.HomeSpawn.HomeSpawn;
 import net.lapismc.HomeSpawn.HomeSpawnPermissions;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
-public class HomeSpawnDelSpawn {
+public class HomeSpawnDelSpawn extends LapisCommand {
 
     private final HomeSpawn plugin;
 
     public HomeSpawnDelSpawn(HomeSpawn p) {
+        super("delspawn", "Deletes the spawn location from file", new ArrayList<>());
         this.plugin = p;
     }
 
-    public void delSpawn(String[] args, CommandSender sender) {
+    @Override
+    public void onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         boolean permitted;
         if (sender instanceof Player) {
             Player p = (Player) sender;
