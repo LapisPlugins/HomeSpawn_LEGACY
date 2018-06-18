@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package net.lapismc.HomeSpawn.commands;
+package net.lapismc.HomeSpawn.util;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -27,7 +27,7 @@ import java.util.ArrayList;
 
 public class LapisCommand extends BukkitCommand {
 
-    LapisCommand(String name, String desc, ArrayList<String> aliases) {
+    public LapisCommand(String name, String desc, ArrayList<String> aliases) {
         super(name);
         setDescription(desc);
         setAliases(aliases);

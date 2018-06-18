@@ -21,6 +21,7 @@ import net.lapismc.HomeSpawn.HomeSpawnPermissions;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
 
@@ -110,8 +111,9 @@ public class Home {
 
     public void setLocation(Location loc) {
         HomeSpawnPlayer p = plugin.getPlayer(owner.getUniqueId());
-        p.getConfig().set("Homes." + name, loc);
-        p.saveConfig(p.getConfig());
+        YamlConfiguration getHomes = p.getConfig(false);
+        getHomes.set("Homes." + name, loc);
+        p.saveConfig(getHomes);
         location = loc;
     }
 

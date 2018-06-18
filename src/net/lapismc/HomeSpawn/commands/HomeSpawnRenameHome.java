@@ -19,6 +19,7 @@ package net.lapismc.HomeSpawn.commands;
 import net.lapismc.HomeSpawn.api.events.HomeRenameEvent;
 import net.lapismc.HomeSpawn.playerdata.Home;
 import net.lapismc.HomeSpawn.playerdata.HomeSpawnPlayer;
+import net.lapismc.HomeSpawn.util.LapisCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -49,7 +50,7 @@ public class HomeSpawnRenameHome extends LapisCommand {
         if (args.length == 2) {
             String oldHome = args[0];
             String newHomeName = args[1];
-            YamlConfiguration homes = HSPlayer.getConfig();
+            YamlConfiguration homes = HSPlayer.getConfig(false);
             List<String> list = HSPlayer.getHomesStringList();
             if (list.contains(oldHome)) {
                 if (!list.contains(newHomeName)) {

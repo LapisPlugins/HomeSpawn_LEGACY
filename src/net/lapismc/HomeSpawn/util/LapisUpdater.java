@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package net.lapismc.HomeSpawn;
+package net.lapismc.HomeSpawn.util;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -41,7 +41,7 @@ public class LapisUpdater {
     private Boolean force;
     private String newVersionRawString;
 
-    LapisUpdater(JavaPlugin plugin) {
+    public LapisUpdater(JavaPlugin plugin) {
         this.plugin = plugin;
         this.jarName = "Homespawn";
         this.username = "LapisPlugins";

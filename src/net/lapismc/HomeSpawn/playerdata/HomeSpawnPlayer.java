@@ -103,8 +103,8 @@ public class HomeSpawnPlayer {
         return plugin.HSPermissions.isPermitted(op.getUniqueId(), perm);
     }
 
-    public YamlConfiguration getConfig() {
-        if (yaml == null) {
+    public YamlConfiguration getConfig(boolean force) {
+        if (yaml == null || force) {
             yaml = plugin.HSConfig.getPlayerData(op.getUniqueId());
         }
         return yaml;
@@ -115,8 +115,13 @@ public class HomeSpawnPlayer {
         plugin.HSConfig.savePlayerData(op.getUniqueId(), config);
     }
 
+    public void reloadHomes() {
+        homes.clear();
+        loadHomes();
+    }
+
     private void loadHomes() {
-        getConfig();
+        getConfig(true);
         if (yaml.contains("Homes.list")) {
             List<String> homesList = yaml.getStringList("Homes.list");
             ConfigurationSection cs = yaml.getConfigurationSection("Homes");

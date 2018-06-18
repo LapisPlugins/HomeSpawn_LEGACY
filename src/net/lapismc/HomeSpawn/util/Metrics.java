@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package net.lapismc.HomeSpawn;
+package net.lapismc.HomeSpawn.util;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -40,7 +40,7 @@ import java.util.zip.GZIPOutputStream;
  * Check out https://bStats.org/ to learn more about bStats!
  */
 @SuppressWarnings("unchecked")
-class Metrics {
+public class Metrics {
 
     // The version of this bStats class
     private static final int B_STATS_VERSION = 1;
@@ -72,7 +72,7 @@ class Metrics {
      *
      * @param plugin The plugin which stats should be submitted.
      */
-    Metrics(JavaPlugin plugin) {
+    public Metrics(JavaPlugin plugin) {
         if (plugin == null) {
             throw new IllegalArgumentException("Plugin cannot be null!");
         }

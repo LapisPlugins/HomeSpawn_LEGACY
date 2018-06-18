@@ -65,7 +65,7 @@ public class HomeSpawnCommand implements TabCompleter {
         //checks if a player is attempting to tab complete a home name
         if (command.getName().equalsIgnoreCase("home") || command.getName().equalsIgnoreCase("delhome")) {
             Player p = (Player) sender;
-            YamlConfiguration playerData = plugin.getPlayer(p.getUniqueId()).getConfig();
+            YamlConfiguration playerData = plugin.getPlayer(p.getUniqueId()).getConfig(false);
             //Gets the list of the players homes and returns it for the tab complete to deal with
             List<String> l = new ArrayList<>();
             for (String home : playerData.getStringList("Homes.list")) {

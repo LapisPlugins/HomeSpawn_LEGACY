@@ -22,6 +22,7 @@ import net.lapismc.HomeSpawn.api.events.HomeMoveEvent;
 import net.lapismc.HomeSpawn.api.events.HomeSetEvent;
 import net.lapismc.HomeSpawn.playerdata.Home;
 import net.lapismc.HomeSpawn.playerdata.HomeSpawnPlayer;
+import net.lapismc.HomeSpawn.util.LapisCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -48,9 +49,9 @@ public class HomeSpawnSetHome extends LapisCommand {
         }
         Player p = (Player) sender;
         HomeSpawnPlayer HSPlayer = new HomeSpawnPlayer(plugin, p.getUniqueId());
-        YamlConfiguration getHomes = HSPlayer.getConfig();
+        YamlConfiguration getHomes = HSPlayer.getConfig(false);
         List<String> list = getHomes.getStringList("Homes.list");
-        if (list.size() >= HSPlayer.getPermissionValue(HomeSpawnPermissions.perm.homes)) {
+        if (HSPlayer.getHomes().size() >= HSPlayer.getPermissionValue(HomeSpawnPermissions.perm.homes)) {
             p.sendMessage(plugin.HSConfig.getColoredMessage("Home.LimitReached"));
             return;
         }
@@ -80,6 +81,8 @@ public class HomeSpawnSetHome extends LapisCommand {
             }
             home.setLocation(p.getLocation());
             HSPlayer.addHome(home);
+            HSPlayer.saveConfig(getHomes);
+            HSPlayer.reloadHomes();
             p.sendMessage(plugin.HSConfig.getColoredMessage("Home.HomeSet"));
         } else if (args.length == 1) {
             if (HSPlayer.isPermitted(HomeSpawnPermissions.perm.customHomes)) {
@@ -112,6 +115,8 @@ public class HomeSpawnSetHome extends LapisCommand {
                 }
                 home.setLocation(p.getLocation());
                 HSPlayer.addHome(home);
+                HSPlayer.saveConfig(getHomes);
+                HSPlayer.reloadHomes();
                 p.sendMessage(plugin.HSConfig.getColoredMessage("Home.HomeSet"));
             } else {
                 p.sendMessage(plugin.HSConfig.getColoredMessage("NoPerms"));
@@ -119,7 +124,6 @@ public class HomeSpawnSetHome extends LapisCommand {
         } else {
             p.sendMessage(plugin.HSConfig.getColoredMessage("Error.Args+"));
         }
-        this.plugin.HSConfig.savePlayerData(p.getUniqueId(), getHomes);
     }
 
 }

@@ -18,6 +18,7 @@ package net.lapismc.HomeSpawn.commands;
 
 import net.lapismc.HomeSpawn.HomeSpawnPermissions;
 import net.lapismc.HomeSpawn.playerdata.HomeSpawnPlayer;
+import net.lapismc.HomeSpawn.util.LapisCommand;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

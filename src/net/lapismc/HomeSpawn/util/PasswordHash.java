@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package net.lapismc.HomeSpawn;
+package net.lapismc.HomeSpawn.util;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;

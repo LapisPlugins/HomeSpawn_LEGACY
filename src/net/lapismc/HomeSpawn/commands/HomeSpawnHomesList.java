@@ -19,6 +19,8 @@ package net.lapismc.HomeSpawn.commands;
 import net.lapismc.HomeSpawn.HomeSpawn;
 import net.lapismc.HomeSpawn.playerdata.Home;
 import net.lapismc.HomeSpawn.playerdata.HomeSpawnPlayer;
+import net.lapismc.HomeSpawn.util.EasyComponent;
+import net.lapismc.HomeSpawn.util.LapisCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
@@ -35,7 +37,7 @@ import java.util.*;
 
 public class HomeSpawnHomesList extends LapisCommand {
 
-    final public HashMap<Player, Inventory> HomesListInvs = new HashMap<>();
+    final public HashMap<Player, Inventory> HomesListInventories = new HashMap<>();
     private final HomeSpawn plugin;
 
     public HomeSpawnHomesList(HomeSpawn p) {
@@ -56,8 +58,15 @@ public class HomeSpawnHomesList extends LapisCommand {
             HomeSpawnPlayer HSPlayer = new HomeSpawnPlayer(plugin, p.getUniqueId());
             List<Home> list = HSPlayer.getHomes();
             if (!list.isEmpty()) {
-                p.sendMessage(plugin.HSConfig.getColoredMessage("Home.CurrentHomes"));
-                p.sendMessage(plugin.SecondaryColor + HSPlayer.getHomesList());
+                EasyComponent component = new EasyComponent(plugin.HSConfig.getColoredMessage("Home.CurrentHomes"))
+                        .append("\n");
+                for (Home home : list) {
+                    component.append(plugin.SecondaryColor + home.getName() + "  ")
+                            .onClickRunCmd("/home " + home.getName())
+                            .onHover(plugin.PrimaryColor + "Click to teleport");
+                }
+                component.append("\n" + plugin.HSConfig.getColoredMessage("Home.ClickToTeleport"));
+                component.send(p);
             } else {
                 p.sendMessage(plugin.HSConfig.getColoredMessage("Home.NoHomeSet"));
             }
@@ -72,33 +81,26 @@ public class HomeSpawnHomesList extends LapisCommand {
                     plugin.HSConfig.getColoredMessage("Home.NoHomeSet")));
             return;
         }
-        ArrayList<DyeColor> dc = new ArrayList<>();
-        dc.add(DyeColor.BLACK);
-        dc.add(DyeColor.BLUE);
-        dc.add(DyeColor.GRAY);
-        dc.add(DyeColor.GREEN);
-        dc.add(DyeColor.MAGENTA);
-        dc.add(DyeColor.ORANGE);
         Random r = new Random(System.currentTimeMillis());
         int slots = homes.size() % 9 == 0 ? homes.size() / 9 : homes.size() / 9 + 1;
-        if (HomesListInvs.containsKey(p)) {
-            if (!(HomesListInvs.get(p).getSize() == slots * 9)) {
+        if (HomesListInventories.containsKey(p)) {
+            if (!(HomesListInventories.get(p).getSize() == slots * 9)) {
                 Inventory inv = Bukkit.createInventory(p, 9 * slots, ChatColor.GOLD + p.getName() + "'s Homes List");
-                HomesListInvs.put(p, inv);
+                HomesListInventories.put(p, inv);
             }
         } else {
             Inventory inv = Bukkit.createInventory(p, 9 * slots, ChatColor.GOLD + p.getName() + "'s Homes List");
-            HomesListInvs.put(p, inv);
+            HomesListInventories.put(p, inv);
         }
         for (String home : homes) {
-            ItemStack i = new Wool(dc.get(r.nextInt(5))).toItemStack(1);
+            ItemStack i = new Wool(DyeColor.values()[(r.nextInt(DyeColor.values().length))]).toItemStack(1);
             ItemMeta im = i.getItemMeta();
             im.setDisplayName(ChatColor.GOLD + home);
             im.setLore(Arrays.asList(ChatColor.GOLD + "Click To Teleport To",
                     ChatColor.RED + home));
             i.setItemMeta(im);
-            HomesListInvs.get(p).addItem(i);
+            HomesListInventories.get(p).addItem(i);
         }
-        p.openInventory(HomesListInvs.get(p));
+        p.openInventory(HomesListInventories.get(p));
     }
 }

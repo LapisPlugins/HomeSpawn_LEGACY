@@ -161,7 +161,7 @@ class HomeSpawnListener implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void invInteract(InventoryClickEvent e) {
         Player p = (Player) e.getWhoClicked();
-        if (e.getInventory().equals(plugin.HSCommand.homesList.HomesListInvs.get(p))) {
+        if (e.getInventory().equals(plugin.HSCommand.homesList.HomesListInventories.get(p))) {
             String name = e.getCurrentItem().getItemMeta().getDisplayName();
             String name1 = ChatColor.stripColor(name);
             YamlConfiguration getHomes = plugin.HSConfig.getPlayerData(p.getUniqueId());
@@ -177,9 +177,9 @@ class HomeSpawnListener implements Listener {
                 }
             }
             e.getWhoClicked().closeInventory();
-            Inventory inv = plugin.HSCommand.homesList.HomesListInvs.get(p);
+            Inventory inv = plugin.HSCommand.homesList.HomesListInventories.get(p);
             inv.clear();
-            plugin.HSCommand.homesList.HomesListInvs.put(p, inv);
+            plugin.HSCommand.homesList.HomesListInventories.put(p, inv);
         }
 
     }
@@ -188,11 +188,11 @@ class HomeSpawnListener implements Listener {
     public void onInvExit(InventoryCloseEvent e) {
         if (!(e.getPlayer() == null && e.getInventory() == null)) {
             Player p = (Player) e.getPlayer();
-            if (plugin.HSCommand.homesList.HomesListInvs.containsKey(p) && Objects
-                    .equals(e.getInventory().getName(), plugin.HSCommand.homesList.HomesListInvs.get(p).getName())) {
-                Inventory inv = plugin.HSCommand.homesList.HomesListInvs.get(p);
+            if (plugin.HSCommand.homesList.HomesListInventories.containsKey(p) && Objects
+                    .equals(e.getInventory().getName(), plugin.HSCommand.homesList.HomesListInventories.get(p).getName())) {
+                Inventory inv = plugin.HSCommand.homesList.HomesListInventories.get(p);
                 inv.clear();
-                plugin.HSCommand.homesList.HomesListInvs.put(p, inv);
+                plugin.HSCommand.homesList.HomesListInventories.put(p, inv);
             }
         }
     }

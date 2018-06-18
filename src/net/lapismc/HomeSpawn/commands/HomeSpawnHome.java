@@ -21,6 +21,7 @@ import net.lapismc.HomeSpawn.HomeSpawnPermissions;
 import net.lapismc.HomeSpawn.api.events.HomeTeleportEvent;
 import net.lapismc.HomeSpawn.playerdata.Home;
 import net.lapismc.HomeSpawn.playerdata.HomeSpawnPlayer;
+import net.lapismc.HomeSpawn.util.LapisCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;

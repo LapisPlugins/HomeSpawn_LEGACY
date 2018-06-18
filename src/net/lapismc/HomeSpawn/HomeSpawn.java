@@ -18,6 +18,8 @@ package net.lapismc.HomeSpawn;
 
 import net.lapismc.HomeSpawn.playerdata.Home;
 import net.lapismc.HomeSpawn.playerdata.HomeSpawnPlayer;
+import net.lapismc.HomeSpawn.util.LapisUpdater;
+import net.lapismc.HomeSpawn.util.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;

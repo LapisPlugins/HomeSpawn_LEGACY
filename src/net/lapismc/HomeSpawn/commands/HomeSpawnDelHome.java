@@ -20,6 +20,7 @@ import net.lapismc.HomeSpawn.HomeSpawn;
 import net.lapismc.HomeSpawn.api.events.HomeDeleteEvent;
 import net.lapismc.HomeSpawn.playerdata.Home;
 import net.lapismc.HomeSpawn.playerdata.HomeSpawnPlayer;
+import net.lapismc.HomeSpawn.util.LapisCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -46,7 +47,7 @@ public class HomeSpawnDelHome extends LapisCommand {
         }
         Player p = (Player) sender;
         HomeSpawnPlayer HSPlayer = new HomeSpawnPlayer(plugin, p.getUniqueId());
-        YamlConfiguration getHomes = HSPlayer.getConfig();
+        YamlConfiguration getHomes = HSPlayer.getConfig(false);
         List<String> list = HSPlayer.getHomesStringList();
         if (args.length == 0) {
             if (list.contains("Home")) {
@@ -65,6 +66,7 @@ public class HomeSpawnDelHome extends LapisCommand {
                     getHomes.set("Homes.list", list);
                 }
                 HSPlayer.saveConfig(getHomes);
+                HSPlayer.reloadHomes();
             } else {
                 p.sendMessage(plugin.HSConfig.getColoredMessage("Home.NoHomeSet"));
                 if (!list.isEmpty()) {
@@ -93,13 +95,14 @@ public class HomeSpawnDelHome extends LapisCommand {
                     return;
                 }
                 p.sendMessage(plugin.HSConfig.getColoredMessage("Home.HomeRemoved"));
-                getHomes.set(homeName, null);
+                getHomes.set("Homes." + homeName, null);
                 HSPlayer.removeHome(home);
                 if (list.contains(homeName)) {
                     list.remove(homeName);
                     getHomes.set("Homes.list", list);
                 }
                 HSPlayer.saveConfig(getHomes);
+                HSPlayer.reloadHomes();
             }
         } else {
             p.sendMessage(plugin.HSConfig.getColoredMessage("Error.Args+"));

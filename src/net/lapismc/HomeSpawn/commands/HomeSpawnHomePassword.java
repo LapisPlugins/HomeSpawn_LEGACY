@@ -17,7 +17,8 @@
 package net.lapismc.HomeSpawn.commands;
 
 import net.lapismc.HomeSpawn.HomeSpawn;
-import net.lapismc.HomeSpawn.PasswordHash;
+import net.lapismc.HomeSpawn.util.LapisCommand;
+import net.lapismc.HomeSpawn.util.PasswordHash;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;

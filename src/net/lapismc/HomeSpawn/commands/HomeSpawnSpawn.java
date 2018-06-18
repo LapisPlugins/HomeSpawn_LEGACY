@@ -20,6 +20,7 @@ import net.lapismc.HomeSpawn.HomeSpawn;
 import net.lapismc.HomeSpawn.HomeSpawnCommand;
 import net.lapismc.HomeSpawn.HomeSpawnPermissions;
 import net.lapismc.HomeSpawn.api.events.SpawnTeleportEvent;
+import net.lapismc.HomeSpawn.util.LapisCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
