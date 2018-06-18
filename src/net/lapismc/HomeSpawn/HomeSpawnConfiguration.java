@@ -29,12 +29,15 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 
+@SuppressWarnings("FieldCanBeLocal")
 public class HomeSpawnConfiguration {
 
     private final HashMap<UUID, YamlConfiguration> HomeConfigs = new HashMap<>();
     private final HomeSpawn plugin;
     public YamlConfiguration spawn;
     public File spawnFile;
+    private int configVersion = 10;
+    private int messagesVersion = 1;
     private YamlConfiguration messages;
     private File messagesFile;
     private File passwordsFile;
@@ -346,16 +349,20 @@ public class HomeSpawnConfiguration {
     }
 
     private void configVersion() {
-        if (plugin.getConfig().getInt("ConfigVersion") != 9) {
-            File oldConfig = new File(plugin.getDataFolder() + File.separator + "config.yml");
-            File backupConfig = new File(plugin.getDataFolder() + File.separator +
-                    "Backup_config.yml");
-            if (!oldConfig.renameTo(backupConfig)) {
-                plugin.logger.info("Failed to generate new config.yml");
-            }
+        if (plugin.getConfig().getInt("ConfigVersion") != configVersion) {
+            File oldConfig = new File(plugin.getDataFolder() + File.separator + "config_OLD.yml");
+            File config = new File(plugin.getDataFolder() + File.separator + "config.yml");
+            config.renameTo(oldConfig);
             plugin.saveDefaultConfig();
-            plugin.logger.info("New config generated!");
-            plugin.logger.info("Please transfer values!");
+            plugin.logger.info("The config.yml file has been updated, it is now called config_OLD.yml," +
+                    " please transfer any values into the new config.yml");
+        }
+        if (messages.getInt("ConfigVersion") != messagesVersion) {
+            File oldMessages = new File(plugin.getDataFolder() + File.separator + "messages_OLD.yml");
+            messagesFile.renameTo(oldMessages);
+            createMessages();
+            plugin.logger.info("The messages.yml file has been updated, it is now called messages_OLD.yml," +
+                    " please transfer any values into the new messages.yml");
         }
     }
 

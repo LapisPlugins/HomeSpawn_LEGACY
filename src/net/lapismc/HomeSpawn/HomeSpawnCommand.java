@@ -35,17 +35,28 @@ public class HomeSpawnCommand implements TabCompleter {
     HomeSpawnHomesList homesList;
 
     HomeSpawnCommand(HomeSpawn plugin) {
+        List<String> disabledCommands = plugin.getConfig().getStringList("DisabledCommands");
         this.plugin = plugin;
-        new net.lapismc.HomeSpawn.commands.HomeSpawn(plugin);
-        new HomeSpawnDelHome(plugin);
-        new HomeSpawnDelSpawn(plugin);
-        new HomeSpawnHome(plugin);
-        homesList = new HomeSpawnHomesList(plugin);
-        new HomeSpawnSetHome(plugin);
-        new HomeSpawnRenameHome(plugin);
-        new HomeSpawnSetSpawn(plugin);
-        new HomeSpawnSpawn(plugin, this);
-        new HomeSpawnHomePassword(plugin);
+        if (!disabledCommands.contains("homespawn"))
+            new net.lapismc.HomeSpawn.commands.HomeSpawn(plugin);
+        if (!disabledCommands.contains("delhome"))
+            new HomeSpawnDelHome(plugin);
+        if (!disabledCommands.contains("delspawn"))
+            new HomeSpawnDelSpawn(plugin);
+        if (!disabledCommands.contains("home"))
+            new HomeSpawnHome(plugin);
+        if (!disabledCommands.contains("homeslist"))
+            homesList = new HomeSpawnHomesList(plugin);
+        if (!disabledCommands.contains("sethome"))
+            new HomeSpawnSetHome(plugin);
+        if (!disabledCommands.contains("renamehome"))
+            new HomeSpawnRenameHome(plugin);
+        if (!disabledCommands.contains("setspawn"))
+            new HomeSpawnSetSpawn(plugin);
+        if (!disabledCommands.contains("spawn"))
+            new HomeSpawnSpawn(plugin, this);
+        if (!disabledCommands.contains("homepassword"))
+            new HomeSpawnHomePassword(plugin);
         plugin.logger.info("Commands Registered!");
     }
 

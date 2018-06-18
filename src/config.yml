@@ -1,41 +1,45 @@
-##Dont Change This, It Will Reset The Config If You Do!
-ConfigVersion: 9
-## If Set To True Console Will Be Notified If The Plugin Has Updates Available
+#Dont Change This, It Will Reset The Config If You Do!
+ConfigVersion: 10
+# If Set To True Console Will Be Notified If The Plugin Has Updates Available
 UpdateNotification: true
-## If set to true the plugin will automaticly download and install updates (updates can be force installed with /homespawn update)
+# If set to true the plugin will automatically download and install updates (updates can be force installed with /homespawn update)
 DownloadUpdates: false
-## If set to true the plugin will print messages telling you what it is currently doing, helpfull while trying to find errors
+# If set to true the plugin will print messages telling you what it is currently doing, helpful while trying to find errors
 Debug: false
-## If enabled the player wil be given a book with all player commands listed (Does not contain admin or VIP commands)
-## on first join
+# If enabled the player wil be given a book with all player commands listed (Does not contain admin or VIP commands)
+# on first join
 CommandBook: true
-## When enabled players will be given an inventory menu to select a home to teleport to when
-## they run /homeslist, otherwise they wll get a clickable chat list
+# When enabled players will be given an inventory menu to select a home to teleport to when
+# they run /homeslist, otherwise they wll get a clickable chat list
 InventoryMenu: true
-## Permissions are handled below, there is no limit to how many permissions
-## you can have as long as they contain all of the settings
-## (NOTE: in a permission name "," will be replaced with "." EG. homespawn,player = homespawn.player)
+#If you want to disable commands you can enter the command names here and they wont be used
+#e.g. home would disable the /home command
+DisabledCommands:
+  - "Command names here"
+# Permissions are handled below, there is no limit to how many permissions
+# you can have as long as they contain all of the settings
+# (NOTE: in a permission name "," will be replaced with "." EG. homespawn,player = homespawn.player)
 Permissions:
     homespawn,player:
-        ## Who will have this by default? 0=no one 1=everyone 2=OPs
+        # Who will have this by default? 0=no one 1=everyone 2=OPs
         default: 1
-        ## Players will be given the permission with the highest value, if players have multiple permissions.
+        # Players will be given the permission with the highest value, if players have multiple permissions.
         priority: 0
-        ## How many homes can they have set? 0=none, will be limited to 1 if custom homes is disabled
+        # How many homes can they have set? 0=none, will be limited to 1 if custom homes is disabled
         homes: 1
-        ## Can they use /spawn? 0=no 1=yes
+        # Can they use /spawn? 0=no 1=yes
         spawn: 1
-        ## Can they make custom named homes? 0=no 1=yes
+        # Can they make custom named homes? 0=no 1=yes
         set custom homes: 0
-        ## How many seconds must they wait before they are teleported? 0=instant
+        # How many seconds must they wait before they are teleported? 0=instant
         TP delay: 10
-        ## Can they set spawn? this includes /setspawn new. 0=no 1=yes
+        # Can they set spawn? this includes /setspawn new. 0=no 1=yes
         setspawn: 0
-        ## Will they be notified of an available update? (NOTE: this also allows them to install updates with /homespawn update) 0=no 1=yes
+        # Will they be notified of an available update? (NOTE: this also allows them to install updates with /homespawn update) 0=no 1=yes
         updateNotify: 0
-        ## Can they reload the plugin? 0=no 1=yes
+        # Can they reload the plugin? 0=no 1=yes
         reload: 0
-        ##can they view player stats and teleport to other players homes? 0 = no 1 = yes
+        #can they view player stats and teleport to other players homes? 0 = no 1 = yes
         player stats: 0
     homespawn,vip:
         default: 0
