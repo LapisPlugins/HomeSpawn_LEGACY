@@ -349,7 +349,7 @@ public class HomeSpawnConfiguration {
     }
 
     private void configVersion() {
-        if (plugin.getConfig().getInt("ConfigVersion") != configVersion) {
+        if (plugin.getConfig().getInt("ConfigVersion", 0) != configVersion) {
             File oldConfig = new File(plugin.getDataFolder() + File.separator + "config_OLD.yml");
             File config = new File(plugin.getDataFolder() + File.separator + "config.yml");
             config.renameTo(oldConfig);
@@ -357,7 +357,7 @@ public class HomeSpawnConfiguration {
             plugin.logger.info("The config.yml file has been updated, it is now called config_OLD.yml," +
                     " please transfer any values into the new config.yml");
         }
-        if (messages.getInt("ConfigVersion") != messagesVersion) {
+        if (messages.getInt("ConfigVersion", 0) != messagesVersion) {
             File oldMessages = new File(plugin.getDataFolder() + File.separator + "messages_OLD.yml");
             messagesFile.renameTo(oldMessages);
             createMessages();
