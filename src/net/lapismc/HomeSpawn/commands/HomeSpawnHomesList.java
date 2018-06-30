@@ -16,24 +16,28 @@
 
 package net.lapismc.HomeSpawn.commands;
 
+import me.kangarko.ui.UIDesignerAPI;
+import me.kangarko.ui.menu.menues.MenuPagged;
+import me.kangarko.ui.model.ItemCreator;
 import net.lapismc.HomeSpawn.HomeSpawn;
 import net.lapismc.HomeSpawn.playerdata.Home;
 import net.lapismc.HomeSpawn.playerdata.HomeSpawnPlayer;
 import net.lapismc.HomeSpawn.util.EasyComponent;
 import net.lapismc.HomeSpawn.util.LapisCommand;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.material.Wool;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Random;
 
 public class HomeSpawnHomesList extends LapisCommand {
 
@@ -74,33 +78,73 @@ public class HomeSpawnHomesList extends LapisCommand {
     }
 
     private void showMenu(Player p) {
-        YamlConfiguration getHomes = this.plugin.HSConfig.getPlayerData(p.getUniqueId());
-        List<String> homes = getHomes.getStringList("Homes.list");
-        if (homes.isEmpty()) {
-            p.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.HSConfig.getColoredMessage("Home.NoHomeSet")));
-            return;
-        }
+        UIDesignerAPI.setPlugin(plugin);
+        HomeSpawnPlayer hsPlayer = plugin.getPlayer(p.getUniqueId());
+        new homesListUI(hsPlayer).displayTo(p);
+        /*
+        This is the old menu code
+         YamlConfiguration getHomes = this.plugin.HSConfig.getPlayerData(p.getUniqueId());
+         List<String> homes = getHomes.getStringList("Homes.list");
+         if (homes.isEmpty()) {
+         p.sendMessage(ChatColor.translateAlternateColorCodes('&',
+         plugin.HSConfig.getColoredMessage("Home.NoHomeSet")));
+         return;
+         }
+         Random r = new Random(System.currentTimeMillis());
+         int slots = homes.size() % 9 == 0 ? homes.size() / 9 : homes.size() / 9 + 1;
+         if (HomesListInventories.containsKey(p)) {
+         if (!(HomesListInventories.get(p).getSize() == slots * 9)) {
+         Inventory inv = Bukkit.createInventory(p, 9 * slots, ChatColor.GOLD + p.getName() + "'s Homes List");
+         HomesListInventories.put(p, inv);
+         }
+         } else {
+         Inventory inv = Bukkit.createInventory(p, 9 * slots, ChatColor.GOLD + p.getName() + "'s Homes List");
+         HomesListInventories.put(p, inv);
+         }
+         for (String home : homes) {
+         ItemStack i = new Wool(DyeColor.values()[(r.nextInt(DyeColor.values().length))]).toItemStack(1);
+         ItemMeta im = i.getItemMeta();
+         im.setDisplayName(ChatColor.GOLD + home);
+         im.setLore(Arrays.asList(ChatColor.GOLD + "Click To Teleport To",
+         ChatColor.RED + home));
+         i.setItemMeta(im);
+         HomesListInventories.get(p).addItem(i);
+         }
+         p.openInventory(HomesListInventories.get(p));
+         */
+    }
+
+    private class homesListUI extends MenuPagged<Home> {
+
         Random r = new Random(System.currentTimeMillis());
-        int slots = homes.size() % 9 == 0 ? homes.size() / 9 : homes.size() / 9 + 1;
-        if (HomesListInventories.containsKey(p)) {
-            if (!(HomesListInventories.get(p).getSize() == slots * 9)) {
-                Inventory inv = Bukkit.createInventory(p, 9 * slots, ChatColor.GOLD + p.getName() + "'s Homes List");
-                HomesListInventories.put(p, inv);
+
+        homesListUI(HomeSpawnPlayer p) {
+            super(9 * 2, null, p.getHomes());
+        }
+
+        @Override
+        protected String getMenuTitle() {
+            return "Your homes";
+        }
+
+        @Override
+        protected ItemStack convertToItemStack(Home home) {
+            return ItemCreator.of(Material.WOOL).color(DyeColor.values()[(r.nextInt(DyeColor.values().length))])
+                    .name(home.getName()).build().make();
+        }
+
+        @Override
+        protected void onMenuClickPaged(Player player, Home home, ClickType clickType) {
+            if (clickType.isLeftClick()) {
+                Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, () -> home.teleportPlayer(player), 1);
             }
-        } else {
-            Inventory inv = Bukkit.createInventory(p, 9 * slots, ChatColor.GOLD + p.getName() + "'s Homes List");
-            HomesListInventories.put(p, inv);
         }
-        for (String home : homes) {
-            ItemStack i = new Wool(DyeColor.values()[(r.nextInt(DyeColor.values().length))]).toItemStack(1);
-            ItemMeta im = i.getItemMeta();
-            im.setDisplayName(ChatColor.GOLD + home);
-            im.setLore(Arrays.asList(ChatColor.GOLD + "Click To Teleport To",
-                    ChatColor.RED + home));
-            i.setItemMeta(im);
-            HomesListInventories.get(p).addItem(i);
+
+        @Override
+        protected String[] getInfo() {
+            return new String[]{
+                    "This is a list of your current homes", "", "Left click to teleport!"
+            };
         }
-        p.openInventory(HomesListInventories.get(p));
     }
 }
