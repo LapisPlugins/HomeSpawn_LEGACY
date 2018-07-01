@@ -24,7 +24,6 @@ import net.lapismc.HomeSpawn.playerdata.Home;
 import net.lapismc.HomeSpawn.playerdata.HomeSpawnPlayer;
 import net.lapismc.HomeSpawn.util.EasyComponent;
 import net.lapismc.HomeSpawn.util.LapisCommand;
-import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -80,7 +79,7 @@ public class HomeSpawnHomesList extends LapisCommand {
     private void showMenu(Player p) {
         UIDesignerAPI.setPlugin(plugin);
         HomeSpawnPlayer hsPlayer = plugin.getPlayer(p.getUniqueId());
-        new homesListUI(hsPlayer).displayTo(p);
+        new HomesListUI(hsPlayer).displayTo(p);
         /*
         This is the old menu code
          YamlConfiguration getHomes = this.plugin.HSConfig.getPlayerData(p.getUniqueId());
@@ -114,11 +113,11 @@ public class HomeSpawnHomesList extends LapisCommand {
          */
     }
 
-    private class homesListUI extends MenuPagged<Home> {
+    private class HomesListUI extends MenuPagged<Home> {
 
         Random r = new Random(System.currentTimeMillis());
 
-        homesListUI(HomeSpawnPlayer p) {
+        HomesListUI(HomeSpawnPlayer p) {
             super(9 * 2, null, p.getHomes());
         }
 
@@ -136,7 +135,8 @@ public class HomeSpawnHomesList extends LapisCommand {
         @Override
         protected void onMenuClickPaged(Player player, Home home, ClickType clickType) {
             if (clickType.isLeftClick()) {
-                Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, () -> home.teleportPlayer(player), 1);
+                player.closeInventory();
+                home.teleportPlayer(player);
             }
         }
 
