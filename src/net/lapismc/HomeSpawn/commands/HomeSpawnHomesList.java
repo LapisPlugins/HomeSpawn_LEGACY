@@ -34,10 +34,7 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class HomeSpawnHomesList extends LapisCommand {
 
@@ -45,7 +42,7 @@ public class HomeSpawnHomesList extends LapisCommand {
     private final HomeSpawn plugin;
 
     public HomeSpawnHomesList(HomeSpawn p) {
-        super("homeslist", "Shows the players current homes", new ArrayList<>());
+        super("homeslist", "Shows the players current homes", new ArrayList<>(Arrays.asList("listhomes", "listhome", "homelist")));
         this.plugin = p;
     }
 
