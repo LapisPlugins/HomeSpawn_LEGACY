@@ -26,6 +26,7 @@ import net.lapismc.HomeSpawn.util.EasyComponent;
 import net.lapismc.HomeSpawn.util.LapisCommand;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -80,50 +81,22 @@ public class HomeSpawnHomesList extends LapisCommand {
         UIDesignerAPI.setPlugin(plugin);
         HomeSpawnPlayer hsPlayer = plugin.getPlayer(p.getUniqueId());
         new HomesListUI(hsPlayer).displayTo(p);
-        /*
-        This is the old menu code
-         YamlConfiguration getHomes = this.plugin.HSConfig.getPlayerData(p.getUniqueId());
-         List<String> homes = getHomes.getStringList("Homes.list");
-         if (homes.isEmpty()) {
-         p.sendMessage(ChatColor.translateAlternateColorCodes('&',
-         plugin.HSConfig.getColoredMessage("Home.NoHomeSet")));
-         return;
-         }
-         Random r = new Random(System.currentTimeMillis());
-         int slots = homes.size() % 9 == 0 ? homes.size() / 9 : homes.size() / 9 + 1;
-         if (HomesListInventories.containsKey(p)) {
-         if (!(HomesListInventories.get(p).getSize() == slots * 9)) {
-         Inventory inv = Bukkit.createInventory(p, 9 * slots, ChatColor.GOLD + p.getName() + "'s Homes List");
-         HomesListInventories.put(p, inv);
-         }
-         } else {
-         Inventory inv = Bukkit.createInventory(p, 9 * slots, ChatColor.GOLD + p.getName() + "'s Homes List");
-         HomesListInventories.put(p, inv);
-         }
-         for (String home : homes) {
-         ItemStack i = new Wool(DyeColor.values()[(r.nextInt(DyeColor.values().length))]).toItemStack(1);
-         ItemMeta im = i.getItemMeta();
-         im.setDisplayName(ChatColor.GOLD + home);
-         im.setLore(Arrays.asList(ChatColor.GOLD + "Click To Teleport To",
-         ChatColor.RED + home));
-         i.setItemMeta(im);
-         HomesListInventories.get(p).addItem(i);
-         }
-         p.openInventory(HomesListInventories.get(p));
-         */
     }
 
     private class HomesListUI extends MenuPagged<Home> {
 
         Random r = new Random(System.currentTimeMillis());
+        OfflinePlayer op;
 
         HomesListUI(HomeSpawnPlayer p) {
             super(9 * 2, null, p.getHomes());
+            op = p.getOfflinePlayer();
+            setTitle(getMenuTitle());
         }
 
         @Override
         protected String getMenuTitle() {
-            return "Your homes";
+            return op == null ? "Player" : op.getName() + "'s homes";
         }
 
         @Override
@@ -138,6 +111,11 @@ public class HomeSpawnHomesList extends LapisCommand {
                 player.closeInventory();
                 home.teleportPlayer(player);
             }
+        }
+
+        @Override
+        protected boolean updateButtonOnClick() {
+            return false;
         }
 
         @Override

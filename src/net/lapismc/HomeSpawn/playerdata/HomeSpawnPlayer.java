@@ -103,6 +103,10 @@ public class HomeSpawnPlayer {
         return plugin.HSPermissions.isPermitted(op.getUniqueId(), perm);
     }
 
+    public OfflinePlayer getOfflinePlayer() {
+        return op;
+    }
+
     public YamlConfiguration getConfig(boolean force) {
         if (yaml == null || force) {
             yaml = plugin.HSConfig.getPlayerData(op.getUniqueId());
