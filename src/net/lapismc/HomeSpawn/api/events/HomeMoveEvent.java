@@ -22,10 +22,10 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-@SuppressWarnings({"unused", "WeakerAccess"})
+@SuppressWarnings({"unused", "WeakerAccess", "CanBeFinal"})
 public class HomeMoveEvent extends Event implements Cancellable {
 
-    public static final HandlerList handlers = new HandlerList();
+    public static HandlerList handlers = new HandlerList();
     private final Home oldHome;
     private final Home newHome;
     private final Player p;

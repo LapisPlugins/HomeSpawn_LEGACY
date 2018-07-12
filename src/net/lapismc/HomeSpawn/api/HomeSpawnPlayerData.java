@@ -29,6 +29,7 @@ import java.io.IOException;
  *
  * @author Dart2112
  */
+@SuppressWarnings("unused")
 class HomeSpawnPlayerData {
 
     private static HomeSpawn plugin;

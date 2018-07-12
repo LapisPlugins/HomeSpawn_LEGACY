@@ -21,7 +21,7 @@ ChangeLog:
         - "Added Console Printout of Changes After Downloading Updates(Read From This Changelog File)"
         - "Moved Permissions to Their Own Class Ready For Permission Syncing With WarpPoint"
         - "Fixed Permission Defaults"
-        - "Optomisation and Bug Fixing"
+        - "Optimisation and Bug Fixing"
     Stable 2.0.2:
         - "All Beta Features From Beta 0.1.7 to 0.2.0"
         - "Support For Minecraft 1.8-1.11"
@@ -87,7 +87,7 @@ ChangeLog:
       - "Fixed error in command delay"
     2.2.3:
       - "Code rework to make my job easier"
-      - "Possibly fixed the multiverse error"
+      - "Possibly fixed the multi-verse error"
       - "Minor fixes associated with the code rework"
     2.2.4:
       - "Additional code for HomeSpawnCost integration"

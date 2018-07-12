@@ -27,18 +27,18 @@ import net.lapismc.HomeSpawn.util.LapisCommand;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 
 public class HomeSpawnHomesList extends LapisCommand {
 
-    final public HashMap<Player, Inventory> HomesListInventories = new HashMap<>();
     private final HomeSpawn plugin;
 
     public HomeSpawnHomesList(HomeSpawn p) {
@@ -47,7 +47,7 @@ public class HomeSpawnHomesList extends LapisCommand {
     }
 
     @Override
-    public void onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
+    public void onCommand(CommandSender sender, String[] args) {
         if (!(sender instanceof Player)) {
             sender.sendMessage(plugin.HSConfig.getMessage("Error.MustBePlayer"));
             return;
@@ -82,8 +82,8 @@ public class HomeSpawnHomesList extends LapisCommand {
 
     private class HomesListUI extends MenuPagged<Home> {
 
-        Random r = new Random(System.currentTimeMillis());
-        OfflinePlayer op;
+        final Random r = new Random(System.currentTimeMillis());
+        final OfflinePlayer op;
 
         HomesListUI(HomeSpawnPlayer p) {
             super(9 * 2, null, p.getHomes());

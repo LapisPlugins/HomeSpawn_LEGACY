@@ -22,7 +22,6 @@ import net.lapismc.HomeSpawn.playerdata.Home;
 import net.lapismc.HomeSpawn.playerdata.HomeSpawnPlayer;
 import net.lapismc.HomeSpawn.util.LapisCommand;
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -40,7 +39,7 @@ public class HomeSpawnDelHome extends LapisCommand {
     }
 
     @Override
-    public void onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
+    public void onCommand(CommandSender sender, String[] args) {
         if (!(sender instanceof Player)) {
             sender.sendMessage(plugin.HSConfig.getMessage("Error.MustBePlayer"));
             return;

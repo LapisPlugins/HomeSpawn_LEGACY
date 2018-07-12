@@ -28,13 +28,13 @@ import org.bukkit.entity.Player;
 import java.util.HashMap;
 import java.util.UUID;
 
-@SuppressWarnings("deprecation")
+@SuppressWarnings({"deprecation"})
 public class Home {
 
     private final HomeSpawn plugin;
     private final OfflinePlayer owner;
+    private final String name;
     private Location location;
-    private String name;
 
     public Home(HomeSpawn plugin, String name, Location loc, OfflinePlayer owner) {
         this.plugin = plugin;
@@ -124,10 +124,6 @@ public class Home {
 
     public String getName() {
         return name;
-    }
-
-    public void setName(String newName) {
-        name = newName;
     }
 
     @Override

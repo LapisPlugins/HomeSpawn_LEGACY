@@ -36,8 +36,8 @@ public class HomeSpawnConfiguration {
     private final HomeSpawn plugin;
     public YamlConfiguration spawn;
     public File spawnFile;
-    private int configVersion = 10;
-    private int messagesVersion = 1;
+    private final int configVersion = 10;
+    private final int messagesVersion = 1;
     private YamlConfiguration messages;
     private File messagesFile;
     private File passwordsFile;
@@ -251,7 +251,7 @@ public class HomeSpawnConfiguration {
         if (!file.exists()) {
             try {
                 if (!file.createNewFile()) {
-                    plugin.logger.info("Faile to generate " + file.getName());
+                    plugin.logger.info("Failed to generate " + file.getName());
                 }
             } catch (IOException e) {
                 plugin.logger.log(Level.SEVERE, "An error has occurred while trying to" +

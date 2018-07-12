@@ -39,7 +39,7 @@ import java.util.zip.GZIPOutputStream;
  * <p>
  * Check out https://bStats.org/ to learn more about bStats!
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings("ALL")
 public class Metrics {
 
     // The version of this bStats class

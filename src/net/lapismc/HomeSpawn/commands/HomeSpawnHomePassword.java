@@ -20,7 +20,6 @@ import net.lapismc.HomeSpawn.HomeSpawn;
 import net.lapismc.HomeSpawn.util.LapisCommand;
 import net.lapismc.HomeSpawn.util.PasswordHash;
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -42,7 +41,7 @@ public class HomeSpawnHomePassword extends LapisCommand {
     }
 
     @Override
-    public void onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
+    public void onCommand(CommandSender sender, String[] args) {
         if (!(sender instanceof Player)) {
             sender.sendMessage(plugin.HSConfig.getMessage("Error.MustBePlayer"));
             return;
@@ -88,7 +87,7 @@ public class HomeSpawnHomePassword extends LapisCommand {
                 } else if (string.equalsIgnoreCase("transfer")) {
                     String pass = args[2];
                     String name = args[1];
-                    File namefile = new File(this.plugin.getDataFolder()
+                    File nameFile = new File(this.plugin.getDataFolder()
                             .getAbsolutePath()
                             + File.separator
                             + "PlayerData"
@@ -98,7 +97,7 @@ public class HomeSpawnHomePassword extends LapisCommand {
                             + name
                             + ".yml");
                     FileConfiguration getOldName = YamlConfiguration
-                            .loadConfiguration(namefile);
+                            .loadConfiguration(nameFile);
                     boolean Password = false;
                     try {
                         Password = PasswordHash.validatePassword(pass,
@@ -108,7 +107,7 @@ public class HomeSpawnHomePassword extends LapisCommand {
                         e2.printStackTrace();
                         p.sendMessage(plugin.HSConfig.getColoredMessage("Password.CheckError"));
                     }
-                    if (namefile.exists() && Password) {
+                    if (nameFile.exists() && Password) {
                         String uuid = getOldName.getString("UUID");
                         File OldUUIDFile = new File(
                                 this.plugin.getDataFolder() + File.separator
@@ -124,7 +123,7 @@ public class HomeSpawnHomePassword extends LapisCommand {
                             e1.printStackTrace();
                         }
                         OldUUIDFile.delete();
-                        namefile.delete();
+                        nameFile.delete();
                         try {
                             getHomes.save(file);
                         } catch (IOException e) {
@@ -140,7 +139,7 @@ public class HomeSpawnHomePassword extends LapisCommand {
                 }
             }
         } else {
-            p.sendMessage("This Command Isnt Used As This Is An Online Mode Server");
+            p.sendMessage("This Command Isn't Used As This Is An Online Mode Server");
         }
 
     }
@@ -150,14 +149,14 @@ public class HomeSpawnHomePassword extends LapisCommand {
                 + ChatColor.RED + "Homespawn" + ChatColor.GOLD
                 + "---------------------");
         player.sendMessage(ChatColor.RED + "/homepassword help:"
-                + ChatColor.GOLD + " Shows This Text");
+                + ChatColor.GOLD + " Shows this text");
         player.sendMessage(ChatColor.RED
                 + "/homepassword set [password] [password]:" + ChatColor.GOLD
-                + " Sets Your Transfer Password");
+                + " Sets your transfer password");
         player.sendMessage(ChatColor.RED
                 + "/homepassword transfer [old username] [password]:"
                 + ChatColor.GOLD
-                + " Transfers Playerdata From Old Username To Current Username");
+                + " Transfers player data from old username to current username");
         player.sendMessage(ChatColor.GOLD
                 + "-----------------------------------------------------");
     }

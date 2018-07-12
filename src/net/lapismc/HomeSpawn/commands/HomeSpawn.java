@@ -19,7 +19,6 @@ package net.lapismc.HomeSpawn.commands;
 import net.lapismc.HomeSpawn.HomeSpawnPermissions;
 import net.lapismc.HomeSpawn.playerdata.HomeSpawnPlayer;
 import net.lapismc.HomeSpawn.util.LapisCommand;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -37,7 +36,7 @@ public class HomeSpawn extends LapisCommand {
     }
 
     @Override
-    public void onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
+    public void onCommand(CommandSender sender, String[] args) {
         if (args.length > 0 && args[0].equalsIgnoreCase("player")) {
             homeSpawnPlayer.homeSpawnPlayer(args, sender);
             return;

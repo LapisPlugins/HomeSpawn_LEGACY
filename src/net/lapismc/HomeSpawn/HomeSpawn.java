@@ -36,15 +36,14 @@ import java.util.logging.Logger;
 public class HomeSpawn extends JavaPlugin {
 
     final Logger logger = getLogger();
-    public HashMap<Player, Location> HomeSpawnLocations = new HashMap<>();
-    public HashMap<Player, Integer> HomeSpawnTimeLeft = new HashMap<>();
+    public final HashMap<Player, Location> HomeSpawnLocations = new HashMap<>();
+    public final HashMap<Player, Integer> HomeSpawnTimeLeft = new HashMap<>();
     public LapisUpdater lapisUpdater;
     public HomeSpawnPermissions HSPermissions;
     public HomeSpawnConfiguration HSConfig;
     public String PrimaryColor = ChatColor.GOLD.toString();
     public String SecondaryColor = ChatColor.RED.toString();
-    HomeSpawnCommand HSCommand;
-    private ArrayList<HomeSpawnPlayer> players = new ArrayList<>();
+    private final ArrayList<HomeSpawnPlayer> players = new ArrayList<>();
 
     @Override
     public void onEnable() {
@@ -52,7 +51,7 @@ public class HomeSpawn extends JavaPlugin {
         Enable();
         Update();
         HSPermissions = new HomeSpawnPermissions(this);
-        HSCommand = new HomeSpawnCommand(this);
+        new HomeSpawnCommand(this);
         CommandDelay();
         new Metrics(this);
     }

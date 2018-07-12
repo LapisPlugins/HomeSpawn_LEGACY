@@ -17,7 +17,6 @@
 package net.lapismc.HomeSpawn.util;
 
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.defaults.BukkitCommand;
@@ -27,7 +26,7 @@ import java.util.ArrayList;
 
 public class LapisCommand extends BukkitCommand {
 
-    public LapisCommand(String name, String desc, ArrayList<String> aliases) {
+    protected LapisCommand(String name, String desc, ArrayList<String> aliases) {
         super(name);
         setDescription(desc);
         setAliases(aliases);
@@ -47,11 +46,11 @@ public class LapisCommand extends BukkitCommand {
 
     @Override
     public boolean execute(CommandSender sender, String commandLabel, String[] args) {
-        onCommand(sender, this, commandLabel, args);
+        onCommand(sender, args);
         return true;
     }
 
-    public void onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
+    protected void onCommand(CommandSender sender, String[] args) {
         System.out.println("The command " + getName() + " hasn't been setup correctly, Please contact the plugin developer");
     }
 

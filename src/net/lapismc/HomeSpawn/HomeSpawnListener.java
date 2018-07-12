@@ -25,15 +25,15 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.inventory.Inventory;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 class HomeSpawnListener implements Listener {
 
@@ -157,44 +157,4 @@ class HomeSpawnListener implements Listener {
             }
         }
     }
-
-    @EventHandler(priority = EventPriority.HIGH)
-    public void invInteract(InventoryClickEvent e) {
-        Player p = (Player) e.getWhoClicked();
-        if (e.getInventory().equals(plugin.HSCommand.homesList.HomesListInventories.get(p))) {
-            String name = e.getCurrentItem().getItemMeta().getDisplayName();
-            String name1 = ChatColor.stripColor(name);
-            YamlConfiguration getHomes = plugin.HSConfig.getPlayerData(p.getUniqueId());
-            if (name1.equalsIgnoreCase("Home")) {
-                if (getHomes.getStringList("Homes.list").contains(name1)) {
-                    Location home = (Location) getHomes.get("Homes." + name1);
-                    plugin.HSCommand.TeleportPlayer(p, home, "Home");
-                }
-            } else {
-                if (getHomes.getStringList("Homes.list").contains(name1)) {
-                    Location home2 = (Location) getHomes.get("Homes." + name1);
-                    plugin.HSCommand.TeleportPlayer(p, home2, "Home");
-                }
-            }
-            e.getWhoClicked().closeInventory();
-            Inventory inv = plugin.HSCommand.homesList.HomesListInventories.get(p);
-            inv.clear();
-            plugin.HSCommand.homesList.HomesListInventories.put(p, inv);
-        }
-
-    }
-
-    @EventHandler
-    public void onInvExit(InventoryCloseEvent e) {
-        if (!(e.getPlayer() == null && e.getInventory() == null)) {
-            Player p = (Player) e.getPlayer();
-            if (plugin.HSCommand.homesList.HomesListInventories.containsKey(p) && Objects
-                    .equals(e.getInventory().getName(), plugin.HSCommand.homesList.HomesListInventories.get(p).getName())) {
-                Inventory inv = plugin.HSCommand.homesList.HomesListInventories.get(p);
-                inv.clear();
-                plugin.HSCommand.homesList.HomesListInventories.put(p, inv);
-            }
-        }
-    }
-
 }
