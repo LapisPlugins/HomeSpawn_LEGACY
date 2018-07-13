@@ -113,3 +113,6 @@ ChangeLog:
       - "Added clickable text for non inventory homes list"
       - "Messages.yml and Config.yml now have separate configuration versions"
       - "Fixed spelling and capitalisation all over the place"
+    2.3.1:
+      - "Updated GUI to use UI Designer paged UI"
+      - "Fixed some teleporting issues"
