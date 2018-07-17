@@ -56,31 +56,24 @@ public class Home {
         }
         HashMap<HomeSpawnPermissions.perm, Integer> perms = plugin.HSPermissions.getPlayerPermissions(p.getUniqueId());
         if (perms.get(HomeSpawnPermissions.perm.TeleportDelay) == 0) {
-            if (!location.getChunk().isLoaded()) {
-                location.getChunk().load();
-            }
-            if (p.isInsideVehicle()) {
-                if (p.getVehicle() instanceof Horse) {
-                    Horse horse = (Horse) p.getVehicle();
-                    horse.eject();
-                    horse.teleport(location);
-                    p.teleport(location);
-                    horse.setPassenger(p);
-                }
-            } else {
-                p.teleport(location);
-            }
+            teleport(p);
             p.sendMessage(plugin.HSConfig.getColoredMessage("Home.SentHome"));
         } else {
             String waitRaw = plugin.HSConfig.getColoredMessage("Wait");
             String wait = waitRaw.replace("{time}", perms.get(HomeSpawnPermissions.perm.TeleportDelay).toString());
             p.sendMessage(wait);
-            plugin.HomeSpawnLocations.put(p, location);
+            plugin.HomeSpawnHomes.put(p, this);
             plugin.HomeSpawnTimeLeft.put(p, perms.get(HomeSpawnPermissions.perm.TeleportDelay));
         }
     }
 
     public void teleportPlayerNow(Player p) {
+        teleport(p);
+        p.sendMessage(plugin.HSConfig.getColoredMessage("Home.SentHome"));
+        plugin.debug("Teleported " + p.getName());
+    }
+
+    private void teleport(Player p) {
         if (location == null) {
             location = (Location) plugin.HSConfig.getPlayerData(getOwner().getUniqueId()).get("Homes." + name);
         }
@@ -98,8 +91,6 @@ public class Home {
         } else {
             p.teleport(location);
         }
-        p.sendMessage(plugin.HSConfig.getColoredMessage("Home.SentHome"));
-        plugin.debug("Teleported " + p.getName());
     }
 
     public Location getLocation() {

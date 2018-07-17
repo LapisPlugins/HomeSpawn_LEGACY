@@ -19,6 +19,7 @@ package net.lapismc.HomeSpawn.commands;
 import net.lapismc.HomeSpawn.HomeSpawn;
 import net.lapismc.HomeSpawn.HomeSpawnPermissions;
 import net.lapismc.HomeSpawn.api.events.SpawnTeleportEvent;
+import net.lapismc.HomeSpawn.playerdata.Home;
 import net.lapismc.HomeSpawn.util.LapisCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -87,7 +88,7 @@ public class HomeSpawnSpawn extends LapisCommand {
             String waitRaw = plugin.HSConfig.getColoredMessage("Wait");
             String Wait = waitRaw.replace("{time}", perms.get(HomeSpawnPermissions.perm.TeleportDelay).toString());
             p.sendMessage(Wait);
-            this.plugin.HomeSpawnLocations.put(p, l);
+            this.plugin.HomeSpawnHomes.put(p, new Home(plugin, "TEMP", l, p.getUniqueId()));
             this.plugin.HomeSpawnTimeLeft.put(p, perms.get(HomeSpawnPermissions.perm.TeleportDelay));
         }
     }

@@ -20,7 +20,6 @@ import net.lapismc.HomeSpawn.HomeSpawn;
 import net.lapismc.HomeSpawn.HomeSpawnPermissions;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -66,8 +65,9 @@ class HomeSpawnPlayer {
                 sender.sendMessage(plugin.HSConfig.getColoredMessage("NoPlayerData"));
                 return;
             }
-            YamlConfiguration homes = plugin.HSConfig.getPlayerData(op.getUniqueId());
-            if (homes == null) {
+            net.lapismc.HomeSpawn.playerdata.HomeSpawnPlayer HSPlayer = plugin.getPlayer(op.getUniqueId());
+            YamlConfiguration homes = HSPlayer.getConfig(true);
+            if (!op.hasPlayedBefore()) {
                 sender.sendMessage(plugin.HSConfig.getColoredMessage("NoPlayerData"));
                 return;
             }
@@ -96,16 +96,13 @@ class HomeSpawnPlayer {
                 sender.sendMessage(ChatColor.RED + "Player " + ChatColor.BLUE + name + ChatColor.RED + " has been offline since "
                         + ChatColor.GOLD + time);
             }
-            List<String> list = homes.getStringList("Homes.list");
-            String usedHomes = String.valueOf(homes.getStringList("Homes.list").size());
+            HSPlayer.reloadHomes();
+            String usedHomes = String.valueOf(HSPlayer.getHomes().size());
             sender.sendMessage(ChatColor.GOLD + usedHomes + ChatColor.RED + " out of " + ChatColor.GOLD + perms.get(HomeSpawnPermissions.perm.homes)
                     + " homes used");
-            if (!list.isEmpty()) {
+            if (!HSPlayer.getHomes().isEmpty()) {
                 sender.sendMessage(ChatColor.RED + "The players home(s) are:");
-                String list2 = list.toString();
-                String list3 = list2.replace("[", " ");
-                String StringList = list3.replace("]", " ");
-                sender.sendMessage(ChatColor.GOLD + StringList);
+                sender.sendMessage(ChatColor.GOLD + HSPlayer.getHomesList());
             }
         } else if (args.length == 3) {
             if (!(sender instanceof Player)) {
@@ -114,14 +111,15 @@ class HomeSpawnPlayer {
             }
             Player p = (Player) sender;
             String name = args[1];
+            String homeName = args[2];
             //noinspection deprecation
             OfflinePlayer op = Bukkit.getOfflinePlayer(name);
-            YamlConfiguration homes = plugin.HSConfig.getPlayerData(op.getUniqueId());
-            if (homes == null) {
-                sender.sendMessage(plugin.HSConfig.getColoredMessage("NoPlayerData"));
-                return;
+            net.lapismc.HomeSpawn.playerdata.HomeSpawnPlayer hsPlayer = plugin.getPlayer(op.getUniqueId());
+            if (hsPlayer.hasHome(homeName)) {
+                hsPlayer.getHome(homeName).teleportPlayer(p);
+            } else {
+                p.sendMessage(plugin.HSConfig.getColoredMessage("Home.NoHomeName"));
             }
-            teleportPlayer(p, args[2], homes);
         } else {
             help(sender);
         }
@@ -133,21 +131,5 @@ class HomeSpawnPlayer {
         sender.sendMessage(ChatColor.RED + "/homespawn player (name):" + ChatColor.GOLD + " Shows the stats of the player given");
         sender.sendMessage(ChatColor.RED + "/homespawn player (name) (home name):" + ChatColor.GOLD + " Teleports you to that players" +
                 " home of that name");
-    }
-
-    private void teleportPlayer(Player player, String home, YamlConfiguration getHomes) {
-        if (home.equalsIgnoreCase("home") && getHomes.contains("Homes.Home")) {
-            Location home2 = (Location) getHomes.get("Homes.Home");
-            player.sendMessage(plugin.HSConfig.getColoredMessage("Home.SentHome"));
-            player.teleport(home2);
-            return;
-        }
-        if (getHomes.contains("Homes." + home)) {
-            Location home2 = (Location) getHomes.get("Homes." + home);
-            player.sendMessage(plugin.HSConfig.getColoredMessage("Home.SentHome"));
-            player.teleport(home2);
-        } else {
-            player.sendMessage(plugin.HSConfig.getColoredMessage("Home.NoHomeName"));
-        }
     }
 }

@@ -92,7 +92,7 @@ class HomeSpawnListener implements Listener {
             Players = new ArrayList<>();
         }
         Player p = e.getPlayer();
-        if (plugin.HomeSpawnLocations.containsKey(p)) {
+        if (plugin.HomeSpawnHomes.containsKey(p)) {
             if (plugin.HomeSpawnTimeLeft.containsKey(p)) {
                 Location From = e.getFrom();
                 Location To = e.getTo();
@@ -106,7 +106,7 @@ class HomeSpawnListener implements Listener {
                 From1.add(From.getBlockZ());
                 if (!From1.equals(To1)) {
                     if (!Players.contains(p)) {
-                        plugin.HomeSpawnLocations.put(p, null);
+                        plugin.HomeSpawnHomes.put(p, null);
                         plugin.HomeSpawnTimeLeft.remove(p);
                         p.sendMessage(plugin.HSConfig.getColoredMessage("TeleportCancelMove"));
                     } else {
@@ -128,7 +128,7 @@ class HomeSpawnListener implements Listener {
                 if (Hitter instanceof Arrow) {
                     Arrow arrow = (Arrow) Hitter;
                     if (arrow.getShooter() instanceof Player) {
-                        plugin.HomeSpawnLocations.put(p, null);
+                        plugin.HomeSpawnHomes.put(p, null);
                         p.sendMessage(plugin.HSConfig.getColoredMessage("TeleportCancelPvP"));
                         e.setCancelled(true);
                     } else if (arrow.getShooter() instanceof Skeleton) {
@@ -139,7 +139,7 @@ class HomeSpawnListener implements Listener {
                 if (Hitter instanceof Wolf) {
                     Wolf wolf = (Wolf) Hitter;
                     if (wolf.isTamed()) {
-                        plugin.HomeSpawnLocations.put(p, null);
+                        plugin.HomeSpawnHomes.put(p, null);
                         p.sendMessage(plugin.HSConfig.getColoredMessage("TeleportCancelPvP"));
                     } else {
                         Players.add(p);
@@ -147,7 +147,7 @@ class HomeSpawnListener implements Listener {
                     }
                 }
                 if (Hitter instanceof Player) {
-                    plugin.HomeSpawnLocations.put(p, null);
+                    plugin.HomeSpawnHomes.put(p, null);
                     plugin.HomeSpawnTimeLeft.remove(p);
                     p.sendMessage(plugin.HSConfig.getColoredMessage("TeleportCancelPvP"));
                 } else {

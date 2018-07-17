@@ -35,15 +35,15 @@ import java.util.logging.Logger;
 
 public class HomeSpawn extends JavaPlugin {
 
-    final Logger logger = getLogger();
-    public final HashMap<Player, Location> HomeSpawnLocations = new HashMap<>();
+    public final HashMap<Player, Home> HomeSpawnHomes = new HashMap<>();
     public final HashMap<Player, Integer> HomeSpawnTimeLeft = new HashMap<>();
+    final Logger logger = getLogger();
+    private final ArrayList<HomeSpawnPlayer> players = new ArrayList<>();
     public LapisUpdater lapisUpdater;
     public HomeSpawnPermissions HSPermissions;
     public HomeSpawnConfiguration HSConfig;
     public String PrimaryColor = ChatColor.GOLD.toString();
     public String SecondaryColor = ChatColor.RED.toString();
-    private final ArrayList<HomeSpawnPlayer> players = new ArrayList<>();
 
     @Override
     public void onEnable() {
@@ -52,7 +52,7 @@ public class HomeSpawn extends JavaPlugin {
         Update();
         HSPermissions = new HomeSpawnPermissions(this);
         new HomeSpawnCommand(this);
-        CommandDelay();
+        teleportDelay();
         new Metrics(this);
     }
 
@@ -150,16 +150,26 @@ public class HomeSpawn extends JavaPlugin {
                 sender.sendMessage(ChatColor.RED + "/sethome [name]:"
                         + ChatColor.GOLD
                         + " Sets Your Home At Your Current Location");
-                sender.sendMessage(ChatColor.RED + "/delhome [name]:"
-                        + ChatColor.GOLD + " Removes The Specified Home");
+                if (perms.get(HomeSpawnPermissions.perm.playerStats) == 1) {
+                    sender.sendMessage(ChatColor.RED + "/delhome [name] [player]:"
+                            + ChatColor.GOLD + " Removes The Specified Home, If a player is provided it will attempt to delete that players home");
+                } else {
+                    sender.sendMessage(ChatColor.RED + "/delhome [name]:"
+                            + ChatColor.GOLD + " Removes The Specified Home");
+                }
             } else if (isPlayer && perms.get(HomeSpawnPermissions.perm.homes) > 0) {
                 sender.sendMessage(ChatColor.RED + "/home:" + ChatColor.GOLD
                         + " Sends You To Your Home");
                 sender.sendMessage(ChatColor.RED + "/sethome:"
                         + ChatColor.GOLD
                         + " Sets YourHome At Your Current Location");
-                sender.sendMessage(ChatColor.RED + "/delhome:"
-                        + ChatColor.GOLD + " Removes Your Home");
+                if (perms.get(HomeSpawnPermissions.perm.playerStats) == 1) {
+                    sender.sendMessage(ChatColor.RED + "/delhome [name] [player]:"
+                            + ChatColor.GOLD + " Removes The Specified Home, If a player is provided it will attempt to delete that players home");
+                } else {
+                    sender.sendMessage(ChatColor.RED + "/delhome:"
+                            + ChatColor.GOLD + " Removes Your Home");
+                }
             }
             if (isPlayer && perms.get(HomeSpawnPermissions.perm.spawn) == 1) {
                 sender.sendMessage(ChatColor.RED + "/spawn:" + ChatColor.GOLD
@@ -199,7 +209,7 @@ public class HomeSpawn extends JavaPlugin {
     }
 
     @SuppressWarnings("deprecation")
-    private void CommandDelay() {
+    private void teleportDelay() {
         //Handles the delay of teleporting
         BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
         scheduler.scheduleSyncRepeatingTask(this, () -> {
@@ -213,9 +223,9 @@ public class HomeSpawn extends JavaPlugin {
                         Player p = it.next();
                         //if the location is null the teleport has probably been canceled
                         //so we will remove the player from the waiting list
-                        if (HomeSpawnLocations.get(p) == null) {
+                        if (HomeSpawnHomes.get(p) == null) {
                             it.remove();
-                            HomeSpawnLocations.remove(p);
+                            HomeSpawnHomes.remove(p);
                         }
                         if (HomeSpawnTimeLeft.isEmpty()) {
                             return;
@@ -232,9 +242,9 @@ public class HomeSpawn extends JavaPlugin {
                                 HomeSpawnTimeLeft.put(p, NewTime);
                             } else {
                                 //Generates a fake home object to use the home objects advanced teleport code
-                                Home h = new Home(this, "temp", HomeSpawnLocations.get(p), p.getUniqueId());
+                                Home h = HomeSpawnHomes.get(p);
                                 h.teleportPlayerNow(p);
-                                HomeSpawnLocations.remove(p);
+                                HomeSpawnHomes.remove(p);
                                 HomeSpawnTimeLeft.remove(p);
                             }
                         }

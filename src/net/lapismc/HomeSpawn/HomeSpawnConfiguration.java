@@ -32,19 +32,17 @@ import java.util.logging.Level;
 @SuppressWarnings("FieldCanBeLocal")
 public class HomeSpawnConfiguration {
 
-    private final HashMap<UUID, YamlConfiguration> HomeConfigs = new HashMap<>();
     private final HomeSpawn plugin;
-    public YamlConfiguration spawn;
-    public File spawnFile;
     private final int configVersion = 10;
     private final int messagesVersion = 1;
+    public YamlConfiguration spawn;
+    public File spawnFile;
     private YamlConfiguration messages;
     private File messagesFile;
     private File passwordsFile;
 
     HomeSpawnConfiguration(HomeSpawn p) {
         plugin = p;
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, HomeConfigs::clear, 20 * 60 * 5, 20 * 60 * 5);
         Configs();
         updatePlayerData();
     }
@@ -131,22 +129,21 @@ public class HomeSpawnConfiguration {
     }
 
     public YamlConfiguration getPlayerData(UUID uuid) {
-        YamlConfiguration yaml;
-        if (!HomeConfigs.containsKey(uuid) || HomeConfigs.get(uuid) == null) {
-            File f = new File(plugin.getDataFolder().getAbsolutePath() + File.separator + "PlayerData" + File.separator + uuid.toString() + ".yml");
-            yaml = YamlConfiguration.loadConfiguration(f);
-            HomeConfigs.put(uuid, yaml);
-        } else {
-            yaml = HomeConfigs.get(uuid);
+        File f = new File(plugin.getDataFolder().getAbsolutePath() + File.separator + "PlayerData" + File.separator + uuid.toString() + ".yml");
+        if (!f.exists()) {
+            try {
+                f.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-        return yaml;
+        return YamlConfiguration.loadConfiguration(f);
     }
 
     void unloadPlayerData(UUID uuid) {
         YamlConfiguration getHomes = getPlayerData(uuid);
         try {
             getHomes.save(new File(plugin.getDataFolder().getAbsolutePath() + File.separator + "PlayerData" + File.separator + uuid.toString() + ".yml"));
-            HomeConfigs.remove(uuid);
         } catch (IOException e) {
             e.printStackTrace();
         }
