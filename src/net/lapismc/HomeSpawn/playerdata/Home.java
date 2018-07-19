@@ -102,7 +102,7 @@ public class Home {
 
     public void setLocation(Location loc) {
         HomeSpawnPlayer p = plugin.getPlayer(owner.getUniqueId());
-        YamlConfiguration getHomes = p.getConfig(false);
+        YamlConfiguration getHomes = p.getConfig(true);
         getHomes.set("Homes." + name, loc);
         p.saveConfig(getHomes);
         location = loc;

@@ -78,9 +78,9 @@ public class HomeSpawnSetHome extends LapisCommand {
                 list.add("Home");
                 getHomes.set("Homes.list", list);
             }
+            HSPlayer.saveConfig(getHomes);
             home.setLocation(p.getLocation());
             HSPlayer.addHome(home);
-            HSPlayer.saveConfig(getHomes);
             HSPlayer.reloadHomes();
             p.sendMessage(plugin.HSConfig.getColoredMessage("Home.HomeSet"));
         } else if (args.length == 1) {

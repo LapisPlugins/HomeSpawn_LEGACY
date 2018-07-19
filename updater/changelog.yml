@@ -120,3 +120,5 @@ ChangeLog:
       - "Fixed some teleportaion bugs"
       - "Fixed a problem with homes not deleting"
       - "Major code cleanup"
+    2.3.3:
+      - "Fixed a major error with setting homes, thanks to Craftyjai for reporting it"
