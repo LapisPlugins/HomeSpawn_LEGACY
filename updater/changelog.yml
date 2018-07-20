@@ -124,3 +124,5 @@ ChangeLog:
       - "Fixed a major error with setting homes, thanks to Craftyjai for reporting it"
     2.3.4:
       - "Fixed /sethome [name] not adding location data"
+    2.3.5:
+      - "Fixed /delhome not detecting new homes"

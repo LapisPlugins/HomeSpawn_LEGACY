@@ -48,7 +48,8 @@ public class HomeSpawnDelHome extends LapisCommand {
         }
         Player p = (Player) sender;
         HomeSpawnPlayer HSPlayer = new HomeSpawnPlayer(plugin, p.getUniqueId());
-        YamlConfiguration getHomes = HSPlayer.getConfig(false);
+        YamlConfiguration getHomes = HSPlayer.getConfig(true);
+        HSPlayer.reloadHomes();
         List<String> list = HSPlayer.getHomesStringList();
         if (args.length == 0) {
             if (list.contains("Home")) {
