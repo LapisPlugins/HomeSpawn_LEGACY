@@ -122,3 +122,5 @@ ChangeLog:
       - "Major code cleanup"
     2.3.3:
       - "Fixed a major error with setting homes, thanks to Craftyjai for reporting it"
+    2.3.4:
+      - "Fixed /sethome [name] not adding location data"
